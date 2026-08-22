@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "prompt-lens",
+  "name": "Prompt Lens",
+  "description": "Shows project-aware prompt context before the composer.",
+  "version": "1.2.0-beta.1",
+  "source": "https://github.com/example/prompt-lens",
+  "homepage": "https://example.github.io/prompt-lens/",
+  "icon": "https://example.github.io/prompt-lens/icon.png",
+  "manifest": "https://example.github.io/prompt-lens/cordisx.plugin.json",
+  "license": "Apache-2.0",
+  "compatibility": {
+    "cordisx": "^0.1.0"
+  },
+  "authors": [
+    {
+      "name": "Example Maintainer",
+      "url": "https://github.com/example"
+    }
+  ],
+  "keywords": ["composer", "productivity"]
+}

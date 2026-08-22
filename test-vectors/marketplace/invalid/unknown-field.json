@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "unknown-field",
+  "name": "Unknown Field",
+  "description": "Includes a field that version 1 does not define.",
+  "version": "1.0.0",
+  "source": "https://github.com/example/unknown-field",
+  "license": "MIT",
+  "compatibility": {
+    "cordisx": "^0.1.0"
+  },
+  "authors": [
+    {
+      "name": "Example"
+    }
+  ],
+  "permissions": ["network"]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "Unsorted Marketplace",
+  "homepage": "https://example.com/marketplace/",
+  "plugins": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "zeta",
+      "name": "Zeta",
+      "description": "Sorts after alpha but appears first.",
+      "version": "1.0.0",
+      "source": "https://github.com/example/zeta",
+      "license": "MIT",
+      "compatibility": {
+        "cordisx": "^0.1.0"
+      },
+      "authors": [
+        {
+          "name": "Example"
+        }
+      ]
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "alpha",
+      "name": "Alpha",
+      "description": "Should sort before zeta.",
+      "version": "1.0.0",
+      "source": "https://github.com/example/alpha",
+      "license": "MIT",
+      "compatibility": {
+        "cordisx": "^0.1.0"
+      },
+      "authors": [
+        {
+          "name": "Example"
+        }
+      ]
+    }
+  ]
+}
