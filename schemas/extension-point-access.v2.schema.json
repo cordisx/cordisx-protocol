@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json",
+  "title": "CordisX Extension Point Access Origin v2",
+  "oneOf": [
+    { "$ref": "#/$defs/surfaceCommand" },
+    { "$ref": "#/$defs/surfaceRoute" },
+    { "$ref": "#/$defs/outletRoute" },
+    { "$ref": "#/$defs/outletPage" },
+    { "$ref": "#/$defs/outletPageCommand" }
+  ],
+  "$defs": {
+    "baseProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "schemaVersion", "generation", "operation", "identity"],
+      "properties": {
+        "$schema": {
+          "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json"
+        },
+        "schemaVersion": { "const": 2 },
+        "generation": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "operation": { "type": "string" },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" }
+      }
+    },
+    "surfaceCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "schemaVersion", "generation", "operation", "identity", "contributionId", "commandId"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json" },
+        "schemaVersion": { "const": 2 },
+        "generation": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "operation": { "const": "surface.command.invoke" },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+        "contributionId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "commandId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" }
+      }
+    },
+    "surfaceRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "schemaVersion", "generation", "operation", "identity", "contributionId", "routeId"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json" },
+        "schemaVersion": { "const": 2 },
+        "generation": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "operation": { "const": "surface.route.navigate" },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+        "contributionId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "routeId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" }
+      }
+    },
+    "outletRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "schemaVersion", "generation", "operation", "identity", "routeId", "pageId"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json" },
+        "schemaVersion": { "const": 2 },
+        "generation": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "operation": { "const": "outlet.route.navigate" },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+        "routeId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "pageId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" }
+      }
+    },
+    "outletPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "schemaVersion", "generation", "operation", "identity", "routeId", "pageId"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json" },
+        "schemaVersion": { "const": 2 },
+        "generation": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "operation": { "const": "outlet.page.mount" },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+        "routeId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "pageId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" }
+      }
+    },
+    "outletPageCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "schemaVersion", "generation", "operation", "identity", "routeId", "pageId", "actionId", "commandId"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json" },
+        "schemaVersion": { "const": 2 },
+        "generation": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "operation": { "const": "outlet.page.command.invoke" },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+        "routeId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "pageId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "actionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "commandId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" }
+      }
+    }
+  }
+}

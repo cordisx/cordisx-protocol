@@ -14,6 +14,9 @@ Specified areas:
   surface/outlet authorization origin version 1.
 - `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery,
   pre-step, prompt, permission, degradation, and pagination contract version 1.
+- `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
+  structured contribution version 2, availability, contextual invocation, DSH
+  intent mapping, and explicit replacement refusals.
 
 Planned areas include isolated execution, signed package identity,
 distribution, activation, and rollback.

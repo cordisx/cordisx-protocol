@@ -13,3 +13,7 @@ origin, and downgrade behavior.
 Agent-event conformance additionally covers per-session sequence, stable event
 identity, provenance/source consistency, causal ordering, delivery transitions,
 snapshot pagination, and rejection of host-specific public fields.
+UI extension catalog conformance covers the complete version-2 point
+vocabulary, payload-family mapping, independent stability/availability,
+generation-fenced surface origin, host-only contextual identity, and
+deterministic ordering.

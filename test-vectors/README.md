@@ -25,3 +25,8 @@ origin, and outlet route/page plus page-header command enforcement phases.
 Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,
 message delivery, chunk boundaries, paging, provenance, and causal parents.
+
+UI extension catalog suites live in `ui-extension-catalog/valid` and
+`ui-extension-catalog/invalid`. They cover every version-2 surface/outlet id,
+payload-family mapping, semantic composer anchors, availability, surface route
+origin, generation fencing, and host-only contextual identity.
