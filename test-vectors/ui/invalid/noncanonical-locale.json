@@ -1,0 +1,17 @@
+{
+  "owner": "demo",
+  "catalogs": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+      "schemaVersion": 1,
+      "namespace": "demo",
+      "locale": "en-us",
+      "messages": { "label": "Label" }
+    }
+  ],
+  "commands": [],
+  "pages": [],
+  "outlets": [],
+  "routes": [],
+  "contributions": []
+}

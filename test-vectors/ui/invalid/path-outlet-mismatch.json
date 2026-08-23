@@ -1,0 +1,35 @@
+{
+  "owner": "demo",
+  "catalogs": [],
+  "commands": [],
+  "pages": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "page",
+      "title": { "key": "page", "fallback": "Page" }
+    }
+  ],
+  "outlets": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "app",
+      "authority": "host-adapter",
+      "scope": "renderer",
+      "preferredPlacement": "fixed",
+      "contextPolicy": "generation"
+    }
+  ],
+  "routes": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "route",
+      "path": "/main/wrong",
+      "outlet": "app",
+      "page": "page"
+    }
+  ],
+  "contributions": []
+}

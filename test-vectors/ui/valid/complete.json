@@ -1,0 +1,243 @@
+{
+  "owner": "demo",
+  "catalogs": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+      "schemaVersion": 1,
+      "namespace": "demo",
+      "locale": "en",
+      "default": true,
+      "messages": {
+        "command.open": "Open app demo",
+        "command.refresh": "Refresh demo data",
+        "page.app": "Application demo",
+        "page.main": "Main demo",
+        "page.session": "Session analytics",
+        "breadcrumb.demo": "Demo",
+        "breadcrumb.application": "Application",
+        "tab.overview": "Overview",
+        "tab.events": "Events",
+        "action.open": "Open demo",
+        "action.refresh": "Refresh",
+        "action.open-page": "Open application page",
+        "navigation.demo": "CordisX demo",
+        "action.open-app": "Open app page",
+        "action.refresh-environment": "Refresh environment",
+        "environment.demo": "Demo environment",
+        "action.refresh-section": "Refresh section",
+        "row.heartbeat": "Heartbeat",
+        "action.refresh-row": "Refresh row"
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+      "schemaVersion": 1,
+      "namespace": "demo",
+      "locale": "zh-CN",
+      "messages": {
+        "command.open": "打开应用演示",
+        "command.refresh": "刷新演示数据",
+        "page.app": "应用页面演示",
+        "page.main": "主区域演示",
+        "page.session": "会话分析",
+        "breadcrumb.demo": "演示",
+        "breadcrumb.application": "应用",
+        "tab.overview": "概览",
+        "tab.events": "事件",
+        "action.open": "打开演示",
+        "action.refresh": "刷新",
+        "action.open-page": "打开应用页面",
+        "navigation.demo": "CordisX 演示",
+        "action.open-app": "打开应用页面",
+        "action.refresh-environment": "刷新环境",
+        "environment.demo": "演示环境",
+        "action.refresh-section": "刷新分区",
+        "row.heartbeat": "心跳",
+        "action.refresh-row": "刷新行"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/command.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "open.app",
+      "title": { "key": "command.open", "fallback": "Open app demo" },
+      "icon": "host:open"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/command.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "refresh",
+      "title": { "key": "command.refresh", "fallback": "Refresh demo data" },
+      "icon": "host:refresh"
+    }
+  ],
+  "pages": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "page.app",
+      "title": { "key": "page.app", "fallback": "Application demo" },
+      "icon": "host:layers",
+      "breadcrumbs": [
+        { "key": "breadcrumb.demo", "fallback": "Demo" },
+        { "key": "breadcrumb.application", "fallback": "Application" }
+      ]
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "page.main",
+      "title": { "key": "page.main", "fallback": "Main demo" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "page.session",
+      "title": { "key": "page.session", "fallback": "Session analytics" },
+      "tabs": [
+        { "id": "overview", "label": { "key": "tab.overview", "fallback": "Overview" } },
+        { "id": "events", "label": { "key": "tab.events", "fallback": "Events" } }
+      ]
+    }
+  ],
+  "outlets": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "app",
+      "authority": "host-adapter",
+      "scope": "renderer",
+      "preferredPlacement": "fixed",
+      "contextPolicy": "generation"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "main",
+      "authority": "host-adapter",
+      "scope": "main",
+      "preferredPlacement": "absolute",
+      "contextPolicy": "semantic"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "session.content",
+      "authority": "host-adapter",
+      "scope": "session.content",
+      "preferredPlacement": "absolute",
+      "contextPolicy": "semantic"
+    }
+  ],
+  "routes": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "route.app",
+      "path": "/demo",
+      "outlet": "app",
+      "page": "page.app"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "route.main",
+      "path": "/main/demo",
+      "outlet": "main",
+      "page": "page.main"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "route.session",
+      "path": "/sessions/:sessionId/analytics",
+      "outlet": "session.content",
+      "page": "page.session"
+    }
+  ],
+  "contributions": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "footer.before",
+      "surface": "sidebar.footer.before-control",
+      "order": 10,
+      "item": { "label": { "key": "action.open", "fallback": "Open demo" }, "icon": "host:open", "command": { "id": "open.app" } }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "footer.after",
+      "surface": "sidebar.footer.after-control",
+      "item": { "label": { "key": "action.refresh", "fallback": "Refresh" }, "icon": "host:refresh", "command": { "id": "refresh" } }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "footer.menu",
+      "surface": "sidebar.footer.menu",
+      "item": { "label": { "key": "action.open-page", "fallback": "Open application page" }, "command": { "id": "open.app" } }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "navigation",
+      "surface": "sidebar.navigation.items",
+      "when": { "key": "workspace.active", "equals": true },
+      "item": {
+        "label": { "key": "navigation.demo", "fallback": "CordisX demo" },
+        "icon": "host:layers",
+        "route": { "id": "route.main" },
+        "actions": [
+          { "id": "open-app", "label": { "key": "action.open-app", "fallback": "Open app page" }, "icon": "host:open", "command": { "id": "open.app" } },
+          { "id": "refresh", "label": { "key": "action.refresh", "fallback": "Refresh" }, "icon": "host:refresh", "command": { "id": "refresh" } }
+        ]
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "toolbar",
+      "surface": "workspace.toolbar.items",
+      "item": { "anchor": "workspace.primary", "placement": "after", "label": { "key": "action.refresh", "fallback": "Refresh" }, "icon": "host:refresh", "command": { "id": "refresh" } }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "environment.header",
+      "surface": "environment.panel.header-actions",
+      "item": { "label": { "key": "action.refresh-environment", "fallback": "Refresh environment" }, "icon": "host:refresh", "command": { "id": "refresh" } }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "environment.section",
+      "surface": "environment.panel.sections",
+      "item": { "sectionId": "demo.section", "title": { "key": "environment.demo", "fallback": "Demo environment" }, "icon": "host:info" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "environment.section-action",
+      "surface": "environment.section.actions",
+      "item": { "sectionId": "demo.section", "label": { "key": "action.refresh-section", "fallback": "Refresh section" }, "command": { "id": "refresh" } }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "environment.row",
+      "surface": "environment.section.rows",
+      "item": { "sectionId": "demo.section", "rowId": "demo.row", "label": { "key": "row.heartbeat", "fallback": "Heartbeat" }, "value": 1, "status": "host:success" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "environment.row-action",
+      "surface": "environment.row.trailing-actions",
+      "disabled": { "value": false },
+      "item": { "rowId": "demo.row", "label": { "key": "action.refresh-row", "fallback": "Refresh row" }, "command": { "id": "refresh" } }
+    }
+  ]
+}

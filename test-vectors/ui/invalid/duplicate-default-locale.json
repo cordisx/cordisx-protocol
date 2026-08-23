@@ -1,0 +1,26 @@
+{
+  "owner": "demo",
+  "catalogs": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+      "schemaVersion": 1,
+      "namespace": "demo",
+      "locale": "en",
+      "default": true,
+      "messages": { "label": "Label" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+      "schemaVersion": 1,
+      "namespace": "demo",
+      "locale": "zh-CN",
+      "default": true,
+      "messages": { "label": "标签" }
+    }
+  ],
+  "commands": [],
+  "pages": [],
+  "outlets": [],
+  "routes": [],
+  "contributions": []
+}
