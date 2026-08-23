@@ -57,7 +57,12 @@
           "minItems": 1,
           "maxItems": 32,
           "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1, "maxLength": 4096 }
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "pattern": "^(?:/.*|[A-Za-z]:[\\\\/].*|\\\\\\\\.+)$"
+          }
         },
         "taskIds": {
           "type": "array",

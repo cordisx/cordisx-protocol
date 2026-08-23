@@ -23,11 +23,22 @@ function normalizedScope(scope) {
   return normalized
 }
 
+function normalizedReason(reason) {
+  return {
+    ...(reason.namespace === undefined ? {} : { namespace: reason.namespace }),
+    key: reason.key,
+    ...(reason.params === undefined ? {} : {
+      params: Object.fromEntries(Object.entries(reason.params).sort(([left], [right]) => left.localeCompare(right))),
+    }),
+    ...(reason.fallback === undefined ? {} : { fallback: reason.fallback }),
+  }
+}
+
 export function declarationFingerprint(declaration) {
   return JSON.stringify({
     name: declaration.name,
     required: declaration.required,
-    reason: declaration.reason,
+    reason: normalizedReason(declaration.reason),
     scope: normalizedScope(declaration.scope),
   })
 }
@@ -83,6 +94,18 @@ if (declarationFingerprint(base) !== declarationFingerprint(reordered)) {
 }
 if (declarationFingerprint(base) === declarationFingerprint(expanded)) {
   console.error('scope expansion must change declaration fingerprint')
+  failures += 1
+}
+const reorderedReason = {
+  ...base,
+  reason: { fallback: 'Create tasks', params: { z: 1, a: true }, key: 'permission.create' },
+}
+const canonicalReason = {
+  ...base,
+  reason: { key: 'permission.create', params: { a: true, z: 1 }, fallback: 'Create tasks' },
+}
+if (declarationFingerprint(reorderedReason) !== declarationFingerprint(canonicalReason)) {
+  console.error('reason property and param order must not change declaration fingerprint')
   failures += 1
 }
 
