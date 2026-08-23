@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+  "title": "CordisX Extension Point Policy Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "identity",
+    "policy"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "identity": {
+      "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity"
+    },
+    "policy": {
+      "$ref": "extension-point-common.v1.schema.json#/$defs/pointPolicy"
+    }
+  }
+}

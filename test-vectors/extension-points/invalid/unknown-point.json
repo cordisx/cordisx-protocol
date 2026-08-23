@@ -1,0 +1,26 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": []
+  },
+  "policies": [],
+  "accesses": [
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "outlet.page.mount",
+        "identity": {
+          "source": "https://plugins.example/alpha",
+          "pluginId": "alpha",
+          "pointId": "missing"
+        },
+        "routeId": "route.app",
+        "pageId": "page.app"
+      },
+      "expectedEffectivePolicy": "allow",
+      "expectedAuthorized": true
+    }
+  ]
+}

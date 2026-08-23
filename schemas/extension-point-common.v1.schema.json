@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-common.v1.schema.json",
+  "title": "CordisX Extension Point Common Definitions v1",
+  "$defs": {
+    "canonicalSource": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^(?:https://[^?#]+|file:///[^?#]+)$",
+      "maxLength": 2048
+    },
+    "canonicalIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "pluginId",
+        "pointId"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/canonicalSource"
+        },
+        "pluginId": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localId"
+        },
+        "pointId": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localId"
+        }
+      }
+    },
+    "pointPolicy": {
+      "enum": [
+        "inherit",
+        "allow",
+        "deny"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "app",
+        "kind": "outlet",
+        "title": { "key": "outlet.app.title", "fallback": "Application page" },
+        "description": { "key": "outlet.app.description", "fallback": "Mounts an application page." },
+        "icon": "host:open"
+      }
+    ]
+  },
+  "policies": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": {
+        "source": "https://plugins.example/alpha",
+        "pluginId": "alpha",
+        "pointId": "app"
+      },
+      "policy": "ask"
+    }
+  ],
+  "accesses": []
+}
