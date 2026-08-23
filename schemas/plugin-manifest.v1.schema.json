@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+  "title": "CordisX Runtime Plugin Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "capabilities"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 7,
+      "items": { "$ref": "#/$defs/capabilityDeclaration" }
+    }
+  },
+  "$defs": {
+    "capabilityName": {
+      "enum": [
+        "models.read",
+        "tasks.catalog.read",
+        "tasks.content.read",
+        "tasks.create",
+        "tasks.control",
+        "turns.submit",
+        "turns.control"
+      ]
+    },
+    "providerId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$"
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "providers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/providerId" }
+        },
+        "cwdRoots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 4096 }
+        },
+        "taskIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/taskId" }
+        }
+      }
+    },
+    "capabilityDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "required", "reason", "scope"],
+      "properties": {
+        "name": { "$ref": "#/$defs/capabilityName" },
+        "required": { "type": "boolean" },
+        "reason": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "scope": { "$ref": "#/$defs/scope" }
+      }
+    }
+  }
+}

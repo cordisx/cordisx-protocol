@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "platform-demo",
+  "name": "Platform Demo",
+  "capabilities": [
+    {
+      "name": "models.read",
+      "required": true,
+      "reason": { "key": "permission.models", "fallback": "List available models" },
+      "scope": { "providers": ["codex", "claude-code", "zcode"] }
+    },
+    {
+      "name": "tasks.catalog.read",
+      "required": false,
+      "reason": { "key": "permission.task-catalog", "fallback": "List tasks" },
+      "scope": { "cwdRoots": ["/workspace"] }
+    },
+    {
+      "name": "tasks.content.read",
+      "required": false,
+      "reason": { "key": "permission.task-content", "fallback": "Read task content" },
+      "scope": { "taskIds": ["task-1"] }
+    },
+    {
+      "name": "tasks.create",
+      "required": false,
+      "reason": { "key": "permission.task-create", "fallback": "Create tasks" },
+      "scope": { "providers": ["codex"], "cwdRoots": ["/workspace"] }
+    },
+    {
+      "name": "tasks.control",
+      "required": false,
+      "reason": { "key": "permission.task-control", "fallback": "Control tasks" },
+      "scope": { "taskIds": ["task-1"] }
+    },
+    {
+      "name": "turns.submit",
+      "required": false,
+      "reason": { "key": "permission.turn-submit", "fallback": "Submit turns" },
+      "scope": { "taskIds": ["task-1"] }
+    },
+    {
+      "name": "turns.control",
+      "required": false,
+      "reason": { "key": "permission.turn-control", "fallback": "Control turns" },
+      "scope": { "taskIds": ["task-1"] }
+    }
+  ]
+}

@@ -4,4 +4,5 @@ Implementation-independent compatibility fixtures and expected outcomes belong h
 
 Run `npm run check` for marketplace schema, canonical identity, tuple
 uniqueness, deterministic ordering, structured UI schemas, route/outlet path
-compatibility, unique identities, reference integrity, and downgrade behavior.
+compatibility, unique identities, reference integrity, Platform manifest
+capabilities/scopes, declaration fingerprints, and downgrade behavior.

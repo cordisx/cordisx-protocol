@@ -12,3 +12,5 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `page.v1.schema.json`: host-owned page chrome metadata;
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
+- `plugin-manifest.v1.schema.json`: one runtime plugin manifest with
+  versioned Platform capability declarations, reasons, and maximum scopes.
