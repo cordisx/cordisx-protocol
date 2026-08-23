@@ -1,0 +1,36 @@
+{
+  "owner": "native-menus",
+  "catalogs": [],
+  "commands": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/command.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "open-settings",
+      "title": {
+        "key": "command.open-settings",
+        "fallback": "Open settings"
+      }
+    }
+  ],
+  "contributions": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "account-settings",
+      "surface": "sidebar.account.menu",
+      "item": {
+        "label": {
+          "key": "action.account-settings",
+          "fallback": "Account settings"
+        },
+        "command": {
+          "id": "open-settings"
+        },
+        "mount": "<button>Account settings</button>"
+      }
+    }
+  ],
+  "routes": [],
+  "pages": [],
+  "outlets": []
+}

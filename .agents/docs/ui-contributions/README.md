@@ -104,7 +104,10 @@ The closed version-1 surface vocabulary is:
 
 - `sidebar.footer.before-control` and `sidebar.footer.after-control`: compact
   command actions surrounding the designated native control;
-- `sidebar.footer.menu`: command menu entries;
+- `sidebar.footer.menu`: command menu entries inside the designated native
+  footer/help menu;
+- `sidebar.account.menu`: command menu entries inside the designated native
+  account/profile menu;
 - `sidebar.navigation.items`: navigation rows with primary activation and one
   or more independent command shortcuts;
 - `workspace.toolbar.items`: command actions targeting a host semantic anchor
@@ -118,6 +121,23 @@ The closed version-1 surface vocabulary is:
 Toolbar `anchor`, environment `sectionId`, and environment `rowId` values are
 semantic references. Unknown targets remain pending and diagnosed; they never
 fall back to arbitrary placement.
+
+Both sidebar menu surfaces accept only the structured `action` item: localized
+label and optional accessible label/icon plus a command reference. The host
+renders each projected contribution as a native menu item and owns menu
+semantics, focus, keyboard interaction, dismissal, disabled state, and command
+dispatch. A contribution cannot provide a node, mount callback, HTML, CSS,
+selector, submenu implementation, or route-only activation.
+
+The footer/help menu and account/profile menu are distinct extension points.
+An adapter projects `sidebar.account.menu` only when it resolves the exact,
+unique native account trigger and its native menu for the current host state.
+While either cannot be resolved or is ambiguous, the contribution remains
+registered but pending and the manager reports the unresolved point. The host
+must not project it into `sidebar.footer.menu`, attach it to another menu, or
+create a CordisX button or standalone fallback menu. The same fail-pending rule
+applies independently to `sidebar.footer.menu` and its designated native
+footer/help trigger.
 
 The experimental free-DOM `header.actions`, `composer.before`,
 `composer.after`, `sidebar.footer`, and `shell.overlay` slots are not valid v1

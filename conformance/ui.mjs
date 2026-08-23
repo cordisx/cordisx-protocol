@@ -91,6 +91,13 @@ export function activationKind(item) {
   return 'invalid'
 }
 
+/** Native menu surfaces never synthesize a fallback projection. */
+export function nativeMenuProjectionState(resolution) {
+  if (resolution === 'exact') return 'ready'
+  if (resolution === 'missing' || resolution === 'ambiguous') return 'pending'
+  throw new Error(`unknown native menu resolution: ${String(resolution)}`)
+}
+
 export function compareContributions(left, right) {
   return (left.group ?? 'default').localeCompare(right.group ?? 'default')
     || (left.order ?? 0) - (right.order ?? 0)
@@ -273,6 +280,14 @@ if (JSON.stringify(orderProbe) !== JSON.stringify(['a', 'b', 'z'])) {
 }
 if (activationKind({ command: { id: 'command' }, route: { id: 'route' } }) !== 'command') {
   console.error('command must take precedence over route')
+  failures += 1
+}
+if (
+  nativeMenuProjectionState('exact') !== 'ready'
+  || nativeMenuProjectionState('missing') !== 'pending'
+  || nativeMenuProjectionState('ambiguous') !== 'pending'
+) {
+  console.error('native sidebar menu projection must fail pending without a unique trigger')
   failures += 1
 }
 

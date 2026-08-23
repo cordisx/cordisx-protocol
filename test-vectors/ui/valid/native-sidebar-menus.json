@@ -1,0 +1,57 @@
+{
+  "owner": "native-menus",
+  "catalogs": [],
+  "commands": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/command.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "open-settings",
+      "title": {
+        "key": "command.open-settings",
+        "fallback": "Open settings"
+      },
+      "icon": "host:settings"
+    }
+  ],
+  "contributions": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "open-settings",
+      "surface": "sidebar.footer.menu",
+      "item": {
+        "label": {
+          "key": "action.footer-settings",
+          "fallback": "Footer settings"
+        },
+        "icon": "host:settings",
+        "command": {
+          "id": "open-settings"
+        }
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "open-settings",
+      "surface": "sidebar.account.menu",
+      "item": {
+        "label": {
+          "key": "action.account-settings",
+          "fallback": "Account settings"
+        },
+        "ariaLabel": {
+          "key": "action.account-settings.aria",
+          "fallback": "Open account settings"
+        },
+        "icon": "host:settings",
+        "command": {
+          "id": "open-settings"
+        }
+      }
+    }
+  ],
+  "routes": [],
+  "pages": [],
+  "outlets": []
+}

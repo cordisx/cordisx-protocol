@@ -18,6 +18,7 @@
         "sidebar.footer.before-control",
         "sidebar.footer.after-control",
         "sidebar.footer.menu",
+        "sidebar.account.menu",
         "sidebar.navigation.items",
         "workspace.toolbar.items",
         "environment.panel.header-actions",
@@ -42,7 +43,7 @@
       "oneOf": [
         {
           "properties": {
-            "surface": { "enum": ["sidebar.footer.before-control", "sidebar.footer.after-control", "sidebar.footer.menu", "environment.panel.header-actions"] },
+            "surface": { "enum": ["sidebar.footer.before-control", "sidebar.footer.after-control", "sidebar.footer.menu", "sidebar.account.menu", "environment.panel.header-actions"] },
             "item": { "$ref": "#/$defs/action" }
           }
         },

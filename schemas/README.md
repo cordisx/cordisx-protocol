@@ -8,7 +8,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   host icon tokens, conditions, and disabled state;
 - `locale-catalog.v1.schema.json`: one namespace-by-locale ICU message dictionary;
 - `command.v1.schema.json`: serializable command metadata (never a handler);
-- `surface-contribution.v1.schema.json`: one host-rendered shell contribution;
+- `surface-contribution.v1.schema.json`: one host-rendered shell contribution,
+  including distinct native footer/help and account/profile menu actions;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `page.v1.schema.json`: host-owned page chrome metadata;
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
