@@ -1,0 +1,34 @@
+{
+  "generation": "generation-1",
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v2.schema.json",
+    "schemaVersion": 2,
+    "points": [{
+      "id": "composer.command-menu.items",
+      "kind": "surface",
+      "title": { "key": "title", "fallback": "Command menu" },
+      "description": { "key": "description", "fallback": "Native command menu" },
+      "icon": "host:more",
+      "payloadFamily": "contextual-action",
+      "stability": "experimental",
+      "availability": "pending",
+      "diagnostic": { "key": "pending", "fallback": "Native menu is unavailable" }
+    }]
+  },
+  "contributions": [{
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "command",
+    "surface": "composer.command-menu.items",
+    "item": { "label": { "key": "command", "fallback": "Command" }, "command": { "id": "command" } }
+  }],
+  "accesses": [{
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json",
+    "schemaVersion": 2,
+    "generation": "generation-1",
+    "operation": "surface.command.invoke",
+    "identity": { "source": "file:///plugins/demo.mjs", "pluginId": "demo", "pointId": "composer.command-menu.items" },
+    "contributionId": "demo:command",
+    "commandId": "demo:command"
+  }]
+}

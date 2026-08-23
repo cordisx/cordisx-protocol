@@ -1,0 +1,139 @@
+{
+  "complete": true,
+  "generation": "generation-42",
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v2.schema.json",
+    "schemaVersion": 2,
+    "points": [
+      { "id": "sidebar.footer.before-control", "kind": "surface", "title": { "key": "sidebar.footer.before-control.title", "fallback": "Sidebar footer before control" }, "description": { "key": "sidebar.footer.before-control.description", "fallback": "Action before the footer control" }, "icon": "host:open", "payloadFamily": "action", "stability": "stable", "availability": "available" },
+      { "id": "sidebar.footer.after-control", "kind": "surface", "title": { "key": "sidebar.footer.after-control.title", "fallback": "Sidebar footer after control" }, "description": { "key": "sidebar.footer.after-control.description", "fallback": "Action after the footer control" }, "icon": "host:open", "payloadFamily": "action", "stability": "stable", "availability": "available" },
+      { "id": "sidebar.footer.menu", "kind": "surface", "title": { "key": "sidebar.footer.menu.title", "fallback": "Sidebar footer menu" }, "description": { "key": "sidebar.footer.menu.description", "fallback": "Native footer menu item" }, "icon": "host:more", "payloadFamily": "menu-item", "stability": "stable", "availability": "available" },
+      { "id": "sidebar.account.menu", "kind": "surface", "title": { "key": "sidebar.account.menu.title", "fallback": "Sidebar account menu" }, "description": { "key": "sidebar.account.menu.description", "fallback": "Native account menu item" }, "icon": "host:more", "payloadFamily": "menu-item", "stability": "stable", "availability": "available" },
+      { "id": "sidebar.navigation.items", "kind": "surface", "title": { "key": "sidebar.navigation.items.title", "fallback": "Sidebar navigation" }, "description": { "key": "sidebar.navigation.items.description", "fallback": "Navigation item" }, "icon": "host:layers", "payloadFamily": "navigation-item", "stability": "stable", "availability": "available" },
+      { "id": "sidebar.workspace.menu", "kind": "surface", "title": { "key": "sidebar.workspace.menu.title", "fallback": "Workspace menu" }, "description": { "key": "sidebar.workspace.menu.description", "fallback": "Native workspace menu item" }, "icon": "host:more", "payloadFamily": "menu-item", "stability": "experimental", "availability": "pending", "diagnostic": { "key": "diagnostic.anchor", "fallback": "Native menu seat is not currently resolved" } },
+      { "id": "sidebar.session.actions", "kind": "surface", "title": { "key": "sidebar.session.actions.title", "fallback": "Session row actions" }, "description": { "key": "sidebar.session.actions.description", "fallback": "Contextual session row actions" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "sidebar.session.menu", "kind": "surface", "title": { "key": "sidebar.session.menu.title", "fallback": "Session row menu" }, "description": { "key": "sidebar.session.menu.description", "fallback": "Contextual native session menu" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "workspace.toolbar.items", "kind": "surface", "title": { "key": "workspace.toolbar.items.title", "fallback": "Workspace toolbar" }, "description": { "key": "workspace.toolbar.items.description", "fallback": "Workspace toolbar actions" }, "icon": "host:more", "payloadFamily": "action", "stability": "stable", "availability": "available", "anchors": [{ "id": "workspace.primary", "placements": ["before", "after", "menu"], "availability": "available" }] },
+      { "id": "session.header.actions", "kind": "surface", "title": { "key": "session.header.actions.title", "fallback": "Session header actions" }, "description": { "key": "session.header.actions.description", "fallback": "Action and utility groups in the active session header" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "stable", "availability": "available" },
+      { "id": "session.tabs", "kind": "surface", "title": { "key": "session.tabs.title", "fallback": "Session tabs" }, "description": { "key": "session.tabs.description", "fallback": "Controlled session view entries" }, "icon": "host:layers", "payloadFamily": "tab", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "session.banner.items", "kind": "surface", "title": { "key": "session.banner.items.title", "fallback": "Session banners" }, "description": { "key": "session.banner.items.description", "fallback": "Structured session banners" }, "icon": "host:info", "payloadFamily": "presenter", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "session.message.actions", "kind": "surface", "title": { "key": "session.message.actions.title", "fallback": "Message actions" }, "description": { "key": "session.message.actions.description", "fallback": "Contextual message actions" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.identity", "fallback": "Canonical message identity is unavailable" } },
+      { "id": "session.turn.footer", "kind": "surface", "title": { "key": "session.turn.footer.title", "fallback": "Turn footer" }, "description": { "key": "session.turn.footer.description", "fallback": "Structured turn-tail presenter" }, "icon": "host:info", "payloadFamily": "presenter", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "session.tool.actions", "kind": "surface", "title": { "key": "session.tool.actions.title", "fallback": "Tool actions" }, "description": { "key": "session.tool.actions.description", "fallback": "Contextual tool actions" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.identity", "fallback": "Canonical tool identity is unavailable" } },
+      { "id": "composer.toolbar.items", "kind": "surface", "title": { "key": "composer.toolbar.items.title", "fallback": "Composer toolbar" }, "description": { "key": "composer.toolbar.items.description", "fallback": "Actions at semantic composer anchors" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "stable", "availability": "available", "anchors": [{ "id": "submit", "placements": ["before"], "availability": "available" }, { "id": "leading", "placements": ["before", "after"], "availability": "pending", "diagnostic": { "key": "diagnostic.unverified", "fallback": "Anchor is not release-verified" } }, { "id": "model", "placements": ["before", "after", "menu"], "availability": "pending", "diagnostic": { "key": "diagnostic.unverified", "fallback": "Anchor is not release-verified" } }] },
+      { "id": "composer.command-menu.items", "kind": "surface", "title": { "key": "composer.command-menu.items.title", "fallback": "Composer command menu" }, "description": { "key": "composer.command-menu.items.description", "fallback": "Native composer command menu items" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "experimental", "availability": "pending", "diagnostic": { "key": "diagnostic.anchor", "fallback": "Native command menu is not currently open" } },
+      { "id": "composer.dock.above", "kind": "surface", "title": { "key": "composer.dock.above.title", "fallback": "Composer dock above" }, "description": { "key": "composer.dock.above.description", "fallback": "Structured presenter above the composer" }, "icon": "host:info", "payloadFamily": "presenter", "stability": "experimental", "availability": "pending", "diagnostic": { "key": "diagnostic.anchor", "fallback": "Composer dock seat is not currently resolved" } },
+      { "id": "composer.dock.below", "kind": "surface", "title": { "key": "composer.dock.below.title", "fallback": "Composer dock below" }, "description": { "key": "composer.dock.below.description", "fallback": "Structured presenter below the composer" }, "icon": "host:info", "payloadFamily": "presenter", "stability": "experimental", "availability": "pending", "diagnostic": { "key": "diagnostic.anchor", "fallback": "Composer dock seat is not currently resolved" } },
+      { "id": "panel.right.header-actions", "kind": "surface", "title": { "key": "panel.right.header-actions.title", "fallback": "Right panel actions" }, "description": { "key": "panel.right.header-actions.description", "fallback": "Right panel header actions" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "experimental", "availability": "pending", "diagnostic": { "key": "diagnostic.anchor", "fallback": "Visible right panel header is not currently resolved" } },
+      { "id": "panel.right.tabs", "kind": "surface", "title": { "key": "panel.right.tabs.title", "fallback": "Right panel tabs" }, "description": { "key": "panel.right.tabs.description", "fallback": "Controlled right panel tabs" }, "icon": "host:layers", "payloadFamily": "tab", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "panel.bottom.header-actions", "kind": "surface", "title": { "key": "panel.bottom.header-actions.title", "fallback": "Bottom panel actions" }, "description": { "key": "panel.bottom.header-actions.description", "fallback": "Bottom panel header actions" }, "icon": "host:more", "payloadFamily": "contextual-action", "stability": "experimental", "availability": "pending", "diagnostic": { "key": "diagnostic.anchor", "fallback": "Visible bottom panel header is not currently resolved" } },
+      { "id": "panel.bottom.tabs", "kind": "surface", "title": { "key": "panel.bottom.tabs.title", "fallback": "Bottom panel tabs" }, "description": { "key": "panel.bottom.tabs.description", "fallback": "Controlled bottom panel tabs" }, "icon": "host:layers", "payloadFamily": "tab", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "environment.panel.header-actions", "kind": "surface", "title": { "key": "environment.panel.header-actions.title", "fallback": "Environment panel actions" }, "description": { "key": "environment.panel.header-actions.description", "fallback": "Environment panel header actions" }, "icon": "host:more", "payloadFamily": "action", "stability": "stable", "availability": "available" },
+      { "id": "environment.panel.sections", "kind": "surface", "title": { "key": "environment.panel.sections.title", "fallback": "Environment sections" }, "description": { "key": "environment.panel.sections.description", "fallback": "Environment panel sections" }, "icon": "host:layers", "payloadFamily": "environment-section", "stability": "stable", "availability": "available" },
+      { "id": "environment.section.actions", "kind": "surface", "title": { "key": "environment.section.actions.title", "fallback": "Environment section actions" }, "description": { "key": "environment.section.actions.description", "fallback": "Actions for an environment section" }, "icon": "host:more", "payloadFamily": "action", "stability": "stable", "availability": "available" },
+      { "id": "environment.section.rows", "kind": "surface", "title": { "key": "environment.section.rows.title", "fallback": "Environment rows" }, "description": { "key": "environment.section.rows.description", "fallback": "Rows for an environment section" }, "icon": "host:info", "payloadFamily": "environment-row", "stability": "stable", "availability": "available" },
+      { "id": "environment.row.trailing-actions", "kind": "surface", "title": { "key": "environment.row.trailing-actions.title", "fallback": "Environment row actions" }, "description": { "key": "environment.row.trailing-actions.description", "fallback": "Trailing actions for an environment row" }, "icon": "host:more", "payloadFamily": "action", "stability": "stable", "availability": "available" },
+      { "id": "app", "kind": "outlet", "title": { "key": "outlet.app.title", "fallback": "Application page" }, "description": { "key": "outlet.app.description", "fallback": "Renderer application outlet" }, "icon": "host:open", "payloadFamily": "outlet", "stability": "stable", "availability": "available" },
+      { "id": "main", "kind": "outlet", "title": { "key": "outlet.main.title", "fallback": "Main page" }, "description": { "key": "outlet.main.description", "fallback": "Main workspace outlet" }, "icon": "host:layers", "payloadFamily": "outlet", "stability": "stable", "availability": "available" },
+      { "id": "session.content", "kind": "outlet", "title": { "key": "outlet.session.content.title", "fallback": "Session content page" }, "description": { "key": "outlet.session.content.description", "fallback": "Active session content outlet" }, "icon": "host:history", "payloadFamily": "outlet", "stability": "stable", "availability": "available" },
+      { "id": "panel.right.content", "kind": "outlet", "title": { "key": "outlet.panel.right.content.title", "fallback": "Right panel content" }, "description": { "key": "outlet.panel.right.content.description", "fallback": "Controlled right panel content" }, "icon": "host:layers", "payloadFamily": "outlet", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } },
+      { "id": "panel.bottom.content", "kind": "outlet", "title": { "key": "outlet.panel.bottom.content.title", "fallback": "Bottom panel content" }, "description": { "key": "outlet.panel.bottom.content.description", "fallback": "Controlled bottom panel content" }, "icon": "host:layers", "payloadFamily": "outlet", "stability": "reserved", "availability": "unavailable", "diagnostic": { "key": "diagnostic.reserved", "fallback": "Reserved by the protocol" } }
+    ]
+  },
+  "contributions": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v2.schema.json",
+      "schemaVersion": 2,
+      "id": "trace",
+      "surface": "session.header.actions",
+      "group": "action",
+      "order": 10,
+      "item": {
+        "label": { "key": "trace.open", "fallback": "Open Agent Trace" },
+        "icon": "host:history",
+        "command": { "id": "open-trace" }
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v2.schema.json",
+      "schemaVersion": 2,
+      "id": "submit-before",
+      "surface": "composer.toolbar.items",
+      "group": "action",
+      "order": 20,
+      "item": {
+        "anchor": "submit",
+        "placement": "before",
+        "label": { "key": "composer.review", "fallback": "Review prompt" },
+        "icon": "host:review",
+        "route": { "id": "review" }
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v2.schema.json",
+      "schemaVersion": 2,
+      "id": "status",
+      "surface": "composer.dock.above",
+      "item": {
+        "kind": "progress",
+        "text": { "key": "composer.progress", "fallback": "Indexing workspace" },
+        "tone": "info",
+        "progress": { "current": 2, "total": 5 }
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v2.schema.json",
+      "schemaVersion": 2,
+      "id": "details",
+      "surface": "session.tabs",
+      "item": {
+        "id": "details",
+        "title": { "key": "tab.details", "fallback": "Details" },
+        "icon": "host:info",
+        "route": { "id": "details" },
+        "badge": 2,
+        "order": 10,
+        "when": { "key": "session.active", "exists": true }
+      }
+    }
+  ],
+  "accesses": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json",
+      "schemaVersion": 2,
+      "generation": "generation-42",
+      "operation": "surface.command.invoke",
+      "identity": { "source": "file:///plugins/demo.mjs", "pluginId": "demo", "pointId": "session.header.actions" },
+      "contributionId": "demo:trace",
+      "commandId": "demo:open-trace"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json",
+      "schemaVersion": 2,
+      "generation": "generation-42",
+      "operation": "surface.route.navigate",
+      "identity": { "source": "file:///plugins/demo.mjs", "pluginId": "demo", "pointId": "composer.toolbar.items" },
+      "contributionId": "demo:submit-before",
+      "routeId": "demo:review"
+    }
+  ],
+  "contexts": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-invocation-context.v1.schema.json",
+      "schemaVersion": 1,
+      "generation": "generation-42",
+      "contextRef": "context-7",
+      "pointId": "session.header.actions",
+      "contributionId": "demo:trace",
+      "commandId": "demo:open-trace",
+      "provenance": "inferred",
+      "source": { "kind": "adapter", "adapterId": "codex", "adapterVersion": "26.818.41509", "hostId": "com.openai.codex" },
+      "identity": {
+        "workspaceRef": "workspace-opaque",
+        "agent": { "sessionKey": "session-opaque", "turnId": "turn-opaque" },
+        "platformSession": { "providerId": "codex", "remoteSessionId": "remote-session-opaque" },
+        "contextId": "context-opaque"
+      }
+    }
+  ]
+}

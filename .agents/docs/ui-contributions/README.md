@@ -226,3 +226,9 @@ not render, execute, or navigate it.
 A host that does not implement this protocol cannot downgrade a structured
 entry to a free-DOM slot. A plugin targeting a newer version must remain
 inactive with an explicit compatibility diagnostic.
+
+This version-1 surface vocabulary is frozen. The complete additive catalog,
+new structured families, and contextual invocation origin are defined by the
+[UI extension catalog protocol](../ui-extension-catalog/README.md) and
+`surface-contribution.v2`; they do not rename or restore any retired free-DOM
+slot.

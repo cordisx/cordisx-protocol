@@ -1,0 +1,15 @@
+{
+  "generation": "generation-1",
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v2.schema.json",
+    "schemaVersion": 2,
+    "points": []
+  },
+  "contributions": [{
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "bad-icon",
+    "surface": "session.header.actions",
+    "item": { "label": { "key": "bad", "fallback": "Bad" }, "icon": "plugin:logo", "command": { "id": "bad" } }
+  }]
+}

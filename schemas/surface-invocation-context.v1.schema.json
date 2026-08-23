@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-invocation-context.v1.schema.json",
+  "title": "CordisX Host-generated Surface Invocation Context v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "generation", "contextRef", "pointId", "contributionId", "commandId", "provenance", "source", "identity"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-invocation-context.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "generation": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "contextRef": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "pointId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "contributionId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+    "commandId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+    "provenance": { "enum": ["observed", "cordisx", "inferred"] },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "adapterId", "adapterVersion", "hostId"],
+          "properties": {
+            "kind": { "const": "adapter" },
+            "adapterId": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "adapterVersion": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "hostId": { "type": "string", "minLength": 1, "maxLength": 256 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "component", "generation"],
+          "properties": {
+            "kind": { "const": "cordisx" },
+            "component": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "generation": { "type": "string", "minLength": 1, "maxLength": 512 }
+          }
+        }
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "workspaceRef": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sessionKey"],
+          "properties": {
+            "sessionKey": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "turnId": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "stepId": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "itemId": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "messageId": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "toolCallId": { "type": "string", "minLength": 1, "maxLength": 512 }
+          }
+        },
+        "platformSession": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["providerId", "remoteSessionId"],
+          "properties": {
+            "providerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "remoteSessionId": { "type": "string", "minLength": 1, "maxLength": 512 }
+          }
+        },
+        "contextId": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "provenance": { "enum": ["observed", "inferred"] } }, "required": ["provenance"] },
+      "then": { "properties": { "source": { "type": "object", "properties": { "kind": { "const": "adapter" } }, "required": ["kind"] } } }
+    },
+    {
+      "if": { "properties": { "provenance": { "const": "cordisx" } }, "required": ["provenance"] },
+      "then": { "properties": { "source": { "type": "object", "properties": { "kind": { "const": "cordisx" } }, "required": ["kind"] } } }
+    }
+  ]
+}

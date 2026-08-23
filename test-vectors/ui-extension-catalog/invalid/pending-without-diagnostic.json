@@ -1,0 +1,17 @@
+{
+  "generation": "generation-1",
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v2.schema.json",
+    "schemaVersion": 2,
+    "points": [{
+      "id": "composer.command-menu.items",
+      "kind": "surface",
+      "title": { "key": "title", "fallback": "Command menu" },
+      "description": { "key": "description", "fallback": "Native command menu" },
+      "icon": "host:more",
+      "payloadFamily": "contextual-action",
+      "stability": "experimental",
+      "availability": "pending"
+    }]
+  }
+}

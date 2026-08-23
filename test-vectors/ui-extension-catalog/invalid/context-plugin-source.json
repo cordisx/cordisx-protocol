@@ -1,0 +1,20 @@
+{
+  "generation": "generation-1",
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v2.schema.json",
+    "schemaVersion": 2,
+    "points": []
+  },
+  "contexts": [{
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-invocation-context.v1.schema.json",
+    "schemaVersion": 1,
+    "generation": "generation-1",
+    "contextRef": "context-1",
+    "pointId": "session.header.actions",
+    "contributionId": "demo:trace",
+    "commandId": "demo:open-trace",
+    "provenance": "observed",
+    "source": { "kind": "plugin", "id": "demo" },
+    "identity": { "agent": { "sessionKey": "session-1" } }
+  }]
+}
