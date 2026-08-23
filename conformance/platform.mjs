@@ -17,7 +17,7 @@ if (validator === undefined) throw new Error('plugin manifest schema was not reg
 
 function normalizedScope(scope) {
   const normalized = {}
-  for (const key of ['providers', 'cwdRoots', 'taskIds']) {
+  for (const key of ['providers', 'cwdRoots', 'taskIds', 'sessionIds']) {
     if (scope[key] !== undefined) normalized[key] = [...scope[key]].sort()
   }
   return normalized

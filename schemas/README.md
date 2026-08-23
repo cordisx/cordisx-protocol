@@ -24,3 +24,5 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   canonical source, plugin id, and point id;
 - `extension-point-access.v1.schema.json`: host-generated surface command,
   outlet route/page, and page-header command authorization origin metadata.
+- `agent-event.v1.schema.json`: one sourced Session/Agent ledger event;
+- `agent-event-page.v1.schema.json`: one snapshot-bounded query page.

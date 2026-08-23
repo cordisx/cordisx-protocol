@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "agent-audit",
+  "name": "Agent Audit",
+  "capabilities": [
+    {
+      "name": "agent.events.read",
+      "required": true,
+      "reason": { "key": "permission.agent-events", "fallback": "Read sourced Agent events" },
+      "scope": { "sessionIds": ["session-1"] }
+    },
+    {
+      "name": "agent.messages.append",
+      "required": false,
+      "reason": { "key": "permission.agent-append", "fallback": "Append plugin-sourced Agent messages" },
+      "scope": { "sessionIds": ["session-1"] }
+    },
+    {
+      "name": "agent.steps.reject",
+      "required": false,
+      "reason": { "key": "permission.agent-reject", "fallback": "Reject proposed Agent steps" },
+      "scope": { "sessionIds": ["session-1"] }
+    },
+    {
+      "name": "agent.messages.transform",
+      "required": false,
+      "reason": { "key": "permission.agent-transform", "fallback": "Transform original pre-step batches" },
+      "scope": { "sessionIds": ["session-1"] }
+    },
+    {
+      "name": "agent.prompt.section",
+      "required": false,
+      "reason": { "key": "permission.agent-prompt-section", "fallback": "Register system prompt sections" },
+      "scope": { "sessionIds": ["session-1"] }
+    },
+    {
+      "name": "agent.prompt.context",
+      "required": false,
+      "reason": { "key": "permission.agent-prompt-context", "fallback": "Register dynamic prompt context" },
+      "scope": { "sessionIds": ["session-1"] }
+    }
+  ]
+}

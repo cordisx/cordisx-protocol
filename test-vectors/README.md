@@ -17,3 +17,7 @@ Extension-point management v1 suites live in `extension-points/valid` and
 `extension-points/invalid` and cover host descriptors, cross-family identity,
 canonical plugin/point policy, compatible default access, surface command
 origin, and outlet route/page plus page-header command enforcement phases.
+
+Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
+The complete valid page is the stacked-consumer fixture for event identity,
+message delivery, chunk boundaries, paging, provenance, and causal parents.

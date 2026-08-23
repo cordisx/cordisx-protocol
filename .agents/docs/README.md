@@ -11,6 +11,8 @@ Specified areas:
   identity, result, and current-connection contracts version 1.
 - `extension-points/`: host descriptor catalogs, canonical point policy, and
   surface/outlet authorization origin version 1.
+- `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery,
+  pre-step, prompt, permission, degradation, and pagination contract version 1.
 
 Planned areas include isolated execution, signed package identity,
 distribution, activation, and rollback.
