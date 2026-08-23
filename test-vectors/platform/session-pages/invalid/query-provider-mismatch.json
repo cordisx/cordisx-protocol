@@ -1,0 +1,10 @@
+{
+  "request": { "providerIds": ["cliproxy-main"], "searchTerm": "release" },
+  "page": {
+    "contract": "cordisx.platform-session-page/v1",
+    "schemaVersion": 1,
+    "query": { "providerIds": ["cliproxy-backup"], "searchTerm": "release" },
+    "snapshotId": "snapshot-2",
+    "sessions": []
+  }
+}

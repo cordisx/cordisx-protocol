@@ -1,0 +1,29 @@
+{
+  "request": { "providerIds": ["cliproxy-main"] },
+  "page": {
+    "contract": "cordisx.platform-session-page/v1",
+    "schemaVersion": 1,
+    "query": { "providerIds": ["cliproxy-main"] },
+    "snapshotId": "snapshot-4",
+    "sessions": [
+      {
+        "contract": "cordisx.platform-session/v1",
+        "schemaVersion": 1,
+        "ref": { "providerId": "cliproxy-main", "remoteSessionId": "thread-1" },
+        "hostId": "codex-app-server",
+        "model": { "providerId": "cliproxy-main", "modelId": "gpt-5.6" },
+        "cwd": "/workspace/one",
+        "state": "active"
+      },
+      {
+        "contract": "cordisx.platform-session/v1",
+        "schemaVersion": 1,
+        "ref": { "providerId": "cliproxy-main", "remoteSessionId": "thread-1" },
+        "hostId": "codex-app-server",
+        "model": { "providerId": "cliproxy-main", "modelId": "gpt-5.6" },
+        "cwd": "/workspace/two",
+        "state": "archived"
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "request": {
+    "providerIds": ["cliproxy-backup", "cliproxy-main"],
+    "searchTerm": "release",
+    "limit": 50
+  },
+  "page": {
+    "contract": "cordisx.platform-session-page/v1",
+    "schemaVersion": 1,
+    "query": {
+      "providerIds": ["cliproxy-main", "cliproxy-backup"],
+      "searchTerm": "release",
+      "limit": 50
+    },
+    "snapshotId": "snapshot-42",
+    "nextCursor": "cursor-42",
+    "sessions": [
+      {
+        "contract": "cordisx.platform-session/v1",
+        "schemaVersion": 1,
+        "ref": { "providerId": "cliproxy-main", "remoteSessionId": "thread-1" },
+        "hostId": "codex-app-server",
+        "accountId": "main-pool",
+        "model": { "providerId": "cliproxy-main", "modelId": "gpt-5.6" },
+        "cwd": "/workspace/main",
+        "title": "Release plan",
+        "state": "active",
+        "createdAt": "2026-08-24T01:00:00.000Z",
+        "updatedAt": "2026-08-24T01:10:00.000Z"
+      },
+      {
+        "contract": "cordisx.platform-session/v1",
+        "schemaVersion": 1,
+        "ref": { "providerId": "cliproxy-backup", "remoteSessionId": "thread-1" },
+        "hostId": "codex-app-server",
+        "accountId": "backup-pool",
+        "model": { "providerId": "cliproxy-backup", "modelId": "gpt-5.6" },
+        "cwd": "/workspace/backup",
+        "title": "Release verification",
+        "state": "archived",
+        "createdAt": "2026-08-24T02:00:00.000Z",
+        "updatedAt": "2026-08-24T02:10:00.000Z"
+      }
+    ]
+  }
+}

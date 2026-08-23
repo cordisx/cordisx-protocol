@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-session.v1.schema.json",
+  "title": "CordisX Platform Session v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "ref", "hostId", "model", "cwd", "state"],
+  "properties": {
+    "contract": { "const": "cordisx.platform-session/v1" },
+    "schemaVersion": { "const": 1 },
+    "ref": { "$ref": "#/$defs/sessionRef" },
+    "hostId": { "$ref": "platform-model.v1.schema.json#/$defs/opaqueId" },
+    "accountId": { "$ref": "platform-model.v1.schema.json#/$defs/opaqueId" },
+    "model": { "$ref": "platform-model.v1.schema.json#/$defs/modelRef" },
+    "cwd": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "state": { "enum": ["active", "archived", "deleted", "unknown"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sessionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "remoteSessionId"],
+      "properties": {
+        "providerId": { "$ref": "platform-model.v1.schema.json#/$defs/providerId" },
+        "remoteSessionId": { "$ref": "platform-model.v1.schema.json#/$defs/opaqueId" }
+      }
+    }
+  }
+}

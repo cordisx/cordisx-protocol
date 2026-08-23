@@ -1,0 +1,14 @@
+{
+  "contract": "cordisx.platform-model-page/v1",
+  "schemaVersion": 1,
+  "providerIds": ["cliproxy-main"],
+  "models": [
+    {
+      "contract": "cordisx.platform-model/v1",
+      "schemaVersion": 1,
+      "id": "gpt-5.6",
+      "hostId": "codex-app-server",
+      "label": "GPT-5.6"
+    }
+  ]
+}

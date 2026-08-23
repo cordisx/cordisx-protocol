@@ -7,8 +7,9 @@ Specified areas:
 - `marketplace/`: discovery-only catalog feeds;
 - `ui-contributions/`: structured shell contributions, commands, routes,
   pages, outlets, compatibility, and lifecycle version 1.
-- `platform-capabilities/`: adapter-neutral model, task, turn, permission,
-  identity, result, and current-connection contracts version 1.
+- `platform-capabilities/`: adapter-neutral provider, model, session, turn,
+  permission, composite identity, current-connection, and external
+  provider-fleet contracts version 1.
 - `extension-points/`: host descriptor catalogs, canonical point policy, and
   surface/outlet authorization origin version 1.
 - `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery,

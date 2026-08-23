@@ -20,7 +20,11 @@
       "name": "tasks.content.read",
       "required": false,
       "reason": { "key": "permission.task-content", "fallback": "Read task content" },
-      "scope": { "taskIds": ["task-1"] }
+      "scope": {
+        "sessions": [
+          { "providerId": "codex", "remoteSessionId": "task-1" }
+        ]
+      }
     },
     {
       "name": "tasks.create",
@@ -32,19 +36,31 @@
       "name": "tasks.control",
       "required": false,
       "reason": { "key": "permission.task-control", "fallback": "Control tasks" },
-      "scope": { "taskIds": ["task-1"] }
+      "scope": {
+        "sessions": [
+          { "providerId": "codex", "remoteSessionId": "task-1" }
+        ]
+      }
     },
     {
       "name": "turns.submit",
       "required": false,
       "reason": { "key": "permission.turn-submit", "fallback": "Submit turns" },
-      "scope": { "taskIds": ["task-1"] }
+      "scope": {
+        "sessions": [
+          { "providerId": "codex", "remoteSessionId": "task-1" }
+        ]
+      }
     },
     {
       "name": "turns.control",
       "required": false,
       "reason": { "key": "permission.turn-control", "fallback": "Control turns" },
-      "scope": { "taskIds": ["task-1"] }
+      "scope": {
+        "sessions": [
+          { "providerId": "codex", "remoteSessionId": "task-1" }
+        ]
+      }
     }
   ]
 }

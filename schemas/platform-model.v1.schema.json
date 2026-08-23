@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-model.v1.schema.json",
+  "title": "CordisX Platform Model v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "ref", "hostId", "label"],
+  "properties": {
+    "contract": { "const": "cordisx.platform-model/v1" },
+    "schemaVersion": { "const": 1 },
+    "ref": { "$ref": "#/$defs/modelRef" },
+    "hostId": { "$ref": "#/$defs/opaqueId" },
+    "accountId": { "$ref": "#/$defs/opaqueId" },
+    "label": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "isDefault": { "type": "boolean" },
+    "features": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+    }
+  },
+  "$defs": {
+    "providerId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$"
+    },
+    "opaqueId": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "modelRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "modelId"],
+      "properties": {
+        "providerId": { "$ref": "#/$defs/providerId" },
+        "modelId": { "$ref": "#/$defs/opaqueId" }
+      }
+    }
+  }
+}

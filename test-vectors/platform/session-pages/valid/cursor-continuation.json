@@ -1,0 +1,24 @@
+{
+  "cursorBinding": {
+    "providerIds": ["cliproxy-main", "cliproxy-backup"],
+    "searchTerm": "release",
+    "limit": 50
+  },
+  "request": {
+    "providerIds": ["cliproxy-backup", "cliproxy-main"],
+    "searchTerm": "release",
+    "limit": 50,
+    "cursor": "cursor-42"
+  },
+  "page": {
+    "contract": "cordisx.platform-session-page/v1",
+    "schemaVersion": 1,
+    "query": {
+      "providerIds": ["cliproxy-main", "cliproxy-backup"],
+      "searchTerm": "release",
+      "limit": 50
+    },
+    "snapshotId": "snapshot-42",
+    "sessions": []
+  }
+}

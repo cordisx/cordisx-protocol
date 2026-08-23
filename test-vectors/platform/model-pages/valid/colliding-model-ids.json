@@ -1,0 +1,26 @@
+{
+  "contract": "cordisx.platform-model-page/v1",
+  "schemaVersion": 1,
+  "providerIds": ["cliproxy-main", "cliproxy-backup"],
+  "models": [
+    {
+      "contract": "cordisx.platform-model/v1",
+      "schemaVersion": 1,
+      "ref": { "providerId": "cliproxy-main", "modelId": "gpt-5.6" },
+      "hostId": "codex-app-server",
+      "accountId": "main-pool",
+      "label": "GPT-5.6 (Main)",
+      "isDefault": true,
+      "features": ["reasoning", "tools"]
+    },
+    {
+      "contract": "cordisx.platform-model/v1",
+      "schemaVersion": 1,
+      "ref": { "providerId": "cliproxy-backup", "modelId": "gpt-5.6" },
+      "hostId": "codex-app-server",
+      "accountId": "backup-pool",
+      "label": "GPT-5.6 (Backup)",
+      "features": ["reasoning", "tools"]
+    }
+  ]
+}
