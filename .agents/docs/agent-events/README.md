@@ -57,7 +57,8 @@ Every event carries:
 
 - a stable `eventId`, contiguous zero-based `seq` within one `sessionId`, and
   host-observed or CordisX commit time in Unix milliseconds;
-- opaque Session identity plus optional turn, step, item, and message identity;
+- opaque Session identity plus optional turn, step, item, message, tool-call,
+  and context identity;
 - exactly one `provenance`: `observed`, `cordisx`, or `inferred`;
 - one source record naming an adapter, CordisX component, or plugin;
 - an optional earlier `causalParentId` in the same session;
@@ -88,9 +89,11 @@ Version 1 event types are:
 | `content.chunk` | a high-frequency item delta or reference |
 | `diagnostic` | a bounded adapter, ledger, permission, or projection diagnostic |
 
-Turn, step, and item identifiers are independent. An adapter that observes a
-turn and item but no step id leaves `stepId` absent. It may emit a separate
-`inferred` step only when it records the inference as such.
+Turn, step, item, message, tool-call, and context identifiers are independent.
+An adapter that observes a turn and item but no step id leaves `stepId` absent.
+It may emit a separate `inferred` step only when it records the inference as
+such. These identifiers are data projection keys only; they define no session
+header, Timeline, DOM surface, outlet, or rendering ownership.
 
 ## Message identity and source
 

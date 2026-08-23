@@ -14,6 +14,8 @@
     "stepId": { "$ref": "#/$defs/opaqueId" },
     "itemId": { "$ref": "#/$defs/opaqueId" },
     "messageId": { "$ref": "#/$defs/opaqueId" },
+    "toolCallId": { "$ref": "#/$defs/opaqueId" },
+    "contextId": { "$ref": "#/$defs/opaqueId" },
     "seq": { "type": "integer", "minimum": 0 },
     "time": { "type": "integer", "minimum": 0 },
     "type": {
