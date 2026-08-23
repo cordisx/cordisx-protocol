@@ -121,6 +121,13 @@ function routeReferences(contribution) {
   return reference === undefined ? [] : [reference]
 }
 
+function pageCommandReferences(page) {
+  if (!Array.isArray(page.headerActions)) return []
+  return page.headerActions
+    .map(action => action.command?.id)
+    .filter(reference => reference !== undefined)
+}
+
 function duplicateParameters(routePath) {
   const names = [...routePath.matchAll(/:([a-z][a-zA-Z0-9]*)/g)].map(match => match[1])
   return names.filter((name, index) => names.indexOf(name) !== index)
@@ -206,6 +213,17 @@ export function validateSuite(suite) {
     }
     if (contribution.surface === 'sidebar.navigation.items' && activationKind(contribution.item) === 'invalid') {
       errors.push(`navigation contribution ${contribution.id} has no activation`)
+    }
+  }
+
+  for (const page of pages) {
+    const actionIds = new Set()
+    for (const action of page.headerActions ?? []) {
+      if (actionIds.has(action.id)) errors.push(`duplicate page header action id for ${page.id}: ${action.id}`)
+      actionIds.add(action.id)
+    }
+    for (const reference of pageCommandReferences(page)) {
+      if (!commandIds.has(qualify(owner, reference))) errors.push(`dangling page header command reference: ${reference}`)
     }
   }
 

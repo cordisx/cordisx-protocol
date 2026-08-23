@@ -68,7 +68,11 @@ function validateCanonicalIdentity(errors, label, identity) {
 
 function requiredPointKind(operation) {
   if (operation === 'surface.command.invoke') return 'surface'
-  if (operation === 'outlet.route.navigate' || operation === 'outlet.page.mount') return 'outlet'
+  if (
+    operation === 'outlet.route.navigate'
+    || operation === 'outlet.page.mount'
+    || operation === 'outlet.page.command.invoke'
+  ) return 'outlet'
   return undefined
 }
 

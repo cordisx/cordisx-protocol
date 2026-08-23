@@ -1,0 +1,150 @@
+{
+  "owner": "structured-header",
+  "catalogs": [],
+  "commands": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/command.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "refresh",
+      "title": {
+        "key": "command.refresh",
+        "fallback": "Refresh page"
+      },
+      "icon": "host:refresh"
+    }
+  ],
+  "contributions": [],
+  "routes": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "route.app-dashboard",
+      "path": "/dashboard",
+      "outlet": "app",
+      "page": "page.app-dashboard"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "route.main-dashboard",
+      "path": "/main/dashboard",
+      "outlet": "main",
+      "page": "page.main-dashboard"
+    }
+  ],
+  "pages": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "page.app-dashboard",
+      "title": {
+        "key": "page.app-dashboard.title",
+        "fallback": "Application dashboard"
+      },
+      "icon": "host:dashboard",
+      "breadcrumbs": [
+        {
+          "key": "breadcrumb.dashboard",
+          "fallback": "Dashboard"
+        }
+      ],
+      "tabs": [
+        {
+          "id": "overview",
+          "label": {
+            "key": "tab.overview",
+            "fallback": "Overview"
+          },
+          "icon": "host:overview"
+        }
+      ],
+      "headerActions": [
+        {
+          "id": "refresh",
+          "label": {
+            "key": "action.refresh",
+            "fallback": "Refresh"
+          },
+          "ariaLabel": {
+            "key": "action.refresh.aria",
+            "fallback": "Refresh application dashboard"
+          },
+          "icon": "host:refresh",
+          "command": {
+            "id": "refresh"
+          },
+          "when": {
+            "key": "workspace.active",
+            "equals": true
+          }
+        }
+      ]
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "page.main-dashboard",
+      "title": {
+        "key": "page.main-dashboard.title",
+        "fallback": "Main dashboard"
+      },
+      "icon": "host:dashboard",
+      "breadcrumbs": [
+        {
+          "key": "breadcrumb.dashboard",
+          "fallback": "Dashboard"
+        }
+      ],
+      "tabs": [
+        {
+          "id": "overview",
+          "label": {
+            "key": "tab.overview",
+            "fallback": "Overview"
+          },
+          "icon": "host:overview"
+        }
+      ],
+      "headerActions": [
+        {
+          "id": "refresh",
+          "label": {
+            "key": "action.refresh",
+            "fallback": "Refresh"
+          },
+          "ariaLabel": {
+            "key": "action.refresh.aria",
+            "fallback": "Refresh main dashboard"
+          },
+          "icon": "host:refresh",
+          "command": {
+            "id": "refresh"
+          },
+          "disabled": {
+            "value": false
+          }
+        }
+      ]
+    }
+  ],
+  "outlets": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "app",
+      "authority": "host-adapter",
+      "scope": "renderer",
+      "preferredPlacement": "fixed",
+      "contextPolicy": "generation"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "main",
+      "authority": "host-adapter",
+      "scope": "main",
+      "preferredPlacement": "absolute",
+      "contextPolicy": "semantic"
+    }
+  ]
+}
