@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "duplicate",
+  "capabilities": [
+    {
+      "name": "models.read",
+      "required": false,
+      "reason": { "key": "permission.models", "fallback": "List models" },
+      "scope": { "providers": ["codex"] }
+    },
+    {
+      "name": "models.read",
+      "required": true,
+      "reason": { "key": "permission.models.required", "fallback": "Models are required" },
+      "scope": { "providers": ["zcode"] }
+    }
+  ]
+}

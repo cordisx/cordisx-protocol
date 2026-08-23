@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "unknown-capability",
+  "capabilities": [
+    {
+      "name": "appserver.raw",
+      "required": false,
+      "reason": { "key": "permission.raw", "fallback": "Raw access" },
+      "scope": {}
+    }
+  ]
+}

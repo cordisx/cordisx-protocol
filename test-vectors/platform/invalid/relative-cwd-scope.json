@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "relative-cwd",
+  "capabilities": [
+    {
+      "name": "tasks.create",
+      "required": false,
+      "reason": { "key": "permission.task-create", "fallback": "Create tasks" },
+      "scope": { "cwdRoots": ["relative/workspace"] }
+    }
+  ]
+}

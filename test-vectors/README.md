@@ -7,3 +7,6 @@ Marketplace v1 vectors live in `marketplace/valid`, `marketplace/invalid`, and
 
 Structured UI v1 suites live in `ui/valid` and `ui/invalid` and cover commands,
 surface entries, routes, pages, host outlets, and semantic reference rules.
+
+Platform v1 manifests live in `platform/valid` and `platform/invalid` and cover
+capability declarations, required reasons, closed scopes, and unique names.
