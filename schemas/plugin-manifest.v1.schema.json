@@ -14,7 +14,7 @@
     "name": { "type": "string", "minLength": 1, "maxLength": 200 },
     "capabilities": {
       "type": "array",
-      "maxItems": 7,
+      "maxItems": 13,
       "items": { "$ref": "#/$defs/capabilityDeclaration" }
     }
   },
@@ -27,7 +27,13 @@
         "tasks.create",
         "tasks.control",
         "turns.submit",
-        "turns.control"
+        "turns.control",
+        "agent.events.read",
+        "agent.messages.append",
+        "agent.steps.reject",
+        "agent.messages.transform",
+        "agent.prompt.section",
+        "agent.prompt.context"
       ]
     },
     "providerId": {
@@ -65,6 +71,13 @@
           }
         },
         "taskIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/taskId" }
+        },
+        "sessionIds": {
           "type": "array",
           "minItems": 1,
           "maxItems": 100,

@@ -10,3 +10,6 @@ integrity, Platform manifest
 capabilities/scopes, declaration fingerprints, host extension-point descriptor
 identity, canonical point policy, surface/outlet/page-header authorization
 origin, and downgrade behavior.
+Agent-event conformance additionally covers per-session sequence, stable event
+identity, provenance/source consistency, causal ordering, delivery transitions,
+snapshot pagination, and rejection of host-specific public fields.
