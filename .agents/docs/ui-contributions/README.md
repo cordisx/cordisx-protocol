@@ -12,11 +12,13 @@ tokens name glyphs already supplied by the host. Command schemas contain
 metadata and references only; executable handlers are trusted-local runtime
 bindings owned by `cordisx`, not serialized protocol fields.
 
-Page metadata is serializable, but a page mount callback is a trusted-local
-runtime binding. A controlled page container and lifecycle signal are not a
-permission sandbox. Capability enforcement, isolated execution, signatures,
-installation, marketplace activation, atomic generation publication, and
-rollback are not part of this protocol version.
+Page metadata and page-header declarations are serializable, but a page body
+mount callback is a trusted-local runtime binding. The mount receives only the
+host-owned body container below the structured header; version 1 exposes no
+header mount seat. A controlled page body container and lifecycle signal are
+not a permission sandbox. Capability enforcement, isolated execution,
+signatures, installation, marketplace activation, atomic generation
+publication, and rollback are not part of this protocol version.
 
 ## Identity and ownership
 
@@ -147,9 +149,30 @@ accept a mount function or raw node.
 ## Routes, pages, and outlets
 
 A route joins a path pattern, outlet id, and page id. A page supplies host-owned
-title/breadcrumb/tab metadata. An outlet declaration supplies semantic scope,
-placement, and context policy. Only a host/adapter may register an outlet that
-touches host DOM; plugin-provided outlet declarations are invalid at runtime.
+title, icon, breadcrumb, tab, and header-action metadata. An outlet declaration
+supplies semantic scope, placement, and context policy. Only a host/adapter may
+register an outlet that touches host DOM; plugin-provided outlet declarations
+are invalid at runtime.
+
+The page header contract is outlet-neutral. An `app` route and a `main` route
+use the same `page.v1` fields and host projection rules; plugins do not declare
+an app-specific or main-specific header renderer. The host renders the complete
+header and may adapt its layout to the outlet geometry without changing page
+metadata.
+
+Each `headerActions` entry contains only a page-local action id, localized
+label, optional localized accessible label, optional icon token, command
+reference, and optional `when`/`disabled` state. Action ids are unique within
+one page and array order is presentation order. The referenced command must be
+live and visible to the page owner. The host owns buttons, overflow behavior,
+focus, keyboard interaction, loading, cancellation, errors, disabled state,
+and command dispatch.
+
+A page descriptor and header action cannot contain DOM nodes, HTML, CSS,
+selectors, framework renderers, `children`, a header component, or a mount
+callback. The trusted-local page mount is exclusively for page body content;
+attempting to render, replace, or adopt the host header is invalid rather than
+a compatibility fallback.
 
 Only structured surfaces and host outlets are extension points. Commands,
 routes, and pages are associated resources. Host descriptor identity, per-point

@@ -1,0 +1,51 @@
+{
+  "owner": "structured-header",
+  "catalogs": [],
+  "commands": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/command.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "refresh",
+      "title": {
+        "key": "command.refresh",
+        "fallback": "Refresh page"
+      }
+    }
+  ],
+  "contributions": [],
+  "routes": [],
+  "pages": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "page.duplicate",
+      "title": {
+        "key": "page.duplicate.title",
+        "fallback": "Duplicate actions"
+      },
+      "headerActions": [
+        {
+          "id": "refresh",
+          "label": {
+            "key": "action.refresh",
+            "fallback": "Refresh"
+          },
+          "command": {
+            "id": "refresh"
+          }
+        },
+        {
+          "id": "refresh",
+          "label": {
+            "key": "action.refresh-again",
+            "fallback": "Refresh again"
+          },
+          "command": {
+            "id": "refresh"
+          }
+        }
+      ]
+    }
+  ],
+  "outlets": []
+}

@@ -1,0 +1,94 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "app",
+        "kind": "outlet",
+        "title": {
+          "key": "outlet.app.title",
+          "fallback": "Application page"
+        },
+        "description": {
+          "key": "outlet.app.description",
+          "fallback": "Mounts an application-level page."
+        },
+        "icon": "host:layers"
+      },
+      {
+        "id": "main",
+        "kind": "outlet",
+        "title": {
+          "key": "outlet.main.title",
+          "fallback": "Main page"
+        },
+        "description": {
+          "key": "outlet.main.description",
+          "fallback": "Mounts a page in the main content region."
+        },
+        "icon": "host:panel"
+      }
+    ]
+  },
+  "policies": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": {
+        "source": "https://plugins.example/header",
+        "pluginId": "header",
+        "pointId": "app"
+      },
+      "policy": "allow"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": {
+        "source": "https://plugins.example/header",
+        "pluginId": "header",
+        "pointId": "main"
+      },
+      "policy": "deny"
+    }
+  ],
+  "accesses": [
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "outlet.page.command.invoke",
+        "identity": {
+          "source": "https://plugins.example/header",
+          "pluginId": "header",
+          "pointId": "app"
+        },
+        "routeId": "route.app-dashboard",
+        "pageId": "page.app-dashboard",
+        "actionId": "refresh",
+        "commandId": "refresh"
+      },
+      "expectedEffectivePolicy": "allow",
+      "expectedAuthorized": true
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "outlet.page.command.invoke",
+        "identity": {
+          "source": "https://plugins.example/header",
+          "pluginId": "header",
+          "pointId": "main"
+        },
+        "routeId": "route.main-dashboard",
+        "pageId": "page.main-dashboard",
+        "actionId": "refresh",
+        "commandId": "refresh"
+      },
+      "expectedEffectivePolicy": "deny",
+      "expectedAuthorized": false
+    }
+  ]
+}

@@ -45,6 +45,43 @@
           }
         }
       }
+    },
+    "headerActions": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "$ref": "#/$defs/headerAction"
+      }
+    }
+  },
+  "$defs": {
+    "headerAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "command"],
+      "properties": {
+        "id": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localId"
+        },
+        "label": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        "ariaLabel": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        "icon": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/iconToken"
+        },
+        "command": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/commandReference"
+        },
+        "when": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/condition"
+        },
+        "disabled": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/disabled"
+        }
+      }
     }
   }
 }
