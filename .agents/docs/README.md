@@ -9,6 +9,8 @@ Specified areas:
   pages, outlets, compatibility, and lifecycle version 1.
 - `platform-capabilities/`: adapter-neutral model, task, turn, permission,
   identity, result, and current-connection contracts version 1.
+- `extension-points/`: host descriptor catalogs, canonical point policy, and
+  surface/outlet authorization origin version 1.
 
 Planned areas include isolated execution, signed package identity,
 distribution, activation, and rollback.

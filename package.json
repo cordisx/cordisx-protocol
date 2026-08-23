@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node conformance/marketplace.mjs && node conformance/ui.mjs && node conformance/platform.mjs"
+    "check": "node conformance/marketplace.mjs && node conformance/ui.mjs && node conformance/platform.mjs && node conformance/extension-points.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",

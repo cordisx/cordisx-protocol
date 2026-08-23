@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json",
+  "title": "CordisX Host Extension Point Catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "points"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "points": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/descriptor"
+      }
+    }
+  },
+  "$defs": {
+    "descriptorText": {
+      "allOf": [
+        {
+          "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        {
+          "type": "object",
+          "required": [
+            "fallback"
+          ],
+          "properties": {
+            "fallback": true
+          }
+        }
+      ]
+    },
+    "descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "icon"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localId"
+        },
+        "kind": {
+          "enum": [
+            "surface",
+            "outlet"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/descriptorText"
+        },
+        "description": {
+          "$ref": "#/$defs/descriptorText"
+        },
+        "icon": {
+          "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken"
+        }
+      }
+    }
+  }
+}

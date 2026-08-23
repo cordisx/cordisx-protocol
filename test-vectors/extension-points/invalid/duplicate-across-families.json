@@ -1,0 +1,24 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "shared.point",
+        "kind": "surface",
+        "title": { "key": "surface.title", "fallback": "Shared surface" },
+        "description": { "key": "surface.description", "fallback": "A shared surface id." },
+        "icon": "host:layers"
+      },
+      {
+        "id": "shared.point",
+        "kind": "outlet",
+        "title": { "key": "outlet.title", "fallback": "Shared outlet" },
+        "description": { "key": "outlet.description", "fallback": "A shared outlet id." },
+        "icon": "host:open"
+      }
+    ]
+  },
+  "policies": [],
+  "accesses": []
+}

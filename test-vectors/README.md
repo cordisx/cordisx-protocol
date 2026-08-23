@@ -10,3 +10,8 @@ surface entries, routes, pages, host outlets, and semantic reference rules.
 
 Platform v1 manifests live in `platform/valid` and `platform/invalid` and cover
 capability declarations, required reasons, closed scopes, and unique names.
+
+Extension-point management v1 suites live in `extension-points/valid` and
+`extension-points/invalid` and cover host descriptors, cross-family identity,
+canonical plugin/point policy, compatible default access, surface command
+origin, and outlet route/page enforcement phases.

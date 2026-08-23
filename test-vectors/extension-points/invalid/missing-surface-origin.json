@@ -1,0 +1,33 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "sidebar.navigation.items",
+        "kind": "surface",
+        "title": { "key": "navigation.title", "fallback": "Navigation" },
+        "description": { "key": "navigation.description", "fallback": "Adds navigation rows." },
+        "icon": "host:layers"
+      }
+    ]
+  },
+  "policies": [],
+  "accesses": [
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "surface.command.invoke",
+        "identity": {
+          "source": "https://plugins.example/alpha",
+          "pluginId": "alpha",
+          "pointId": "sidebar.navigation.items"
+        },
+        "commandId": "refresh"
+      },
+      "expectedEffectivePolicy": "allow",
+      "expectedAuthorized": true
+    }
+  ]
+}

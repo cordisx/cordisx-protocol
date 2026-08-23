@@ -13,4 +13,8 @@ Version 1 marketplace discovery contracts are defined by:
 - `.agents/docs/marketplace/README.md`;
 - `test-vectors/marketplace` and `conformance/marketplace.mjs`.
 
+Version 1 structured UI, Platform capabilities, and extension-point management
+contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
+conformance vectors in this repository.
+
 Run `npm ci && npm run check` to validate the schemas and conformance vectors.

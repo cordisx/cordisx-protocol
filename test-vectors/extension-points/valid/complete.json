@@ -1,0 +1,178 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "sidebar.navigation.items",
+        "kind": "surface",
+        "title": {
+          "namespace": "cordisx.manager.extension-points",
+          "key": "sidebar.navigation.items.title",
+          "fallback": "Sidebar navigation"
+        },
+        "description": {
+          "namespace": "cordisx.manager.extension-points",
+          "key": "sidebar.navigation.items.description",
+          "fallback": "Adds a host-rendered navigation row."
+        },
+        "icon": "host:layers"
+      },
+      {
+        "id": "session.content",
+        "kind": "outlet",
+        "title": {
+          "namespace": "cordisx.manager.extension-points",
+          "key": "outlet.session.content.title",
+          "fallback": "Session content page"
+        },
+        "description": {
+          "namespace": "cordisx.manager.extension-points",
+          "key": "outlet.session.content.description",
+          "fallback": "Mounts a page below the active session header."
+        },
+        "icon": "host:history"
+      }
+    ]
+  },
+  "policies": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": {
+        "source": "https://plugins.example/alpha",
+        "pluginId": "alpha",
+        "pointId": "sidebar.navigation.items"
+      },
+      "policy": "deny"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": {
+        "source": "https://plugins.example/alpha",
+        "pluginId": "alpha",
+        "pointId": "session.content"
+      },
+      "policy": "allow"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": {
+        "source": "https://plugins.example/beta",
+        "pluginId": "beta",
+        "pointId": "sidebar.navigation.items"
+      },
+      "policy": "inherit"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-policy.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": {
+        "source": "https://plugins.example/gamma",
+        "pluginId": "gamma",
+        "pointId": "session.content"
+      },
+      "policy": "deny"
+    }
+  ],
+  "accesses": [
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "surface.command.invoke",
+        "identity": {
+          "source": "https://plugins.example/alpha",
+          "pluginId": "alpha",
+          "pointId": "sidebar.navigation.items"
+        },
+        "contributionId": "navigation",
+        "commandId": "open.page"
+      },
+      "expectedEffectivePolicy": "deny",
+      "expectedAuthorized": false
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "surface.command.invoke",
+        "identity": {
+          "source": "https://plugins.example/beta",
+          "pluginId": "beta",
+          "pointId": "sidebar.navigation.items"
+        },
+        "contributionId": "navigation",
+        "commandId": "refresh"
+      },
+      "expectedEffectivePolicy": "allow",
+      "expectedAuthorized": true
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "outlet.route.navigate",
+        "identity": {
+          "source": "https://plugins.example/beta",
+          "pluginId": "beta",
+          "pointId": "session.content"
+        },
+        "routeId": "route.session",
+        "pageId": "page.session"
+      },
+      "expectedEffectivePolicy": "allow",
+      "expectedAuthorized": true
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "outlet.page.mount",
+        "identity": {
+          "source": "https://plugins.example/alpha",
+          "pluginId": "alpha",
+          "pointId": "session.content"
+        },
+        "routeId": "route.session",
+        "pageId": "page.session"
+      },
+      "expectedEffectivePolicy": "allow",
+      "expectedAuthorized": true
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "outlet.route.navigate",
+        "identity": {
+          "source": "https://plugins.example/gamma",
+          "pluginId": "gamma",
+          "pointId": "session.content"
+        },
+        "routeId": "route.session",
+        "pageId": "page.session"
+      },
+      "expectedEffectivePolicy": "deny",
+      "expectedAuthorized": false
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v1.schema.json",
+        "schemaVersion": 1,
+        "operation": "outlet.page.mount",
+        "identity": {
+          "source": "https://plugins.example/gamma",
+          "pluginId": "gamma",
+          "pointId": "session.content"
+        },
+        "routeId": "route.session",
+        "pageId": "page.session"
+      },
+      "expectedEffectivePolicy": "deny",
+      "expectedAuthorized": false
+    }
+  ]
+}

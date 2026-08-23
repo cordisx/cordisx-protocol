@@ -14,3 +14,11 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
 - `plugin-manifest.v1.schema.json`: one runtime plugin manifest with
   versioned Platform capability declarations, reasons, and maximum scopes.
+- `extension-point-common.v1.schema.json`: canonical plugin/point identity and
+  `inherit`/`allow`/`deny` policy definitions;
+- `host-extension-point-catalog.v1.schema.json`: one host-owned catalog of
+  localized surface and outlet descriptors;
+- `extension-point-policy.v1.schema.json`: one user policy record keyed by
+  canonical source, plugin id, and point id;
+- `extension-point-access.v1.schema.json`: host-generated surface command and
+  outlet route/page authorization origin metadata.

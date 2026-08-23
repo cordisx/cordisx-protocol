@@ -131,6 +131,11 @@ title/breadcrumb/tab metadata. An outlet declaration supplies semantic scope,
 placement, and context policy. Only a host/adapter may register an outlet that
 touches host DOM; plugin-provided outlet declarations are invalid at runtime.
 
+Only structured surfaces and host outlets are extension points. Commands,
+routes, and pages are associated resources. Host descriptor identity, per-point
+policy, and command/route/page authorization origin are defined by the
+[extension-point management protocol](../extension-points/README.md).
+
 The TypeScript runtime may extend its outlet vocabulary through module
 augmentation, but every live outlet declaration and every route is still
 schema-validated. Version 1 initially declares `app`, `main`, and
