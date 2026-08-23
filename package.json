@@ -1,0 +1,16 @@
+{
+  "name": "@cordisx/protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node conformance/marketplace.mjs"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  },
+  "engines": {
+    "node": ">=22.19"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "hello-toolbar",
+  "name": "Hello Toolbar",
+  "description": "Adds one reversible action to the Codex header.",
+  "version": "0.1.0",
+  "source": "https://github.com/cordisx/hello-toolbar",
+  "license": "MIT",
+  "compatibility": {
+    "cordisx": ">=0.1.0 <0.2.0"
+  },
+  "authors": [
+    {
+      "name": "CordisX"
+    }
+  ]
+}
