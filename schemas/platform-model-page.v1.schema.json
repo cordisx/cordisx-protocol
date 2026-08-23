@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-model-page.v1.schema.json",
+  "title": "CordisX Platform Model Page v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "providerIds", "models"],
+  "properties": {
+    "contract": { "const": "cordisx.platform-model-page/v1" },
+    "schemaVersion": { "const": 1 },
+    "providerIds": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": { "$ref": "platform-model.v1.schema.json#/$defs/providerId" }
+    },
+    "models": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": { "$ref": "platform-model.v1.schema.json" }
+    }
+  }
+}
