@@ -26,6 +26,12 @@ Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,
 message delivery, chunk boundaries, paging, provenance, and causal parents.
 
+Agent-event v2 suites live in `agent-events-v2/valid` and
+`agent-events-v2/invalid`; delivery snapshot suites live in
+`agent-delivery/valid` and `agent-delivery/invalid`. They cover stable delivery
+ids, owner/generation fencing, cancellable boundaries, terminal idempotence,
+and successful pre-step/prompt contribution lifecycle.
+
 UI extension catalog suites live in `ui-extension-catalog/valid` and
 `ui-extension-catalog/invalid`. They cover every version-2 surface/outlet id,
 payload-family mapping, semantic composer anchors, availability, surface route

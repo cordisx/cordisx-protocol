@@ -1,4 +1,4 @@
-# Agent event and message protocol v1
+# Agent event and message protocol
 
 This specification is normative for adapter-neutral Session/Agent observation,
 message delivery, pre-step composition, and prompt contributions. It is a core
@@ -7,16 +7,23 @@ define a Timeline route, renderer, or demo plugin.
 
 ## Status and version
 
-- Contract id: `cordisx.agent-events/v1`.
+- Stable contract id: `cordisx.agent-events/v1`.
+- Current contract id: `cordisx.agent-events/v2`.
 - Event schema: `schemas/agent-event.v1.schema.json`.
 - Paged query schema: `schemas/agent-event-page.v1.schema.json`.
 - Plugin capability declarations remain in the version-1 runtime manifest.
 - Host-specific wire fields and methods are non-normative and belong only to an
   adapter document or fixture.
 
-Version 1 is stable for the envelope, identity, source, delivery-stage, query,
-and capability vocabulary below. Adapter bindings may still report
-`experimental` or `unavailable` without changing this contract.
+Version 1 remains stable and unchanged. Version 2 is the current contract for
+delivery handles, owner/generation fencing, cancellation control, and
+successful input-contribution lifecycle. Adapter bindings may still report
+`experimental` or `unavailable` without changing either contract.
+
+- Version-2 event schema: `schemas/agent-event.v2.schema.json`.
+- Version-2 page schema: `schemas/agent-event-page.v2.schema.json`.
+- Delivery snapshot contract: `cordisx.agent-delivery/v1`, defined by
+  `schemas/agent-delivery-snapshot.v1.schema.json`.
 
 ## One runtime and three public faces
 
@@ -35,16 +42,20 @@ must not create independent task, turn, inbox, permission, or connection state.
 `ctx.agents.get(sessionId)` returns an adapter-neutral Agent handle with the
 DeepSeek Harness delivery shape:
 
-- `send(message, target, wakeup)` is the single primitive;
+- `send(message, target, wakeup)` is the single primitive and returns a
+  generation- and owner-fenced delivery handle;
 - `followup(message)` is `send(message, 'next-turn', true)`;
 - `steer(message)` is `send(message, 'next-step', true)`;
 - `inject(message)` is `send(message, 'next-step', false)`.
 
 `inject` is therefore a non-waking next-step queue, `steer` is a waking
 next-step delivery, and `followup` is a waking next-turn delivery. Enqueue does
-not promise a model request or a resulting turn. The ledger is the source of
-truth for later claim, projection, forwarding, cancellation, expiry, or
-failure.
+not promise a model request or a resulting turn. Every method returns a handle
+containing a stable `deliveryId`, immutable current snapshot, and `cancel()`.
+The Agent handle also provides `clearPending()`, which operates only on the
+calling plugin's cancellable deliveries in that Agent session and generation.
+The ledger remains the source of truth for later claim, projection,
+forwarding, cancellation, expiry, or failure.
 
 Prompt composition uses `ctx.systemPrompt.section()` and
 `ctx.systemPrompt.context()`. There is no `ctx.modelInput`. Sections and dynamic
@@ -76,7 +87,8 @@ always a host-issued runtime generation. Call arguments never contain or
 override this tuple. Plugins cannot claim the `user`, `application`, `trusted`,
 adapter, or CordisX source classes.
 
-Version 1 event types are:
+Version 1 event types remain unchanged. Version 2 adds
+`input.contribution` to the following vocabulary:
 
 | Type | Meaning |
 | --- | --- |
@@ -86,6 +98,7 @@ Version 1 event types are:
 | `item.lifecycle` | started, updated, completed, failed, or cancelled item boundary |
 | `message.observed` | one host-observed user-role message with its native identity |
 | `message.delivery` | one stage in a CordisX message-delivery chain |
+| `input.contribution` | successful or failed pre-step append and system-prompt lifecycle |
 | `content.chunk` | a high-frequency item delta or reference |
 | `diagnostic` | a bounded adapter, ledger, permission, or projection diagnostic |
 
@@ -140,6 +153,53 @@ requested -> permission -> queued -> claimed -> projected -> forwarded
 
 Missing current-connection authority produces `failed` with an unavailable
 diagnostic. CordisX must not emit `forwarded` optimistically.
+
+Version 2 requires one stable `deliveryId` and host-stamped plugin `owner` on
+every delivery stage. Public snapshots repeat that identity, the current
+stage, `terminal`, `cancellable`, and `valid` flags, and any available
+turn/step/context identity. Handles never accept an owner or generation from a
+caller.
+
+Cancellation is an atomic race against adapter claim. Only `requested`,
+`permission`, and `queued` may transition to `cancelled`. Once the host-owned
+claim wins, `cancel()` returns `irreversible`; it cannot append a false
+terminal. Terminal cancellation is idempotent. `clearPending()` filters by the
+calling owner, selected session, and current generation, so it cannot cancel a
+different plugin's work.
+
+Block, owning-fiber disposal, permission blocking, and generation replacement
+invalidate old handles. A still-cancellable request receives one auditable
+`cancelled` terminal and reason. Claimed/projected work retains its real
+terminal. A stale handle may expose its last immutable snapshot but cannot
+mutate the old generation.
+
+## Successful input-contribution lifecycle
+
+Version 2 makes the Host ledger authoritative for successful pre-step append
+and `systemPrompt.section/context`; a consumer must not manufacture substitute
+Trace events. `input.contribution` identifies `pre-step.append`,
+`system-prompt.section`, or `system-prompt.context`, a stable contribution id,
+and the stages that actually occurred:
+
+- `registered`: a prompt contribution passed permission and entered the
+  generation registry;
+- `evaluated`: a handler or prompt contribution successfully produced step
+  input;
+- `projected`: the HostRuntime incorporated that output into its immutable
+  step projection;
+- `forwarded`: the projection left HostRuntime for the next host boundary;
+- `released`: the registration left the active generation;
+- `failed`: permission, evaluation, validation, or projection failed.
+
+One evaluation uses a stable `evaluationId`; pre-step append stages also name
+the generated message ids. Envelope session identity is always present and
+turn/step identity is present where the host knows it. The envelope source is
+the host-stamped plugin tuple, so owner and generation cannot be supplied by
+the plugin.
+
+`forwarded` is not `model-consumed`. Model consumption requires a separate
+adapter observation. An unavailable current connection emits neither native
+forwarding nor model-consumption facts.
 
 ## Capabilities and permission policy
 
@@ -228,7 +288,8 @@ Host conformance must additionally cover:
 | Ledger | gap, duplicate, out-of-order, pagination snapshot, subscriber range, generation disposal |
 | Permission | undeclared, ask/allow/deny, required denial, timeout, scope denial, identity non-spoofing |
 | Pre-step | full sourced batch, waterfall append, original preservation, reject capability, transform capability |
-| Delivery | all stages, non-waking inject, waking steer/followup, expiry/cancel/failure |
+| Delivery | stable handles, owner/generation fencing, cancel race, owned clear, terminal idempotence, inject/steer/followup |
+| Input lifecycle | pre-step append plus prompt registered/evaluated/projected/forwarded/released/failed with real identities |
 | Adapter | lifecycle normalization, chunk indices/references, native context preservation, collision-free internal projection |
 | Degradation | current connection unavailable, no second connection, no raw bridge, no optimistic forwarded event |
 | Real probe | isolated renderer/app-server evidence for ordering, persistence, resume/fork/compaction, history, and token behavior; unknown facts stay experimental |
