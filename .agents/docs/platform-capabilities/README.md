@@ -79,6 +79,28 @@ policy, last use, last denial, denial count, and blocked reason. Reason text is
 resolved at projection time so a locale-version change updates the manager
 without changing the declaration.
 
+### Permission presentation hierarchy
+
+The host owns the visible permission hierarchy as well as the projection. Once
+a parent title, breadcrumb, or selected tab establishes that the user is
+viewing permissions, the content must not repeat that concept with a heading
+such as `Platform permissions`. One permission group has no section title. If
+multiple groups or sources are present, a group title is valid only when it
+names the new differentiating dimension, such as plugin source or account.
+
+Permission declarations are peers and use a flat list with separators or
+spacing. A declaration is not wrapped in a card inside a permission-section
+card merely to restate the page hierarchy. Nesting is reserved for an
+independent status or interaction boundary. Each fact appears once, nearest to
+the control or state it explains: policy beside its selector, denial details
+beside the affected declaration, and adapter diagnostics beside adapter
+status. Empty, multi-source, and error states still name enough context to
+identify what is empty, grouped, or unavailable.
+
+The trusted-renderer limitation remains mandatory, but it is shown once in the
+nearest permission/security status boundary rather than repeated per
+declaration. Locale reprojection changes text, not heading depth or grouping.
+
 ## Adapter-neutral data model
 
 Host, account, provider, model, task, turn, and content identifiers are opaque
@@ -191,6 +213,9 @@ field, control action, required field, or result variant. Required coverage is:
 - adapter-unavailable diagnostics, no second app-server, and no raw bridge in
   the plugin service;
 - permission reason reprojection after locale changes;
+- visible permission hierarchy with no repeated title/tab concept, flat
+  single-group declarations, and contextual multi-source, empty, and error
+  states;
 - exact disposal of broker state and subscriptions at plugin/generation end.
 
 ## Owning repositories and delivery order
