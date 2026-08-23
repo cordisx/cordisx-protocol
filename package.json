@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node conformance/marketplace.mjs"
+    "check": "node conformance/marketplace.mjs && node conformance/ui.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
-    "ajv-formats": "3.0.1"
+    "ajv-formats": "3.0.1",
+    "intl-messageformat": "11.2.14"
   },
   "engines": {
     "node": ">=22.19"

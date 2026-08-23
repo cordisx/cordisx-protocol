@@ -1,0 +1,16 @@
+{
+  "owner": "demo",
+  "catalogs": [],
+  "commands": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/command.v1.schema.json",
+      "schemaVersion": 2,
+      "id": "future",
+      "title": { "key": "future", "fallback": "Future command" }
+    }
+  ],
+  "pages": [],
+  "outlets": [],
+  "routes": [],
+  "contributions": []
+}

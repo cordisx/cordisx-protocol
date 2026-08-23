@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+  "title": "CordisX Locale Catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "namespace", "locale", "messages"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "namespace": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localId"
+    },
+    "locale": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$",
+      "maxLength": 48
+    },
+    "default": { "type": "boolean", "default": false },
+    "messages": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 2000,
+      "propertyNames": { "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$" },
+      "additionalProperties": { "type": "string", "maxLength": 4000 }
+    }
+  }
+}

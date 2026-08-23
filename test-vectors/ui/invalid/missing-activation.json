@@ -1,0 +1,17 @@
+{
+  "owner": "demo",
+  "catalogs": [],
+  "commands": [],
+  "pages": [],
+  "outlets": [],
+  "routes": [],
+  "contributions": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "navigation",
+      "surface": "sidebar.navigation.items",
+      "item": { "label": { "key": "invalid", "fallback": "Invalid navigation" } }
+    }
+  ]
+}
