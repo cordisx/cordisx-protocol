@@ -12,8 +12,9 @@ Specified areas:
   provider-fleet contracts version 1.
 - `extension-points/`: host descriptor catalogs, canonical point policy, and
   surface/outlet authorization origin version 1.
-- `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery,
-  pre-step, prompt, permission, degradation, and pagination contract version 1.
+- `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery
+  handles, cancellation, pre-step/prompt lifecycle, permission, degradation,
+  and pagination contracts versions 1 and 2.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution version 2, availability, contextual invocation, DSH
   intent mapping, and explicit replacement refusals.
