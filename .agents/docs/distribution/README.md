@@ -43,6 +43,11 @@ id. `plugin-lifecycle-result.v2` is the matching product-safe result. Version-1
 operation/result documents remain frozen and are never upgraded by silently
 mapping an archive to `inspect-local`.
 
+`plugin-lifecycle-operation/result.v3` retain `inspect-source` and the same
+candidate/impact lifecycle, but replace only the permission v1 authorization
+envelopes with permission v2. Version 2 remains frozen; a Host must not place a
+permission v2 plan or decision in a version-2 lifecycle document.
+
 The Host validates the manifest and package boundary, builds the browser
 artifact, and computes a SHA-256 digest over the normalized manifest and built
 artifact. The resulting content-addressed artifact is immutable. This digest

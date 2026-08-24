@@ -52,6 +52,11 @@ reload, disable, and uninstall token flow is otherwise unchanged. A v1 Host
 rejects v2 documents; it does not downgrade a local package or downloaded
 tarball to a directory operation.
 
+Version 3 preserves the version-2 source and lifecycle operations while
+binding install/update/enable review to permission authorization plan and
+decision v2. It does not change candidate, impact, revision, generation, or
+rollback fencing.
+
 The closed public outcomes are `planned`, `applied`, `conflict`, `rejected`,
 `rolled-back`, and `rollback-failed`. A normal result exposes product-safe
 package identity, affected plugin ids, operation scope, and a bounded error;

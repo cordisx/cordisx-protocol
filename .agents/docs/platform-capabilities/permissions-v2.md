@@ -21,11 +21,19 @@ The compatible delivery order is:
    package v1/v2;
 3. permission common/policy/authorization plan/decision v2 define the new
    decision vocabulary and security fingerprint;
-4. Host implementations migrate v1 records into their single v2 ledger only
+4. plugin lifecycle operation/result v3 carry those v2 authorization
+   envelopes without changing frozen lifecycle v1/v2 documents;
+5. Host implementations migrate v1 records into their single v2 ledger only
    after exact identity, scope, and catalog validation.
 
 Unknown schemas and capabilities fail closed. A capability cannot enter a
 production Host catalog until every required risk field below is present.
+
+Lifecycle v3 changes only the authorization seam: inspection remains the
+`inspect-source` operation introduced in lifecycle v2, while install/update
+and enable now consume permission decision v2 and planned results return
+permission plan v2. Candidate, impact, generation, revision, rollback, and
+product-safe output semantics are otherwise identical to lifecycle v2.
 
 ## Host capability catalog
 

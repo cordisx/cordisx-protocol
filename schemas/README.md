@@ -106,6 +106,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   rollback outcome with redacted package and impact data;
 - `plugin-lifecycle-result.v2.schema.json`: the matching product-safe
   `inspect-source` and mutation result without local/store paths;
+- `plugin-lifecycle-operation.v3.schema.json` and
+  `plugin-lifecycle-result.v3.schema.json`: the same lifecycle with permission
+  authorization plan/decision v2;
 - `plugin-runtime-snapshot.v1.schema.json`: redacted Host-owned manager
   projection of package state, graph, preferences, and available operations.
 - `plugin-console-entry.v1.schema.json`: one Host-attributed DevTools Console
