@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-source.v1.schema.json",
+  "schemaVersion": 1,
+  "url": "https://plugins.example/catalog.json",
+  "enabled": true,
+  "local": {
+    "name": " Example catalog "
+  }
+}

@@ -16,6 +16,8 @@ The machine-readable contracts are:
 - `schemas/marketplace-plugin.v3.schema.json` and
   `schemas/marketplace-feed.v3.schema.json` for external artifact identity and
   top-level trust records; and
+- `schemas/marketplace-source.v1.schema.json` for importing one Host-managed
+  catalog source; and
 - `schemas/marketplace-official.v1.schema.json` and
   `schemas/marketplace-certification.v1.schema.json` for the two independent
   trust dimensions embedded by a version-3 feed.
@@ -29,6 +31,34 @@ fields from a newer document.
 Version 3 composes localized discovery with the independent trust contract in
 [`trust.md`](trust.md). It does not change the Marketplace's metadata-only
 ownership boundary.
+
+## Host-managed sources
+
+`marketplace-source.v1` is the portable clipboard/import shape for one source.
+It is not a feed, plugin manifest, trust record, or installation instruction.
+The source URL is the stable identity and must use canonical HTTPS
+serialization without credentials or a fragment. Query parameters are allowed
+because a publisher may expose explicit release channels through one endpoint.
+
+The required `enabled` value is a profile preference. Optional `local` fields
+are also profile-local plain text:
+
+- `name` overrides the projected feed display name;
+- `description` supplies a local introduction for the source; and
+- `note` records private operator context that never enters discovery ranking,
+  provenance, or trust evaluation.
+
+Local fields are not translated dictionaries. They remain exactly as the user
+entered them across locale changes, while the validated remote feed continues
+to use its existing fallback and localization rules underneath. Hosts may also
+accept a bare canonical HTTPS URL as an ergonomic quick-import shorthand and
+project it to an enabled minimal v1 record.
+
+Official status is deliberately absent. A source cannot self-assert that it is
+official, trusted, certified, or safe through import data. Hosts derive an
+undeletable built-in source from their configured trust root and may let the
+user disable it. Importing, renaming, annotating, enabling, or disabling a
+source never changes Marketplace trust evaluation or grants permissions.
 
 ## Ownership and artifact boundary
 
@@ -126,7 +156,7 @@ protocol.
 
 ## Version compatibility
 
-Version-1 consumers reject version-2 and version-3 documents. Publishers that must serve an
+Version-1 feed consumers reject version-2 and version-3 documents. Publishers that must serve an
 older client may deliberately produce a separate version-1 projection using
 the version-2 fallback values while preserving the same canonical identity.
 Consumers must not silently downgrade, strip fields, or combine versions inside

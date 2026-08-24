@@ -2,7 +2,7 @@
 
 Implementation-independent compatibility fixtures and expected outcomes belong here.
 
-Run `npm run check` for marketplace schema, canonical identity, tuple
+Run `npm run check` for marketplace schema, canonical identity, source import, tuple
 uniqueness, deterministic ordering, structured UI schemas, route/outlet path
 compatibility, native sidebar menu fail-pending projection, unique identities,
 structured app/main page headers, body-only mount boundaries, reference

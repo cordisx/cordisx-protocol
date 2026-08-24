@@ -9,6 +9,7 @@ const pluginSchemas = [1, 2, 3].map(async version => JSON.parse(await readFile(p
 const feedSchemas = [1, 2, 3].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8')))
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
 const resolvedFeedSchemas = await Promise.all(feedSchemas)
+const marketplaceSourceSchema = JSON.parse(await readFile(path.join(root, 'schemas/marketplace-source.v1.schema.json'), 'utf8'))
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv)
 for (const dependency of ['ui-common.v1.schema.json', 'plugin-lifecycle-common.v1.schema.json', 'marketplace-official.v1.schema.json', 'marketplace-certification.v1.schema.json']) {
@@ -17,6 +18,7 @@ for (const dependency of ['ui-common.v1.schema.json', 'plugin-lifecycle-common.v
 for (const schema of resolvedPluginSchemas) ajv.addSchema(schema)
 const pluginValidators = new Map(resolvedPluginSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.getSchema(schema.$id)]))
 const feedValidators = new Map(resolvedFeedSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.compile(schema)]))
+const marketplaceSourceValidator = ajv.compile(marketplaceSourceSchema)
 if ([...pluginValidators.values()].some(validator => validator === undefined)) throw new Error('plugin schema was not registered')
 
 export function canonicalSource(value) {
@@ -26,6 +28,28 @@ export function canonicalSource(value) {
   }
   if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/+$/, '')
   return url.href
+}
+
+export function canonicalMarketplaceFeedUrl(value) {
+  const url = new URL(value)
+  if (url.protocol !== 'https:' || url.username !== '' || url.password !== '' || url.hash !== '') {
+    throw new Error('marketplace feed URL must be HTTPS without credentials or fragment')
+  }
+  return url.href
+}
+
+export function validateMarketplaceSource(source) {
+  if (!marketplaceSourceValidator(source)) return marketplaceSourceValidator.errors ?? [{ message: 'invalid marketplace source' }]
+  const errors = []
+  try {
+    if (canonicalMarketplaceFeedUrl(source.url) !== source.url) errors.push({ message: 'marketplace source URL must use canonical serialization' })
+  } catch (error) {
+    errors.push({ message: error instanceof Error ? error.message : String(error) })
+  }
+  for (const [field, value] of Object.entries(source.local ?? {})) {
+    if (value !== value.trim()) errors.push({ message: `marketplace source local.${field} must not have leading or trailing whitespace` })
+  }
+  return errors
 }
 
 function canonicalLocale(value) {
@@ -158,6 +182,21 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/marketplace/fee
   const passed = validateFeed(value).length === 0
   if (passed !== shouldPass) {
     console.error(`${path.relative(root, file)} should ${shouldPass ? 'pass' : 'fail'}`, validateFeed(value))
+    failures += 1
+  }
+}
+for (const file of await jsonFiles(path.join(root, 'test-vectors/marketplace-source/valid'))) {
+  const value = JSON.parse(await readFile(file, 'utf8'))
+  const errors = validateMarketplaceSource(value)
+  if (errors.length > 0) {
+    console.error(`${path.relative(root, file)} should be valid`, errors)
+    failures += 1
+  }
+}
+for (const file of await jsonFiles(path.join(root, 'test-vectors/marketplace-source/invalid'))) {
+  const value = JSON.parse(await readFile(file, 'utf8'))
+  if (validateMarketplaceSource(value).length === 0) {
+    console.error(`${path.relative(root, file)} should be invalid`)
     failures += 1
   }
 }
