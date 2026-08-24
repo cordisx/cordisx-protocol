@@ -11,6 +11,12 @@
       "scope": { "sessionIds": ["session-1"] }
     },
     {
+      "name": "agent.history.read",
+      "required": false,
+      "reason": { "key": "permission.agent-history", "fallback": "Read redacted Agent history" },
+      "scope": { "sessionIds": ["session-1"] }
+    },
+    {
       "name": "agent.messages.append",
       "required": false,
       "reason": { "key": "permission.agent-append", "fallback": "Append plugin-sourced Agent messages" },

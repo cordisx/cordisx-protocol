@@ -203,11 +203,13 @@ forwarding nor model-consumption facts.
 
 ## Capabilities and permission policy
 
-The version-1 manifest adds six Agent capabilities:
+The version-1 manifest now contains seven Agent capabilities. The first six
+govern the live HostRuntime; durable history is an orthogonal read service:
 
 | Capability | Authority |
 | --- | --- |
 | `agent.events.read` | query and subscribe to normalized ledger events within scope |
+| `agent.history.read` | query and tail redacted adapter-owned history projections within scope |
 | `agent.messages.append` | append host-stamped plugin messages through Agent delivery and pre-step |
 | `agent.steps.reject` | reject a proposed model step |
 | `agent.messages.transform` | remove, replace, or reorder original pre-step messages |
