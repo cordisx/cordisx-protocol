@@ -11,8 +11,10 @@ const schemaNames = [
   'command.v1.schema.json',
   'surface-contribution.v1.schema.json',
   'route.v1.schema.json',
+  'route.v2.schema.json',
   'page.v1.schema.json',
   'page.v2.schema.json',
+  'page.v3.schema.json',
   'outlet.v1.schema.json',
 ]
 const schemas = new Map()
@@ -27,15 +29,24 @@ const compatiblePageSchema = {
   oneOf: [
     { $ref: schemas.get('page.v1.schema.json').$id },
     { $ref: schemas.get('page.v2.schema.json').$id },
+    { $ref: schemas.get('page.v3.schema.json').$id },
+  ],
+}
+const compatibleRouteSchema = {
+  $id: 'urn:cordisx:compatible-route',
+  oneOf: [
+    { $ref: schemas.get('route.v1.schema.json').$id },
+    { $ref: schemas.get('route.v2.schema.json').$id },
   ],
 }
 ajv.addSchema(compatiblePageSchema)
+ajv.addSchema(compatibleRouteSchema)
 
 const validators = {
   catalogs: ajv.getSchema(schemas.get('locale-catalog.v1.schema.json').$id),
   commands: ajv.getSchema(schemas.get('command.v1.schema.json').$id),
   contributions: ajv.getSchema(schemas.get('surface-contribution.v1.schema.json').$id),
-  routes: ajv.getSchema(schemas.get('route.v1.schema.json').$id),
+  routes: ajv.getSchema(compatibleRouteSchema.$id),
   pages: ajv.getSchema(compatiblePageSchema.$id),
   outlets: ajv.getSchema(schemas.get('outlet.v1.schema.json').$id),
 }
@@ -299,6 +310,31 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/ui/invalid'))) 
     console.error(`${path.relative(root, file)} should be invalid`)
     failures += 1
   }
+}
+
+const localizedMetadataSuite = JSON.parse(await readFile(
+  path.join(root, 'test-vectors/ui/valid/localized-route-page-metadata.json'),
+  'utf8',
+))
+const localizedRoute = localizedMetadataSuite.routes[0]
+const localizedPage = localizedMetadataSuite.pages[0]
+const routeTitleZh = resolveMessage(localizedMetadataSuite.owner, localizedRoute.title, 'zh-CN', localizedMetadataSuite.catalogs)
+const routeDescriptionEn = resolveMessage(localizedMetadataSuite.owner, localizedRoute.description, 'en', localizedMetadataSuite.catalogs)
+const pageTitleEn = resolveMessage(localizedMetadataSuite.owner, localizedPage.title, 'en', localizedMetadataSuite.catalogs)
+const pageDescriptionZh = resolveMessage(localizedMetadataSuite.owner, localizedPage.description, 'zh-CN', localizedMetadataSuite.catalogs)
+if (
+  routeTitleZh.text !== '打开概览'
+  || routeDescriptionEn.text !== 'Review the plugin overview in the application area.'
+  || pageTitleEn.text !== 'Plugin overview'
+  || pageDescriptionZh.text !== '展示用户可读的摘要以及应用上下文中可用的操作。'
+) {
+  console.error('route-v2/page-v3 localized product metadata projection failed', {
+    routeTitleZh,
+    routeDescriptionEn,
+    pageTitleEn,
+    pageDescriptionZh,
+  })
+  failures += 1
 }
 
 const orderProbe = [

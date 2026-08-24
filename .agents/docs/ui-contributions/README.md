@@ -154,6 +154,24 @@ supplies semantic scope, placement, and context policy. Only a host/adapter may
 register an outlet that touches host DOM; plugin-provided outlet declarations
 are invalid at runtime.
 
+Route metadata version 2 and page metadata version 3 add the product metadata
+needed by host-owned catalogs. Both require `title` and `description` as
+`LocalizedText`. The title names the user-facing destination. The description
+states what the user can do there and the context in which it is useful; it
+does not expose implementation details. The registering owner supplies the
+message namespace and locale dictionaries, and the host resolves the current
+locale through the shared localization kernel and its existing fallback rules.
+
+The canonical route id, path, outlet id, referenced page id, named path
+parameters, page id, and chrome value remain untranslated machine data. A host
+may index those fields for search and show them as secondary metadata, but it
+must not substitute translated strings into navigation or registry identity.
+Legacy route-v1 and page-v1/page-v2 records remain consumable. When their
+product metadata is absent, management UI displays the stable id and a
+restrained missing-description fallback, and records a diagnostic asking the
+contribution owner to migrate. The host must not infer a purpose from the path,
+outlet, mounted DOM, or plugin implementation.
+
 The standard page header contract is outlet-neutral. An `app` route and a
 `main` route use the same page fields and host projection rules; plugins do not
 declare an app-specific or main-specific header renderer. The host renders the
@@ -261,8 +279,12 @@ the host-private adapter.
 All documents set their exact versioned schema URL, use
 `additionalProperties: false`, and fail closed on unknown schema versions,
 unknown surface kinds, unknown chrome or route behaviors, unknown condition
-operators, or unknown required fields. Version-1 pages remain frozen and imply
-standard chrome. Version-2 surface contributions remain frozen and imply
+operators, or unknown required fields. Route version 1, page versions 1 and 2,
+and their compatibility behavior remain frozen. Page version 1 implies
+standard chrome. Route version 2 and page version 3 require localized product
+title and description metadata without changing navigation identity, outlet
+policy, page mount authority, or chrome semantics. Version-2 surface
+contributions remain frozen and imply
 `routeBehavior: navigate`. Older hosts may preserve newer entries for
 diagnostics but must not render, execute, or navigate them.
 

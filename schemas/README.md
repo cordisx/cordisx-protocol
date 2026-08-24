@@ -18,10 +18,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   surface with one envelope-level identity/order/condition source and a
   same-owner route item;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
+- `route.v2.schema.json`: route-v1 navigation fields plus required localized
+  product title and description metadata;
 - `page.v1.schema.json`: host-owned page header metadata and structured header
   actions; trusted-local mounts render the page body only;
 - `page.v2.schema.json`: page-v1 metadata plus the bounded `standard` or
   `body-only` host chrome policy;
+- `page.v3.schema.json`: page-v2 chrome metadata plus a required localized
+  product description;
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
 - `plugin-manifest.v1.schema.json`: one runtime plugin manifest with
   versioned Platform capability declarations, reasons, and maximum scopes.

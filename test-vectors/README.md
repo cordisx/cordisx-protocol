@@ -8,7 +8,9 @@ Marketplace v1 vectors live in `marketplace/valid`, `marketplace/invalid`, and
 Structured UI v1 suites live in `ui/valid` and `ui/invalid` and cover commands,
 surface entries, distinct native sidebar menu points, routes, pages, host
 outlets, structured app/main page headers, body-only mount boundaries, and
-semantic reference rules.
+semantic reference rules. The suites also cover route-v2/page-v3 localized
+product metadata, legacy compatibility, and closed-schema rejection when the
+required description is absent or replaced with raw display text.
 
 Platform v1 manifests live in `platform/valid` and `platform/invalid` and cover
 capability declarations, required reasons, closed scopes, structured session

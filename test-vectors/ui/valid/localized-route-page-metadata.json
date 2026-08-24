@@ -1,0 +1,72 @@
+{
+  "owner": "catalog-demo",
+  "catalogs": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+      "schemaVersion": 1,
+      "namespace": "catalog-demo",
+      "locale": "en",
+      "default": true,
+      "messages": {
+        "route.overview.title": "Open overview",
+        "route.overview.description": "Review the plugin overview in the application area.",
+        "page.overview.title": "Plugin overview",
+        "page.overview.description": "Shows a user-facing summary and the actions available from the application context."
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/locale-catalog.v1.schema.json",
+      "schemaVersion": 1,
+      "namespace": "catalog-demo",
+      "locale": "zh-CN",
+      "messages": {
+        "route.overview.title": "打开概览",
+        "route.overview.description": "在应用区域查看插件概览。",
+        "page.overview.title": "插件概览",
+        "page.overview.description": "展示用户可读的摘要以及应用上下文中可用的操作。"
+      }
+    }
+  ],
+  "commands": [],
+  "contributions": [],
+  "routes": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json",
+      "schemaVersion": 2,
+      "id": "overview",
+      "path": "/overview",
+      "outlet": "app",
+      "page": "overview",
+      "title": { "key": "route.overview.title", "fallback": "Open overview" },
+      "description": {
+        "key": "route.overview.description",
+        "fallback": "Review the plugin overview in the application area."
+      }
+    }
+  ],
+  "pages": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json",
+      "schemaVersion": 3,
+      "id": "overview",
+      "title": { "key": "page.overview.title", "fallback": "Plugin overview" },
+      "description": {
+        "key": "page.overview.description",
+        "fallback": "Shows a user-facing summary and the actions available from the application context."
+      },
+      "icon": "host:overview",
+      "chrome": "standard"
+    }
+  ],
+  "outlets": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "app",
+      "authority": "host-adapter",
+      "scope": "renderer",
+      "preferredPlacement": "fixed",
+      "contextPolicy": "generation"
+    }
+  ]
+}

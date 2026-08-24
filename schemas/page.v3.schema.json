@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json",
+  "title": "CordisX Page Metadata v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "title", "description"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json"
+    },
+    "schemaVersion": { "const": 3 },
+    "id": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localId"
+    },
+    "title": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+    },
+    "description": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+    },
+    "icon": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/iconToken"
+    },
+    "chrome": {
+      "enum": ["standard", "body-only"],
+      "default": "standard"
+    },
+    "breadcrumbs": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+      }
+    },
+    "tabs": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label"],
+        "properties": {
+          "id": {
+            "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localId"
+          },
+          "label": {
+            "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+          },
+          "icon": {
+            "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/iconToken"
+          }
+        }
+      }
+    },
+    "headerActions": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "$ref": "#/$defs/headerAction"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "chrome": { "const": "body-only" } },
+        "required": ["chrome"]
+      },
+      "then": {
+        "properties": {
+          "breadcrumbs": false,
+          "tabs": false,
+          "headerActions": false
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "headerAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "command"],
+      "properties": {
+        "id": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localId"
+        },
+        "label": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        "ariaLabel": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        "icon": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/iconToken"
+        },
+        "command": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/commandReference"
+        },
+        "when": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/condition"
+        },
+        "disabled": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/disabled"
+        }
+      }
+    }
+  }
+}
