@@ -1,0 +1,18 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v5.schema.json",
+    "schemaVersion": 5,
+    "points": [{
+      "id": "session.tabs", "kind": "surface",
+      "title": { "key": "tabs.title", "fallback": "Session tabs" },
+      "description": { "key": "tabs.description", "fallback": "Reserved session tabs" },
+      "icon": "host:layers", "payloadFamily": "tab", "maturity": "reserved",
+      "adapterSupport": "supported"
+    }]
+  },
+  "context": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-runtime-context.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [{ "id": "session.tabs", "state": "not-mounted" }]
+  }
+}

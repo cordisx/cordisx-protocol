@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-runtime-context.v1.schema.json",
+  "title": "CordisX Extension Point Runtime Context v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "points"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-runtime-context.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "points": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/pointContext" }
+    }
+  },
+  "$defs": {
+    "pointContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "state"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "state": { "enum": ["active", "inactive", "not-mounted"] },
+        "code": { "type": "string", "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$", "maxLength": 128 },
+        "detail": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "anchors": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/anchorContext" }
+        }
+      }
+    },
+    "anchorContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "state"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "state": { "enum": ["active", "inactive", "not-mounted"] },
+        "code": { "type": "string", "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$", "maxLength": 128 },
+        "detail": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+      }
+    }
+  }
+}

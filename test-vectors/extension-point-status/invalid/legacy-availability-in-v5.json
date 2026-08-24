@@ -1,0 +1,19 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v5.schema.json",
+    "schemaVersion": 5,
+    "points": [{
+      "id": "app", "kind": "outlet",
+      "title": { "key": "app.title", "fallback": "Application page" },
+      "description": { "key": "app.description", "fallback": "Application outlet" },
+      "icon": "host:open", "payloadFamily": "outlet", "maturity": "stable",
+      "adapterSupport": "supported", "availability": "available",
+      "pageChrome": ["standard"], "presentationGroup": "app", "routePathFamily": "app"
+    }]
+  },
+  "context": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-runtime-context.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [{ "id": "app", "state": "active" }]
+  }
+}

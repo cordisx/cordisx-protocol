@@ -5,7 +5,7 @@
   "type": "module",
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "check": "node conformance/marketplace.mjs && node conformance/marketplace-trust.mjs && node conformance/ui.mjs && node conformance/platform.mjs && node conformance/permission-v2.mjs && node conformance/extension-points.mjs && node conformance/agent-events.mjs && node conformance/agent-events-v2.mjs && node conformance/agent-history.mjs && node conformance/ui-extension-catalog.mjs && node conformance/manager-settings-tabs.mjs && node conformance/manager-settings-navigation.mjs && node conformance/channel-runtime.mjs && node conformance/plugin-configuration.mjs && node conformance/plugin-lifecycle.mjs && node conformance/plugin-console.mjs"
+    "check": "node conformance/marketplace.mjs && node conformance/marketplace-trust.mjs && node conformance/ui.mjs && node conformance/platform.mjs && node conformance/permission-v2.mjs && node conformance/extension-points.mjs && node conformance/extension-point-status.mjs && node conformance/agent-events.mjs && node conformance/agent-events-v2.mjs && node conformance/agent-history.mjs && node conformance/ui-extension-catalog.mjs && node conformance/manager-settings-tabs.mjs && node conformance/manager-settings-navigation.mjs && node conformance/channel-runtime.mjs && node conformance/plugin-configuration.mjs && node conformance/plugin-lifecycle.mjs && node conformance/plugin-console.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
