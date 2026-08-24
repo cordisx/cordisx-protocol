@@ -60,25 +60,93 @@ uses normalized absolute paths and path-segment containment, not string
 prefixes. The broker intersects the declaration with the current user grant
 and rejects parameters outside either bound before adapter dispatch.
 
-Scopes may only narrow authority. A later manifest that adds a capability or
-changes `required`, `reason`, or `scope` has a new declaration fingerprint and
-starts at `ask`; an earlier `allow` must not silently cover the upgrade.
+Scopes may only narrow authority. The authorization key is the canonical
+tuple `(profileId, source, pluginId, capability, normalizedScope)`. A later
+manifest that adds a capability or changes scope has a new key and starts at
+`ask`; an earlier `allow` must not silently cover the upgrade. A source or
+plugin-id change is a different identity and therefore also starts at `ask`.
+`required` and localized `reason` remain declaration metadata rather than
+authority-key material: changing either does not itself widen callable
+authority, while their current values are always used for activation and UI.
 
 ## Policy and activation
 
-The persisted policy vocabulary is `ask`, `deny`, and `allow`.
+The persisted policy vocabulary is `ask`, `deny`, and `allow`. A host-owned
+prompt resolves `ask` to one of three call decisions:
 
-- `ask` invokes a host-owned prompt for the current call. The call may be
-  allowed or denied once without changing the persisted policy.
-- `deny` rejects the call without adapter dispatch.
-- `allow` authorizes calls within the declared and granted scope without a
-  prompt.
+- `allow-once` authorizes exactly the matching current broker request and is
+  never written to configuration;
+- `allow` changes the matching persisted policy to `allow` before dispatch;
+- `deny` rejects the request without silently changing an existing persisted
+  policy unless the user explicitly saves `deny` in manager UI.
+
+The prompt's primary action is persistent `allow` (`Always allow`);
+`allow-once` is secondary and deny is visually distinct. It carries only a
+host-projected identity, declaration, scope, and operation summary. Plugin code
+cannot render, answer, or spoof it.
+
+Persisted `deny` rejects without adapter dispatch. Persisted `allow` authorizes
+matching calls within the declared and granted scope without a prompt.
 
 The default for a new declaration is `ask`. Required declarations are never
 auto-allowed. A required declaration with policy `deny` blocks the plugin and
 produces a manager-visible reason. Denial of an optional declaration leaves
 the plugin active and that feature must degrade explicitly. A plugin with no
 matching declaration receives `permission-undeclared`.
+
+The persistent record is profile-local and contains canonical source/plugin
+identity, capability, normalized scope, policy, and schema version. A
+launcher/Host configuration writer owns it. The renderer receives only the
+current profile's validated projection and a narrow mutation RPC; it never
+receives the configuration path, arbitrary configuration data, or a general
+writer. `allow-once` exists only in the in-memory Broker for the current
+runtime generation and is cleared by consumption, disable, identity
+replacement, or generation disposal.
+
+`permission-policy.v1.schema.json` is the durable record.
+`permission-authorization-plan.v1.schema.json` and
+`permission-authorization-decision.v1.schema.json` are the host-owned batch
+review boundary; their identity/profile fields are projections to be checked,
+not caller-selectable authority.
+
+### Install and enable authorization
+
+Before installation activation or enabling a disabled package, the Host builds
+one authorization plan from the normalized manifest. The plan contains every
+required and optional declaration exactly once, its localized reason, scope,
+current policy, and whether a new decision is needed. The Host presents that
+plan as one flat, host-rendered review instead of sequential plugin-owned
+prompts.
+
+The user may persist `allow` or `deny` per declaration, keep `ask`, or issue an
+`allow-once` decision. In a batch, one `allow-once` decision creates one
+generation-bound ticket for the first matching Broker request after activation;
+the ticket is consumed exactly once and is never durable. Persistent `allow`
+is the default primary action. An unresolved or denied required declaration
+blocks activation with an attributed reason. Optional denial or unresolved
+optional authority does not block activation, and the plugin must degrade that
+feature explicitly.
+
+The plan/decision contract is shared by package installation and ordinary
+enable/restore flows. It does not itself grant package download, signature,
+filesystem, Marketplace, or code-loading authority; a Host without an
+installer uses it only for already-present packages.
+
+### Upgrade and migration
+
+Policy lookup is exact on the normalized authorization key. Capability or
+scope changes, profile changes, and source/id changes therefore return to
+`ask`. Version 1 never treats a broader or differently serialized declaration
+as an implicit match.
+
+The legacy renderer-local policy ledger stored source/id, capability, and a
+declaration fingerprint. A Host may migrate it only when identity parses
+canonically and the fingerprint yields the exact current capability and
+normalized scope. The current launcher profile is added to the new record;
+`required` and `reason` are discarded as non-authority metadata. Malformed,
+ambiguous, expanded, or identity-mismatched entries fail closed to `ask`.
+Successfully migrated records are written atomically to Host configuration,
+and the legacy copy is retired only after acknowledged write.
 
 Every decision records the bound identity, capability, declaration
 fingerprint, policy, complete requested model or session reference, adapter
@@ -260,6 +328,23 @@ field, control action, required field, or result variant. Required coverage is:
   shared manager content design;
 - exact disposal of broker state and subscriptions at plugin/generation end.
 
+Authorization-duration and activation coverage additionally includes:
+
+- runtime `allow-once`, persistent `allow`, and deny, with persistent allow as
+  the default primary prompt action;
+- no configuration write for `allow-once`, exactly one matching call per
+  activation ticket, and ticket cleanup at disable/generation replacement;
+- profile/source/id/capability/scope separation, capability/scope upgrade
+  re-prompt, and fail-closed legacy migration;
+- one install/enable plan containing required and optional declarations,
+  required denial blocking, optional denial degradation, and no plugin-owned
+  prompt or identity field;
+- atomic launcher persistence through a bounded RPC, invalid identity/scope
+  rejection, and no configuration path or general writer in renderer/plugin
+  APIs;
+- manager adjustment of `ask`/`allow`/`deny` and prompt/plan keyboard, focus,
+  heading, light-theme, and dark-theme behavior.
+
 Provider-fleet conformance additionally covers duplicate provider rejection,
 generation replacement/drain, equal local model/session ids across providers,
 query-bound cursor rejection, complete-reference routing for read/resume/
@@ -275,17 +360,21 @@ part of either protocol.
 
 ## Owning repositories and delivery order
 
-1. This specification, schemas, vectors, and conformance land in
-   `cordisx-protocol` on top of Agent event protocol v1.
-2. `cordisx` lands the matching TypeScript contract, identity-bound Permission
-   Broker, fleet router, private launcher RPC, provider lifecycle/persistence,
-   manager audit projection, tests, and isolated renderer smoke.
+1. This specification, permission policy/authorization-plan schemas, vectors,
+   and conformance land in `cordisx-protocol`. No Agent event or Agent Trace
+   contract changes are part of this slice.
+2. `cordisx` lands the matching TypeScript contract, profile-scoped Permission
+   Broker persistence, narrow launcher RPC, enable/restore authorization UI,
+   runtime prompt, manager policy editing, tests, and isolated renderer smoke.
 3. A CLIProxyAPI connection adapter uses an independent provider-specific
    store and app-server, while its renderer plugin uses only `ctx.platform`
    and the existing page/route/outlet system.
-4. A future private adapter PR may bind the Desktop current connection only
+4. A future installer may call the same authorization-plan boundary before
+   activating an authenticated package; package acquisition, signing, and
+   rollback remain outside this slice.
+5. A future private adapter PR may bind the Desktop current connection only
    after an auditable stable seat is available; that PR must not change the
    public contract or reuse an external provider connection.
-5. `cordisxmono` updates exact merged commits last in a separate commit.
+6. `cordisxmono` updates exact merged commits last in a separate commit.
 
 No roadmap checkout is required for this public compatibility unit.

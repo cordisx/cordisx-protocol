@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v1.schema.json",
+  "schemaVersion": 1,
+  "planId": "generation-7:session-tools",
+  "operation": "install",
+  "profileId": "work",
+  "identity": {
+    "source": "https://plugins.example/session-tools.js",
+    "pluginId": "session-tools"
+  },
+  "defaultDecision": "allow-once",
+  "declarations": []
+}

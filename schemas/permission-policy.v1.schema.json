@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v1.schema.json",
+  "title": "CordisX Persistent Permission Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "key", "policy"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "key": { "$ref": "permission-common.v1.schema.json#/$defs/authorizationKey" },
+    "policy": { "$ref": "permission-common.v1.schema.json#/$defs/policy" }
+  }
+}

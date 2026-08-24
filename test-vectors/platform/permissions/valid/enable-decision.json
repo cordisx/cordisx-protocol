@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v1.schema.json",
+  "schemaVersion": 1,
+  "planId": "generation-7:session-tools",
+  "operation": "enable",
+  "profileId": "work",
+  "identity": {
+    "source": "file:///opt/cordisx/plugins/session-tools.js",
+    "pluginId": "session-tools"
+  },
+  "decisions": [
+    {
+      "capability": "models.read",
+      "scope": { "providers": ["codex"] },
+      "decision": "allow"
+    },
+    {
+      "capability": "turns.submit",
+      "scope": {
+        "sessions": [
+          { "providerId": "codex", "remoteSessionId": "thread-1" }
+        ]
+      },
+      "decision": "allow-once"
+    }
+  ]
+}
