@@ -63,5 +63,7 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `agent-event-page.v2.schema.json`: one version-2 snapshot-bounded query page;
 - `agent-delivery-snapshot.v1.schema.json`: one immutable owner- and
   generation-fenced public delivery snapshot.
+- `agent-history-page.v1.schema.json`: one permission-scoped, privacy-bounded,
+  snapshot-paged historical Agent event projection.
 - `surface-invocation-context.v1.schema.json`: immutable host-generated
   contextual surface identity aligned with the Agent event id vocabulary.

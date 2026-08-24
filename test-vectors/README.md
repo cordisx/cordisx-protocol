@@ -32,6 +32,11 @@ Agent-event v2 suites live in `agent-events-v2/valid` and
 ids, owner/generation fencing, cancellable boundaries, terminal idempotence,
 and successful pre-step/prompt contribution lifecycle.
 
+Agent-history v1 suites live in `agent-history/valid` and
+`agent-history/invalid`. They cover bounded historical pages, privacy/source
+invariants, payload policy, and rejection of unprovable CordisX lifecycle
+events.
+
 UI extension catalog suites live in `ui-extension-catalog/valid` and
 `ui-extension-catalog/invalid`. They cover every version-2 surface/outlet id,
 payload-family mapping, semantic composer anchors, availability, surface route

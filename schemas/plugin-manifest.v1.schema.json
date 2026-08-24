@@ -14,7 +14,7 @@
     "name": { "type": "string", "minLength": 1, "maxLength": 200 },
     "capabilities": {
       "type": "array",
-      "maxItems": 13,
+      "maxItems": 14,
       "items": { "$ref": "#/$defs/capabilityDeclaration" }
     }
   },
@@ -29,6 +29,7 @@
         "turns.submit",
         "turns.control",
         "agent.events.read",
+        "agent.history.read",
         "agent.messages.append",
         "agent.steps.reject",
         "agent.messages.transform",

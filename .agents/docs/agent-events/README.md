@@ -203,11 +203,13 @@ forwarding nor model-consumption facts.
 
 ## Capabilities and permission policy
 
-The version-1 manifest adds six Agent capabilities:
+The version-1 manifest now contains seven Agent capabilities. The first six
+govern the live HostRuntime; durable history is an orthogonal read service:
 
 | Capability | Authority |
 | --- | --- |
 | `agent.events.read` | query and subscribe to normalized ledger events within scope |
+| `agent.history.read` | query and tail redacted adapter-owned history projections within scope |
 | `agent.messages.append` | append host-stamped plugin messages through Agent delivery and pre-step |
 | `agent.steps.reject` | reject a proposed model step |
 | `agent.messages.transform` | remove, replace, or reorder original pre-step messages |
@@ -273,6 +275,13 @@ copied by fork, retained by resume, retained by compaction, or counted in a
 specific token bucket is an adapter fact. Version 1 provides fields and
 fixtures to record verified behavior but defines no cross-adapter assumption.
 Unverified behavior is `experimental` or `unavailable`.
+
+Durable adapter-owned history is not appended to this live ledger. The
+orthogonal `cordisx.agent-history/v1` service returns snapshot-bound pages of
+valid version-2 events with an explicit historical source and privacy policy.
+See `../agent-history/README.md`. A consumer may merge those projections for
+display, but live and historical sequences, coverage, and authority remain
+distinct.
 
 ## Conformance and validation matrix
 

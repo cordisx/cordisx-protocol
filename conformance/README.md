@@ -14,6 +14,9 @@ origin, and downgrade behavior.
 Agent-event conformance additionally covers per-session sequence, stable event
 identity, provenance/source consistency, causal ordering, delivery transitions,
 snapshot pagination, and rejection of host-specific public fields.
+Agent-history conformance covers privacy-bounded historical pages, allowed
+version-2 projections, payload-policy clamping, source identity, coverage, and
+path/offset/provider leakage rejection.
 UI extension catalog conformance covers the complete version-2 point
 vocabulary, payload-family mapping, independent stability/availability,
 generation-fenced surface origin, host-only contextual identity, and
