@@ -7,11 +7,16 @@ import addFormats from 'ajv-formats'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const schemaNames = [
   'ui-common.v1.schema.json',
+  'extension-point-common.v1.schema.json',
   'platform-model.v1.schema.json',
   'platform-model-page.v1.schema.json',
   'platform-session.v1.schema.json',
   'platform-session-page.v1.schema.json',
   'plugin-manifest.v1.schema.json',
+  'permission-common.v1.schema.json',
+  'permission-policy.v1.schema.json',
+  'permission-authorization-plan.v1.schema.json',
+  'permission-authorization-decision.v1.schema.json',
 ]
 const schemas = new Map()
 for (const name of schemaNames) {
@@ -27,6 +32,16 @@ const modelPageValidator = ajv.getSchema(schemas.get('platform-model-page.v1.sch
 if (modelPageValidator === undefined) throw new Error('Platform model page schema was not registered')
 const sessionPageValidator = ajv.getSchema(schemas.get('platform-session-page.v1.schema.json').$id)
 if (sessionPageValidator === undefined) throw new Error('Platform session page schema was not registered')
+const permissionValidators = new Map([
+  'permission-policy.v1.schema.json',
+  'permission-authorization-plan.v1.schema.json',
+  'permission-authorization-decision.v1.schema.json',
+].map((name) => {
+  const schema = schemas.get(name)
+  const activeValidator = ajv.getSchema(schema.$id)
+  if (activeValidator === undefined) throw new Error(`${name} was not registered`)
+  return [schema.$id, activeValidator]
+}))
 
 function sessionKey(ref) {
   return JSON.stringify([ref.providerId, ref.remoteSessionId])
@@ -65,10 +80,23 @@ function normalizedReason(reason) {
 export function declarationFingerprint(declaration) {
   return JSON.stringify({
     name: declaration.name,
-    required: declaration.required,
-    reason: normalizedReason(declaration.reason),
     scope: normalizedScope(declaration.scope),
   })
+}
+
+export function validatePermissionDocument(document) {
+  const activeValidator = permissionValidators.get(document?.$schema)
+  if (activeValidator === undefined) return ['unknown permission document schema']
+  const errors = activeValidator(document)
+    ? []
+    : validatorErrors(activeValidator)
+  const entries = document?.declarations ?? document?.decisions ?? []
+  const seen = new Set()
+  for (const entry of entries) {
+    if (seen.has(entry.capability)) errors.push(`duplicate permission capability: ${entry.capability}`)
+    seen.add(entry.capability)
+  }
+  return errors
 }
 
 export function validateManifest(manifest) {
@@ -206,6 +234,21 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/platform/sessio
     failures += 1
   }
 }
+for (const file of await jsonFiles(path.join(root, 'test-vectors/platform/permissions/valid'))) {
+  const document = JSON.parse(await readFile(file, 'utf8'))
+  const errors = validatePermissionDocument(document)
+  if (errors.length > 0) {
+    console.error(`${path.relative(root, file)} should be valid`, errors)
+    failures += 1
+  }
+}
+for (const file of await jsonFiles(path.join(root, 'test-vectors/platform/permissions/invalid'))) {
+  const document = JSON.parse(await readFile(file, 'utf8'))
+  if (validatePermissionDocument(document).length === 0) {
+    console.error(`${path.relative(root, file)} should be invalid`)
+    failures += 1
+  }
+}
 
 const base = {
   name: 'tasks.create',
@@ -233,6 +276,15 @@ const canonicalReason = {
 }
 if (declarationFingerprint(reorderedReason) !== declarationFingerprint(canonicalReason)) {
   console.error('reason property and param order must not change declaration fingerprint')
+  failures += 1
+}
+const changedMetadata = {
+  ...base,
+  required: true,
+  reason: { key: 'permission.create.updated', fallback: 'Updated explanation' },
+}
+if (declarationFingerprint(base) !== declarationFingerprint(changedMetadata)) {
+  console.error('required/reason metadata must not change the authorization fingerprint')
   failures += 1
 }
 

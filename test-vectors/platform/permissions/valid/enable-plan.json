@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v1.schema.json",
+  "schemaVersion": 1,
+  "planId": "generation-7:session-tools",
+  "operation": "enable",
+  "profileId": "work",
+  "identity": {
+    "source": "file:///opt/cordisx/plugins/session-tools.js",
+    "pluginId": "session-tools"
+  },
+  "defaultDecision": "allow",
+  "declarations": [
+    {
+      "capability": "models.read",
+      "required": true,
+      "reason": { "key": "permission.models", "fallback": "Choose an available model" },
+      "scope": { "providers": ["codex"] },
+      "policy": "ask",
+      "decisionRequired": true
+    },
+    {
+      "capability": "turns.submit",
+      "required": false,
+      "reason": { "key": "permission.submit", "fallback": "Send a follow-up message" },
+      "scope": {
+        "sessions": [
+          { "providerId": "codex", "remoteSessionId": "thread-1" }
+        ]
+      },
+      "policy": "deny",
+      "decisionRequired": false
+    }
+  ]
+}

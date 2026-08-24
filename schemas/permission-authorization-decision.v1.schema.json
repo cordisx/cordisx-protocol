@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v1.schema.json",
+  "title": "CordisX Install or Enable Authorization Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "planId", "operation", "profileId", "identity", "decisions"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "planId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "operation": { "enum": ["install", "enable"] },
+    "profileId": { "$ref": "permission-common.v1.schema.json#/$defs/profileId" },
+    "identity": { "$ref": "permission-common.v1.schema.json#/$defs/identity" },
+    "decisions": {
+      "type": "array",
+      "maxItems": 14,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["capability", "scope", "decision"],
+        "properties": {
+          "capability": { "$ref": "permission-common.v1.schema.json#/$defs/capability" },
+          "scope": { "$ref": "permission-common.v1.schema.json#/$defs/scope" },
+          "decision": { "$ref": "permission-common.v1.schema.json#/$defs/decision" }
+        }
+      }
+    }
+  }
+}

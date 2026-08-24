@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v1.schema.json",
+  "schemaVersion": 1,
+  "key": {
+    "profileId": "work",
+    "identity": {
+      "source": "file:///opt/cordisx/plugins/session-tools.js",
+      "pluginId": "session-tools"
+    },
+    "capability": "models.read",
+    "scope": {}
+  },
+  "policy": "allow-once"
+}

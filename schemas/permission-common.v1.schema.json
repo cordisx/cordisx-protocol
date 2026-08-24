@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-common.v1.schema.json",
+  "title": "CordisX Permission Common Definitions v1",
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "pluginId"],
+      "properties": {
+        "source": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalSource" },
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+      }
+    },
+    "profileId": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localId"
+    },
+    "capability": {
+      "$ref": "plugin-manifest.v1.schema.json#/$defs/capabilityName"
+    },
+    "scope": {
+      "$ref": "plugin-manifest.v1.schema.json#/$defs/scope"
+    },
+    "policy": {
+      "enum": ["ask", "deny", "allow"]
+    },
+    "decision": {
+      "enum": ["ask", "deny", "allow-once", "allow"]
+    },
+    "authorizationKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "identity", "capability", "scope"],
+      "properties": {
+        "profileId": { "$ref": "#/$defs/profileId" },
+        "identity": { "$ref": "#/$defs/identity" },
+        "capability": { "$ref": "#/$defs/capability" },
+        "scope": { "$ref": "#/$defs/scope" }
+      }
+    }
+  }
+}
