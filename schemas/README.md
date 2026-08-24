@@ -50,6 +50,21 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   configuration with opaque credential references only;
 - `channel-service-config-descriptor.v1.schema.json`: redacted Host projection
   for the dedicated Manager Channel settings page;
+- `service-config-common.v1.schema.json`: shared plugin/service identity,
+  profile/generation scope, form schema projection, exact application modes,
+  secret slots, and bounded errors for launcher service configuration;
+- `service-config-descriptor.v1.schema.json`: one redacted Host projection for
+  a service section inside its owning plugin detail, including desired versus
+  active app-restart state;
+- `service-config-mutation.v1.schema.json`: one exact-identity, generation- and
+  revision-fenced service configuration candidate;
+- `service-config-result.v1.schema.json`: applied service restart, staged app
+  restart, conflict, or rejected result without secret references;
+- `cli-proxy-provider-runtime-config.v1.schema.json`: CLIProxy provider
+  endpoint, opaque credential reference, model mapping, and request-timeout
+  configuration applied by Provider Fleet service restart;
+- `cli-proxy-provider-startup-config.v1.schema.json`: CLIProxy executable and
+  provider data-directory overrides applied only after an application restart;
 - `platform-model.v1.schema.json`: one provider-aware model descriptor keyed by
   `(providerId, modelId)`;
 - `platform-model-page.v1.schema.json`: one provider-filtered model catalog;

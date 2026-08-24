@@ -1,0 +1,11 @@
+{
+  "case": "startup",
+  "value": {
+    "contract": "cordisx.cli-proxy-provider-startup-config/v1",
+    "schemaVersion": 1,
+    "providers": [
+      { "id": "gateway-a", "executable": "codex", "dataDir": "providers/shared" },
+      { "id": "gateway-b", "executable": "codex", "dataDir": "providers/shared" }
+    ]
+  }
+}

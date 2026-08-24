@@ -148,3 +148,8 @@ last-good, generation, and secret-redaction principles, but do not reuse its
 ordinary default form or renderer mutation transport. A package may have both a
 renderer `Config` and a Channel service config only as separately identified,
 separately persisted, separately projected documents.
+
+The generic `cordisx.service-config-*/v1` contracts extend that separate plane
+to plugin-owned launcher services projected inside the owning plugin detail.
+They do not turn service data into renderer `Config` and do not create a global
+settings category. See `../service-configuration/README.md`.

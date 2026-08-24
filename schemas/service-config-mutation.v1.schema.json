@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/service-config-mutation.v1.schema.json",
+  "title": "CordisX Host Service Configuration Mutation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "identity", "scope", "expectedRevision", "configuration"],
+  "properties": {
+    "contract": { "const": "cordisx.service-config-mutation/v1" },
+    "schemaVersion": { "const": 1 },
+    "identity": { "$ref": "service-config-common.v1.schema.json#/$defs/identity" },
+    "scope": { "$ref": "service-config-common.v1.schema.json#/$defs/scope" },
+    "expectedRevision": { "type": "integer", "minimum": 0 },
+    "configuration": { "$ref": "ui-common.v1.schema.json#/$defs/jsonValue" }
+  }
+}

@@ -42,6 +42,10 @@ v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,
 last-good ordering, reserved secret roles, owner-bounded namespace renderers,
 and closed result outcomes.
+Service configuration conformance covers plugin/service ownership, form-safe
+schema projection, exact CAS/generation scope, fixed service/app restart
+planes, desired-versus-active startup state, CLIProxy composite-provider model
+mapping, and complete secret-reference removal from renderer-safe documents.
 Plugin lifecycle conformance covers package/runtime identity, exact and acyclic
 dependency graphs, enabled dependency readiness, activation/last-good ordering,
 explicit local directory/package/downloaded-tarball input boundaries, separate

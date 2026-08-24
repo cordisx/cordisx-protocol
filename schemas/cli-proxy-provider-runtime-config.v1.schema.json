@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/cli-proxy-provider-runtime-config.v1.schema.json",
+  "title": "CordisX CLIProxy Provider Runtime Configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "providers"],
+  "properties": {
+    "contract": { "const": "cordisx.cli-proxy-provider-runtime-config/v1" },
+    "schemaVersion": { "const": 1 },
+    "providers": {
+      "type": "array",
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/provider" }
+    }
+  },
+  "$defs": {
+    "providerId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$"
+    },
+    "secretRef": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^(?:keychain|host-secret):[A-Za-z0-9][A-Za-z0-9._:/-]{0,500}$"
+    },
+    "modelMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceModelId", "modelId", "enabled", "isDefault"],
+      "properties": {
+        "sourceModelId": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "modelId": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "enabled": { "type": "boolean" },
+        "isDefault": { "type": "boolean" }
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "displayName", "enabled", "endpoint", "models", "timeoutMs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/providerId" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "enabled": { "type": "boolean" },
+        "endpoint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["baseUrl"],
+          "properties": {
+            "baseUrl": { "type": "string", "format": "uri", "minLength": 1, "maxLength": 4096 },
+            "secretRef": { "$ref": "#/$defs/secretRef" }
+          }
+        },
+        "models": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mappings"],
+          "properties": {
+            "mappings": {
+              "type": "array",
+              "maxItems": 256,
+              "items": { "$ref": "#/$defs/modelMapping" }
+            }
+          }
+        },
+        "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000 }
+      }
+    }
+  }
+}

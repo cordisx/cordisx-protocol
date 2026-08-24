@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/cli-proxy-provider-startup-config.v1.schema.json",
+  "title": "CordisX CLIProxy Provider Startup Configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "providers"],
+  "properties": {
+    "contract": { "const": "cordisx.cli-proxy-provider-startup-config/v1" },
+    "schemaVersion": { "const": 1 },
+    "providers": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "executable", "dataDir"],
+        "properties": {
+          "id": { "$ref": "cli-proxy-provider-runtime-config.v1.schema.json#/$defs/providerId" },
+          "executable": { "type": "string", "minLength": 1, "maxLength": 4096 },
+          "dataDir": { "type": "string", "minLength": 1, "maxLength": 4096 }
+        }
+      }
+    }
+  }
+}

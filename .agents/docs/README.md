@@ -35,6 +35,10 @@ Specified areas:
   metadata, profile/plugin/generation scope, revision-fenced mutations,
   live/restart application, last-good rollback, secret handling, and
   lifecycle-owned custom field renderers.
+- `service-configuration/`: plugin-owned launcher service schemas projected
+  into the owning plugin detail through Host-owned forms, exact CAS and
+  generation fences, opaque secret references, and explicit service/app
+  restart planes.
 - `manifests/`, `lifecycle/`, and `distribution/`: explicit-local package
   manifests and three-form local sources, exact dependency graphs, five
   minimum apply scopes, revision/generation/package-fenced staged lifecycle
