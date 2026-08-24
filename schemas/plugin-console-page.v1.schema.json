@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-console-page.v1.schema.json",
+  "title": "CordisX Plugin DevTools Console Page v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "plugin", "generation", "generatedAt", "partialObservability", "entries"],
+  "properties": {
+    "contract": { "const": "cordisx.plugin-console-page/v1" },
+    "schemaVersion": { "const": 1 },
+    "plugin": { "$ref": "plugin-console-entry.v1.schema.json#/$defs/pluginIdentity" },
+    "generation": { "$ref": "plugin-console-entry.v1.schema.json#/$defs/opaqueId" },
+    "generatedAt": { "type": "integer", "minimum": 0 },
+    "partialObservability": { "const": true },
+    "droppedEntries": { "type": "integer", "minimum": 0 },
+    "entries": { "type": "array", "maxItems": 5000, "items": { "$ref": "plugin-console-entry.v1.schema.json" } }
+  }
+}

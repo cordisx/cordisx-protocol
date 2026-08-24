@@ -39,3 +39,6 @@ Plugin lifecycle conformance covers package/runtime identity, exact and acyclic
 dependency graphs, enabled dependency readiness, activation/last-good ordering,
 absolute local input boundaries, matching permission decisions, minimum apply
 scope, safe share availability, and path/secret-free results and snapshots.
+Plugin Console conformance covers owner/generation isolation, ordered immutable
+lines, zero-touch Host call phases, permission projection, terminal uniqueness,
+and the rule that success cannot precede real Host dispatch.

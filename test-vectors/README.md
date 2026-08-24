@@ -60,3 +60,8 @@ Plugin lifecycle suites live in `plugin-lifecycle/valid` and
 dependency graphs and cycles, activation ordering, local source input,
 permission plans, reload scope, redacted runtime snapshots, and canonical-only
 share availability.
+
+Plugin Console v1 suites live in `plugin-console/valid` and
+`plugin-console/invalid`. They cover zero-touch Host call instrumentation,
+permission correlation, dispatch-before-success, one terminal per correlation,
+owner/generation fencing, and owner-scoped plugin console messages.

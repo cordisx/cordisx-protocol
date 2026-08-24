@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-console-entry.v1.schema.json",
+  "title": "CordisX Plugin DevTools Console Entry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "entryId", "seq", "time", "plugin", "generation", "kind", "level", "source", "message"],
+  "properties": {
+    "contract": { "const": "cordisx.plugin-console-entry/v1" },
+    "schemaVersion": { "const": 1 },
+    "entryId": { "$ref": "#/$defs/opaqueId" },
+    "seq": { "type": "integer", "minimum": 0 },
+    "time": { "type": "integer", "minimum": 0 },
+    "plugin": { "$ref": "#/$defs/pluginIdentity" },
+    "generation": { "$ref": "#/$defs/opaqueId" },
+    "kind": { "enum": ["console", "invocation", "permission", "lifecycle", "diagnostic"] },
+    "level": { "enum": ["debug", "log", "info", "warn", "error"] },
+    "source": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "message": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "phase": { "enum": ["requested", "ask", "allow", "deny", "dispatch", "success", "failure", "cancel", "activate", "dispose", "reload"] },
+    "status": { "enum": ["pending", "success", "failure", "denied", "cancelled"] },
+    "correlationId": { "$ref": "#/$defs/opaqueId" },
+    "sessionId": { "$ref": "#/$defs/opaqueId" },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "invocationKey": { "type": "string", "minLength": 1, "maxLength": 256 }
+      }
+    },
+    "durationMs": { "type": "number", "minimum": 0 },
+    "arguments": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/valueSummary" } },
+    "request": { "$ref": "#/$defs/consumptionSummary" },
+    "result": { "$ref": "#/$defs/consumptionSummary" },
+    "stack": { "type": "string", "minLength": 1, "maxLength": 16384 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "enum": ["invocation", "permission"] } } },
+      "then": {
+        "required": ["correlationId", "phase", "status"],
+        "properties": {
+          "correlationId": { "$ref": "#/$defs/opaqueId" },
+          "phase": { "enum": ["requested", "ask", "allow", "deny", "dispatch", "success", "failure", "cancel"] },
+          "status": { "enum": ["pending", "success", "failure", "denied", "cancelled"] }
+        }
+      }
+    },
+    {
+      "if": { "required": ["phase"], "properties": { "phase": { "enum": ["success", "failure", "cancel"] } } },
+      "then": { "required": ["durationMs"], "properties": { "durationMs": { "type": "number", "minimum": 0 } } }
+    },
+    {
+      "if": { "required": ["phase"], "properties": { "phase": { "const": "success" } } },
+      "then": { "properties": { "status": { "const": "success" } } }
+    },
+    {
+      "if": { "required": ["phase"], "properties": { "phase": { "const": "failure" } } },
+      "then": { "properties": { "status": { "const": "failure" } } }
+    },
+    {
+      "if": { "required": ["phase"], "properties": { "phase": { "const": "deny" } } },
+      "then": { "properties": { "status": { "const": "denied" } } }
+    },
+    {
+      "if": { "required": ["phase"], "properties": { "phase": { "const": "cancel" } } },
+      "then": { "properties": { "status": { "const": "cancelled" } } }
+    }
+  ],
+  "$defs": {
+    "opaqueId": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "pluginIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "pluginId"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "pluginId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$" }
+      }
+    },
+    "valueSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "preview"],
+      "properties": {
+        "type": { "enum": ["undefined", "null", "boolean", "number", "string", "bigint", "symbol", "function", "error", "array", "object", "element"] },
+        "preview": { "type": "string", "maxLength": 2048 },
+        "itemCount": { "type": "integer", "minimum": 0 },
+        "byteCount": { "type": "integer", "minimum": 0 },
+        "truncated": { "type": "boolean" }
+      }
+    },
+    "consumptionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "itemCount": { "type": "integer", "minimum": 0 },
+        "byteCount": { "type": "integer", "minimum": 0 },
+        "preview": { "type": "string", "maxLength": 512 },
+        "truncated": { "type": "boolean" }
+      }
+    }
+  }
+}
