@@ -30,3 +30,6 @@ Channel runtime conformance covers manifest-v2 service and capability identity,
 capability-family scope separation, sourced user-only input, complete binding
 lineage, redacted manager snapshots, account coverage, and one active binding
 per endpoint/route. It does not claim transport exactly-once behavior.
+Plugin configuration conformance covers redacted descriptors, profile/plugin/
+generation scope, revision-fenced JSON mutations, last-good ordering, reserved
+secret roles, owner-bounded namespace renderers, and closed result outcomes.

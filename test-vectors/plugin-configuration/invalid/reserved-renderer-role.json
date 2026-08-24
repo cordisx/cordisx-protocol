@@ -1,0 +1,19 @@
+{
+  "case": "renderer",
+  "value": {
+    "version": 1,
+    "identity": {
+      "source": "file:///opt/cordisx/plugins/example.mjs",
+      "pluginId": "example"
+    },
+    "scope": {
+      "profileId": "default",
+      "generation": "generation-7"
+    },
+    "id": "secret-control",
+    "selector": {
+      "role": "secret"
+    },
+    "order": 0
+  }
+}

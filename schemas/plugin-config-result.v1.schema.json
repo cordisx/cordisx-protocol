@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-config-result.v1.schema.json",
+  "title": "CordisX Plugin Configuration Mutation Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "identity", "scope", "namespace", "status", "revision"],
+  "properties": {
+    "version": { "const": 1 },
+    "identity": { "$ref": "plugin-config-common.v1.schema.json#/$defs/identity" },
+    "scope": { "$ref": "plugin-config-common.v1.schema.json#/$defs/scope" },
+    "namespace": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "status": { "enum": ["applied", "conflict", "rejected"] },
+    "revision": { "type": "integer", "minimum": 0 },
+    "applies": { "$ref": "plugin-config-common.v1.schema.json#/$defs/applies" },
+    "generation": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "enum": ["stale-generation", "validation-failed", "persistence-failed", "restart-failed", "rollback-failed", "secret-path", "disposed"] },
+        "message": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "applied" } }, "required": ["status"] },
+      "then": {
+        "required": ["applies", "generation"],
+        "properties": {
+          "applies": {},
+          "generation": {},
+          "error": false
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["conflict", "rejected"] } }, "required": ["status"] },
+      "then": {
+        "required": ["error"],
+        "properties": { "error": {} }
+      }
+    }
+  ]
+}

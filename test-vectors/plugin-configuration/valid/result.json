@@ -1,0 +1,19 @@
+{
+  "case": "result",
+  "value": {
+    "version": 1,
+    "identity": {
+      "source": "file:///opt/cordisx/plugins/example.mjs",
+      "pluginId": "example"
+    },
+    "scope": {
+      "profileId": "default",
+      "generation": "generation-7"
+    },
+    "namespace": "example.runtime",
+    "status": "applied",
+    "revision": 5,
+    "applies": "restart",
+    "generation": "generation-8"
+  }
+}

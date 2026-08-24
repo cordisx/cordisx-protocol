@@ -1,0 +1,23 @@
+{
+  "case": "mutation",
+  "value": {
+    "version": 1,
+    "identity": {
+      "source": "file:///opt/cordisx/plugins/example.mjs",
+      "pluginId": "example"
+    },
+    "scope": {
+      "profileId": "default",
+      "generation": "generation-7"
+    },
+    "namespace": "example",
+    "expectedRevision": 0,
+    "operations": [
+      {
+        "op": "set",
+        "path": ["__proto__"],
+        "value": true
+      }
+    ]
+  }
+}

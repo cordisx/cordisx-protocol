@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-config-descriptor.v1.schema.json",
+  "title": "CordisX Plugin Configuration Descriptor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "identity", "scope", "namespace", "schema", "value", "revision", "lastGoodRevision", "applies", "writable", "secrets"],
+  "properties": {
+    "version": { "const": 1 },
+    "identity": { "$ref": "plugin-config-common.v1.schema.json#/$defs/identity" },
+    "scope": { "$ref": "plugin-config-common.v1.schema.json#/$defs/scope" },
+    "namespace": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "schema": { "$ref": "plugin-config-common.v1.schema.json#/$defs/schemaProjection" },
+    "value": { "$ref": "ui-common.v1.schema.json#/$defs/jsonValue" },
+    "user": { "$ref": "ui-common.v1.schema.json#/$defs/jsonValue" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "lastGoodRevision": { "type": "integer", "minimum": 0 },
+    "applies": { "$ref": "plugin-config-common.v1.schema.json#/$defs/applies" },
+    "writable": { "type": "boolean" },
+    "secrets": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "$ref": "plugin-config-common.v1.schema.json#/$defs/secretSlot" }
+    }
+  }
+}

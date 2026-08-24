@@ -27,6 +27,10 @@ Specified areas:
 - `channel-runtime/`: structured Channel identity, sourced user input,
   persistent Platform session bindings, redacted runtime snapshots, scoped
   permissions, and launcher-side service declarations.
+- `plugin-configuration/`: Standard Schema validation, Schemastery form
+  metadata, profile/plugin/generation scope, revision-fenced mutations,
+  live/restart application, last-good rollback, secret handling, and
+  lifecycle-owned custom field renderers.
 
 Planned areas include isolated execution, signed package identity,
 distribution, activation, and rollback.

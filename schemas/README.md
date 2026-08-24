@@ -67,3 +67,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   snapshot-paged historical Agent event projection.
 - `surface-invocation-context.v1.schema.json`: immutable host-generated
   contextual surface identity aligned with the Agent event id vocabulary.
+- `plugin-config-common.v1.schema.json`: shared plugin identity, runtime scope,
+  field paths, schema projections, and redacted secret slots;
+- `plugin-config-descriptor.v1.schema.json`: one Host-generated configuration
+  snapshot with resolved/raw layers, revision, application mode, and
+  last-good state;
+- `plugin-config-mutation.v1.schema.json`: one revision- and generation-fenced
+  set/unset request containing JSON data only;
+- `plugin-config-result.v1.schema.json`: applied, conflict, or rejected write
+  outcome without secret values or filesystem details;
+- `plugin-config-renderer.v1.schema.json`: metadata for one lifecycle-owned
+  role, field-path, or namespace custom renderer registration.
