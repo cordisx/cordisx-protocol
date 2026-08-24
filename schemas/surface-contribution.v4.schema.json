@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json",
+  "title": "CordisX Structured Surface Contribution v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "surface", "item"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json"
+    },
+    "schemaVersion": { "const": 4 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "surface": {
+      "enum": [
+        "sidebar.footer.before-control",
+        "sidebar.footer.after-control",
+        "sidebar.footer.menu",
+        "sidebar.account.menu",
+        "sidebar.navigation.items",
+        "sidebar.workspace.menu",
+        "sidebar.session.actions",
+        "sidebar.session.menu",
+        "workspace.toolbar.items",
+        "session.header.actions",
+        "session.tabs",
+        "session.banner.items",
+        "session.message.actions",
+        "session.turn.footer",
+        "session.tool.actions",
+        "composer.toolbar.items",
+        "composer.command-menu.items",
+        "composer.dock.above",
+        "composer.dock.below",
+        "panel.right.header-actions",
+        "panel.right.tabs",
+        "panel.bottom.header-actions",
+        "panel.bottom.tabs",
+        "environment.panel.header-actions",
+        "environment.panel.sections",
+        "environment.section.actions",
+        "environment.section.rows",
+        "environment.row.trailing-actions",
+        "manager.settings.tabs"
+      ]
+    },
+    "group": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$", "default": "default" },
+    "order": { "type": "integer", "minimum": -100000, "maximum": 100000, "default": 0 },
+    "when": { "$ref": "ui-common.v1.schema.json#/$defs/condition" },
+    "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+    "item": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "surface": {
+              "enum": [
+                "sidebar.footer.before-control",
+                "sidebar.footer.after-control",
+                "sidebar.footer.menu",
+                "sidebar.account.menu",
+                "sidebar.workspace.menu",
+                "session.header.actions",
+                "composer.command-menu.items",
+                "panel.right.header-actions",
+                "panel.bottom.header-actions",
+                "sidebar.session.actions",
+                "sidebar.session.menu",
+                "session.message.actions",
+                "session.tool.actions"
+              ]
+            },
+            "item": { "$ref": "surface-contribution.v3.schema.json#/$defs/action" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "sidebar.navigation.items" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/navigationItem" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "workspace.toolbar.items" },
+            "item": { "$ref": "surface-contribution.v3.schema.json#/$defs/workspaceToolbarAction" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "composer.toolbar.items" },
+            "item": { "$ref": "surface-contribution.v3.schema.json#/$defs/composerToolbarAction" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "enum": ["session.tabs", "panel.right.tabs", "panel.bottom.tabs"] },
+            "item": { "$ref": "surface-contribution.v2.schema.json#/$defs/tab" }
+          }
+        },
+        {
+          "properties": {
+            "surface": {
+              "enum": ["session.banner.items", "session.turn.footer", "composer.dock.above", "composer.dock.below"]
+            },
+            "item": { "$ref": "surface-contribution.v2.schema.json#/$defs/presenter" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.panel.header-actions" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/action" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.panel.sections" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentSection" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.section.actions" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentSectionAction" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.section.rows" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentRow" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.row.trailing-actions" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentRowAction" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "manager.settings.tabs" },
+            "group": false,
+            "item": { "$ref": "#/$defs/managerSettingsTab" }
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "sameOwnerRouteReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "params": {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9]*$" },
+          "additionalProperties": { "$ref": "ui-common.v1.schema.json#/$defs/scalar" }
+        }
+      }
+    },
+    "managerSettingsTab": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "icon", "route"],
+      "properties": {
+        "title": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" },
+        "route": { "$ref": "#/$defs/sameOwnerRouteReference" }
+      }
+    }
+  }
+}

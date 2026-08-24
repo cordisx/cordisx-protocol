@@ -5,6 +5,11 @@ catalog, structured surface contribution versions 2 and 3, and host-generated
 invocation context version 1. It is independent of Codex selectors, React,
 native DOM layout, and distribution format.
 
+Manager settings extends this catalog through the independently versioned
+[`manager-settings-tabs`](../manager-settings-tabs/README.md) contract:
+`surface-contribution.v4` and `host-extension-point-catalog.v3`. The v2 catalog
+and v1/v2/v3 surface vocabularies remain frozen.
+
 ## Compatibility
 
 `surface-contribution.v1` remains frozen with its eleven structured surfaces.
@@ -142,7 +147,7 @@ reserved until that adapter supplies unique-seat evidence.
 | assistant actions | `session.message.actions` contextual action |
 | `turnTail` | `session.turn.footer` presenter |
 | `details.tool` | right-panel route/outlet plus `session.tool.actions` |
-| settings sections | CordisX manager/configuration schema |
+| settings sections | `manager.settings.tabs` plus `manager.settings.content` |
 
 Keyed chat/message/tool renderers and whole composer, session, header, chat,
 message, or tool replacement are refused. Future replacement authority needs a
@@ -156,3 +161,7 @@ do not sandbox trusted renderer code. Versions 2 and 3 fail closed for unknown
 versions, surfaces, families, anchors, placements, presenter kinds, arbitrary
 icons, route behaviors, free-DOM fields, plugin-supplied invocation sources, or catalog family
 mismatches. No version may downgrade a rejected contribution to raw DOM.
+
+Version 4 additionally fails closed on an unknown manager surface, a repeated
+settings identity/order/condition field inside the item, `group`, badges,
+non-host icons, free header DOM, or a qualified cross-owner settings route.
