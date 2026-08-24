@@ -18,9 +18,10 @@ version 2, Platform capabilities, Agent events, and extension-point management
 contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
 conformance vectors in this repository.
 
-Dynamic local packages and plugin generations are defined by the package,
-activation, lifecycle operation/result, and manager snapshot version-1 schemas,
-the `manifests`, `lifecycle`, and `distribution` specifications, and the
+Dynamic local packages and plugin generations are defined by the frozen
+package/operation/result v1 schemas, the explicit-local source v1 and separate
+package/operation/result v2 schemas, activation/manager snapshot v1, the
+`manifests`, `lifecycle`, and `distribution` specifications, and the
 `plugin-lifecycle` conformance suite. This local integrity contract does not
 claim remote marketplace installation, publisher signing, or sandboxing.
 

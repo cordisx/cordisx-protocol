@@ -1,0 +1,26 @@
+{
+  "case": "package-v2",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "notes",
+    "version": "1.3.0",
+    "entry": "./dist/index.js",
+    "readme": "./README.md",
+    "canonicalSource": "https://plugins.example/notes",
+    "distribution": { "mode": "explicit-local-v1", "signature": "unsupported" },
+    "compatibility": {
+      "runtimeAbi": 1,
+      "protocolSchemas": [
+        "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v3.schema.json",
+        "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-tabs.v1.schema.json"
+      ]
+    },
+    "dependencies": [{ "id": "storage", "version": "1.0.0" }],
+    "runtimeManifest": {
+      "path": "./cordisx-runtime.json",
+      "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v3.schema.json",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  }
+}

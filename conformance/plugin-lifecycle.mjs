@@ -15,10 +15,14 @@ const schemaNames = [
   'permission-authorization-plan.v1.schema.json',
   'permission-authorization-decision.v1.schema.json',
   'plugin-lifecycle-common.v1.schema.json',
+  'plugin-package-source.v1.schema.json',
   'plugin-package.v1.schema.json',
+  'plugin-package.v2.schema.json',
   'plugin-activation.v1.schema.json',
   'plugin-lifecycle-operation.v1.schema.json',
+  'plugin-lifecycle-operation.v2.schema.json',
   'plugin-lifecycle-result.v1.schema.json',
+  'plugin-lifecycle-result.v2.schema.json',
   'plugin-runtime-snapshot.v1.schema.json',
 ]
 const schemas = new Map()
@@ -38,9 +42,13 @@ function schemaValidator(name) {
 
 const validators = {
   package: schemaValidator('plugin-package.v1.schema.json'),
+  packageV2: schemaValidator('plugin-package.v2.schema.json'),
+  source: schemaValidator('plugin-package-source.v1.schema.json'),
   activation: schemaValidator('plugin-activation.v1.schema.json'),
   operation: schemaValidator('plugin-lifecycle-operation.v1.schema.json'),
+  operationV2: schemaValidator('plugin-lifecycle-operation.v2.schema.json'),
   result: schemaValidator('plugin-lifecycle-result.v1.schema.json'),
+  resultV2: schemaValidator('plugin-lifecycle-result.v2.schema.json'),
   snapshot: schemaValidator('plugin-runtime-snapshot.v1.schema.json'),
 }
 
@@ -66,6 +74,22 @@ export function validatePackage(value) {
   for (const id of duplicates(dependencyIds)) errors.push(`duplicate dependency: ${id}`)
   if (dependencyIds.includes(value.id)) errors.push('package depends on itself')
   return errors
+}
+
+export function validatePackageV2(value) {
+  if (!validators.packageV2(value)) return validatorErrors(validators.packageV2)
+  const errors = []
+  const dependencyIds = value.dependencies.map(item => item.id)
+  for (const id of duplicates(dependencyIds)) errors.push(`duplicate dependency: ${id}`)
+  if (dependencyIds.includes(value.id)) errors.push('package depends on itself')
+  if (!value.compatibility.protocolSchemas.includes(value.runtimeManifest.schema)) {
+    errors.push('runtime manifest schema is absent from compatibility requirements')
+  }
+  return errors
+}
+
+export function validateSource(value) {
+  return validators.source(value) ? [] : validatorErrors(validators.source)
 }
 
 function graphErrors(plugins) {
@@ -127,6 +151,17 @@ export function validateOperation(value) {
   return errors
 }
 
+export function validateOperationV2(value) {
+  if (!validators.operationV2(value)) return validatorErrors(validators.operationV2)
+  const errors = []
+  const decision = value.operation.authorizationDecision
+  if (decision !== undefined) {
+    if (decision.profileId !== value.profileId) errors.push('authorization decision profile differs from operation profile')
+    if (decision.operation !== value.operation.kind) errors.push('authorization decision operation differs from lifecycle operation')
+  }
+  return errors
+}
+
 export function validateResult(value) {
   if (!validators.result(value)) return validatorErrors(validators.result)
   const errors = []
@@ -138,6 +173,22 @@ export function validateResult(value) {
   if (value.authorizationPlan !== undefined) {
     if (value.authorizationPlan.profileId !== value.profileId) errors.push('authorization plan profile differs from result profile')
     const expected = value.operation === 'inspect-local' ? 'install' : value.operation
+    if (value.authorizationPlan.operation !== expected) errors.push('authorization plan operation differs from lifecycle result')
+  }
+  return errors
+}
+
+export function validateResultV2(value) {
+  if (!validators.resultV2(value)) return validatorErrors(validators.resultV2)
+  const errors = []
+  for (const id of duplicates(value.affectedPluginIds)) errors.push(`duplicate affected plugin: ${id}`)
+  if (value.operation === 'reload' && value.scope !== 'plugin-restart') errors.push('reload must use plugin-restart scope')
+  if (['install', 'update', 'enable', 'disable', 'uninstall'].includes(value.operation) && value.scope !== 'plugin-generation') {
+    errors.push(`${value.operation} must use plugin-generation scope`)
+  }
+  if (value.authorizationPlan !== undefined) {
+    if (value.authorizationPlan.profileId !== value.profileId) errors.push('authorization plan profile differs from result profile')
+    const expected = value.operation === 'inspect-source' ? 'install' : value.operation
     if (value.authorizationPlan.operation !== expected) errors.push('authorization plan operation differs from lifecycle result')
   }
   return errors
@@ -166,9 +217,13 @@ export function validateSnapshot(value) {
 
 const caseValidators = {
   package: validatePackage,
+  'package-v2': validatePackageV2,
+  source: validateSource,
   activation: validateActivation,
   operation: validateOperation,
+  'operation-v2': validateOperationV2,
   result: validateResult,
+  'result-v2': validateResultV2,
   snapshot: validateSnapshot,
 }
 
@@ -204,6 +259,7 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/plugin-lifecycl
 
 const publicSnapshots = JSON.stringify([
   schemas.get('plugin-lifecycle-result.v1.schema.json'),
+  schemas.get('plugin-lifecycle-result.v2.schema.json'),
   schemas.get('plugin-runtime-snapshot.v1.schema.json'),
 ])
 for (const forbidden of [

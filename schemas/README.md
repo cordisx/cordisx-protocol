@@ -89,13 +89,23 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   generation, operation, state, and minimum apply-scope vocabulary;
 - `plugin-package.v1.schema.json`: one explicit-local immutable package input
   with exact compatibility, dependency, and runtime-manifest declarations;
+- `plugin-package-source.v1.schema.json`: one explicit local directory,
+  package/archive, or already-downloaded tarball source with optional expected
+  digest and no remote-install authority;
+- `plugin-package.v2.schema.json`: package metadata with a separately digested
+  runtime-manifest v1/v2/v3 reference, explicit unsupported-signature state,
+  exact protocol requirements, and dependencies;
 - `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or
   last-good activation record without filesystem paths;
 - `plugin-lifecycle-operation.v1.schema.json`: revision- and
   runtime-generation-fenced inspect/install/update/enable/disable/reload/
   uninstall request;
+- `plugin-lifecycle-operation.v2.schema.json`: exact-version operation using
+  `inspect-source` for all three explicit-local source forms;
 - `plugin-lifecycle-result.v1.schema.json`: planned/applied/conflict/failure/
   rollback outcome with redacted package and impact data;
+- `plugin-lifecycle-result.v2.schema.json`: the matching product-safe
+  `inspect-source` and mutation result without local/store paths;
 - `plugin-runtime-snapshot.v1.schema.json`: redacted Host-owned manager
   projection of package state, graph, preferences, and available operations.
 - `plugin-console-entry.v1.schema.json`: one Host-attributed DevTools Console

@@ -32,9 +32,10 @@ Specified areas:
   live/restart application, last-good rollback, secret handling, and
   lifecycle-owned custom field renderers.
 - `manifests/`, `lifecycle/`, and `distribution/`: explicit-local package
-  manifests, exact dependency graphs, five minimum apply scopes,
-  revision/generation-fenced lifecycle operations, immutable activation
-  records, last-good rollback, and redacted manager snapshots.
+  manifests and three-form local sources, exact dependency graphs, five
+  minimum apply scopes, revision/generation/package-fenced staged lifecycle
+  operations, atomic registry publication, immutable activation records,
+  last-good rollback, and redacted manager snapshots.
 
 Planned areas include isolated execution, remote distribution, publisher
 signatures, transparency, and public marketplace activation.

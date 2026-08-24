@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package-source.v1.schema.json",
+  "title": "CordisX Explicit Local Plugin Package Source v1",
+  "$defs": {
+    "fileUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^file:///(?!.*[?#]).+$",
+      "maxLength": 4096
+    },
+    "downloadUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^/?#]+(?:/[^?#]*)?$",
+      "maxLength": 2048
+    },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "location"],
+          "properties": {
+            "kind": { "const": "local-directory" },
+            "location": { "$ref": "#/$defs/fileUrl" },
+            "expectedDigest": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "location"],
+          "properties": {
+            "kind": { "const": "local-package" },
+            "location": { "$ref": "#/$defs/fileUrl" },
+            "expectedDigest": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "location", "downloadedFrom"],
+          "properties": {
+            "kind": { "const": "downloaded-tarball" },
+            "location": { "$ref": "#/$defs/fileUrl" },
+            "downloadedFrom": { "$ref": "#/$defs/downloadUrl" },
+            "expectedDigest": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" }
+          }
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/source"
+}

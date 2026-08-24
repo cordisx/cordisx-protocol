@@ -56,10 +56,11 @@ redacted Manager descriptors, route/connection integrity, retry ordering,
 active binding uniqueness, and safe package entry resolution.
 
 Plugin lifecycle suites live in `plugin-lifecycle/valid` and
-`plugin-lifecycle/invalid`. They cover package/runtime id equality, exact
-dependency graphs and cycles, activation ordering, local source input,
-permission plans, reload scope, redacted runtime snapshots, and canonical-only
-share availability.
+`plugin-lifecycle/invalid`. They cover the frozen embedded package v1 plus
+separate-runtime-manifest package v2, all three explicit-local source forms,
+fake signature and remote source rejection, exact dependency graphs and
+cycles, activation ordering, permission plans, reload scope, redacted runtime
+snapshots, and canonical-only share availability.
 
 Plugin Console v1 suites live in `plugin-console/valid` and
 `plugin-console/invalid`. They cover zero-touch Host call instrumentation,
