@@ -1,0 +1,7 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "accesses.0.generation", "value": "generation-51" },
+    { "op": "set", "path": "accesses.1.identity.pointId", "value": "manager.settings.content" }
+  ]
+}

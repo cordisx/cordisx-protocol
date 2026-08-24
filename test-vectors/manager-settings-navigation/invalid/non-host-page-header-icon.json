@@ -1,0 +1,6 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "pages.1.document.headerActions.0.icon", "value": "plugin:refresh" }
+  ]
+}

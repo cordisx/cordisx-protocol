@@ -1,0 +1,7 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "contributions.0.document.$schema", "value": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json" },
+    { "op": "set", "path": "contributions.0.document.schemaVersion", "value": 4 }
+  ]
+}

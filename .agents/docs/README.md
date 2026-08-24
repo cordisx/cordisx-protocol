@@ -22,9 +22,12 @@ Specified areas:
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution versions 2 and 3, availability, contextual
   invocation, DSH intent mapping, and explicit replacement refusals.
-- `manager-settings-tabs/`: structured manager settings surface version 4,
-  catalog version 3, controlled body-only outlet, deterministic projection,
-  authorization origin, and lifecycle.
+- `manager-settings-tabs/`: structured Manager settings content-tab surface
+  versions 4/5, catalog versions 3/4, controlled body-only outlet,
+  deterministic projection, authorization origin, and lifecycle.
+- `manager-settings-navigation/`: top-level Manager settings-adjacent
+  navigation items in surface version 5/catalog version 4, standard page
+  shell, deterministic host/plugin merge, authorization, and lifecycle.
 - `channel-runtime/`: structured Channel identity, sourced user input,
   persistent Platform session bindings, redacted runtime snapshots, scoped
   permissions, and launcher-side service declarations.

@@ -1,0 +1,7 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "contributions.0.document.item.css", "value": ".manager { display: none }" },
+    { "op": "set", "path": "contributions.0.document.item.selector", "value": "[data-manager-sidebar]" }
+  ]
+}

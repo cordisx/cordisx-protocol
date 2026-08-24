@@ -50,6 +50,15 @@ boundary, host-only tab headers, deterministic built-in merge, same-owner
 route/page wiring, pending dependencies, body-only content, authorization
 origin, and lifecycle cleanup/fallback.
 
+Top-level Manager navigation suites live in
+`manager-settings-navigation/valid` and
+`manager-settings-navigation/invalid`. They cover the closed surface-v5/
+catalog-v4 boundary, content-tab compatibility naming, required page-v3 Host
+icons and free-header rejection, fixed core groups, deterministic order/owner/id ties,
+same-owner route-v2/page-v3 wiring, pending dependencies, standard page
+chrome, generation-fenced origins, close/reopen selection, and cleanup to the
+Host Settings fallback.
+
 Channel runtime suites live in `channel-runtime/valid` and
 `channel-runtime/invalid`. They cover manifest-v2 compatibility and manifest-v3
 explicit service configuration, complete Channel and Platform identities,

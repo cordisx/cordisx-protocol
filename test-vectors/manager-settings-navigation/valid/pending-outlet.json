@@ -1,0 +1,17 @@
+{
+  "generation": "generation-pending-outlet",
+  "catalog": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v4.schema.json", "schemaVersion": 4, "points": [
+    { "id": "manager.settings.tabs", "kind": "surface", "title": { "key": "tabs.title", "fallback": "Manager settings content tabs" }, "description": { "key": "tabs.description", "fallback": "Settings content switcher" }, "icon": "host:settings", "payloadFamily": "manager-settings-content-tab", "stability": "stable", "availability": "available" },
+    { "id": "manager.settings.content", "kind": "outlet", "title": { "key": "settings.content.title", "fallback": "Settings content body" }, "description": { "key": "settings.content.description", "fallback": "Controlled settings tab body" }, "icon": "host:settings", "payloadFamily": "outlet", "stability": "stable", "availability": "available", "pageChrome": ["body-only"], "presentationGroup": "manager.settings", "routePathFamily": "manager-settings" },
+    { "id": "manager.settings.navigation-items", "kind": "surface", "title": { "key": "navigation.title", "fallback": "Manager settings navigation items" }, "description": { "key": "navigation.description", "fallback": "Top-level Manager plugin destinations" }, "icon": "host:layers", "payloadFamily": "manager-settings-navigation-item", "stability": "stable", "availability": "available" },
+    { "id": "manager.content", "kind": "outlet", "title": { "key": "manager.content.title", "fallback": "Manager content" }, "description": { "key": "manager.content.description", "fallback": "Standard Manager page shell" }, "icon": "host:layers", "payloadFamily": "outlet", "stability": "stable", "availability": "available", "pageChrome": ["standard"], "presentationGroup": "manager", "routePathFamily": "manager" }
+  ] },
+  "owners": [{ "id": "demo", "source": "file:///plugins/demo.mjs" }],
+  "contributions": [{ "owner": "demo", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v5.schema.json", "schemaVersion": 5, "id": "pending", "surface": "manager.settings.navigation-items", "group": "after-settings", "item": { "route": { "id": "pending" } } } }],
+  "routes": [{ "owner": "demo", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "pending", "path": "/manager/extensions/pending", "outlet": "manager.content", "page": "pending", "title": { "key": "route.pending.title", "fallback": "Pending outlet" }, "description": { "key": "route.pending.description", "fallback": "Waits for the Manager outlet to resolve." } } }],
+  "pages": [{ "owner": "demo", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "pending", "title": { "key": "page.pending.title", "fallback": "Pending outlet" }, "description": { "key": "page.pending.description", "fallback": "This page is ready after its outlet resolves." }, "icon": "host:layers", "chrome": "standard" } }],
+  "resolvedOutlets": [],
+  "accesses": [],
+  "expectedPending": [{ "id": "demo:pending", "reason": "outlet" }],
+  "expectedProjection": [{ "id": "host:plugins", "disabled": false }, { "id": "host:extensions", "disabled": false }, { "id": "host:routes", "disabled": false }, { "id": "host:marketplace", "disabled": false }, { "id": "host:settings", "disabled": false }, { "id": "host:about", "disabled": false }]
+}

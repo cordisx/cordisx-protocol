@@ -17,6 +17,10 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `surface-contribution.v4.schema.json`: the additive manager settings tab
   surface with one envelope-level identity/order/condition source and a
   same-owner route item;
+- `surface-contribution.v5.schema.json`: the compatible Manager settings
+  content-tab family plus top-level settings-adjacent navigation items with a
+  same-owner route and closed before/after Settings groups; route-v2/page-v3
+  metadata supplies all navigation/header display data;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `route.v2.schema.json`: route-v1 navigation fields plus required localized
   product title and description metadata;
@@ -61,6 +65,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   family plus implemented, experimental, or reserved adapter availability;
 - `host-extension-point-catalog.v3.schema.json`: the additive manager settings
   points plus outlet page-chrome, presentation-group, and route-path policy;
+- `host-extension-point-catalog.v4.schema.json`: precise Manager settings
+  content-tab naming plus the top-level navigation surface and standard
+  `manager.content` outlet;
 - `extension-point-policy.v1.schema.json`: one user policy record keyed by
   canonical source, plugin id, and point id;
 - `extension-point-access.v1.schema.json`: host-generated surface command,

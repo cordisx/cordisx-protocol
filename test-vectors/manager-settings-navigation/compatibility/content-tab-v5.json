@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v5.schema.json",
+  "schemaVersion": 5,
+  "id": "plugin-settings",
+  "surface": "manager.settings.tabs",
+  "order": 150,
+  "item": {
+    "title": { "key": "settings.title", "fallback": "Plugin settings" },
+    "icon": "host:settings",
+    "route": { "id": "settings" }
+  }
+}

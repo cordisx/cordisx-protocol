@@ -1,0 +1,9 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "owners.0.id", "value": "host" },
+    { "op": "set", "path": "contributions.1.owner", "value": "host" },
+    { "op": "set", "path": "routes.1.owner", "value": "host" },
+    { "op": "set", "path": "pages.1.owner", "value": "host" }
+  ]
+}

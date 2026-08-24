@@ -52,6 +52,16 @@ payload family `manager-settings-tab` plus outlet `pageChrome`,
 reject v3 rather than dropping those fields. The exact manager settings rules
 live in [`manager-settings-tabs`](../manager-settings-tabs/README.md).
 
+Catalog version 4 is another closed, separately validated contract. It keeps
+the stable `manager.settings.tabs` point and policy identity while naming its
+payload family precisely as `manager-settings-content-tab`. It also adds
+surface `manager.settings.navigation-items`, payload family
+`manager-settings-navigation-item`, and standard-chrome outlet
+`manager.content` with presentation group and route-path family `manager`.
+Catalog v1/v2/v3 consumers reject v4 rather than guessing at the new point or
+discarding its outlet policy. The top-level navigation rules live in
+[`manager-settings-navigation`](../manager-settings-navigation/README.md).
+
 ## Canonical point-policy identity
 
 A policy record is keyed by the exact ordered tuple:
