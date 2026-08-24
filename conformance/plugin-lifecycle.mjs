@@ -12,8 +12,14 @@ const schemaNames = [
   'platform-session.v1.schema.json',
   'plugin-manifest.v1.schema.json',
   'permission-common.v1.schema.json',
+  'permission-common.v2.schema.json',
   'permission-authorization-plan.v1.schema.json',
+  'permission-authorization-plan.v2.schema.json',
   'permission-authorization-decision.v1.schema.json',
+  'permission-authorization-decision.v2.schema.json',
+  'plugin-manifest.v4.schema.json',
+  'channel-service-config.v1.schema.json',
+  'channel-common.v1.schema.json',
   'plugin-lifecycle-common.v1.schema.json',
   'plugin-package-source.v1.schema.json',
   'plugin-package.v1.schema.json',
@@ -21,8 +27,10 @@ const schemaNames = [
   'plugin-activation.v1.schema.json',
   'plugin-lifecycle-operation.v1.schema.json',
   'plugin-lifecycle-operation.v2.schema.json',
+  'plugin-lifecycle-operation.v3.schema.json',
   'plugin-lifecycle-result.v1.schema.json',
   'plugin-lifecycle-result.v2.schema.json',
+  'plugin-lifecycle-result.v3.schema.json',
   'plugin-runtime-snapshot.v1.schema.json',
 ]
 const schemas = new Map()
@@ -47,8 +55,10 @@ const validators = {
   activation: schemaValidator('plugin-activation.v1.schema.json'),
   operation: schemaValidator('plugin-lifecycle-operation.v1.schema.json'),
   operationV2: schemaValidator('plugin-lifecycle-operation.v2.schema.json'),
+  operationV3: schemaValidator('plugin-lifecycle-operation.v3.schema.json'),
   result: schemaValidator('plugin-lifecycle-result.v1.schema.json'),
   resultV2: schemaValidator('plugin-lifecycle-result.v2.schema.json'),
+  resultV3: schemaValidator('plugin-lifecycle-result.v3.schema.json'),
   snapshot: schemaValidator('plugin-runtime-snapshot.v1.schema.json'),
 }
 
@@ -162,6 +172,20 @@ export function validateOperationV2(value) {
   return errors
 }
 
+export function validateOperationV3(value) {
+  if (!validators.operationV3(value)) return validatorErrors(validators.operationV3)
+  const errors = []
+  const decision = value.operation.authorizationDecision
+  if (decision !== undefined) {
+    if (decision.profileId !== value.profileId) errors.push('authorization decision profile differs from operation profile')
+    if (decision.operation !== value.operation.kind) errors.push('authorization decision operation differs from lifecycle operation')
+    if (decision.binding.runtimeGeneration !== value.runtimeGeneration) {
+      errors.push('authorization decision generation differs from lifecycle operation')
+    }
+  }
+  return errors
+}
+
 export function validateResult(value) {
   if (!validators.result(value)) return validatorErrors(validators.result)
   const errors = []
@@ -188,6 +212,25 @@ export function validateResultV2(value) {
   }
   if (value.authorizationPlan !== undefined) {
     if (value.authorizationPlan.profileId !== value.profileId) errors.push('authorization plan profile differs from result profile')
+    const expected = value.operation === 'inspect-source' ? 'install' : value.operation
+    if (value.authorizationPlan.operation !== expected) errors.push('authorization plan operation differs from lifecycle result')
+  }
+  return errors
+}
+
+export function validateResultV3(value) {
+  if (!validators.resultV3(value)) return validatorErrors(validators.resultV3)
+  const errors = []
+  for (const id of duplicates(value.affectedPluginIds)) errors.push(`duplicate affected plugin: ${id}`)
+  if (value.operation === 'reload' && value.scope !== 'plugin-restart') errors.push('reload must use plugin-restart scope')
+  if (['install', 'update', 'enable', 'disable', 'uninstall'].includes(value.operation) && value.scope !== 'plugin-generation') {
+    errors.push(`${value.operation} must use plugin-generation scope`)
+  }
+  if (value.authorizationPlan !== undefined) {
+    if (value.authorizationPlan.profileId !== value.profileId) errors.push('authorization plan profile differs from result profile')
+    if (value.authorizationPlan.binding.runtimeGeneration !== value.runtimeGeneration) {
+      errors.push('authorization plan generation differs from lifecycle result')
+    }
     const expected = value.operation === 'inspect-source' ? 'install' : value.operation
     if (value.authorizationPlan.operation !== expected) errors.push('authorization plan operation differs from lifecycle result')
   }
@@ -222,8 +265,10 @@ const caseValidators = {
   activation: validateActivation,
   operation: validateOperation,
   'operation-v2': validateOperationV2,
+  'operation-v3': validateOperationV3,
   result: validateResult,
   'result-v2': validateResultV2,
+  'result-v3': validateResultV3,
   snapshot: validateSnapshot,
 }
 
@@ -260,8 +305,22 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/plugin-lifecycl
 const publicSnapshots = JSON.stringify([
   schemas.get('plugin-lifecycle-result.v1.schema.json'),
   schemas.get('plugin-lifecycle-result.v2.schema.json'),
+  schemas.get('plugin-lifecycle-result.v3.schema.json'),
   schemas.get('plugin-runtime-snapshot.v1.schema.json'),
 ])
+const lifecycleV3Operation = JSON.parse(await readFile(
+  path.join(root, 'test-vectors/plugin-lifecycle/valid/operation-v3.json'),
+  'utf8',
+)).value
+const forgedV2 = {
+  ...lifecycleV3Operation,
+  $schema: schemas.get('plugin-lifecycle-operation.v2.schema.json').$id,
+  schemaVersion: 2,
+}
+if (validators.operationV2(forgedV2)) {
+  console.error('frozen lifecycle v2 must not accept permission authorization decision v2')
+  failures += 1
+}
 for (const forbidden of [
   'sourceDirectory',
   'localPath',

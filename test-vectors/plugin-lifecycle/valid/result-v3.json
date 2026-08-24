@@ -1,0 +1,41 @@
+{
+  "case": "result-v3",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-result.v3.schema.json",
+    "schemaVersion": 3,
+    "requestId": "request-source-10",
+    "profileId": "work",
+    "operation": "inspect-source",
+    "outcome": "planned",
+    "revision": 7,
+    "runtimeGeneration": "runtime-4",
+    "scope": "plugin-generation",
+    "affectedPluginIds": ["notes"],
+    "candidateId": "candidate-10",
+    "impactToken": "impact-10",
+    "package": {
+      "id": "notes",
+      "name": "Notes",
+      "version": "1.3.0",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "dependencies": [],
+      "canonicalSource": "https://plugins.example/notes"
+    },
+    "authorizationPlan": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v2.schema.json",
+      "schemaVersion": 2,
+      "planId": "permission-10",
+      "operation": "install",
+      "profileId": "work",
+      "identity": { "source": "https://plugins.example/notes", "pluginId": "notes" },
+      "catalogVersion": "2026-08-24",
+      "binding": {
+        "operationId": "candidate-10",
+        "runtimeGeneration": "runtime-4",
+        "moduleGeneration": "notes-generation-8",
+        "requestId": "request-source-10"
+      },
+      "declarations": []
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "case": "operation-v3",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-operation.v3.schema.json",
+    "schemaVersion": 3,
+    "requestId": "request-enable-10",
+    "profileId": "work",
+    "expectedRevision": 7,
+    "runtimeGeneration": "runtime-4",
+    "operation": {
+      "kind": "enable",
+      "pluginId": "notes",
+      "authorizationDecision": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v2.schema.json",
+        "schemaVersion": 2,
+        "planId": "permission-10",
+        "operation": "enable",
+        "profileId": "work",
+        "identity": { "source": "https://plugins.example/notes", "pluginId": "notes" },
+        "binding": {
+          "operationId": "request-enable-10",
+          "runtimeGeneration": "runtime-4",
+          "moduleGeneration": "notes-generation-8",
+          "requestId": "request-enable-10"
+        },
+        "decisions": []
+      }
+    }
+  }
+}
