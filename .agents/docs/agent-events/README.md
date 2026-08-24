@@ -274,6 +274,13 @@ specific token bucket is an adapter fact. Version 1 provides fields and
 fixtures to record verified behavior but defines no cross-adapter assumption.
 Unverified behavior is `experimental` or `unavailable`.
 
+Durable adapter-owned history is not appended to this live ledger. The
+orthogonal `cordisx.agent-history/v1` service returns snapshot-bound pages of
+valid version-2 events with an explicit historical source and privacy policy.
+See `../agent-history/README.md`. A consumer may merge those projections for
+display, but live and historical sequences, coverage, and authority remain
+distinct.
+
 ## Conformance and validation matrix
 
 Protocol conformance covers schema strictness, contiguous per-session

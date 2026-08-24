@@ -15,6 +15,9 @@ Specified areas:
 - `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery
   handles, cancellation, pre-step/prompt lifecycle, permission, degradation,
   and pagination contracts versions 1 and 2.
+- `agent-history/`: read-only, permission-scoped historical Agent projections,
+  opaque pagination/tail, payload policy, provenance, and privacy contract
+  version 1.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution versions 2 and 3, availability, contextual
   invocation, DSH intent mapping, and explicit replacement refusals.
