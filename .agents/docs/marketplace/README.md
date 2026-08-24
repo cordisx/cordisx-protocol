@@ -12,7 +12,13 @@ The machine-readable contracts are:
   `schemas/marketplace-feed.v1.schema.json` for the original single-language
   format;
 - `schemas/marketplace-plugin.v2.schema.json` and
-  `schemas/marketplace-feed.v2.schema.json` for localized discovery metadata.
+  `schemas/marketplace-feed.v2.schema.json` for localized discovery metadata;
+- `schemas/marketplace-plugin.v3.schema.json` and
+  `schemas/marketplace-feed.v3.schema.json` for external artifact identity and
+  top-level trust records; and
+- `schemas/marketplace-official.v1.schema.json` and
+  `schemas/marketplace-certification.v1.schema.json` for the two independent
+  trust dimensions embedded by a version-3 feed.
 
 Version 2 adds localization only for human-facing feed metadata. It does not
 define installation, executable package resolution, signatures, provenance,
@@ -20,18 +26,23 @@ official status, certification, capability grants, activation, update, or
 rollback. Consumers must reject unsupported versions instead of guessing at
 fields from a newer document.
 
+Version 3 composes localized discovery with the independent trust contract in
+[`trust.md`](trust.md). It does not change the Marketplace's metadata-only
+ownership boundary.
+
 ## Ownership and artifact boundary
 
 The Marketplace never owns a plugin's source, bundle, build, or publication.
-Those remain in the plugin's owning repository and package artifact. A feed
-entry only refers to that external artifact through stable machine data such
-as `id`, `version`, canonical `source`, an optional manifest URL, and any
-package or integrity field introduced by a future protocol.
+Those remain in the plugin's owning repository and package artifact. A
+version-3 feed entry may refer to that external artifact through stable machine
+data: publisher identity, package namespace/name, download URL, and `sha256`
+integrity. This is a reference, not package hosting or code ingestion.
 
-Feeds must not copy renderer schemas, source trees, or bundle content. Future
-provenance, official, and certification records compose with discovery through
-an independent trust contract. They are not plugin-self-asserted fields and
-are not implied by version-2 localization.
+Feeds must not copy renderer schemas, source trees, or bundle content. Official
+and certification records compose with discovery through an independent trust
+contract. They are top-level Marketplace authority records, not
+plugin-self-asserted fields, and are not implied by version-2 localization or
+the presence of an artifact reference.
 
 ## Plugin identity
 
@@ -59,7 +70,7 @@ licenses, and integrity values are never translated.
 
 ## Plugin entries
 
-Both versions require an `id`, human-readable fallback `name` and
+All versions require an `id`, human-readable fallback `name` and
 `description`, release `version`, canonical `source`, license, CordisX
 compatibility range, and at least one author. Optional discovery metadata
 includes `homepage`, `icon`, `keywords`, author URLs, and a future-facing
@@ -80,6 +91,10 @@ canonical `Intl` serialization (for example `en` and `zh-CN`), and a locale
 must not be repeated in `localizations` when it is already the fallback.
 Unknown properties and non-canonical locale keys are rejected.
 
+Version 3 preserves the same localization projection and may add `artifact`.
+Artifact fields are stable machine identity and never localized. Their
+presence alone does not imply official or certified status.
+
 Host display projection is field-wise and deterministic:
 
 1. the current Host locale when that localized field exists;
@@ -96,10 +111,13 @@ network reload.
 ## Marketplace feeds
 
 A feed requires `$schema`, `schemaVersion`, `name`, `homepage`, and a
-`plugins` array containing plugin entries of the same version. A version-2
-feed also requires `fallbackLocale` and may localize its display name. Feed
-generation is deterministic: catalogs sort entries first by canonical
-`source`, then by `id`, then by release `version`.
+`plugins` array containing plugin entries of the same version. Version-2 and
+version-3 feeds also require `fallbackLocale` and may localize their display
+name. Version 3 additionally requires `generatedAt`, explicit protected-merge
+trust metadata, and `official` and `certifications` arrays, including when
+those arrays are empty. Feed generation is deterministic: catalogs sort
+entries first by canonical `source`, then by `id`, then by release `version`;
+trust records use their documented exact-identity order.
 
 Within one feed, duplicate `(source, id)` tuples are invalid even if versions
 differ. One feed presents one current discovery record per plugin identity;
@@ -108,7 +126,7 @@ protocol.
 
 ## Version compatibility
 
-Version-1 consumers reject version-2 documents. Publishers that must serve an
+Version-1 consumers reject version-2 and version-3 documents. Publishers that must serve an
 older client may deliberately produce a separate version-1 projection using
 the version-2 fallback values while preserving the same canonical identity.
 Consumers must not silently downgrade, strip fields, or combine versions inside
@@ -117,6 +135,10 @@ one feed.
 Version-2 consumers continue to accept version 1 as a single-language entry
 whose effective fallback locale is `en`; this is a compatibility projection,
 not a claim that the original prose was authored in English.
+
+Version-3 consumers may accept versions 1 and 2 as discovery-only feeds. They
+must project neither Official nor Certified for those feeds: absence of the
+version-3 trust envelope is not a downgrade-compatible positive claim.
 
 ## Multiple feeds
 
@@ -142,9 +164,11 @@ request checks that:
 - deterministically rebuild the aggregate feed;
 - fail when the committed feed differs from generated output.
 
-Conformance fixtures cover both schema versions, locale projection and
+Conformance fixtures cover all schema versions, locale projection and
 fallback, invalid locale/author bindings, invalid identity and unknown fields,
-duplicate tuples, deterministic ordering, and mixed-version rejection.
+duplicate tuples, deterministic ordering, mixed-version rejection, exact
+artifact mismatch, unknown trust authority, status/expiry/revocation, and
+plugin-manifest self-claims.
 
 ## Security boundary
 

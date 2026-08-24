@@ -1,0 +1,21 @@
+{
+  "case": "trusted-empty",
+  "sourceUrl": "https://raw.githubusercontent.com/cordisx/marketplace/main/marketplace.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v3.schema.json",
+    "schemaVersion": 3,
+    "generatedAt": "2026-08-24T08:00:00Z",
+    "trust": {
+      "authority": "cordisx.marketplace.codeowners/v1",
+      "root": "https://raw.githubusercontent.com/cordisx/marketplace/main/marketplace.json",
+      "grantModel": "protected-merge-chain-v1",
+      "cryptographicAttestation": "unsupported"
+    },
+    "fallbackLocale": "en",
+    "name": "CordisX Marketplace",
+    "homepage": "https://cordisx.github.io/marketplace/",
+    "plugins": [],
+    "official": [],
+    "certifications": []
+  }
+}

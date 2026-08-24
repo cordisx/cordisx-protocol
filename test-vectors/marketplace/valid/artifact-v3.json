@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v3.schema.json",
+  "schemaVersion": 3,
+  "id": "notes",
+  "fallbackLocale": "en",
+  "name": "Notes",
+  "description": "A structured notes plugin.",
+  "version": "1.3.0",
+  "source": "https://github.com/cordisx/notes",
+  "artifact": {
+    "publisherIdentity": "npm:@cordisx",
+    "packageNamespace": "@cordisx",
+    "packageName": "@cordisx/notes",
+    "downloadUrl": "https://registry.npmjs.org/@cordisx/notes/-/notes-1.3.0.tgz",
+    "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "license": "AGPL-3.0-or-later",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "CordisX", "url": "https://github.com/cordisx" }],
+  "keywords": ["notes"]
+}

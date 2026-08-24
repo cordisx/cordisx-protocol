@@ -1,0 +1,64 @@
+{
+  "case": "trusted-official-mismatch",
+  "sourceUrl": "https://raw.githubusercontent.com/cordisx/marketplace/main/marketplace.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v3.schema.json",
+    "schemaVersion": 3,
+    "generatedAt": "2026-08-24T08:00:00Z",
+    "trust": {
+      "authority": "cordisx.marketplace.codeowners/v1",
+      "root": "https://raw.githubusercontent.com/cordisx/marketplace/main/marketplace.json",
+      "grantModel": "protected-merge-chain-v1",
+      "cryptographicAttestation": "unsupported"
+    },
+    "fallbackLocale": "en",
+    "name": "CordisX Marketplace",
+    "homepage": "https://cordisx.github.io/marketplace/",
+    "plugins": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v3.schema.json",
+        "schemaVersion": 3,
+        "id": "notes",
+        "fallbackLocale": "en",
+        "name": "Notes",
+        "description": "A structured notes plugin.",
+        "version": "1.3.0",
+        "source": "https://github.com/cordisx/notes",
+        "artifact": {
+          "publisherIdentity": "npm:@third-party",
+          "packageNamespace": "@third-party",
+          "packageName": "@third-party/notes",
+          "downloadUrl": "https://registry.npmjs.org/@third-party/notes/-/notes-1.3.0.tgz",
+          "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "license": "AGPL-3.0-or-later",
+        "compatibility": { "cordisx": "^0.1.0" },
+        "authors": [{ "name": "Example" }]
+      }
+    ],
+    "official": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v1.schema.json",
+        "schemaVersion": 1,
+        "designation": "cordisx-official",
+        "identity": {
+          "pluginId": "notes",
+          "canonicalSource": "https://github.com/cordisx/notes",
+          "publisherIdentity": "npm:@cordisx",
+          "packageNamespace": "@cordisx",
+          "packageName": "@cordisx/notes"
+        },
+        "verificationPolicy": { "id": "cordisx-official-publisher", "version": "1.0.0" },
+        "verifiedAt": "2026-08-20T08:00:00Z",
+        "reviewer": {
+          "authority": "cordisx.marketplace.codeowners/v1",
+          "evidenceRef": "https://github.com/cordisx/marketplace/pull/41"
+        },
+        "status": "active",
+        "label": { "key": "official.label", "fallback": "Official" },
+        "description": { "key": "official.description", "fallback": "Created by CordisX." }
+      }
+    ],
+    "certifications": []
+  }
+}

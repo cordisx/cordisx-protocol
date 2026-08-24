@@ -1,0 +1,34 @@
+{
+  "case": "official-revoked",
+  "kind": "official",
+  "evaluatedAt": "2026-08-24T08:00:00Z",
+  "subject": {
+    "pluginId": "notes",
+    "canonicalSource": "https://github.com/cordisx/notes",
+    "publisherIdentity": "npm:@cordisx",
+    "packageNamespace": "@cordisx",
+    "packageName": "@cordisx/notes"
+  },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v1.schema.json",
+    "schemaVersion": 1,
+    "designation": "cordisx-official",
+    "identity": {
+      "pluginId": "notes",
+      "canonicalSource": "https://github.com/cordisx/notes",
+      "publisherIdentity": "npm:@cordisx",
+      "packageNamespace": "@cordisx",
+      "packageName": "@cordisx/notes"
+    },
+    "verificationPolicy": { "id": "cordisx-official-publisher", "version": "1.0.0" },
+    "verifiedAt": "2026-08-20T08:00:00Z",
+    "reviewer": {
+      "authority": "cordisx.marketplace.codeowners/v1",
+      "evidenceRef": "https://github.com/cordisx/marketplace/commit/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "status": "revoked",
+    "revokedAt": "2026-08-23T08:00:00Z",
+    "label": { "key": "official.label", "fallback": "Official" },
+    "description": { "key": "official.revoked", "fallback": "The official publisher designation was revoked." }
+  }
+}

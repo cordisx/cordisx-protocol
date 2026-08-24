@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v1.schema.json",
+  "title": "CordisX Marketplace Official Publisher Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "designation",
+    "identity",
+    "verificationPolicy",
+    "verifiedAt",
+    "reviewer",
+    "status",
+    "label",
+    "description"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "designation": { "const": "cordisx-official" },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pluginId", "canonicalSource", "publisherIdentity", "packageNamespace", "packageName"],
+      "properties": {
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "canonicalSource": {
+          "allOf": [
+            { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/canonicalPublicSource" },
+            { "type": "string", "pattern": "^https://github\\.com/cordisx/[A-Za-z0-9_.-]+$" }
+          ]
+        },
+        "publisherIdentity": { "const": "npm:@cordisx" },
+        "packageNamespace": { "const": "@cordisx" },
+        "packageName": {
+          "type": "string",
+          "pattern": "^@cordisx/[a-z0-9][a-z0-9._-]*$",
+          "maxLength": 214
+        }
+      }
+    },
+    "verificationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "cordisx-official-publisher" },
+        "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" }
+      }
+    },
+    "verifiedAt": { "type": "string", "format": "date-time" },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "evidenceRef"],
+      "properties": {
+        "authority": { "const": "cordisx.marketplace.codeowners/v1" },
+        "evidenceRef": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://github\\.com/cordisx/marketplace/(?:pull/[1-9][0-9]*|commit/[a-f0-9]{40})$",
+          "maxLength": 2048
+        }
+      }
+    },
+    "status": { "enum": ["active", "revoked"] },
+    "revokedAt": { "type": "string", "format": "date-time" },
+    "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+    "description": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+  }
+}

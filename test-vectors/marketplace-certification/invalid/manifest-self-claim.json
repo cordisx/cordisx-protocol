@@ -1,0 +1,12 @@
+{
+  "case": "manifest-self-claim",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v3.schema.json",
+    "schemaVersion": 3,
+    "id": "notes",
+    "name": "Notes",
+    "capabilities": [],
+    "services": [],
+    "certification": "cordisx-certified"
+  }
+}

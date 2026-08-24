@@ -5,12 +5,15 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchemas = [1, 2].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8')))
-const feedSchemas = [1, 2].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8')))
+const pluginSchemas = [1, 2, 3].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8')))
+const feedSchemas = [1, 2, 3].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8')))
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
 const resolvedFeedSchemas = await Promise.all(feedSchemas)
-const ajv = new Ajv2020({ allErrors: true, strict: true })
+const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv)
+for (const dependency of ['ui-common.v1.schema.json', 'plugin-lifecycle-common.v1.schema.json', 'marketplace-official.v1.schema.json', 'marketplace-certification.v1.schema.json']) {
+  ajv.addSchema(JSON.parse(await readFile(path.join(root, 'schemas', dependency), 'utf8')))
+}
 for (const schema of resolvedPluginSchemas) ajv.addSchema(schema)
 const pluginValidators = new Map(resolvedPluginSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.getSchema(schema.$id)]))
 const feedValidators = new Map(resolvedFeedSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.compile(schema)]))
@@ -56,8 +59,8 @@ function localizedField(raw, localizations, field, currentLocale, fallbackLocale
 
 /** Deterministic display/search projection; stable identity and canonical URLs never enter localization. */
 export function projectPluginMetadata(plugin, currentLocale) {
-  const fallbackLocale = plugin.schemaVersion === 2 ? plugin.fallbackLocale : 'en'
-  const localizations = plugin.schemaVersion === 2 ? plugin.localizations : undefined
+  const fallbackLocale = plugin.schemaVersion >= 2 ? plugin.fallbackLocale : 'en'
+  const localizations = plugin.schemaVersion >= 2 ? plugin.localizations : undefined
   return {
     name: localizedField(plugin.name, localizations, 'name', currentLocale, fallbackLocale),
     description: localizedField(plugin.description, localizations, 'description', currentLocale, fallbackLocale),
@@ -67,8 +70,8 @@ export function projectPluginMetadata(plugin, currentLocale) {
 }
 
 export function projectFeedName(feed, currentLocale) {
-  const fallbackLocale = feed.schemaVersion === 2 ? feed.fallbackLocale : 'en'
-  return localizedField(feed.name, feed.schemaVersion === 2 ? feed.localizations : undefined, 'name', currentLocale, fallbackLocale)
+  const fallbackLocale = feed.schemaVersion >= 2 ? feed.fallbackLocale : 'en'
+  return localizedField(feed.name, feed.schemaVersion >= 2 ? feed.localizations : undefined, 'name', currentLocale, fallbackLocale)
 }
 
 export function validatePlugin(plugin) {
@@ -80,12 +83,16 @@ export function validatePlugin(plugin) {
   } catch (error) {
     errors.push({ message: error instanceof Error ? error.message : String(error) })
   }
-  if (plugin.schemaVersion === 2) {
+  if (plugin.schemaVersion >= 2) {
     try {
       errors.push(...localeErrors(plugin, 'plugin', plugin.authors.length))
     } catch (error) {
       errors.push({ message: error instanceof Error ? error.message : String(error) })
     }
+  }
+  if (plugin.schemaVersion === 3 && plugin.artifact !== undefined
+    && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)) {
+    errors.push({ message: 'artifact.packageName must belong to artifact.packageNamespace' })
   }
   return errors
 }
@@ -101,7 +108,7 @@ export function validateFeed(feed) {
   const validateFeedSchema = feedValidators.get(feed?.schemaVersion)
   if (validateFeedSchema === undefined) errors.push({ message: 'unsupported marketplace feed schemaVersion' })
   else if (!validateFeedSchema(feed)) errors.push(...(validateFeedSchema.errors ?? []))
-  if (feed?.schemaVersion === 2) {
+  if (feed?.schemaVersion >= 2) {
     try {
       errors.push(...localeErrors(feed, 'feed'))
     } catch (error) {
