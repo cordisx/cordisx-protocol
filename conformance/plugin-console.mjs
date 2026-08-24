@@ -26,6 +26,18 @@ export function validatePluginConsolePage(page) {
     if (entry.generation !== page.generation) errors.push(`entry[${index}] generation differs from page`)
     if (entry.seq <= previousSeq) errors.push(`entry[${index}] seq is not strictly increasing`)
     if (entry.time < previousTime) errors.push(`entry[${index}] time moves backwards`)
+    if (entry.coverage === 'unknown') errors.push(`entry[${index}] unknown coverage cannot enter a plugin-owned page`)
+    if ((entry.kind === 'invocation' || entry.kind === 'permission') && entry.coverage !== 'host-mediated') {
+      errors.push(`entry[${index}] Host call phases require host-mediated coverage`)
+    }
+    if (entry.kind === 'console' && entry.coverage !== 'scoped-console') {
+      errors.push(`entry[${index}] plugin console requires scoped-console coverage`)
+    }
+    if (entry.effectiveOwner !== undefined
+      && JSON.stringify(entry.effectiveOwner) !== JSON.stringify(entry.plugin)
+      && entry.trigger?.kind !== 'registration') {
+      errors.push(`entry[${index}] cross-owner invocation requires a registration trigger`)
+    }
     previousSeq = entry.seq
     previousTime = entry.time
     if (entry.correlationId === undefined) continue

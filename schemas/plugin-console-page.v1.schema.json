@@ -13,6 +13,7 @@
     "generatedAt": { "type": "integer", "minimum": 0 },
     "partialObservability": { "const": true },
     "droppedEntries": { "type": "integer", "minimum": 0 },
+    "unattributedEntries": { "type": "integer", "minimum": 0 },
     "entries": { "type": "array", "maxItems": 5000, "items": { "$ref": "plugin-console-entry.v1.schema.json" } }
   }
 }

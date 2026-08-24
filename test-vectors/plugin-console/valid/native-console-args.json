@@ -1,0 +1,49 @@
+{
+  "contract": "cordisx.plugin-console-page/v1",
+  "schemaVersion": 1,
+  "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" },
+  "generation": "generation-10",
+  "generatedAt": 1730000000300,
+  "partialObservability": true,
+  "entries": [{
+    "contract": "cordisx.plugin-console-entry/v1",
+    "schemaVersion": 1,
+    "entryId": "cxconsole:generation-10:0",
+    "seq": 0,
+    "time": 1730000000000,
+    "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" },
+    "generation": "generation-10",
+    "coverage": "scoped-console",
+    "kind": "console",
+    "method": "error",
+    "source": "console.error",
+    "message": "attempt=2 payload={items: Array(2)} Error: boom 9n",
+    "args": [
+      { "type": "string", "preview": "attempt=%d payload=%o", "value": "attempt=%d payload=%o" },
+      { "type": "number", "preview": "2", "value": 2 },
+      {
+        "type": "object",
+        "preview": "{items: Array(2)}",
+        "itemCount": 1,
+        "entries": [{
+          "key": "items",
+          "value": {
+            "type": "array",
+            "preview": "Array(2)",
+            "itemCount": 2,
+            "items": [
+              { "type": "string", "preview": "one", "value": "one" },
+              { "type": "circular", "preview": "[Circular]" }
+            ]
+          }
+        }]
+      },
+      { "type": "error", "preview": "Error: boom", "name": "Error", "value": "boom", "stack": "Error: boom\n    at demo.ts:1:1" },
+      { "type": "bigint", "preview": "9n", "value": "9" },
+      { "type": "function", "preview": "[Function run]", "name": "run" },
+      { "type": "element", "preview": "<button#save.primary>" },
+      { "type": "unavailable", "preview": "[Uninspectable Proxy]" }
+    ],
+    "stack": "Error: boom\n    at demo.ts:1:1"
+  }]
+}

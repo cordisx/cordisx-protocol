@@ -4,7 +4,7 @@
   "title": "CordisX Plugin DevTools Console Entry v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contract", "schemaVersion", "entryId", "seq", "time", "plugin", "generation", "kind", "level", "source", "message"],
+  "required": ["contract", "schemaVersion", "entryId", "seq", "time", "plugin", "generation", "coverage", "kind", "method", "source", "message", "args"],
   "properties": {
     "contract": { "const": "cordisx.plugin-console-entry/v1" },
     "schemaVersion": { "const": 1 },
@@ -12,9 +12,11 @@
     "seq": { "type": "integer", "minimum": 0 },
     "time": { "type": "integer", "minimum": 0 },
     "plugin": { "$ref": "#/$defs/pluginIdentity" },
+    "effectiveOwner": { "$ref": "#/$defs/pluginIdentity" },
     "generation": { "$ref": "#/$defs/opaqueId" },
+    "coverage": { "enum": ["host-mediated", "scoped-console", "best-effort", "unknown"] },
     "kind": { "enum": ["console", "invocation", "permission", "lifecycle", "diagnostic"] },
-    "level": { "enum": ["debug", "log", "info", "warn", "error"] },
+    "method": { "enum": ["debug", "log", "info", "warn", "error"] },
     "source": { "type": "string", "minLength": 1, "maxLength": 160 },
     "message": { "type": "string", "minLength": 1, "maxLength": 4096 },
     "phase": { "enum": ["requested", "ask", "allow", "deny", "dispatch", "success", "failure", "cancel", "activate", "dispose", "reload"] },
@@ -29,8 +31,18 @@
         "invocationKey": { "type": "string", "minLength": 1, "maxLength": 256 }
       }
     },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["capability", "registration", "lifecycle", "error-boundary"] },
+        "registrationId": { "$ref": "#/$defs/opaqueId" },
+        "parentCorrelationId": { "$ref": "#/$defs/opaqueId" }
+      }
+    },
     "durationMs": { "type": "number", "minimum": 0 },
-    "arguments": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/valueSummary" } },
+    "args": { "type": "array", "items": { "$ref": "#/$defs/valueSnapshot" } },
     "request": { "$ref": "#/$defs/consumptionSummary" },
     "result": { "$ref": "#/$defs/consumptionSummary" },
     "stack": { "type": "string", "minLength": 1, "maxLength": 16384 }
@@ -79,13 +91,29 @@
         "pluginId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$" }
       }
     },
-    "valueSummary": {
+    "valueSnapshot": {
       "type": "object",
       "additionalProperties": false,
       "required": ["type", "preview"],
       "properties": {
-        "type": { "enum": ["undefined", "null", "boolean", "number", "string", "bigint", "symbol", "function", "error", "array", "object", "element"] },
+        "type": { "enum": ["undefined", "null", "boolean", "number", "string", "bigint", "symbol", "function", "error", "array", "object", "element", "circular", "unavailable", "redacted"] },
         "preview": { "type": "string", "maxLength": 2048 },
+        "value": { "oneOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" }] },
+        "name": { "type": "string", "maxLength": 256 },
+        "stack": { "type": "string", "maxLength": 16384 },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/valueSnapshot" } },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["key", "value"],
+            "properties": {
+              "key": { "type": "string", "maxLength": 512 },
+              "value": { "$ref": "#/$defs/valueSnapshot" }
+            }
+          }
+        },
         "itemCount": { "type": "integer", "minimum": 0 },
         "byteCount": { "type": "integer", "minimum": 0 },
         "truncated": { "type": "boolean" }
