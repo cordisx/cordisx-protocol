@@ -1,0 +1,52 @@
+{
+  "case": "manifest",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "channel-consumer",
+    "capabilities": [
+      {
+        "name": "channel.accounts.read",
+        "required": true,
+        "reason": { "key": "channel.accounts", "fallback": "List available Channel connections" },
+        "scope": {
+          "channelAccounts": [
+            { "adapterId": "simulator", "accountId": "local" }
+          ]
+        }
+      },
+      {
+        "name": "channel.events.subscribe",
+        "required": true,
+        "reason": { "key": "channel.subscribe", "fallback": "Receive sourced Channel messages" },
+        "scope": {
+          "channelUsers": [
+            {
+              "adapterId": "simulator",
+              "accountId": "local",
+              "tenantId": "test",
+              "userId": "alice"
+            }
+          ]
+        }
+      },
+      {
+        "name": "channel.messages.send",
+        "required": false,
+        "reason": { "key": "channel.send", "fallback": "Send a Channel reply" },
+        "scope": {
+          "channelConversations": [
+            {
+              "adapterId": "simulator",
+              "accountId": "local",
+              "tenantId": "test",
+              "conversationId": "direct-alice",
+              "kind": "direct"
+            }
+          ]
+        }
+      }
+    ],
+    "services": []
+  }
+}

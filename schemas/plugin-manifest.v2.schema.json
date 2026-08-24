@@ -14,7 +14,7 @@
     "name": { "type": "string", "minLength": 1, "maxLength": 200 },
     "capabilities": {
       "type": "array",
-      "maxItems": 19,
+      "maxItems": 21,
       "items": { "$ref": "#/$defs/capabilityDeclaration" }
     },
     "services": {
@@ -39,8 +39,10 @@
         "agent.messages.transform",
         "agent.prompt.section",
         "agent.prompt.context",
+        "channel.accounts.read",
         "channel.accounts.connect",
         "channel.events.receive",
+        "channel.events.subscribe",
         "channel.messages.send",
         "channel.bindings.read",
         "channel.bindings.write",
