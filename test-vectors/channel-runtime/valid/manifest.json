@@ -1,8 +1,8 @@
 {
   "case": "manifest",
   "value": {
-    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v2.schema.json",
-    "schemaVersion": 2,
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v3.schema.json",
+    "schemaVersion": 3,
     "id": "channel-simulator",
     "name": "Channel Simulator",
     "capabilities": [
@@ -62,7 +62,16 @@
       }
     ],
     "services": [
-      { "id": "simulator", "kind": "channel-adapter", "entry": "./dist/simulator.js" }
+      {
+        "id": "simulator",
+        "kind": "channel-adapter",
+        "entry": "./dist/simulator.js",
+        "configuration": {
+          "kind": "host",
+          "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-service-config.v1.schema.json",
+          "configApplies": "restart"
+        }
+      }
     ]
   }
 }

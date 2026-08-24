@@ -110,3 +110,20 @@ All documents use exact `version: 1` and reject unknown fields. Older hosts
 reject these documents rather than interpreting them as Manager tabs or free
 DOM contributions. A future breaking schema or lifecycle change requires a
 new version and explicit migration behavior.
+
+## Launcher service configuration is a separate plane
+
+The `Config`/Schemastery contract applies to renderer plugin fibers. A
+manifest-declared Node service that owns credentials, webhook or long-connection
+transport, durable queues, or process-lifetime state must not tunnel its config
+through a renderer plugin value. It declares an exact Host schema in the
+versioned runtime manifest and exposes only a separate redacted Manager
+descriptor. A service with no user configuration declares `kind=none` rather
+than manufacturing placeholder fields.
+
+Channel manifest v3 and `cordisx.channel-service-config/v1` are the first such
+Host-owned contract. They reuse this protocol's revision fencing, candidate,
+last-good, generation, and secret-redaction principles, but do not reuse its
+ordinary default form or renderer mutation transport. A package may have both a
+renderer `Config` and a Channel service config only as separately identified,
+separately persisted, separately projected documents.

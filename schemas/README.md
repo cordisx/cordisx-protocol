@@ -27,6 +27,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   versioned Platform capability declarations, reasons, and maximum scopes.
 - `plugin-manifest.v2.schema.json`: exact-version Channel capabilities/scopes
   and launcher-resolved `channel-adapter` services;
+- `plugin-manifest.v3.schema.json`: Channel service declarations with mandatory
+  explicit Host schema or no-configuration mode;
 - `channel-common.v1.schema.json`: complete Channel account, tenant,
   conversation, thread, user, and event identities;
 - `channel-user-input.v1.schema.json`: attributed, user-role-only ingress with
@@ -35,6 +37,11 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   session binding;
 - `channel-runtime-snapshot.v1.schema.json`: bounded and redacted manager
   health/binding projection;
+- `channel-service-config.v1.schema.json`: launcher-owned adapter connection,
+  route/task mapping, policy, notification, reliability, rate, and attachment
+  configuration with opaque credential references only;
+- `channel-service-config-descriptor.v1.schema.json`: redacted Host projection
+  for the dedicated Manager Channel settings page;
 - `platform-model.v1.schema.json`: one provider-aware model descriptor keyed by
   `(providerId, modelId)`;
 - `platform-model-page.v1.schema.json`: one provider-filtered model catalog;

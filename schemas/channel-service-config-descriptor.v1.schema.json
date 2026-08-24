@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-service-config-descriptor.v1.schema.json",
+  "title": "CordisX Redacted Channel Service Configuration Descriptor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "identity",
+    "scope",
+    "revision",
+    "lastGoodRevision",
+    "configApplies",
+    "writable",
+    "configuration"
+  ],
+  "properties": {
+    "contract": { "const": "cordisx.channel-service-config-descriptor/v1" },
+    "schemaVersion": { "const": 1 },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "pluginId", "serviceId"],
+      "properties": {
+        "source": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalSource" },
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "serviceId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "generation"],
+      "properties": {
+        "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "generation": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      }
+    },
+    "revision": { "type": "integer", "minimum": 0 },
+    "lastGoodRevision": { "type": "integer", "minimum": 0 },
+    "configApplies": { "const": "restart" },
+    "writable": { "type": "boolean" },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "schemaVersion", "connections", "routes", "reliability"],
+      "properties": {
+        "contract": { "const": "cordisx.channel-service-config/v1" },
+        "schemaVersion": { "const": 1 },
+        "connections": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/connectionProjection" }
+        },
+        "routes": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "channel-service-config.v1.schema.json#/$defs/route" }
+        },
+        "reliability": { "$ref": "channel-service-config.v1.schema.json#/$defs/reliability" }
+      }
+    }
+  },
+  "$defs": {
+    "connectionProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "adapterKind", "enabled", "transport", "secretState"],
+      "properties": {
+        "ref": { "$ref": "channel-common.v1.schema.json#/$defs/tenantRef" },
+        "adapterKind": { "$ref": "channel-service-config.v1.schema.json#/$defs/adapterKind" },
+        "enabled": { "type": "boolean" },
+        "transport": { "$ref": "channel-service-config.v1.schema.json#/$defs/transport" },
+        "secretState": { "enum": ["missing", "ready", "unavailable"] }
+      }
+    }
+  }
+}

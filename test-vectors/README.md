@@ -49,7 +49,8 @@ route/page wiring, pending dependencies, body-only content, authorization
 origin, and lifecycle cleanup/fallback.
 
 Channel runtime suites live in `channel-runtime/valid` and
-`channel-runtime/invalid`. They cover manifest-v2 service/capability boundaries,
-complete Channel and Platform identities, sourced user-only input, binding
-lineage, redacted snapshots, active binding uniqueness, and safe package entry
-resolution.
+`channel-runtime/invalid`. They cover manifest-v2 compatibility and manifest-v3
+explicit service configuration, complete Channel and Platform identities,
+sourced user-only input, binding lineage, launcher-only secret references,
+redacted Manager descriptors, route/connection integrity, retry ordering,
+active binding uniqueness, and safe package entry resolution.
