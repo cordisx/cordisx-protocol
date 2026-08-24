@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-source.v1.schema.json",
+  "schemaVersion": 1,
+  "url": "https://plugins.example/catalog.json?channel=preview",
+  "enabled": false,
+  "local": {
+    "name": "Preview catalog",
+    "description": "Pre-release CordisX plugins from the example publisher.",
+    "note": "Disabled until the next compatibility review."
+  }
+}
