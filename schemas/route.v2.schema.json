@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json",
+  "title": "CordisX Route v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "path", "outlet", "page", "title", "description"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json"
+    },
+    "schemaVersion": { "const": 2 },
+    "id": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localId"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^/(?:[a-z0-9._~-]+|:[a-z][a-zA-Z0-9]*)(?:/(?:[a-z0-9._~-]+|:[a-z][a-zA-Z0-9]*))*$",
+      "maxLength": 512
+    },
+    "outlet": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/reference"
+    },
+    "page": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/reference"
+    },
+    "title": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+    },
+    "description": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
+    },
+    "when": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/condition"
+    }
+  }
+}
