@@ -45,6 +45,7 @@
           "enum": [
             "stale-generation",
             "conflict",
+            "permission-denied",
             "validation-failed",
             "persistence-failed",
             "service-restart-failed",

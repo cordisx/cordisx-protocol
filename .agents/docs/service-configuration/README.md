@@ -22,6 +22,12 @@ mutation outside that owner or generation fails closed. `expectedRevision` is
 compared before validation, persistence, secret-reference changes, or restart;
 the Host never retries a conflict implicitly.
 
+Read and write authorization is evaluated by the Host for the exact service
+identity and profile. A descriptor denied for write reports `writable=false`;
+a stale or forged write still fails closed, and an otherwise well-formed write
+without authority returns the auditable `permission-denied` error code before
+validation, persistence, secret-reference changes, or restart.
+
 ## Schema and secret projection
 
 The service contract supplies both a canonical protocol schema id and a
