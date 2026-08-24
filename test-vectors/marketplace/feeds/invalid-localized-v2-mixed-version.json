@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v2.schema.json",
+  "schemaVersion": 2,
+  "fallbackLocale": "en",
+  "name": "Mixed Marketplace",
+  "homepage": "https://example.com/marketplace/",
+  "plugins": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "legacy",
+      "name": "Legacy",
+      "description": "A v1 plugin cannot be embedded in a v2 feed.",
+      "version": "1.0.0",
+      "source": "https://github.com/example/legacy",
+      "license": "MIT",
+      "compatibility": { "cordisx": "^0.1.0" },
+      "authors": [{ "name": "Example" }]
+    }
+  ]
+}

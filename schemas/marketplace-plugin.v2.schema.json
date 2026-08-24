@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v2.schema.json",
+  "title": "CordisX Marketplace Plugin Entry v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "id",
+    "fallbackLocale",
+    "name",
+    "description",
+    "version",
+    "source",
+    "license",
+    "compatibility",
+    "authors"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v2.schema.json"
+    },
+    "schemaVersion": { "const": 2 },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "maxLength": 96
+    },
+    "fallbackLocale": { "$ref": "#/$defs/locale" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 280 },
+    "localizations": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": { "$ref": "#/$defs/locale" },
+      "additionalProperties": { "$ref": "#/$defs/localization" }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "source": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^?#]+$",
+      "maxLength": 2048
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "maxLength": 2048
+    },
+    "icon": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "maxLength": 2048
+    },
+    "manifest": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "maxLength": 2048
+    },
+    "license": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cordisx"],
+      "properties": {
+        "cordisx": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "authors": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "url": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048 }
+        }
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]*$",
+        "maxLength": 32
+      }
+    }
+  },
+  "$defs": {
+    "locale": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$",
+      "maxLength": 48
+    },
+    "localization": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 280 },
+        "authors": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": { "type": "string", "minLength": 1, "maxLength": 80 }
+        },
+        "keywords": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        }
+      }
+    }
+  }
+}

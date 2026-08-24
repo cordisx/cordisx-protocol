@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v2.schema.json",
+  "schemaVersion": 2,
+  "fallbackLocale": "en",
+  "name": "CordisX Marketplace",
+  "localizations": {
+    "zh-CN": { "name": "CordisX 插件商店" }
+  },
+  "homepage": "https://cordisx.github.io/marketplace/",
+  "plugins": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v2.schema.json",
+      "schemaVersion": 2,
+      "id": "slot-showcase",
+      "fallbackLocale": "en",
+      "name": "Slot Showcase",
+      "description": "Shows structured CordisX extension points.",
+      "localizations": {
+        "zh-CN": {
+          "name": "点位展示",
+          "description": "展示结构化 CordisX 扩展点。",
+          "authors": ["CordisX 团队"],
+          "keywords": ["扩展点", "界面"]
+        }
+      },
+      "version": "0.1.0",
+      "source": "https://github.com/cordisx/slot-showcase",
+      "license": "MIT",
+      "compatibility": { "cordisx": "^0.1.0" },
+      "authors": [{ "name": "CordisX Team" }],
+      "keywords": ["extension-points", "structured-ui"]
+    }
+  ]
+}
