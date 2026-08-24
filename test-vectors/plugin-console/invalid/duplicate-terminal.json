@@ -9,29 +9,29 @@
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:0", "seq": 0, "time": 1730000000000,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "invocation", "level": "info", "source": "commands.execute", "message": "Call requested",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "invocation", "method": "info", "source": "commands.execute", "message": "Call requested", "args": [],
       "phase": "requested", "status": "pending", "correlationId": "cxcall:generation-7:0"
     },
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:1", "seq": 1, "time": 1730000000001,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "invocation", "level": "debug", "source": "commands.execute", "message": "Dispatched",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "invocation", "method": "debug", "source": "commands.execute", "message": "Dispatched", "args": [],
       "phase": "dispatch", "status": "pending", "correlationId": "cxcall:generation-7:0"
     },
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:2", "seq": 2, "time": 1730000000002,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "invocation", "level": "error", "source": "commands.execute", "message": "Call failed",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "invocation", "method": "error", "source": "commands.execute", "message": "Call failed", "args": [],
       "phase": "failure", "status": "failure", "correlationId": "cxcall:generation-7:0", "durationMs": 2
     },
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:3", "seq": 3, "time": 1730000000003,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "invocation", "level": "info", "source": "commands.execute", "message": "Call succeeded",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "invocation", "method": "info", "source": "commands.execute", "message": "Call succeeded", "args": [],
       "phase": "success", "status": "success", "correlationId": "cxcall:generation-7:0", "durationMs": 3
     }
   ]

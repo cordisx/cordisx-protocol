@@ -44,5 +44,7 @@ and path/secret-free results and snapshots. Normative lifecycle text additionall
 fixes staged-registry readiness, whole-closure atomic publish, token-to-complete
 activation-tuple fencing, and last-good recovery without exposing private plans.
 Plugin Console conformance covers owner/generation isolation, ordered immutable
-lines, zero-touch Host call phases, permission projection, terminal uniqueness,
-and the rule that success cannot precede real Host dispatch.
+lines, issuance-bound principal/effective-owner attribution, capture coverage,
+variadic Console argument snapshots, zero-touch Host call phases, permission
+projection, terminal uniqueness, and the rule that success cannot precede real
+Host dispatch.

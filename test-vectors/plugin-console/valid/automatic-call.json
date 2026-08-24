@@ -9,39 +9,39 @@
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:0", "seq": 0, "time": 1730000000000,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "invocation", "level": "info", "source": "platform.models.list", "message": "Call requested",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "invocation", "method": "info", "source": "platform.models.list", "message": "Call requested", "args": [{ "type": "string", "preview": "Call requested", "value": "Call requested" }],
       "phase": "requested", "status": "pending", "correlationId": "cxcall:generation-7:0",
       "request": { "type": "object", "itemCount": 1 }
     },
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:1", "seq": 1, "time": 1730000000001,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "permission", "level": "info", "source": "models.read", "message": "Permission allowed",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "permission", "method": "info", "source": "models.read", "message": "Permission allowed", "args": [{ "type": "string", "preview": "Permission allowed", "value": "Permission allowed" }],
       "phase": "allow", "status": "pending", "correlationId": "cxcall:generation-7:0"
     },
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:2", "seq": 2, "time": 1730000000002,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "invocation", "level": "debug", "source": "platform.models.list", "message": "Dispatched to Host adapter",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "invocation", "method": "debug", "source": "platform.models.list", "message": "Dispatched to Host adapter", "args": [{ "type": "string", "preview": "Dispatched to Host adapter", "value": "Dispatched to Host adapter" }],
       "phase": "dispatch", "status": "pending", "correlationId": "cxcall:generation-7:0"
     },
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:3", "seq": 3, "time": 1730000000021,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "invocation", "level": "info", "source": "platform.models.list", "message": "Call succeeded",
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "host-mediated",
+      "kind": "invocation", "method": "info", "source": "platform.models.list", "message": "Call succeeded", "args": [{ "type": "string", "preview": "Call succeeded", "value": "Call succeeded" }, { "type": "object", "preview": "{models: Array(3)}", "entries": [{ "key": "models", "value": { "type": "array", "preview": "Array(3)", "itemCount": 3, "items": [] } }] }],
       "phase": "success", "status": "success", "correlationId": "cxcall:generation-7:0", "durationMs": 21,
       "result": { "type": "platform-model-page", "itemCount": 3, "byteCount": 384 }
     },
     {
       "contract": "cordisx.plugin-console-entry/v1", "schemaVersion": 1,
       "entryId": "cxconsole:generation-7:4", "seq": 4, "time": 1730000000022,
-      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7",
-      "kind": "console", "level": "warn", "source": "console.warn", "message": "cache is cold",
-      "arguments": [{ "type": "string", "preview": "cache is cold", "byteCount": 13 }]
+      "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" }, "generation": "generation-7", "coverage": "scoped-console",
+      "kind": "console", "method": "warn", "source": "console.warn", "message": "cache is cold",
+      "args": [{ "type": "string", "preview": "cache is cold", "value": "cache is cold", "byteCount": 13 }]
     }
   ]
 }

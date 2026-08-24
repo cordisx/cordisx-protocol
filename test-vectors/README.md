@@ -65,4 +65,5 @@ snapshots, and canonical-only share availability.
 Plugin Console v1 suites live in `plugin-console/valid` and
 `plugin-console/invalid`. They cover zero-touch Host call instrumentation,
 permission correlation, dispatch-before-success, one terminal per correlation,
-owner/generation fencing, and owner-scoped plugin console messages.
+owner/generation fencing, owner-scoped plugin console messages, variadic native
+Console arguments, format placeholders, and safely inspectable value snapshots.

@@ -1,0 +1,23 @@
+{
+  "contract": "cordisx.plugin-console-page/v1",
+  "schemaVersion": 1,
+  "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" },
+  "generation": "generation-10",
+  "generatedAt": 1730000000300,
+  "partialObservability": true,
+  "entries": [{
+    "contract": "cordisx.plugin-console-entry/v1",
+    "schemaVersion": 1,
+    "entryId": "cxconsole:generation-10:0",
+    "seq": 0,
+    "time": 1730000000000,
+    "plugin": { "source": "file:///plugins/demo/index.ts", "pluginId": "demo" },
+    "generation": "generation-10",
+    "coverage": "scoped-console",
+    "kind": "console",
+    "level": "info",
+    "source": "ctx.logger",
+    "message": "legacy",
+    "data": { "only": "one object" }
+  }]
+}
