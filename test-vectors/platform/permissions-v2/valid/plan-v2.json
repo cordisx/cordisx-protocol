@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v2.schema.json",
+  "schemaVersion": 2,
+  "planId": "runtime-1:workspace-helper:request-1",
+  "operation": "runtime",
+  "profileId": "work",
+  "identity": {
+    "source": "file:///plugins/workspace-helper.js",
+    "pluginId": "workspace-helper"
+  },
+  "catalogVersion": "2026-08-24",
+  "binding": {
+    "operationId": "request-1",
+    "runtimeGeneration": "runtime-1",
+    "moduleGeneration": "workspace-helper-1",
+    "requestId": "request-1"
+  },
+  "declarations": [
+    {
+      "capability": "tasks.create",
+      "required": false,
+      "rationale": {
+        "title": { "key": "permission.create.title", "fallback": "Create a task" },
+        "description": { "key": "permission.create.description", "fallback": "Creates the task selected in the plugin." },
+        "feature": { "key": "permission.create.feature", "fallback": "New task shortcut" },
+        "deniedBehavior": { "key": "permission.create.denied", "fallback": "The shortcut cannot create a task." }
+      },
+      "security": {
+        "dataUse": "ephemeral",
+        "retention": "none",
+        "externalTransfer": false
+      },
+      "scope": {
+        "providers": ["codex"],
+        "cwdRoots": ["/workspace"]
+      },
+      "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "policy": "ask",
+      "decisionRequired": true,
+      "sensitivity": "sensitive",
+      "persistentAllow": true,
+      "persistentDeny": true,
+      "allowedDecisions": ["allow-once", "allow-persistent", "deny-once", "deny-persistent"],
+      "defaultDecision": "allow-once",
+      "presentation": {
+        "name": { "key": "host.tasks.create.name", "fallback": "Create tasks" },
+        "description": { "key": "host.tasks.create.description", "fallback": "Create a task in an allowed working directory." },
+        "risk": { "key": "host.tasks.create.risk", "fallback": "The initial message is sent to the selected provider." },
+        "limitation": { "key": "host.tasks.create.limit", "fallback": "The plugin cannot choose an undeclared provider or directory." }
+      }
+    }
+  ]
+}

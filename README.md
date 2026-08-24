@@ -19,8 +19,9 @@ contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
 conformance vectors in this repository.
 
 Dynamic local packages and plugin generations are defined by the frozen
-package/operation/result v1 schemas, the explicit-local source v1 and separate
-package/operation/result v2 schemas, activation/manager snapshot v1, the
+package/operation/result v1 schemas, the explicit-local source v1, separate
+package/operation/result v2 schemas, permission-aware package v3,
+activation/manager snapshot v1, the
 `manifests`, `lifecycle`, and `distribution` specifications, and the
 `plugin-lifecycle` conformance suite. This local integrity contract does not
 claim remote marketplace installation, publisher signing, or sandboxing.

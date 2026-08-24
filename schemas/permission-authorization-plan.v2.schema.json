@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v2.schema.json",
+  "title": "CordisX Permission Authorization Plan v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "planId",
+    "operation",
+    "profileId",
+    "identity",
+    "catalogVersion",
+    "binding",
+    "declarations"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v2.schema.json"
+    },
+    "schemaVersion": { "const": 2 },
+    "planId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "operation": { "enum": ["install", "update", "enable", "runtime"] },
+    "profileId": { "$ref": "permission-common.v2.schema.json#/$defs/profileId" },
+    "identity": { "$ref": "permission-common.v2.schema.json#/$defs/identity" },
+    "catalogVersion": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "binding": { "$ref": "permission-common.v2.schema.json#/$defs/binding" },
+    "declarations": {
+      "type": "array",
+      "maxItems": 22,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capability",
+          "required",
+          "scope",
+          "securityFingerprint",
+          "policy",
+          "decisionRequired",
+          "sensitivity",
+          "persistentAllow",
+          "persistentDeny",
+          "allowedDecisions",
+          "defaultDecision",
+          "presentation"
+        ],
+        "properties": {
+          "capability": { "$ref": "permission-common.v2.schema.json#/$defs/capability" },
+          "required": { "type": "boolean" },
+          "rationale": { "$ref": "plugin-manifest.v4.schema.json#/$defs/rationale" },
+          "security": { "$ref": "plugin-manifest.v4.schema.json#/$defs/securityDeclaration" },
+          "scope": { "$ref": "permission-common.v2.schema.json#/$defs/scope" },
+          "securityFingerprint": { "$ref": "permission-common.v2.schema.json#/$defs/securityFingerprint" },
+          "policy": { "$ref": "permission-common.v2.schema.json#/$defs/policy" },
+          "decisionRequired": { "type": "boolean" },
+          "sensitivity": { "enum": ["low", "general", "sensitive", "high-risk"] },
+          "persistentAllow": { "type": "boolean" },
+          "persistentDeny": { "type": "boolean" },
+          "allowedDecisions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": { "$ref": "permission-common.v2.schema.json#/$defs/decision" }
+          },
+          "defaultDecision": { "$ref": "permission-common.v2.schema.json#/$defs/decision" },
+          "presentation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "description", "risk", "limitation"],
+            "properties": {
+              "name": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "description": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "risk": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "limitation": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

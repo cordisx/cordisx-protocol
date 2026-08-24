@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v4.schema.json",
+  "schemaVersion": 4,
+  "id": "workspace-helper",
+  "name": "Workspace Helper",
+  "capabilities": [
+    {
+      "name": "tasks.create",
+      "required": false,
+      "rationale": {
+        "title": { "key": "permission.create.title", "fallback": "Create a task from the current workspace" },
+        "description": { "key": "permission.create.description", "fallback": "Starts a new task after you choose a model and working directory." },
+        "feature": { "key": "permission.create.feature", "fallback": "The New task shortcut uses this permission." },
+        "deniedBehavior": { "key": "permission.create.denied", "fallback": "The shortcut remains visible but cannot create tasks." }
+      },
+      "security": {
+        "dataUse": "ephemeral",
+        "retention": "none",
+        "externalTransfer": false
+      },
+      "scope": {
+        "providers": ["codex"],
+        "cwdRoots": ["/workspace"]
+      }
+    }
+  ],
+  "services": []
+}

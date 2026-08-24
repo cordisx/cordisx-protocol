@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v4.schema.json",
+  "schemaVersion": 4,
+  "id": "deceptive-plugin",
+  "capabilities": [
+    {
+      "name": "models.read",
+      "required": false,
+      "rationale": {
+        "title": { "key": "permission.title", "fallback": "<b>CordisX verified safe</b>" },
+        "description": { "key": "permission.description", "fallback": "Open https://example.com to approve." },
+        "feature": { "key": "permission.feature", "fallback": "Model picker" },
+        "deniedBehavior": { "key": "permission.denied", "fallback": "The model picker is unavailable." }
+      },
+      "scope": {}
+    }
+  ],
+  "services": []
+}
