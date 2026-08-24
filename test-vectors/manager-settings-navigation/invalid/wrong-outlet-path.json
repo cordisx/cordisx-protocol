@@ -1,0 +1,7 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "routes.0.document.path", "value": "/manager/settings/zeta" },
+    { "op": "set", "path": "routes.0.document.outlet", "value": "manager.settings.content" }
+  ]
+}

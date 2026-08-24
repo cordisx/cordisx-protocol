@@ -1,0 +1,6 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "pages.0.document.icon", "value": "plugin:zeta-logo" }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "pages.0.document.chrome", "value": "body-only" },
+    { "op": "delete", "path": "pages.0.document.breadcrumbs" }
+  ]
+}

@@ -1,8 +1,10 @@
-# Manager settings tabs protocol
+# Manager settings content tabs protocol
 
-This specification is normative for structured CordisX manager settings tabs,
-their controlled body outlet, deterministic projection, authorization origin,
-and lifecycle. It is host-neutral and contains no Codex selector, native DOM
+This specification is normative for structured tabs that switch content
+inside the CordisX Manager **Settings** page. It does not define top-level
+Manager navigation. Top-level plugin destinations adjacent to Settings use
+[`manager-settings-navigation`](../manager-settings-navigation/README.md).
+Both contracts are host-neutral and contain no Codex selector, native DOM
 class, React type, or renderer-version assumption.
 
 ## Versions and compatibility
@@ -17,13 +19,22 @@ meaning. Rejected v4 data is never downgraded to a free-DOM slot.
 outlet page-chrome compatibility, presentation group, and route-path family
 machine-readable. Catalog v1/v2 consumers reject v3.
 
+Surface version 5 and catalog version 4 retain the stable point id
+`manager.settings.tabs`, so existing policy tuples, registrations, and v4
+validators keep their meaning. Catalog v4 renames only the descriptor payload
+family to the precise `manager-settings-content-tab`; it does not rename the
+point or migrate policy identity. A v5 contribution uses the same item and
+envelope semantics as a v4 `manager-settings-tab`. Hosts normalize the two
+versions to one content-tab runtime record and must not interpret either as a
+top-level navigation item.
+
 Settings page bodies reuse `page.v2` with `chrome: "body-only"`. The page
 schema stays general and frozen. Catalog v3 authorizes body-only pages for
 `manager.settings.content`; no page v3 or settings-specific mount API exists.
 
 ## Extension points
 
-The host declares exactly these manager-settings identities:
+The original catalog-v3 contract declares these manager-settings identities:
 
 - surface `manager.settings.tabs`, payload family `manager-settings-tab`,
   stability `stable`, availability `available`; and
@@ -34,6 +45,12 @@ The host declares exactly these manager-settings identities:
 These are CordisX manager points. They require no Codex adapter selector,
 native anchor, DOM seat, or fallback overlay. Routes and pages are associated
 resources rather than additional extension points.
+
+Catalog v4 declares the same ids with `manager.settings.tabs` described as
+“Manager settings content tabs” and payload family
+`manager-settings-content-tab`. `manager.settings.content` remains a body-only
+outlet in presentation group `manager.settings`. Its separate top-level
+navigation siblings are specified in the linked navigation contract.
 
 ## Contribution shape
 

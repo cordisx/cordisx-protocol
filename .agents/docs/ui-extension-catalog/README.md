@@ -1,14 +1,19 @@
 # UI extension catalog protocol
 
 This specification is normative for the host-neutral CordisX UI extension
-catalog, structured surface contribution versions 2 and 3, and host-generated
+catalog, structured surface contribution versions 2 through 5, and host-generated
 invocation context version 1. It is independent of Codex selectors, React,
 native DOM layout, and distribution format.
 
-Manager settings extends this catalog through the independently versioned
-[`manager-settings-tabs`](../manager-settings-tabs/README.md) contract:
-`surface-contribution.v4` and `host-extension-point-catalog.v3`. The v2 catalog
-and v1/v2/v3 surface vocabularies remain frozen.
+Manager settings extends this catalog through two independently documented
+contracts. [`manager-settings-tabs`](../manager-settings-tabs/README.md)
+defines the content switcher inside Settings; version 4/catalog v3 remain
+compatible inputs, while version 5/catalog v4 names that payload family
+`manager-settings-content-tab`. The separate
+[`manager-settings-navigation`](../manager-settings-navigation/README.md)
+contract adds top-level Manager destinations through
+`manager.settings.navigation-items` and `manager.content`. The v2 catalog and
+v1/v2/v3/v4 surface vocabularies remain frozen.
 
 ## Compatibility
 
@@ -58,6 +63,17 @@ immutable invocation identity at dispatch time;
   `environment-row` families stay compatible; and
 - `outlet` is descriptor-only and is joined to the separate route/page/outlet
   protocol when a host actually declares it.
+
+Version 5 adds two Manager-only structured payload families. A
+`manager-settings-content-tab` retains the version-4 title/icon/route shape
+for an internal Settings content switcher. A
+`manager-settings-navigation-item` contains only a same-owner route reference;
+its required `before-settings` or
+`after-settings` group plus envelope order control relative placement. The
+route-v2 and page-v3 records, not the navigation item, are the single source
+of localized destination title and description. Page v3 must declare a
+`host:*` icon for this point and is the sole icon source for both navigation
+and the standard page header.
 
 Contribution options retain `group`, `order`, `when`, and disabled state. The
 host decides direct-action capacity, overflow, keyboard hints, focus,
@@ -147,7 +163,8 @@ reserved until that adapter supplies unique-seat evidence.
 | assistant actions | `session.message.actions` contextual action |
 | `turnTail` | `session.turn.footer` presenter |
 | `details.tool` | right-panel route/outlet plus `session.tool.actions` |
-| settings sections | `manager.settings.tabs` plus `manager.settings.content` |
+| settings content switcher | `manager.settings.tabs` plus `manager.settings.content` |
+| top-level Manager plugin destination | `manager.settings.navigation-items` plus `manager.content` |
 
 Keyed chat/message/tool renderers and whole composer, session, header, chat,
 message, or tool replacement are refused. Future replacement authority needs a
@@ -165,3 +182,9 @@ mismatches. No version may downgrade a rejected contribution to raw DOM.
 Version 4 additionally fails closed on an unknown manager surface, a repeated
 settings identity/order/condition field inside the item, `group`, badges,
 non-host icons, free header DOM, or a qualified cross-owner settings route.
+
+Version 5 additionally fails closed on an unknown navigation group, title,
+description, or icon duplicated inside a navigation item, a missing/non-host
+page icon, DOM/CSS/selector/header callbacks, or a qualified cross-owner route. Catalog v4,
+route v2, and page v3 remain closed, so older validators reject them rather
+than projecting incomplete navigation or headers.

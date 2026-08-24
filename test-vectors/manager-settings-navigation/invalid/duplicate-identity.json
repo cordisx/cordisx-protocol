@@ -1,0 +1,7 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "contributions.1.owner", "value": "zeta" },
+    { "op": "set", "path": "contributions.1.document.id", "value": "settings" }
+  ]
+}

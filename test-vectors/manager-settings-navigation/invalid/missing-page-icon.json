@@ -1,0 +1,6 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "delete", "path": "pages.0.document.icon" }
+  ]
+}

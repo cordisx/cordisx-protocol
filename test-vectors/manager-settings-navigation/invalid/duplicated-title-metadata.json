@@ -1,0 +1,6 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "contributions.0.document.item.title", "value": { "key": "duplicate.title", "fallback": "Duplicated title" } }
+  ]
+}

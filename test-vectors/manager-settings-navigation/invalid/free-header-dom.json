@@ -1,0 +1,6 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "contributions.0.document.item.headerHtml", "value": "<h1>Untrusted header</h1>" }
+  ]
+}
