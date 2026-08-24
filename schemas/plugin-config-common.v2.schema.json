@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-config-common.v2.schema.json",
+  "title": "CordisX Plugin Configuration Common Definitions v2",
+  "$defs": {
+    "identity": { "$ref": "plugin-config-common.v1.schema.json#/$defs/identity" },
+    "scope": { "$ref": "plugin-config-common.v1.schema.json#/$defs/scope" },
+    "pathSegment": { "$ref": "plugin-config-common.v1.schema.json#/$defs/pathSegment" },
+    "fieldPath": { "$ref": "plugin-config-common.v1.schema.json#/$defs/fieldPath" },
+    "schemaProjection": { "$ref": "plugin-config-common.v1.schema.json#/$defs/schemaProjection" },
+    "secretSlot": { "$ref": "plugin-config-common.v1.schema.json#/$defs/secretSlot" },
+    "applies": {
+      "enum": ["live", "plugin-restart", "service-restart", "app-restart"]
+    }
+  }
+}

@@ -48,7 +48,7 @@ const CONTENT_TAB_SURFACE = 'manager.settings.tabs'
 const CONTENT_OUTLET = 'manager.settings.content'
 const LOCAL_ID = /^[a-z0-9][a-z0-9._-]{0,95}$/
 const HOST_BEFORE = ['host:plugins', 'host:extensions', 'host:routes', 'host:marketplace']
-const HOST_SETTINGS = 'host:settings'
+const HOST_FALLBACK = 'host:plugins'
 const HOST_ABOUT = 'host:about'
 
 function schemaErrors(validator, value) {
@@ -153,7 +153,7 @@ function lifecycleErrors(steps) {
   if (!Array.isArray(steps)) return ['lifecycle must be an array']
   const errors = []
   const eligible = new Set()
-  let active = HOST_SETTINGS
+  let active = HOST_FALLBACK
   let mounted
   for (const [index, step] of steps.entries()) {
     let cleanup = []
@@ -188,19 +188,19 @@ function lifecycleErrors(steps) {
       case 'stale-route':
         eligible.delete(step.id)
         cleanMounted(step.id)
-        if (active === step.id) active = HOST_SETTINGS
+        if (active === step.id) active = HOST_FALLBACK
         break
       case 'generation-replace':
         cleanMounted(mounted)
         eligible.clear()
-        active = HOST_SETTINGS
+        active = HOST_FALLBACK
         break
       case 'close':
         cleanMounted(mounted)
         break
       case 'reopen':
         if (!active.startsWith('host:') && eligible.has(active)) mounted = active
-        else active = HOST_SETTINGS
+        else active = HOST_FALLBACK
         break
       case 'mount-throw':
         if (!eligible.has(step.id)) errors.push(`lifecycle[${index}] cannot mount ineligible navigation item ${step.id}`)
@@ -208,7 +208,7 @@ function lifecycleErrors(steps) {
           active = step.id
           mounted = step.id
           cleanMounted(step.id)
-          active = HOST_SETTINGS
+          active = HOST_FALLBACK
         }
         break
       default:
@@ -303,7 +303,6 @@ export function validateManagerSettingsNavigationSuite(suite) {
   const projection = [
     ...HOST_BEFORE.map(id => ({ id, disabled: false })),
     ...before.map(({ id, disabled }) => ({ id, disabled })),
-    { id: HOST_SETTINGS, disabled: false },
     ...after.map(({ id, disabled }) => ({ id, disabled })),
     { id: HOST_ABOUT, disabled: false },
   ]

@@ -13,5 +13,5 @@
   "resolvedOutlets": [],
   "accesses": [],
   "expectedPending": [{ "id": "demo:pending", "reason": "outlet" }],
-  "expectedProjection": [{ "id": "host:plugins", "disabled": false }, { "id": "host:extensions", "disabled": false }, { "id": "host:routes", "disabled": false }, { "id": "host:marketplace", "disabled": false }, { "id": "host:settings", "disabled": false }, { "id": "host:about", "disabled": false }]
+  "expectedProjection": [{ "id": "host:plugins", "disabled": false }, { "id": "host:extensions", "disabled": false }, { "id": "host:routes", "disabled": false }, { "id": "host:marketplace", "disabled": false }, { "id": "host:about", "disabled": false }]
 }

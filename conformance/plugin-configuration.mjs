@@ -9,9 +9,12 @@ const schemaNames = [
   'ui-common.v1.schema.json',
   'extension-point-common.v1.schema.json',
   'plugin-config-common.v1.schema.json',
+  'plugin-config-common.v2.schema.json',
   'plugin-config-descriptor.v1.schema.json',
+  'plugin-config-descriptor.v2.schema.json',
   'plugin-config-mutation.v1.schema.json',
   'plugin-config-result.v1.schema.json',
+  'plugin-config-result.v2.schema.json',
   'plugin-config-renderer.v1.schema.json',
 ]
 const schemas = new Map()
@@ -31,8 +34,10 @@ function schemaValidator(name) {
 
 const validators = {
   descriptor: schemaValidator('plugin-config-descriptor.v1.schema.json'),
+  'descriptor-v2': schemaValidator('plugin-config-descriptor.v2.schema.json'),
   mutation: schemaValidator('plugin-config-mutation.v1.schema.json'),
   result: schemaValidator('plugin-config-result.v1.schema.json'),
+  'result-v2': schemaValidator('plugin-config-result.v2.schema.json'),
   renderer: schemaValidator('plugin-config-renderer.v1.schema.json'),
 }
 
@@ -76,12 +81,28 @@ export function validateDescriptor(value) {
   return errors
 }
 
+export function validateDescriptorV2(value) {
+  const errors = validateOwnedDocument('descriptor-v2', value)
+  if (errors.length > 0) return errors
+  if (value.lastGoodRevision > value.revision) errors.push('lastGoodRevision exceeds revision')
+  for (const secret of value.secrets) {
+    if (hasPath(value.value, secret.path) || hasPath(value.user, secret.path)) {
+      errors.push(`secret path is exposed: ${secret.path.join('.')}`)
+    }
+  }
+  return errors
+}
+
 export function validateMutation(value) {
   return validateOwnedDocument('mutation', value)
 }
 
 export function validateResult(value) {
   return validateOwnedDocument('result', value)
+}
+
+export function validateResultV2(value) {
+  return validateOwnedDocument('result-v2', value)
 }
 
 const reservedRoles = new Set([
@@ -106,15 +127,29 @@ export function validateRenderer(value) {
 
 const caseValidators = {
   descriptor: validateDescriptor,
+  'descriptor-v2': validateDescriptorV2,
   mutation: validateMutation,
   result: validateResult,
+  'result-v2': validateResultV2,
   renderer: validateRenderer,
 }
 
 function validateVector(vector) {
+  if (vector?.case === 'descriptor-v2-modes') {
+    if (!Array.isArray(vector.values)) return ['descriptor-v2-modes requires values']
+    return vector.values.flatMap((value, index) => validateDescriptorV2(value).map(error => `values[${index}] ${error}`))
+  }
+  if (vector?.case === 'result-v2-modes') {
+    if (!Array.isArray(vector.values)) return ['result-v2-modes requires values']
+    return vector.values.flatMap((value, index) => validateResultV2(value).map(error => `values[${index}] ${error}`))
+  }
   const validate = caseValidators[vector?.case]
   if (validate === undefined) return [`unknown vector case: ${String(vector?.case)}`]
   return validate(vector.value)
+}
+
+function normalizedApplies(version, applies) {
+  return version === 1 && applies === 'restart' ? 'plugin-restart' : applies
 }
 
 async function jsonFiles(directory) {
@@ -139,6 +174,14 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/plugin-configur
     console.error(`${path.relative(root, file)} should be invalid`)
     failures += 1
   }
+}
+
+if (normalizedApplies(1, 'restart') !== 'plugin-restart'
+  || normalizedApplies(2, 'plugin-restart') !== 'plugin-restart'
+  || normalizedApplies(2, 'service-restart') !== 'service-restart'
+  || normalizedApplies(2, 'app-restart') !== 'app-restart') {
+  console.error('Plugin configuration mode compatibility normalization is incorrect')
+  failures += 1
 }
 
 const publicSchemas = JSON.stringify(schemaNames.map(name => schemas.get(name)))

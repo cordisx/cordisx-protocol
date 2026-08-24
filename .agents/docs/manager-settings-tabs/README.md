@@ -1,11 +1,17 @@
 # Manager settings content tabs protocol
 
-This specification is normative for structured tabs that switch content
-inside the CordisX Manager **Settings** page. It does not define top-level
+This specification preserves the structured-tab compatibility contract for
+Hosts that expose a CordisX Manager **Settings** page. It does not define top-level
 Manager navigation. Top-level plugin destinations adjacent to Settings use
 [`manager-settings-navigation`](../manager-settings-navigation/README.md).
 Both contracts are host-neutral and contain no Codex selector, native DOM
 class, React type, or renderer-version assumption.
+
+A Host whose product IA removes the top-level Settings destination does not
+manufacture an empty page for these tabs. It retains the closed protocol and
+policy identities for compatibility, reports the surface/outlet as not mounted
+in current context, and keeps real plugin configuration and permissions in the
+owning plugin detail.
 
 ## Versions and compatibility
 

@@ -45,7 +45,6 @@
     { "id": "zeta:settings", "disabled": false },
     { "id": "alpha:tie", "disabled": false },
     { "id": "zeta:tie", "disabled": false },
-    { "id": "host:settings", "disabled": false },
     { "id": "alpha:after", "disabled": true },
     { "id": "host:about", "disabled": false }
   ],
