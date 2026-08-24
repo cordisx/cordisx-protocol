@@ -98,3 +98,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   rollback outcome with redacted package and impact data;
 - `plugin-runtime-snapshot.v1.schema.json`: redacted Host-owned manager
   projection of package state, graph, preferences, and available operations.
+- `plugin-console-entry.v1.schema.json`: one Host-attributed DevTools Console
+  line for plugin console, invocation, permission, lifecycle, or diagnostic
+  output, with bounded argument and consumption summaries;
+- `plugin-console-page.v1.schema.json`: one owner- and generation-bounded
+  in-memory Console projection with an explicit partial-observability marker.
