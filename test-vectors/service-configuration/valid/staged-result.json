@@ -1,0 +1,16 @@
+{
+  "case": "result",
+  "value": {
+    "contract": "cordisx.service-config-result/v1",
+    "schemaVersion": 1,
+    "identity": {
+      "source": "https://github.com/cordisx/cordisx/tree/main/packages/cli/src/plugins/cli-proxy-api",
+      "pluginId": "cli-proxy-api",
+      "serviceId": "providers-startup"
+    },
+    "scope": { "profileId": "default", "generation": "host-42" },
+    "status": "staged",
+    "revision": 2,
+    "configApplies": "app-restart"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "case": "runtime",
+  "value": {
+    "contract": "cordisx.cli-proxy-provider-runtime-config/v1",
+    "schemaVersion": 1,
+    "providers": [{
+      "id": "gateway-a",
+      "displayName": "Gateway A",
+      "enabled": true,
+      "endpoint": { "baseUrl": "https://proxy.example.com/v1" },
+      "models": { "mappings": [
+        { "sourceModelId": "remote", "modelId": "one", "enabled": true, "isDefault": false },
+        { "sourceModelId": "remote", "modelId": "two", "enabled": true, "isDefault": false }
+      ] },
+      "timeoutMs": 30000
+    }]
+  }
+}

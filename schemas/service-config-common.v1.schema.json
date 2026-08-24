@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/service-config-common.v1.schema.json",
+  "title": "CordisX Host Service Configuration Common Definitions v1",
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "pluginId", "serviceId"],
+      "properties": {
+        "source": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalSource" },
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "serviceId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "generation"],
+      "properties": {
+        "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "generation": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      }
+    },
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "projection"],
+      "properties": {
+        "id": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalSource" },
+        "projection": { "$ref": "plugin-config-common.v2.schema.json#/$defs/schemaProjection" }
+      }
+    },
+    "configApplies": { "enum": ["service-restart", "app-restart"] },
+    "secretSlot": { "$ref": "plugin-config-common.v2.schema.json#/$defs/secretSlot" },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "stale-generation",
+            "conflict",
+            "validation-failed",
+            "persistence-failed",
+            "service-restart-failed",
+            "secret-ref-failed",
+            "disposed"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    }
+  }
+}

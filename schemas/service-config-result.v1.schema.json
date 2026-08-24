@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/service-config-result.v1.schema.json",
+  "title": "CordisX Host Service Configuration Mutation Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "identity", "scope", "status", "revision"],
+  "properties": {
+    "contract": { "const": "cordisx.service-config-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "identity": { "$ref": "service-config-common.v1.schema.json#/$defs/identity" },
+    "scope": { "$ref": "service-config-common.v1.schema.json#/$defs/scope" },
+    "status": { "enum": ["applied", "staged", "conflict", "rejected"] },
+    "revision": { "type": "integer", "minimum": 0 },
+    "configApplies": { "$ref": "service-config-common.v1.schema.json#/$defs/configApplies" },
+    "serviceGeneration": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "error": { "$ref": "service-config-common.v1.schema.json#/$defs/error" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "applied" } } },
+      "then": {
+        "required": ["configApplies", "serviceGeneration"],
+        "properties": {
+          "configApplies": { "const": "service-restart" },
+          "serviceGeneration": true,
+          "error": false
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "staged" } } },
+      "then": {
+        "required": ["configApplies"],
+        "properties": {
+          "configApplies": { "const": "app-restart" },
+          "serviceGeneration": false,
+          "error": false
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "enum": ["conflict", "rejected"] } } },
+      "then": {
+        "required": ["error"],
+        "properties": {
+          "configApplies": false,
+          "serviceGeneration": false,
+          "error": true
+        }
+      }
+    }
+  ]
+}
