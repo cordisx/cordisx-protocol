@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-common.v1.schema.json",
+  "title": "CordisX Plugin Lifecycle Common Definitions v1",
+  "$defs": {
+    "semanticVersion": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 64,
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "generation": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "transactionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "canonicalPublicSource": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^?#]+$",
+      "maxLength": 2048
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "version": { "$ref": "#/$defs/semanticVersion" }
+      }
+    },
+    "applyScope": {
+      "enum": [
+        "config-live",
+        "plugin-restart",
+        "plugin-generation",
+        "runtime-generation",
+        "app-restart"
+      ]
+    },
+    "pluginStatus": {
+      "enum": [
+        "active",
+        "disabled",
+        "blocked",
+        "permission-blocked",
+        "installing",
+        "updating",
+        "enabling",
+        "disabling",
+        "reloading",
+        "uninstalling",
+        "rolling-back",
+        "failed",
+        "rollback-failed"
+      ]
+    },
+    "operationKind": {
+      "enum": [
+        "inspect-local",
+        "install",
+        "update",
+        "enable",
+        "disable",
+        "reload",
+        "uninstall"
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "case": "activation",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-activation.v1.schema.json",
+    "schemaVersion": 1,
+    "recordKind": "active",
+    "profileId": "work",
+    "revision": 7,
+    "lastGoodRevision": 7,
+    "runtimeGeneration": "runtime-4",
+    "plugins": [
+      {
+        "id": "storage",
+        "version": "1.0.0",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "moduleGeneration": "storage-1",
+        "enabled": true,
+        "dependencies": []
+      },
+      {
+        "id": "notes",
+        "version": "1.2.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "moduleGeneration": "notes-3",
+        "enabled": true,
+        "dependencies": [{ "id": "storage", "version": "1.0.0" }],
+        "canonicalSource": "https://plugins.example/notes"
+      }
+    ]
+  }
+}

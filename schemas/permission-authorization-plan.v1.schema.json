@@ -14,7 +14,7 @@
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
     },
-    "operation": { "enum": ["install", "enable"] },
+    "operation": { "enum": ["install", "update", "enable"] },
     "profileId": { "$ref": "permission-common.v1.schema.json#/$defs/profileId" },
     "identity": { "$ref": "permission-common.v1.schema.json#/$defs/identity" },
     "defaultDecision": { "const": "allow" },

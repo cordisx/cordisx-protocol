@@ -54,3 +54,9 @@ explicit service configuration, complete Channel and Platform identities,
 sourced user-only input, binding lineage, launcher-only secret references,
 redacted Manager descriptors, route/connection integrity, retry ordering,
 active binding uniqueness, and safe package entry resolution.
+
+Plugin lifecycle suites live in `plugin-lifecycle/valid` and
+`plugin-lifecycle/invalid`. They cover package/runtime id equality, exact
+dependency graphs and cycles, activation ordering, local source input,
+permission plans, reload scope, redacted runtime snapshots, and canonical-only
+share availability.

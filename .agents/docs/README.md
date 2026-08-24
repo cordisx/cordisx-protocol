@@ -31,6 +31,10 @@ Specified areas:
   metadata, profile/plugin/generation scope, revision-fenced mutations,
   live/restart application, last-good rollback, secret handling, and
   lifecycle-owned custom field renderers.
+- `manifests/`, `lifecycle/`, and `distribution/`: explicit-local package
+  manifests, exact dependency graphs, five minimum apply scopes,
+  revision/generation-fenced lifecycle operations, immutable activation
+  records, last-good rollback, and redacted manager snapshots.
 
-Planned areas include isolated execution, signed package identity,
-distribution, activation, and rollback.
+Planned areas include isolated execution, remote distribution, publisher
+signatures, transparency, and public marketplace activation.

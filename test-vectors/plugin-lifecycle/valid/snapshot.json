@@ -1,0 +1,40 @@
+{
+  "case": "snapshot",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-runtime-snapshot.v1.schema.json",
+    "schemaVersion": 1,
+    "profileId": "work",
+    "revision": 7,
+    "runtimeGeneration": "runtime-4",
+    "operationsAvailable": true,
+    "plugins": [
+      {
+        "id": "storage",
+        "name": "Storage",
+        "version": "1.0.0",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "moduleGeneration": "storage-1",
+        "enabled": true,
+        "status": "active",
+        "dependencies": [],
+        "dependents": ["notes"],
+        "favorite": false,
+        "availableOperations": ["update", "disable", "reload", "uninstall"]
+      },
+      {
+        "id": "notes",
+        "name": "Notes",
+        "version": "1.2.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "moduleGeneration": "notes-3",
+        "enabled": true,
+        "status": "active",
+        "dependencies": ["storage"],
+        "dependents": [],
+        "favorite": true,
+        "availableOperations": ["update", "disable", "reload", "share", "uninstall"],
+        "canonicalSource": "https://plugins.example/notes"
+      }
+    ]
+  }
+}

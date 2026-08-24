@@ -1,0 +1,15 @@
+{
+  "case": "result",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-result.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "request-2",
+    "profileId": "work",
+    "operation": "reload",
+    "outcome": "applied",
+    "revision": 2,
+    "runtimeGeneration": "runtime-1",
+    "scope": "runtime-generation",
+    "affectedPluginIds": ["notes"]
+  }
+}

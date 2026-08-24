@@ -1,0 +1,24 @@
+{
+  "case": "snapshot",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-runtime-snapshot.v1.schema.json",
+    "schemaVersion": 1,
+    "profileId": "work",
+    "revision": 1,
+    "runtimeGeneration": "runtime-1",
+    "operationsAvailable": true,
+    "plugins": [{
+      "id": "local",
+      "name": "Local",
+      "version": "1.0.0",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "moduleGeneration": "local-1",
+      "enabled": true,
+      "status": "active",
+      "dependencies": [],
+      "dependents": [],
+      "favorite": false,
+      "availableOperations": ["share"]
+    }]
+  }
+}

@@ -85,3 +85,16 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   outcome without secret values or filesystem details;
 - `plugin-config-renderer.v1.schema.json`: metadata for one lifecycle-owned
   role, field-path, or namespace custom renderer registration.
+- `plugin-lifecycle-common.v1.schema.json`: shared package version, digest,
+  generation, operation, state, and minimum apply-scope vocabulary;
+- `plugin-package.v1.schema.json`: one explicit-local immutable package input
+  with exact compatibility, dependency, and runtime-manifest declarations;
+- `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or
+  last-good activation record without filesystem paths;
+- `plugin-lifecycle-operation.v1.schema.json`: revision- and
+  runtime-generation-fenced inspect/install/update/enable/disable/reload/
+  uninstall request;
+- `plugin-lifecycle-result.v1.schema.json`: planned/applied/conflict/failure/
+  rollback outcome with redacted package and impact data;
+- `plugin-runtime-snapshot.v1.schema.json`: redacted Host-owned manager
+  projection of package state, graph, preferences, and available operations.
