@@ -1,0 +1,8 @@
+{
+  "case": "source",
+  "value": {
+    "kind": "downloaded-tarball",
+    "location": "https://marketplace.example.org/notes-1.3.0.tgz",
+    "downloadedFrom": "https://marketplace.example.org/notes-1.3.0.tgz"
+  }
+}

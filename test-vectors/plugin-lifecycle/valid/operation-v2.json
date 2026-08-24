@@ -1,0 +1,18 @@
+{
+  "case": "operation-v2",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-operation.v2.schema.json",
+    "schemaVersion": 2,
+    "requestId": "request-source-1",
+    "profileId": "work",
+    "expectedRevision": 7,
+    "runtimeGeneration": "runtime-4",
+    "operation": {
+      "kind": "inspect-source",
+      "source": {
+        "kind": "local-package",
+        "location": "file:///Users/example/Packages/notes-1.3.0.tgz"
+      }
+    }
+  }
+}

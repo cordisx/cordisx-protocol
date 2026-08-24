@@ -1,0 +1,23 @@
+{
+  "case": "package-v2",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "notes",
+    "version": "1.3.0",
+    "entry": "./dist/index.js",
+    "distribution": { "mode": "marketplace-signed", "signature": "verified" },
+    "compatibility": {
+      "runtimeAbi": 1,
+      "protocolSchemas": [
+        "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json"
+      ]
+    },
+    "dependencies": [],
+    "runtimeManifest": {
+      "path": "./cordisx-runtime.json",
+      "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  }
+}

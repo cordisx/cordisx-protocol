@@ -1,0 +1,9 @@
+{
+  "case": "source",
+  "value": {
+    "kind": "downloaded-tarball",
+    "location": "file:///Users/example/Downloads/notes-1.3.0.tgz",
+    "downloadedFrom": "https://releases.example.org/notes-1.3.0.tgz",
+    "expectedDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+}

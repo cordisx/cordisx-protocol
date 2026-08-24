@@ -37,8 +37,12 @@ generation scope, revision-fenced JSON mutations, last-good ordering, reserved
 secret roles, owner-bounded namespace renderers, and closed result outcomes.
 Plugin lifecycle conformance covers package/runtime identity, exact and acyclic
 dependency graphs, enabled dependency readiness, activation/last-good ordering,
-absolute local input boundaries, matching permission decisions, minimum apply
-scope, safe share availability, and path/secret-free results and snapshots.
+explicit local directory/package/downloaded-tarball input boundaries, separate
+runtime-manifest integrity, unsupported-signature and remote-source rejection,
+matching permission decisions, minimum apply scope, safe share availability,
+and path/secret-free results and snapshots. Normative lifecycle text additionally
+fixes staged-registry readiness, whole-closure atomic publish, token-to-complete
+activation-tuple fencing, and last-good recovery without exposing private plans.
 Plugin Console conformance covers owner/generation isolation, ordered immutable
 lines, zero-touch Host call phases, permission projection, terminal uniqueness,
 and the rule that success cannot precede real Host dispatch.

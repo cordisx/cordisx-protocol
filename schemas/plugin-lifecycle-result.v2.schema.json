@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-result.v2.schema.json",
+  "title": "CordisX Plugin Lifecycle Result v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "requestId",
+    "profileId",
+    "operation",
+    "outcome",
+    "revision",
+    "runtimeGeneration",
+    "scope",
+    "affectedPluginIds"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-result.v2.schema.json"
+    },
+    "schemaVersion": { "const": 2 },
+    "requestId": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" },
+    "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "operation": { "enum": ["inspect-source", "install", "update", "enable", "disable", "reload", "uninstall"] },
+    "outcome": { "enum": ["planned", "applied", "conflict", "rejected", "rolled-back", "rollback-failed"] },
+    "revision": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/revision" },
+    "runtimeGeneration": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/generation" },
+    "scope": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/applyScope" },
+    "affectedPluginIds": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+    },
+    "transactionId": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" },
+    "candidateId": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" },
+    "impactToken": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "digest", "dependencies"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+        "digest": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" },
+        "dependencies": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/dependency" }
+        },
+        "canonicalSource": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/canonicalPublicSource" }
+      }
+    },
+    "authorizationPlan": { "$ref": "permission-authorization-plan.v1.schema.json" },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "invalid-source",
+            "invalid-manifest",
+            "incompatible-runtime",
+            "integrity-failed",
+            "dependency-missing",
+            "dependency-version",
+            "dependency-cycle",
+            "permission-denied",
+            "build-failed",
+            "readiness-failed",
+            "stale-revision",
+            "stale-generation",
+            "activation-failed",
+            "rollback-failed",
+            "operation-unavailable"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "outcome": { "const": "planned" } },
+        "required": ["outcome"]
+      },
+      "then": {
+        "required": ["candidateId", "impactToken", "package", "authorizationPlan"],
+        "properties": {
+          "candidateId": true,
+          "impactToken": true,
+          "package": true,
+          "authorizationPlan": true
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "outcome": { "enum": ["conflict", "rejected", "rolled-back", "rollback-failed"] } },
+        "required": ["outcome"]
+      },
+      "then": { "required": ["error"], "properties": { "error": true } }
+    }
+  ]
+}
