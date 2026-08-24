@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-common.v2.schema.json",
+  "title": "CordisX Permission Common Definitions v2",
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "pluginId"],
+      "properties": {
+        "source": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalSource" },
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+      }
+    },
+    "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "capability": { "$ref": "plugin-manifest.v4.schema.json#/$defs/capabilityName" },
+    "scope": { "$ref": "plugin-manifest.v4.schema.json#/$defs/scope" },
+    "securityFingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "policy": {
+      "enum": ["ask", "allow-persistent", "deny-persistent"]
+    },
+    "decision": {
+      "enum": ["allow-once", "allow-persistent", "deny-once", "deny-persistent"]
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operationId", "runtimeGeneration"],
+      "properties": {
+        "operationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "runtimeGeneration": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "moduleGeneration": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      }
+    },
+    "authorizationKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "identity", "capability", "scope", "securityFingerprint"],
+      "properties": {
+        "profileId": { "$ref": "#/$defs/profileId" },
+        "identity": { "$ref": "#/$defs/identity" },
+        "capability": { "$ref": "#/$defs/capability" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "securityFingerprint": { "$ref": "#/$defs/securityFingerprint" }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v1.schema.json",
+  "schemaVersion": 1,
+  "catalogVersion": "incomplete",
+  "entries": [
+    {
+      "capability": "models.read",
+      "providerFamily": "platform",
+      "sensitivity": "low",
+      "recommendedPolicy": "allow-persistent",
+      "persistentAllow": true,
+      "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["providers"], "unscopedAllowed": true },
+      "scopeUpgrade": "strict-expansion",
+      "installPrompt": "batch-eligible",
+      "runtimePrompt": "first-use",
+      "presentation": {
+        "name": { "key": "models.read.name", "fallback": "Read available models" },
+        "description": { "key": "models.read.description", "fallback": "List models." },
+        "risk": { "key": "models.read.risk", "fallback": "Reveals model availability." },
+        "limitation": { "key": "models.read.limitation", "fallback": "Does not read conversations." }
+      }
+    }
+  ]
+}

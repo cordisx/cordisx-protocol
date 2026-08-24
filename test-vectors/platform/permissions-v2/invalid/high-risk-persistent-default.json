@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v2.schema.json",
+  "schemaVersion": 2,
+  "planId": "runtime-1:dangerous:request-1",
+  "operation": "runtime",
+  "profileId": "work",
+  "identity": {
+    "source": "file:///plugins/dangerous.js",
+    "pluginId": "dangerous"
+  },
+  "catalogVersion": "2026-08-24",
+  "binding": {
+    "operationId": "request-1",
+    "runtimeGeneration": "runtime-1",
+    "requestId": "request-1"
+  },
+  "declarations": [
+    {
+      "capability": "tasks.control",
+      "required": true,
+      "scope": {},
+      "securityFingerprint": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "policy": "ask",
+      "decisionRequired": true,
+      "sensitivity": "high-risk",
+      "persistentAllow": false,
+      "persistentDeny": true,
+      "allowedDecisions": ["allow-once", "allow-persistent", "deny-once", "deny-persistent"],
+      "defaultDecision": "allow-persistent",
+      "presentation": {
+        "name": { "key": "host.tasks.control.name", "fallback": "Control tasks" },
+        "description": { "key": "host.tasks.control.description", "fallback": "Archive, restore, fork, or delete tasks." },
+        "risk": { "key": "host.tasks.control.risk", "fallback": "This can delete or replace task state." },
+        "limitation": { "key": "host.tasks.control.limit", "fallback": "Only declared task scope is accepted." }
+      }
+    }
+  ]
+}

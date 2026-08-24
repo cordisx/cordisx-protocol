@@ -1,0 +1,271 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v1.schema.json",
+  "schemaVersion": 1,
+  "catalogVersion": "2026-08-24",
+  "entries": [
+    {
+      "capability": "models.read", "providerFamily": "platform", "sensitivity": "low",
+      "recommendedPolicy": "allow-persistent", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["providers"], "unscopedAllowed": true },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "batch-eligible", "runtimePrompt": "first-use",
+      "presentation": {
+        "name": { "key": "models.read.name", "fallback": "Read available models" },
+        "description": { "key": "models.read.description", "fallback": "List models exposed by an allowed provider." },
+        "risk": { "key": "models.read.risk", "fallback": "This reveals configured model availability." },
+        "limitation": { "key": "models.read.limitation", "fallback": "It cannot read conversations or credentials." }
+      }
+    },
+    {
+      "capability": "tasks.catalog.read", "providerFamily": "platform", "sensitivity": "general",
+      "recommendedPolicy": "allow-persistent", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["providers", "cwdRoots"], "unscopedAllowed": true },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "batch-eligible", "runtimePrompt": "first-use",
+      "presentation": {
+        "name": { "key": "tasks.catalog.read.name", "fallback": "List tasks" },
+        "description": { "key": "tasks.catalog.read.description", "fallback": "List task summaries for allowed providers and workspaces." },
+        "risk": { "key": "tasks.catalog.read.risk", "fallback": "Task titles and workspace metadata may be visible." },
+        "limitation": { "key": "tasks.catalog.read.limitation", "fallback": "It cannot read task content." }
+      }
+    },
+    {
+      "capability": "tasks.content.read", "providerFamily": "platform", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessions"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "tasks.content.read.name", "fallback": "Read task content" },
+        "description": { "key": "tasks.content.read.description", "fallback": "Read messages and results from allowed tasks." },
+        "risk": { "key": "tasks.content.read.risk", "fallback": "Task content may contain private or sensitive text." },
+        "limitation": { "key": "tasks.content.read.limitation", "fallback": "Only explicitly allowed task identities are readable." }
+      }
+    },
+    {
+      "capability": "tasks.create", "providerFamily": "platform", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["providers", "cwdRoots"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "tasks.create.name", "fallback": "Create tasks" },
+        "description": { "key": "tasks.create.description", "fallback": "Create tasks and optionally submit their first message." },
+        "risk": { "key": "tasks.create.risk", "fallback": "The selected provider receives the initial task content." },
+        "limitation": { "key": "tasks.create.limitation", "fallback": "Provider, model, and workspace remain Host validated." }
+      }
+    },
+    {
+      "capability": "tasks.control", "providerFamily": "platform", "sensitivity": "high-risk",
+      "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessions"], "unscopedAllowed": false },
+      "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
+      "presentation": {
+        "name": { "key": "tasks.control.name", "fallback": "Control tasks" },
+        "description": { "key": "tasks.control.description", "fallback": "Continue, fork, archive, restore, or delete allowed tasks." },
+        "risk": { "key": "tasks.control.risk", "fallback": "Destructive actions can remove or replace task state." },
+        "limitation": { "key": "tasks.control.limitation", "fallback": "Every target and action remains Host validated." }
+      }
+    },
+    {
+      "capability": "turns.submit", "providerFamily": "platform", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessions"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "turns.submit.name", "fallback": "Submit turns" },
+        "description": { "key": "turns.submit.description", "fallback": "Send a new message to an allowed task." },
+        "risk": { "key": "turns.submit.risk", "fallback": "Submitted content is sent to the selected provider." },
+        "limitation": { "key": "turns.submit.limitation", "fallback": "Only allowed task identities can receive content." }
+      }
+    },
+    {
+      "capability": "turns.control", "providerFamily": "platform", "sensitivity": "high-risk",
+      "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessions"], "unscopedAllowed": false },
+      "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
+      "presentation": {
+        "name": { "key": "turns.control.name", "fallback": "Control active turns" },
+        "description": { "key": "turns.control.description", "fallback": "Steer or interrupt an active turn." },
+        "risk": { "key": "turns.control.risk", "fallback": "This can change or stop in-progress work." },
+        "limitation": { "key": "turns.control.limitation", "fallback": "Only the explicitly targeted turn is affected." }
+      }
+    },
+    {
+      "capability": "agent.events.read", "providerFamily": "agent", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "agent.events.read.name", "fallback": "Read Agent events" },
+        "description": { "key": "agent.events.read.description", "fallback": "Read structured events for allowed Agent sessions." },
+        "risk": { "key": "agent.events.read.risk", "fallback": "Events can reveal task activity and tool metadata." },
+        "limitation": { "key": "agent.events.read.limitation", "fallback": "Raw bridge and filesystem access remain unavailable." }
+      }
+    },
+    {
+      "capability": "agent.history.read", "providerFamily": "agent", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "agent.history.read.name", "fallback": "Read Agent history" },
+        "description": { "key": "agent.history.read.description", "fallback": "Read redacted historical Agent projections." },
+        "risk": { "key": "agent.history.read.risk", "fallback": "Historical activity may contain sensitive context." },
+        "limitation": { "key": "agent.history.read.limitation", "fallback": "The Host keeps paths and raw storage private." }
+      }
+    },
+    {
+      "capability": "agent.messages.append", "providerFamily": "agent", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "agent.messages.append.name", "fallback": "Append Agent messages" },
+        "description": { "key": "agent.messages.append.description", "fallback": "Append attributed content to an allowed Agent session." },
+        "risk": { "key": "agent.messages.append.risk", "fallback": "Added content can influence subsequent model input." },
+        "limitation": { "key": "agent.messages.append.limitation", "fallback": "The Host preserves attribution and ordering." }
+      }
+    },
+    {
+      "capability": "agent.steps.reject", "providerFamily": "agent", "sensitivity": "high-risk",
+      "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
+      "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
+      "presentation": {
+        "name": { "key": "agent.steps.reject.name", "fallback": "Reject Agent steps" },
+        "description": { "key": "agent.steps.reject.description", "fallback": "Reject an Agent step before it proceeds." },
+        "risk": { "key": "agent.steps.reject.risk", "fallback": "This can stop or alter Agent execution." },
+        "limitation": { "key": "agent.steps.reject.limitation", "fallback": "Only the current allowed step may be rejected." }
+      }
+    },
+    {
+      "capability": "agent.messages.transform", "providerFamily": "agent", "sensitivity": "high-risk",
+      "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
+      "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
+      "presentation": {
+        "name": { "key": "agent.messages.transform.name", "fallback": "Transform Agent messages" },
+        "description": { "key": "agent.messages.transform.description", "fallback": "Transform attributed messages before model use." },
+        "risk": { "key": "agent.messages.transform.risk", "fallback": "This can materially change model input." },
+        "limitation": { "key": "agent.messages.transform.limitation", "fallback": "Original order and attribution remain Host controlled." }
+      }
+    },
+    {
+      "capability": "agent.prompt.section", "providerFamily": "agent", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "agent.prompt.section.name", "fallback": "Add prompt sections" },
+        "description": { "key": "agent.prompt.section.description", "fallback": "Add an attributed section to model input." },
+        "risk": { "key": "agent.prompt.section.risk", "fallback": "Added text can influence model behavior." },
+        "limitation": { "key": "agent.prompt.section.limitation", "fallback": "The Host controls ordering and attribution." }
+      }
+    },
+    {
+      "capability": "agent.prompt.context", "providerFamily": "agent", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "agent.prompt.context.name", "fallback": "Add prompt context" },
+        "description": { "key": "agent.prompt.context.description", "fallback": "Add attributed context to model input." },
+        "risk": { "key": "agent.prompt.context.risk", "fallback": "Added context can influence model behavior." },
+        "limitation": { "key": "agent.prompt.context.limitation", "fallback": "The Host controls ordering and attribution." }
+      }
+    },
+    {
+      "capability": "channel.accounts.read", "providerFamily": "channel", "sensitivity": "general",
+      "recommendedPolicy": "allow-persistent", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants"], "unscopedAllowed": true },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "batch-eligible", "runtimePrompt": "first-use",
+      "presentation": {
+        "name": { "key": "channel.accounts.read.name", "fallback": "Read Channel accounts" },
+        "description": { "key": "channel.accounts.read.description", "fallback": "List configured Channel account descriptors." },
+        "risk": { "key": "channel.accounts.read.risk", "fallback": "Account identity and readiness may be visible." },
+        "limitation": { "key": "channel.accounts.read.limitation", "fallback": "Credentials and secret references remain private." }
+      }
+    },
+    {
+      "capability": "channel.accounts.connect", "providerFamily": "channel", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "channel.accounts.connect.name", "fallback": "Connect Channel accounts" },
+        "description": { "key": "channel.accounts.connect.description", "fallback": "Start a Host-owned Channel account connection." },
+        "risk": { "key": "channel.accounts.connect.risk", "fallback": "The external account may begin receiving events." },
+        "limitation": { "key": "channel.accounts.connect.limitation", "fallback": "Credentials and transport stay Host owned." }
+      }
+    },
+    {
+      "capability": "channel.events.receive", "providerFamily": "channel", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants", "channelConversations", "channelUsers"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "channel.events.receive.name", "fallback": "Receive Channel events" },
+        "description": { "key": "channel.events.receive.description", "fallback": "Receive sourced events from allowed Channel identities." },
+        "risk": { "key": "channel.events.receive.risk", "fallback": "Events can contain private external conversation content." },
+        "limitation": { "key": "channel.events.receive.limitation", "fallback": "The Host enforces identity, tenant, and conversation scope." }
+      }
+    },
+    {
+      "capability": "channel.events.subscribe", "providerFamily": "channel", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants", "channelConversations", "channelUsers"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "channel.events.subscribe.name", "fallback": "Subscribe to Channel events" },
+        "description": { "key": "channel.events.subscribe.description", "fallback": "Keep a live subscription to allowed Channel events." },
+        "risk": { "key": "channel.events.subscribe.risk", "fallback": "A subscription can continuously expose external activity." },
+        "limitation": { "key": "channel.events.subscribe.limitation", "fallback": "The Host owns cancellation and connection lifetime." }
+      }
+    },
+    {
+      "capability": "channel.messages.send", "providerFamily": "channel", "sensitivity": "high-risk",
+      "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants", "channelConversations", "channelUsers"], "unscopedAllowed": false },
+      "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
+      "presentation": {
+        "name": { "key": "channel.messages.send.name", "fallback": "Send Channel messages" },
+        "description": { "key": "channel.messages.send.description", "fallback": "Send content to an external Channel conversation." },
+        "risk": { "key": "channel.messages.send.risk", "fallback": "This performs an external action as the connected account." },
+        "limitation": { "key": "channel.messages.send.limitation", "fallback": "Every account and conversation remains explicitly scoped." }
+      }
+    },
+    {
+      "capability": "channel.bindings.read", "providerFamily": "channel", "sensitivity": "general",
+      "recommendedPolicy": "allow-persistent", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants", "channelConversations"], "unscopedAllowed": true },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "batch-eligible", "runtimePrompt": "first-use",
+      "presentation": {
+        "name": { "key": "channel.bindings.read.name", "fallback": "Read Channel bindings" },
+        "description": { "key": "channel.bindings.read.description", "fallback": "Read mappings between Channel conversations and Platform sessions." },
+        "risk": { "key": "channel.bindings.read.risk", "fallback": "Bindings reveal cross-system identity relationships." },
+        "limitation": { "key": "channel.bindings.read.limitation", "fallback": "Message content and credentials are not included." }
+      }
+    },
+    {
+      "capability": "channel.bindings.write", "providerFamily": "channel", "sensitivity": "high-risk",
+      "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants", "channelConversations"], "unscopedAllowed": false },
+      "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
+      "presentation": {
+        "name": { "key": "channel.bindings.write.name", "fallback": "Change Channel bindings" },
+        "description": { "key": "channel.bindings.write.description", "fallback": "Create or replace conversation-to-session mappings." },
+        "risk": { "key": "channel.bindings.write.risk", "fallback": "Incorrect bindings can route future messages to the wrong session." },
+        "limitation": { "key": "channel.bindings.write.limitation", "fallback": "The Host validates both sides of every binding." }
+      }
+    },
+    {
+      "capability": "channel.attachments.read", "providerFamily": "channel", "sensitivity": "sensitive",
+      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
+      "maximumScope": { "allowedDimensions": ["channelAccounts", "channelTenants", "channelConversations", "channelUsers"], "unscopedAllowed": false },
+      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
+      "presentation": {
+        "name": { "key": "channel.attachments.read.name", "fallback": "Read Channel attachments" },
+        "description": { "key": "channel.attachments.read.description", "fallback": "Read attachments from allowed Channel conversations." },
+        "risk": { "key": "channel.attachments.read.risk", "fallback": "Attachments may contain private files or sensitive data." },
+        "limitation": { "key": "channel.attachments.read.limitation", "fallback": "Only Host-fetched content within declared scope is available." }
+      }
+    }
+  ]
+}

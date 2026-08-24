@@ -71,3 +71,16 @@ Dependencies remain exact-version in this contract. Duplicate ids,
 self-dependencies, missing versions, and cycles are invalid. The resolved
 activation graph and the affected dependent closure are fixed by the candidate
 and impact tokens before a mutation begins.
+
+## Package manifest v3
+
+Package v3 preserves the explicit-local distribution, integrity, dependency,
+runtime-ABI, path, and separate runtime-manifest boundaries of package v2. Its
+only authority expansion is versioned: the runtime-manifest reference may name
+`plugin-manifest.v4`, which adds structured permission rationale and security
+declarations. Frozen package v2 continues to accept only manifest v1-v3.
+
+The package version is not a permission key. The Host computes the v2 security
+fingerprint from the normalized runtime declaration and capability catalog;
+source/id, scope expansion, or a security-relevant declaration change returns
+authorization to `ask` even when package bytes passed integrity checks.
