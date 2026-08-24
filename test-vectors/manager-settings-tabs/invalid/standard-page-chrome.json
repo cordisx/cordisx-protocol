@@ -1,0 +1,14 @@
+{
+  "generation": "generation-1",
+  "catalog": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v3.schema.json", "schemaVersion": 3, "points": [
+    { "id": "manager.settings.tabs", "kind": "surface", "title": { "key": "tabs.title", "fallback": "Settings tabs" }, "description": { "key": "tabs.description", "fallback": "Settings tab headers" }, "icon": "host:settings", "payloadFamily": "manager-settings-tab", "stability": "stable", "availability": "available" },
+    { "id": "manager.settings.content", "kind": "outlet", "title": { "key": "content.title", "fallback": "Settings content" }, "description": { "key": "content.description", "fallback": "Settings page bodies" }, "icon": "host:settings", "payloadFamily": "outlet", "stability": "stable", "availability": "available", "pageChrome": ["body-only"], "presentationGroup": "manager.settings", "routePathFamily": "manager-settings" }
+  ] },
+  "owners": [{ "id": "demo", "source": "file:///plugins/demo.mjs" }],
+  "contributions": [{ "owner": "demo", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json", "schemaVersion": 4, "id": "settings", "surface": "manager.settings.tabs", "item": { "title": { "key": "demo.title", "fallback": "Demo" }, "icon": "host:settings", "route": { "id": "settings" } } } }],
+  "updates": [],
+  "routes": [{ "owner": "demo", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json", "schemaVersion": 1, "id": "settings", "path": "/manager/settings/demo", "outlet": "manager.settings.content", "page": "settings" } }],
+  "pages": [{ "owner": "demo", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v2.schema.json", "schemaVersion": 2, "id": "settings", "title": { "key": "demo.title", "fallback": "Demo" }, "chrome": "standard", "breadcrumbs": [{ "key": "demo.crumb", "fallback": "Demo" }] } }],
+  "accesses": [], "expectedPending": [],
+  "expectedProjection": [{ "id": "demo:settings", "disabled": false }, { "id": "host:marketplace", "disabled": false }, { "id": "host:runtime", "disabled": false }, { "id": "host:launcher", "disabled": false }]
+}

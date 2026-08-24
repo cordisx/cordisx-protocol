@@ -1,0 +1,56 @@
+{
+  "generation": "generation-42",
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v3.schema.json",
+    "schemaVersion": 3,
+    "points": [
+      { "id": "manager.settings.tabs", "kind": "surface", "title": { "key": "manager.settings.tabs.title", "fallback": "Settings tabs" }, "description": { "key": "manager.settings.tabs.description", "fallback": "CordisX manager settings tabs" }, "icon": "host:settings", "payloadFamily": "manager-settings-tab", "stability": "stable", "availability": "available" },
+      { "id": "manager.settings.content", "kind": "outlet", "title": { "key": "manager.settings.content.title", "fallback": "Settings content" }, "description": { "key": "manager.settings.content.description", "fallback": "Controlled settings page body" }, "icon": "host:settings", "payloadFamily": "outlet", "stability": "stable", "availability": "available", "pageChrome": ["body-only"], "presentationGroup": "manager.settings", "routePathFamily": "manager-settings" }
+    ]
+  },
+  "owners": [
+    { "id": "alpha", "source": "file:///opt/cordisx/plugins/alpha.mjs" },
+    { "id": "zeta", "source": "file:///opt/cordisx/plugins/zeta.mjs" }
+  ],
+  "context": { "feature-enabled": false },
+  "contributions": [
+    { "owner": "zeta", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json", "schemaVersion": 4, "id": "marketplace", "surface": "manager.settings.tabs", "order": 100, "item": { "title": { "key": "zeta.marketplace", "fallback": "Zeta marketplace" }, "icon": "host:store", "route": { "id": "marketplace" } } } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json", "schemaVersion": 4, "id": "tie", "surface": "manager.settings.tabs", "order": 250, "item": { "title": { "key": "alpha.tie", "fallback": "Alpha diagnostics" }, "icon": "host:info", "route": { "id": "tie", "params": { "mode": "full" } } } } },
+    { "owner": "zeta", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json", "schemaVersion": 4, "id": "tie", "surface": "manager.settings.tabs", "order": 250, "item": { "title": { "key": "zeta.tie", "fallback": "Zeta diagnostics" }, "icon": "host:history", "route": { "id": "tie" } } } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json", "schemaVersion": 4, "id": "later", "surface": "manager.settings.tabs", "order": 50, "item": { "title": { "key": "alpha.later", "fallback": "Alpha later" }, "icon": "host:settings", "route": { "id": "later" } } } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json", "schemaVersion": 4, "id": "hidden", "surface": "manager.settings.tabs", "order": 10, "when": { "key": "feature-enabled", "equals": true }, "item": { "title": { "key": "alpha.hidden", "fallback": "Alpha hidden" }, "icon": "host:info", "route": { "id": "hidden" } } } }
+  ],
+  "updates": [
+    { "owner": "alpha", "generation": "generation-42", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v4.schema.json", "schemaVersion": 4, "id": "later", "surface": "manager.settings.tabs", "order": 350, "disabled": { "value": true, "reason": { "key": "alpha.later.disabled", "fallback": "Requires configuration" } }, "item": { "title": { "key": "alpha.later.updated", "fallback": "Alpha later updated" }, "icon": "host:settings", "route": { "id": "later" } } } }
+  ],
+  "routes": [
+    { "owner": "zeta", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json", "schemaVersion": 1, "id": "marketplace", "path": "/manager/settings/zeta-marketplace", "outlet": "manager.settings.content", "page": "marketplace" } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json", "schemaVersion": 1, "id": "tie", "path": "/manager/settings/alpha-tie", "outlet": "manager.settings.content", "page": "tie" } },
+    { "owner": "zeta", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json", "schemaVersion": 1, "id": "tie", "path": "/manager/settings/zeta-tie", "outlet": "manager.settings.content", "page": "tie" } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json", "schemaVersion": 1, "id": "later", "path": "/manager/settings/alpha-later", "outlet": "manager.settings.content", "page": "later" } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json", "schemaVersion": 1, "id": "hidden", "path": "/manager/settings/alpha-hidden", "outlet": "manager.settings.content", "page": "hidden" } }
+  ],
+  "pages": [
+    { "owner": "zeta", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v2.schema.json", "schemaVersion": 2, "id": "marketplace", "title": { "key": "zeta.marketplace", "fallback": "Zeta marketplace" }, "chrome": "body-only" } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v2.schema.json", "schemaVersion": 2, "id": "tie", "title": { "key": "alpha.tie", "fallback": "Alpha diagnostics" }, "chrome": "body-only" } },
+    { "owner": "zeta", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v2.schema.json", "schemaVersion": 2, "id": "tie", "title": { "key": "zeta.tie", "fallback": "Zeta diagnostics" }, "chrome": "body-only" } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v2.schema.json", "schemaVersion": 2, "id": "later", "title": { "key": "alpha.later", "fallback": "Alpha later" }, "chrome": "body-only" } },
+    { "owner": "alpha", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v2.schema.json", "schemaVersion": 2, "id": "hidden", "title": { "key": "alpha.hidden", "fallback": "Alpha hidden" }, "chrome": "body-only" } }
+  ],
+  "expectedPending": [],
+  "expectedProjection": [
+    { "id": "host:marketplace", "disabled": false },
+    { "id": "zeta:marketplace", "disabled": false },
+    { "id": "host:runtime", "disabled": false },
+    { "id": "alpha:tie", "disabled": false },
+    { "id": "zeta:tie", "disabled": false },
+    { "id": "host:launcher", "disabled": false },
+    { "id": "alpha:later", "disabled": true }
+  ],
+  "activated": "alpha:tie",
+  "accesses": [
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json", "schemaVersion": 2, "generation": "generation-42", "operation": "surface.route.navigate", "identity": { "source": "file:///opt/cordisx/plugins/alpha.mjs", "pluginId": "alpha", "pointId": "manager.settings.tabs" }, "contributionId": "alpha:tie", "routeId": "alpha:tie" },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json", "schemaVersion": 2, "generation": "generation-42", "operation": "outlet.route.navigate", "identity": { "source": "file:///opt/cordisx/plugins/alpha.mjs", "pluginId": "alpha", "pointId": "manager.settings.content" }, "routeId": "alpha:tie", "pageId": "alpha:tie" },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json", "schemaVersion": 2, "generation": "generation-42", "operation": "outlet.page.mount", "identity": { "source": "file:///opt/cordisx/plugins/alpha.mjs", "pluginId": "alpha", "pointId": "manager.settings.content" }, "routeId": "alpha:tie", "pageId": "alpha:tie" }
+  ]
+}

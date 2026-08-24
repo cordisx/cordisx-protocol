@@ -16,8 +16,11 @@ Specified areas:
   handles, cancellation, pre-step/prompt lifecycle, permission, degradation,
   and pagination contracts versions 1 and 2.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
-  structured contribution version 2, availability, contextual invocation, DSH
-  intent mapping, and explicit replacement refusals.
+  structured contribution versions 2 and 3, availability, contextual
+  invocation, DSH intent mapping, and explicit replacement refusals.
+- `manager-settings-tabs/`: structured manager settings surface version 4,
+  catalog version 3, controlled body-only outlet, deterministic projection,
+  authorization origin, and lifecycle.
 
 Planned areas include isolated execution, signed package identity,
 distribution, activation, and rollback.

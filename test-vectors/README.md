@@ -36,3 +36,9 @@ UI extension catalog suites live in `ui-extension-catalog/valid` and
 `ui-extension-catalog/invalid`. They cover every version-2 surface/outlet id,
 payload-family mapping, semantic composer anchors, availability, surface route
 origin, generation fencing, and host-only contextual identity.
+
+Manager settings suites live in `manager-settings-tabs/valid` and
+`manager-settings-tabs/invalid`. They cover the surface-v4/catalog-v3 version
+boundary, host-only tab headers, deterministic built-in merge, same-owner
+route/page wiring, pending dependencies, body-only content, authorization
+origin, and lifecycle cleanup/fallback.

@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v3.schema.json",
+  "title": "CordisX Host Extension Point Catalog v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "points"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v3.schema.json"
+    },
+    "schemaVersion": { "const": 3 },
+    "points": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/descriptor" }
+    }
+  },
+  "$defs": {
+    "descriptorText": {
+      "allOf": [
+        { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        { "type": "object", "required": ["fallback"], "properties": { "fallback": true } }
+      ]
+    },
+    "descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "description", "icon", "payloadFamily", "stability", "availability"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "kind": { "enum": ["surface", "outlet"] },
+        "title": { "$ref": "#/$defs/descriptorText" },
+        "description": { "$ref": "#/$defs/descriptorText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" },
+        "payloadFamily": {
+          "enum": [
+            "action",
+            "menu-item",
+            "contextual-action",
+            "tab",
+            "manager-settings-tab",
+            "presenter",
+            "navigation-item",
+            "environment-section",
+            "environment-row",
+            "outlet"
+          ]
+        },
+        "stability": { "enum": ["stable", "experimental", "reserved"] },
+        "availability": { "enum": ["available", "pending", "unavailable"] },
+        "diagnostic": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "anchors": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/anchorDescriptor" }
+        },
+        "pageChrome": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["standard", "body-only"] }
+        },
+        "presentationGroup": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "routePathFamily": { "enum": ["app", "main", "session", "manager-settings", "host-defined"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "outlet" } }, "required": ["kind"] },
+          "then": {
+            "required": ["pageChrome", "presentationGroup", "routePathFamily"],
+            "properties": {
+              "payloadFamily": { "const": "outlet" },
+              "anchors": false,
+              "pageChrome": true,
+              "presentationGroup": true,
+              "routePathFamily": true
+            }
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "surface" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "payloadFamily": { "not": { "const": "outlet" } },
+              "pageChrome": false,
+              "presentationGroup": false,
+              "routePathFamily": false
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "availability": { "enum": ["pending", "unavailable"] } },
+            "required": ["availability"]
+          },
+          "then": { "required": ["diagnostic"], "properties": { "diagnostic": true } }
+        },
+        {
+          "if": { "properties": { "stability": { "const": "reserved" } }, "required": ["stability"] },
+          "then": { "properties": { "availability": { "const": "unavailable" } } }
+        }
+      ]
+    },
+    "anchorDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "placements", "availability"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "placements": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["before", "after", "menu"] }
+        },
+        "availability": { "enum": ["available", "pending", "unavailable"] },
+        "diagnostic": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+      },
+      "allOf": [{
+        "if": {
+          "properties": { "availability": { "enum": ["pending", "unavailable"] } },
+          "required": ["availability"]
+        },
+        "then": { "required": ["diagnostic"], "properties": { "diagnostic": true } }
+      }]
+    }
+  }
+}

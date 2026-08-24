@@ -45,6 +45,13 @@ differ. Changing an existing id from one family to the other is incompatible.
 JSON Schema validates each descriptor; conformance validation enforces the
 cross-record uniqueness rule.
 
+Catalog version 3 is an additive, separately validated contract. It adds
+payload family `manager-settings-tab` plus outlet `pageChrome`,
+`presentationGroup`, and `routePathFamily`. It declares
+`manager.settings.tabs` and `manager.settings.content`; catalog v1/v2 consumers
+reject v3 rather than dropping those fields. The exact manager settings rules
+live in [`manager-settings-tabs`](../manager-settings-tabs/README.md).
+
 ## Canonical point-policy identity
 
 A policy record is keyed by the exact ordered tuple:

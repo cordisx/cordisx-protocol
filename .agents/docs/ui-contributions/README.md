@@ -176,6 +176,13 @@ qualifies because it begins below and preserves the native session header;
 also declare breadcrumbs, tabs, or header actions. Unknown policy values fail
 closed.
 
+Catalog version 3 adds a second body-only-compatible outlet,
+`manager.settings.content`. It retains persistent CordisX-owned settings
+header/tab chrome outside the page body and belongs to the isolated
+`manager.settings` presentation group. Its routes live below
+`/manager/settings/`. This is an additive outlet policy, not a change to the
+frozen page-v2 schema or permission for a page to render settings tabs.
+
 Each `headerActions` entry contains only a page-local action id, localized
 label, optional localized accessible label, optional icon token, command
 reference, and optional `when`/`disabled` state. Action ids are unique within
@@ -266,5 +273,6 @@ inactive with an explicit compatibility diagnostic.
 This version-1 surface vocabulary is frozen. The complete additive catalog,
 new structured families, and contextual invocation origin are defined by the
 [UI extension catalog protocol](../ui-extension-catalog/README.md) and
-`surface-contribution.v2` and `surface-contribution.v3`; they do not rename or
-restore any retired free-DOM slot.
+`surface-contribution.v2` and `surface-contribution.v3`; manager settings is
+added only by `surface-contribution.v4`. None rename or restore a retired
+free-DOM slot.

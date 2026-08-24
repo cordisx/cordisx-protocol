@@ -12,8 +12,11 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   including distinct native footer/help and account/profile menu actions;
 - `surface-contribution.v2.schema.json`: the additive complete surface
   vocabulary and bounded action, contextual-action, tab, and presenter families;
-- `surface-contribution.v3.schema.json`: version-2 surface vocabulary plus the
-  host-owned `navigate`/`toggle` behavior for structured route actions;
+- `surface-contribution.v3.schema.json`: the frozen version-2 surface
+  vocabulary plus host-owned route toggle behavior;
+- `surface-contribution.v4.schema.json`: the additive manager settings tab
+  surface with one envelope-level identity/order/condition source and a
+  same-owner route item;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `page.v1.schema.json`: host-owned page header metadata and structured header
   actions; trusted-local mounts render the page body only;
@@ -35,6 +38,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   localized surface and outlet descriptors;
 - `host-extension-point-catalog.v2.schema.json`: one catalog with payload
   family plus implemented, experimental, or reserved adapter availability;
+- `host-extension-point-catalog.v3.schema.json`: the additive manager settings
+  points plus outlet page-chrome, presentation-group, and route-path policy;
 - `extension-point-policy.v1.schema.json`: one user policy record keyed by
   canonical source, plugin id, and point id;
 - `extension-point-access.v1.schema.json`: host-generated surface command,
