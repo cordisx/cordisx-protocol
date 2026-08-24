@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certification.v1.schema.json",
+  "title": "CordisX Marketplace Certification Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "level",
+    "identity",
+    "reviewPolicy",
+    "reviewedAt",
+    "expiresAt",
+    "reviewer",
+    "status",
+    "label",
+    "description"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certification.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "level": { "const": "cordisx-certified" },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pluginId", "version", "canonicalSource", "integrity"],
+      "properties": {
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+        "canonicalSource": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/canonicalPublicSource" },
+        "integrity": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" }
+      }
+    },
+    "reviewPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "cordisx-marketplace-review" },
+        "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" }
+      }
+    },
+    "reviewedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "evidenceRef"],
+      "properties": {
+        "authority": { "const": "cordisx.marketplace.codeowners/v1" },
+        "evidenceRef": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://github\\.com/cordisx/marketplace/(?:pull/[1-9][0-9]*|commit/[a-f0-9]{40})$",
+          "maxLength": 2048
+        }
+      }
+    },
+    "status": { "enum": ["active", "revoked", "expired"] },
+    "revokedAt": { "type": "string", "format": "date-time" },
+    "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+    "description": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+  }
+}
