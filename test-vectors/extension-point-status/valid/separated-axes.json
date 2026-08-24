@@ -1,0 +1,72 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v5.schema.json",
+    "schemaVersion": 5,
+    "points": [
+      {
+        "id": "session.header.actions",
+        "kind": "surface",
+        "title": { "key": "session.header.title", "fallback": "Session header actions" },
+        "description": { "key": "session.header.description", "fallback": "Actions in a release-verified session header seat" },
+        "icon": "host:more",
+        "payloadFamily": "contextual-action",
+        "maturity": "stable",
+        "adapterSupport": "supported"
+      },
+      {
+        "id": "composer.toolbar.items",
+        "kind": "surface",
+        "title": { "key": "composer.toolbar.title", "fallback": "Composer toolbar" },
+        "description": { "key": "composer.toolbar.description", "fallback": "Actions at semantic composer anchors" },
+        "icon": "host:more",
+        "payloadFamily": "contextual-action",
+        "maturity": "stable",
+        "adapterSupport": "supported",
+        "anchors": [
+          { "id": "submit", "placements": ["before"], "adapterSupport": "supported" },
+          { "id": "leading", "placements": ["before", "after"], "adapterSupport": "unverified", "diagnostic": { "key": "anchor.leading.unverified", "fallback": "Leading anchor is not release-verified" } }
+        ]
+      },
+      {
+        "id": "composer.dock.above",
+        "kind": "surface",
+        "title": { "key": "composer.dock.title", "fallback": "Composer dock above" },
+        "description": { "key": "composer.dock.description", "fallback": "Structured presenter above the composer" },
+        "icon": "host:info",
+        "payloadFamily": "presenter",
+        "maturity": "experimental",
+        "adapterSupport": "unverified",
+        "diagnostic": { "key": "composer.dock.unverified", "fallback": "No release proof exists for this seat" }
+      },
+      {
+        "id": "session.tabs",
+        "kind": "surface",
+        "title": { "key": "session.tabs.title", "fallback": "Session tabs" },
+        "description": { "key": "session.tabs.description", "fallback": "Reserved controlled session view entries" },
+        "icon": "host:layers",
+        "payloadFamily": "tab",
+        "maturity": "reserved",
+        "adapterSupport": "unsupported",
+        "diagnostic": { "key": "session.tabs.unsupported", "fallback": "This host does not expose the reserved point" }
+      }
+    ]
+  },
+  "context": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-runtime-context.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      { "id": "session.header.actions", "state": "not-mounted", "code": "session.not-mounted" },
+      {
+        "id": "composer.toolbar.items",
+        "state": "inactive",
+        "code": "session.inactive",
+        "anchors": [
+          { "id": "submit", "state": "inactive" },
+          { "id": "leading", "state": "not-mounted" }
+        ]
+      },
+      { "id": "composer.dock.above", "state": "not-mounted" },
+      { "id": "session.tabs", "state": "not-mounted" }
+    ]
+  }
+}

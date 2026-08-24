@@ -21,6 +21,11 @@ UI extension catalog conformance covers the complete version-2 point
 vocabulary, payload-family mapping, independent stability/availability,
 generation-fenced surface origin, host-only contextual identity, and
 deterministic ordering.
+Extension-point status conformance freezes the version-5 three-axis model:
+catalog `maturity`, versioned `adapterSupport`, and a separate runtime-context
+snapshot. A supported stable point may be `not-mounted` without becoming
+unverified; unsupported/unverified points cannot report an active context, and
+legacy `availability` or live context fields are rejected from v5 descriptors.
 Manager settings conformance separately covers surface version 4 and catalog
 version 3 so the closed version-2/version-3 vocabularies remain unchanged. It
 validates structured host headers, ordering/collisions, same-owner route/page

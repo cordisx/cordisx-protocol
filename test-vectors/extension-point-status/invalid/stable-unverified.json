@@ -1,0 +1,18 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v5.schema.json",
+    "schemaVersion": 5,
+    "points": [{
+      "id": "session.header.actions", "kind": "surface",
+      "title": { "key": "header.title", "fallback": "Session header" },
+      "description": { "key": "header.description", "fallback": "Session header actions" },
+      "icon": "host:more", "payloadFamily": "contextual-action", "maturity": "stable",
+      "adapterSupport": "unverified", "diagnostic": { "key": "header.unverified", "fallback": "Not verified" }
+    }]
+  },
+  "context": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-runtime-context.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [{ "id": "session.header.actions", "state": "not-mounted" }]
+  }
+}

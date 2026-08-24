@@ -68,6 +68,12 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `host-extension-point-catalog.v4.schema.json`: precise Manager settings
   content-tab naming plus the top-level navigation surface and standard
   `manager.content` outlet;
+- `host-extension-point-catalog.v5.schema.json`: separates the versioned
+  `maturity` promise from `adapterSupport`; a descriptor never contains the
+  current page or DOM mount state;
+- `extension-point-runtime-context.v1.schema.json`: host-observed
+  `active`/`inactive`/`not-mounted` context state for points and semantic
+  anchors, reported independently from catalog support;
 - `extension-point-policy.v1.schema.json`: one user policy record keyed by
   canonical source, plugin id, and point id;
 - `extension-point-access.v1.schema.json`: host-generated surface command,

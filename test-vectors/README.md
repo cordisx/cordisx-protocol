@@ -44,6 +44,12 @@ UI extension catalog suites live in `ui-extension-catalog/valid` and
 payload-family mapping, semantic composer anchors, availability, surface route
 origin, generation fencing, and host-only contextual identity.
 
+Extension-point status suites live in `extension-point-status/valid` and
+`extension-point-status/invalid`. They cover catalog-v5 maturity/support,
+separate runtime `active`/`inactive`/`not-mounted` context, supported points in
+an absent page context, truly unverified anchors, reserved unsupported points,
+and closed-schema rejection of the legacy conflated availability field.
+
 Manager settings suites live in `manager-settings-tabs/valid` and
 `manager-settings-tabs/invalid`. They cover the surface-v4/catalog-v3 version
 boundary, host-only tab headers, deterministic built-in merge, same-owner
