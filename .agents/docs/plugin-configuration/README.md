@@ -51,20 +51,41 @@ is a launcher/Host operation under an exclusive read-modify-write lock and
 atomic publish. Renderer plugins never receive a home-config path or direct
 writer.
 
-## Application modes
+## Configuration planes and application modes
 
-The plugin declares one mode; the editor cannot choose it per write:
+Application startup configuration and runtime plugin configuration are
+different planes. Startup configuration is resolved and frozen before the
+current process starts. Examples include the Codex executable, debug port,
+profile selection, launch environment, and other launcher arguments. These
+values are not Manager global settings and cannot mutate the running process.
+A future editor may stage a candidate only with an explicit “applies after app
+restart” result. Removing a Manager page never removes the owning CLI parser,
+launcher validation, redacted diagnostics, or process-start snapshot.
 
-- `live`: validate the candidate, persist it, atomically publish the new
-  snapshot, and notify the owning plugin. `apply` is not called again.
-- `restart`: validate and stage the candidate, persist it under the revision
-  fence, dispose/recreate only the owning plugin fiber, and publish success
-  only after the candidate fiber is active.
+Runtime configuration belongs to the owning plugin detail. The descriptor,
+not the editor, declares one application mode:
 
-A restart failure restores the previous config on a fresh owning fiber and
-keeps `lastGoodRevision` active. A persistence failure never applies the
-candidate. If rollback itself fails, the plugin becomes `failed`; the previous
-last-good value remains durable and the Host reports a bounded diagnostic.
+- `live`: validate, persist, atomically publish, and notify the active owner;
+- `plugin-restart`: persist under the revision fence, recreate only the owning
+  renderer plugin fiber, then publish the new last-good state;
+- `service-restart`: persist, restart the owning launcher/service component,
+  and publish only after that service reports the candidate active; or
+- `app-restart`: persist a staged candidate without changing the active
+  process snapshot; activation occurs only after a complete application
+  restart.
+
+`plugin-config-descriptor.v1` and `plugin-config-result.v1` remain closed with
+`live|restart`; a v1 `restart` record normalizes to v2 `plugin-restart`.
+Version-2 descriptor/result schemas carry the four explicit modes. Older
+validators reject v2, and a v2 `service-restart` or `app-restart` record must
+never be downgraded to v1 `restart`.
+
+A plugin/service restart failure restores the previous config on the owning
+component and keeps `lastGoodRevision` active. An app-restart write returns a
+staged result rather than claiming runtime application. A persistence failure
+never applies the candidate. If rollback itself fails, the owning component
+becomes `failed`; the previous last-good value remains durable and the Host
+reports a bounded diagnostic.
 Block/restore is orthogonal: a blocked plugin may accept a persisted candidate
 but does not mount until restore, which starts from the latest validated
 last-good value. Generation disposal cancels queued operations and rejects
@@ -98,7 +119,7 @@ writer. The Host retains label, help, error, save/reset, dirty state, focus,
 and accessibility ownership.
 
 Registration and every mounted renderer are effects on the registering fiber.
-Block, restart, failure, restore, generation replacement, or disposal removes
+Block, plugin/service restart, failure, restore, generation replacement, or disposal removes
 the registration and aborts/disposes active mounts. Reserved sensitive roles
 cannot be selected or overridden by an ordinary plugin. A missing, invalid, or
 throwing custom renderer falls back to the Host default control with an

@@ -1,0 +1,34 @@
+{
+  "case": "result-v2-modes",
+  "values": [
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.plugin",
+      "status": "applied",
+      "revision": 5,
+      "applies": "plugin-restart",
+      "generation": "generation-8"
+    },
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.service",
+      "status": "applied",
+      "revision": 6,
+      "applies": "service-restart",
+      "generation": "service-generation-2"
+    },
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.application",
+      "status": "staged",
+      "revision": 7,
+      "applies": "app-restart"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "case": "descriptor-v2-modes",
+  "values": [
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.live",
+      "schema": { "kind": "schemastery", "envelope": { "type": "object" } },
+      "value": {},
+      "revision": 1,
+      "lastGoodRevision": 1,
+      "applies": "live",
+      "writable": true,
+      "secrets": []
+    },
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.plugin",
+      "schema": { "kind": "standard", "renderable": false },
+      "value": {},
+      "revision": 2,
+      "lastGoodRevision": 2,
+      "applies": "plugin-restart",
+      "writable": true,
+      "secrets": []
+    },
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.service",
+      "schema": { "kind": "standard", "renderable": false },
+      "value": {},
+      "revision": 3,
+      "lastGoodRevision": 3,
+      "applies": "service-restart",
+      "writable": true,
+      "secrets": []
+    },
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.application",
+      "schema": { "kind": "standard", "renderable": false },
+      "value": {},
+      "revision": 4,
+      "lastGoodRevision": 3,
+      "applies": "app-restart",
+      "writable": true,
+      "secrets": []
+    }
+  ]
+}

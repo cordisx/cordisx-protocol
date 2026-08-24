@@ -1,7 +1,7 @@
 # Manager settings navigation protocol
 
 This specification is normative for plugin-contributed top-level destinations
-in the CordisX Manager navigation near the Host **Settings** entry. It is
+in the CordisX Manager's settings-adjacent navigation group. It is
 distinct from the tabs that switch content inside Settings, specified by
 [`manager-settings-tabs`](../manager-settings-tabs/README.md). The contract is
 host-neutral: no Codex selector, native node, DOM class, layout framework, or
@@ -35,7 +35,9 @@ Catalog v4 declares:
 
 The version-5 contribution envelope owns local `id`, required `group`, `order`,
 `when`, and `disabled`. Group is exactly `before-settings` or
-`after-settings`. The item contains exactly a same-owner local route reference
+`after-settings`. Those names are stable protocol identities for the two sides
+of the Manager extension seam; they do not require a visible Host Settings row.
+The item contains exactly a same-owner local route reference
 with optional scalar params. Title and description are required on route v2
 and page v3 instead of the item; the required `host:*` icon comes from page v3.
 Thus route and page metadata are the only display-data sources for this point.
@@ -71,14 +73,19 @@ controlled body child, route/page props, and an `AbortSignal`.
 
 ## Deterministic projection and collisions
 
-The projection is one fixed merge:
+The current Manager IA has no top-level Settings destination. The projection is
+one fixed merge:
 
 1. Host core `host:plugins`, `host:extensions`, `host:routes`, and
    `host:marketplace`;
 2. eligible `before-settings` plugins;
-3. `host:settings`;
+3. the stable virtual settings seam (no rendered Host row);
 4. eligible `after-settings` plugins; and
 5. `host:about`.
+
+The group strings stay unchanged so existing version-5 documents, ordering,
+and policy tuples remain valid. A Host must not synthesize an empty Settings
+destination merely to visualize the seam.
 
 Within either plugin group, order is numeric envelope `order`, then owner by
 Unicode code unit, then qualified contribution id by Unicode code unit.
@@ -111,11 +118,11 @@ gates and are rechecked at their operation boundary.
 When the active plugin destination becomes hidden, disabled, removed,
 uninstalled, blocked, permission-denied, point-denied, unavailable, or stale,
 or its generation is replaced, the Host aborts the active signal, then calls
-its disposer, clears the controlled body, and falls back to `host:settings`.
+its disposer, clears the controlled body, and falls back to `host:plugins`.
 Restore makes it eligible without stealing activation. Manager close performs
 abort then dispose while retaining the selected route identity; reopen may
 mount that still-eligible route again. Mount failure cleans partial content and
-falls back to `host:settings` with a Host-owned error projection.
+falls back to `host:plugins` with a Host-owned error projection.
 
 ## Trust boundary and conformance
 

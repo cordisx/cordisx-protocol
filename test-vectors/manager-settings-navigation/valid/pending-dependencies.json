@@ -15,5 +15,5 @@
   "pages": [],
   "accesses": [],
   "expectedPending": [{ "id": "demo:missing-route", "reason": "route" }, { "id": "demo:missing-page", "reason": "page" }],
-  "expectedProjection": [{ "id": "host:plugins", "disabled": false }, { "id": "host:extensions", "disabled": false }, { "id": "host:routes", "disabled": false }, { "id": "host:marketplace", "disabled": false }, { "id": "host:settings", "disabled": false }, { "id": "host:about", "disabled": false }]
+  "expectedProjection": [{ "id": "host:plugins", "disabled": false }, { "id": "host:extensions", "disabled": false }, { "id": "host:routes", "disabled": false }, { "id": "host:marketplace", "disabled": false }, { "id": "host:about", "disabled": false }]
 }

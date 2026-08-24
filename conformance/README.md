@@ -37,9 +37,11 @@ sourced user-only input, complete binding lineage, redacted runtime and config
 Manager projections, connection/route integrity, bounded retry ordering, and one
 active binding per endpoint/route. It does not claim transport exactly-once
 behavior or that a real credentialed adapter exists.
-Plugin configuration conformance covers redacted descriptors, profile/plugin/
-generation scope, revision-fenced JSON mutations, last-good ordering, reserved
-secret roles, owner-bounded namespace renderers, and closed result outcomes.
+Plugin configuration conformance covers closed v1 mode compatibility, explicit
+v2 live/plugin/service/app restart modes, staged app-restart results, redacted
+descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,
+last-good ordering, reserved secret roles, owner-bounded namespace renderers,
+and closed result outcomes.
 Plugin lifecycle conformance covers package/runtime identity, exact and acyclic
 dependency graphs, enabled dependency readiness, activation/last-good ordering,
 explicit local directory/package/downloaded-tarball input boundaries, separate

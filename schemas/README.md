@@ -96,6 +96,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `plugin-config-descriptor.v1.schema.json`: one Host-generated configuration
   snapshot with resolved/raw layers, revision, application mode, and
   last-good state;
+- `plugin-config-common.v2.schema.json`: v1 identity/scope/value definitions
+  plus explicit `live`, `plugin-restart`, `service-restart`, and `app-restart`
+  application modes;
+- `plugin-config-descriptor.v2.schema.json`: one Host-generated runtime
+  configuration snapshot using the explicit four-mode vocabulary;
+- `plugin-config-result.v2.schema.json`: applied/staged/conflict/rejected
+  outcomes; only `app-restart` may be staged and it never claims a new active
+  generation;
 - `plugin-config-mutation.v1.schema.json`: one revision- and generation-fenced
   set/unset request containing JSON data only;
 - `plugin-config-result.v1.schema.json`: applied, conflict, or rejected write
