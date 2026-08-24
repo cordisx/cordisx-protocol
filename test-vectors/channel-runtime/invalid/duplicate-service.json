@@ -1,0 +1,13 @@
+{
+  "case": "manifest",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "duplicate-channel",
+    "capabilities": [],
+    "services": [
+      { "id": "adapter", "kind": "channel-adapter", "entry": "./dist/first.js" },
+      { "id": "adapter", "kind": "channel-adapter", "entry": "./dist/second.js" }
+    ]
+  }
+}

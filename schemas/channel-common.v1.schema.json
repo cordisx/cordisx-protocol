@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-common.v1.schema.json",
+  "title": "CordisX Channel Common Types v1",
+  "$defs": {
+    "opaqueId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "adapterId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$"
+    },
+    "accountRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapterId", "accountId"],
+      "properties": {
+        "adapterId": { "$ref": "#/$defs/adapterId" },
+        "accountId": { "$ref": "#/$defs/opaqueId" }
+      }
+    },
+    "tenantRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapterId", "accountId", "tenantId"],
+      "properties": {
+        "adapterId": { "$ref": "#/$defs/adapterId" },
+        "accountId": { "$ref": "#/$defs/opaqueId" },
+        "tenantId": { "$ref": "#/$defs/opaqueId" }
+      }
+    },
+    "conversationRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapterId", "accountId", "tenantId", "conversationId", "kind"],
+      "properties": {
+        "adapterId": { "$ref": "#/$defs/adapterId" },
+        "accountId": { "$ref": "#/$defs/opaqueId" },
+        "tenantId": { "$ref": "#/$defs/opaqueId" },
+        "conversationId": { "$ref": "#/$defs/opaqueId" },
+        "kind": { "enum": ["direct", "group", "broadcast"] }
+      }
+    },
+    "threadRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapterId",
+        "accountId",
+        "tenantId",
+        "conversationId",
+        "kind",
+        "threadId",
+        "semantics"
+      ],
+      "properties": {
+        "adapterId": { "$ref": "#/$defs/adapterId" },
+        "accountId": { "$ref": "#/$defs/opaqueId" },
+        "tenantId": { "$ref": "#/$defs/opaqueId" },
+        "conversationId": { "$ref": "#/$defs/opaqueId" },
+        "kind": { "enum": ["direct", "group", "broadcast"] },
+        "threadId": { "$ref": "#/$defs/opaqueId" },
+        "semantics": { "enum": ["conversation", "topic", "reply-chain"] }
+      }
+    },
+    "userRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapterId", "accountId", "tenantId", "userId"],
+      "properties": {
+        "adapterId": { "$ref": "#/$defs/adapterId" },
+        "accountId": { "$ref": "#/$defs/opaqueId" },
+        "tenantId": { "$ref": "#/$defs/opaqueId" },
+        "userId": { "$ref": "#/$defs/opaqueId" }
+      }
+    },
+    "eventRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapterId",
+        "accountId",
+        "tenantId",
+        "conversationId",
+        "kind",
+        "threadId",
+        "semantics",
+        "eventId"
+      ],
+      "properties": {
+        "adapterId": { "$ref": "#/$defs/adapterId" },
+        "accountId": { "$ref": "#/$defs/opaqueId" },
+        "tenantId": { "$ref": "#/$defs/opaqueId" },
+        "conversationId": { "$ref": "#/$defs/opaqueId" },
+        "kind": { "enum": ["direct", "group", "broadcast"] },
+        "threadId": { "$ref": "#/$defs/opaqueId" },
+        "semantics": { "enum": ["conversation", "topic", "reply-chain"] },
+        "eventId": { "$ref": "#/$defs/opaqueId" },
+        "messageId": { "$ref": "#/$defs/opaqueId" },
+        "actor": { "$ref": "#/$defs/userRef" }
+      }
+    }
+  }
+}

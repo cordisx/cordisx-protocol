@@ -1,0 +1,39 @@
+{
+  "case": "input",
+  "value": {
+    "contract": "cordisx.channel-user-input/v1",
+    "schemaVersion": 1,
+    "role": "user",
+    "content": [
+      { "type": "text", "text": "Continue the deployment review." },
+      {
+        "type": "attachment",
+        "handle": "quarantine:sha256:fixture",
+        "mediaType": "text/plain",
+        "name": "context.txt",
+        "size": 128
+      }
+    ],
+    "source": {
+      "kind": "channel",
+      "event": {
+        "adapterId": "simulator",
+        "accountId": "local",
+        "tenantId": "test",
+        "conversationId": "direct-alice",
+        "kind": "direct",
+        "threadId": "direct-alice",
+        "semantics": "conversation",
+        "eventId": "event-1",
+        "messageId": "message-1",
+        "actor": {
+          "adapterId": "simulator",
+          "accountId": "local",
+          "tenantId": "test",
+          "userId": "alice"
+        }
+      }
+    },
+    "receivedAt": "2026-08-24T01:00:00.000Z"
+  }
+}

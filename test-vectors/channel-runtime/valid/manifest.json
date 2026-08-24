@@ -1,0 +1,68 @@
+{
+  "case": "manifest",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "channel-simulator",
+    "name": "Channel Simulator",
+    "capabilities": [
+      {
+        "name": "channel.events.receive",
+        "required": true,
+        "reason": { "key": "channel.receive", "fallback": "Receive simulated Channel events" },
+        "scope": {
+          "channelTenants": [
+            { "adapterId": "simulator", "accountId": "local", "tenantId": "test" }
+          ]
+        }
+      },
+      {
+        "name": "channel.messages.send",
+        "required": true,
+        "reason": { "key": "channel.send", "fallback": "Send simulated Channel messages" },
+        "scope": {
+          "channelConversations": [
+            {
+              "adapterId": "simulator",
+              "accountId": "local",
+              "tenantId": "test",
+              "conversationId": "direct-alice",
+              "kind": "direct"
+            }
+          ]
+        }
+      },
+      {
+        "name": "tasks.create",
+        "required": true,
+        "reason": { "key": "channel.task.create", "fallback": "Create a task from Channel input" },
+        "scope": {
+          "providers": ["codex"],
+          "cwdRoots": ["/workspace"],
+          "channelUsers": [
+            {
+              "adapterId": "simulator",
+              "accountId": "local",
+              "tenantId": "test",
+              "userId": "alice"
+            }
+          ]
+        }
+      },
+      {
+        "name": "agent.events.read",
+        "required": false,
+        "reason": { "key": "channel.notify", "fallback": "Observe task lifecycle for notifications" },
+        "scope": {
+          "sessionIds": ["agent-session-1"],
+          "channelAccounts": [
+            { "adapterId": "simulator", "accountId": "local" }
+          ]
+        }
+      }
+    ],
+    "services": [
+      { "id": "simulator", "kind": "channel-adapter", "entry": "./dist/simulator.js" }
+    ]
+  }
+}
