@@ -1,0 +1,25 @@
+{
+  "case": "descriptor",
+  "value": {
+    "version": 1,
+    "identity": {
+      "source": "file:///opt/cordisx/plugins/example.mjs",
+      "pluginId": "example"
+    },
+    "scope": {
+      "profileId": "default",
+      "generation": "generation-7"
+    },
+    "namespace": "example",
+    "schema": {
+      "kind": "standard",
+      "renderable": false
+    },
+    "value": {},
+    "revision": 4,
+    "lastGoodRevision": 5,
+    "applies": "restart",
+    "writable": true,
+    "secrets": []
+  }
+}

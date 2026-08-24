@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-config-mutation.v1.schema.json",
+  "title": "CordisX Plugin Configuration Mutation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "identity", "scope", "namespace", "expectedRevision", "operations"],
+  "properties": {
+    "version": { "const": 1 },
+    "identity": { "$ref": "plugin-config-common.v1.schema.json#/$defs/identity" },
+    "scope": { "$ref": "plugin-config-common.v1.schema.json#/$defs/scope" },
+    "namespace": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "expectedRevision": { "type": "integer", "minimum": 0 },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["op", "path", "value"],
+            "properties": {
+              "op": { "const": "set" },
+              "path": { "$ref": "plugin-config-common.v1.schema.json#/$defs/fieldPath" },
+              "value": { "$ref": "ui-common.v1.schema.json#/$defs/jsonValue" }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["op", "path"],
+            "properties": {
+              "op": { "const": "unset" },
+              "path": { "$ref": "plugin-config-common.v1.schema.json#/$defs/fieldPath" }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

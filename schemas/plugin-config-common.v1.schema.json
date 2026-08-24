@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-config-common.v1.schema.json",
+  "title": "CordisX Plugin Configuration Common Definitions v1",
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "pluginId"],
+      "properties": {
+        "source": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalSource" },
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "generation"],
+      "properties": {
+        "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "generation": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      }
+    },
+    "pathSegment": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "not": { "enum": ["__proto__", "prototype", "constructor"] }
+    },
+    "fieldPath": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/pathSegment" }
+    },
+    "schemaProjection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "envelope"],
+          "properties": {
+            "kind": { "const": "schemastery" },
+            "envelope": { "type": "object", "maxProperties": 100 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "renderable"],
+          "properties": {
+            "kind": { "const": "standard" },
+            "renderable": { "const": false }
+          }
+        }
+      ]
+    },
+    "secretSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "set"],
+      "properties": {
+        "path": { "$ref": "#/$defs/fieldPath" },
+        "set": { "type": "boolean" }
+      }
+    },
+    "applies": { "enum": ["live", "restart"] }
+  }
+}

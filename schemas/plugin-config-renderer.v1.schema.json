@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-config-renderer.v1.schema.json",
+  "title": "CordisX Plugin Configuration Renderer Registration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "identity", "scope", "id", "selector", "order"],
+  "properties": {
+    "version": { "const": 1 },
+    "identity": { "$ref": "plugin-config-common.v1.schema.json#/$defs/identity" },
+    "scope": { "$ref": "plugin-config-common.v1.schema.json#/$defs/scope" },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "selector": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["role"],
+          "properties": {
+            "role": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path"],
+          "properties": {
+            "path": { "$ref": "plugin-config-common.v1.schema.json#/$defs/fieldPath" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["namespace"],
+          "properties": {
+            "namespace": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+          }
+        }
+      ]
+    },
+    "order": { "type": "integer", "minimum": -100000, "maximum": 100000 }
+  }
+}
