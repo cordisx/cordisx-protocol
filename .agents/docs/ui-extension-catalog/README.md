@@ -1,7 +1,7 @@
 # UI extension catalog protocol
 
 This specification is normative for the host-neutral CordisX UI extension
-catalog, structured surface contribution version 2, and host-generated
+catalog, structured surface contribution versions 2 and 3, and host-generated
 invocation context version 1. It is independent of Codex selectors, React,
 native DOM layout, and distribution format.
 
@@ -14,6 +14,12 @@ structured-data boundary can be represented in v2. A v1 document that relied
 on the overly broad v1 `iconToken` schema is rejected during normalization.
 A v1 host must reject a v2 document instead of dropping fields or converting
 it to a DOM slot.
+
+Version 3 preserves the version-2 vocabulary and payload families while adding
+the bounded `routeBehavior` field to route-backed actions. Omission means
+`navigate`; `toggle` delegates exact route/parameter comparison, pressed state,
+activation, close, and focus restoration to the host. A version-2 host rejects
+a version-3 document rather than guessing toggle behavior.
 
 `host-extension-point-catalog.v2` adds `payloadFamily`, protocol `stability`,
 and current-host `availability` to the v1 descriptor. Version 1 hosts continue
@@ -53,6 +59,12 @@ host decides direct-action capacity, overflow, keyboard hints, focus,
 accessibility, error presentation, and native-menu integration. A contribution
 never contains HTML, SVG, CSS, selectors, DOM nodes, a popover renderer, or a
 mount callback.
+
+A version-3 route action may select `routeBehavior: toggle`. Its host-generated
+pressed projection is true only while the exact owner-qualified route with the
+resolved contextual parameters is active and presented. Re-activation closes
+that outlet route. Plugin state is not an input to this projection, and a
+toggle action cannot also reference a command.
 
 Contribution identity is `(point id, owner-qualified contribution id)`.
 Anchor and target are immutable registration fields: an update may replace the
@@ -140,7 +152,7 @@ it cannot be encoded as an action, presenter, tab, or outlet.
 ## Security and downgrade
 
 Schemas and host origin checks enforce cooperative use of CordisX APIs. They
-do not sandbox trusted renderer code. Version 2 fails closed for unknown
+do not sandbox trusted renderer code. Versions 2 and 3 fail closed for unknown
 versions, surfaces, families, anchors, placements, presenter kinds, arbitrary
-icons, free-DOM fields, plugin-supplied invocation sources, or catalog family
+icons, route behaviors, free-DOM fields, plugin-supplied invocation sources, or catalog family
 mismatches. No version may downgrade a rejected contribution to raw DOM.

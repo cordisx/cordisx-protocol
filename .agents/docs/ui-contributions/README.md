@@ -154,11 +154,27 @@ supplies semantic scope, placement, and context policy. Only a host/adapter may
 register an outlet that touches host DOM; plugin-provided outlet declarations
 are invalid at runtime.
 
-The page header contract is outlet-neutral. An `app` route and a `main` route
-use the same `page.v1` fields and host projection rules; plugins do not declare
-an app-specific or main-specific header renderer. The host renders the complete
-header and may adapt its layout to the outlet geometry without changing page
-metadata.
+The standard page header contract is outlet-neutral. An `app` route and a
+`main` route use the same page fields and host projection rules; plugins do not
+declare an app-specific or main-specific header renderer. The host renders the
+complete header and may adapt its layout to the outlet geometry without
+changing page metadata.
+
+Page metadata version 2 adds one bounded host chrome policy. `standard` is the
+default and preserves version-1 behavior. `body-only` asks the host to mount
+the page body without a second CordisX header, breadcrumb row, tab row, or
+header actions. The page still declares a localized title and may declare an
+icon for diagnostics, management, and accessible naming. It cannot provide
+header DOM, CSS, selectors, a close control, or a replacement renderer.
+
+`body-only` is a general page capability with an outlet-policy gate, not a
+session- or plugin-specific adapter exception. A host may accept it only when
+the target outlet retains persistent external host chrome with an independent
+keyboard-reachable close path. In the initial catalog, only `session.content`
+qualifies because it begins below and preserves the native session header;
+`app` and `main` reject `body-only` navigation. A body-only descriptor cannot
+also declare breadcrumbs, tabs, or header actions. Unknown policy values fail
+closed.
 
 Each `headerActions` entry contains only a page-local action id, localized
 label, optional localized accessible label, optional icon token, command
@@ -167,6 +183,24 @@ one page and array order is presentation order. The referenced command must be
 live and visible to the page owner. The host owns buttons, overflow behavior,
 focus, keyboard interaction, loading, cancellation, errors, disabled state,
 and command dispatch.
+
+Structured surface contribution version 3 adds `routeBehavior` to route-backed
+actions. Its default is `navigate`, preserving version-2 behavior. `toggle`
+means the host compares the owner-qualified route and resolved parameters with
+the current outlet stack: inactive activation navigates, while exact active
+activation closes that route. The host projects selected/pressed state and
+must never accept a plugin boolean as its source of truth. A toggle cannot also
+name a command.
+
+For a contextual session surface targeting a route whose only missing
+parameter is `sessionId`, the host may bind that parameter from its current,
+host-issued session identity immediately before authorization and activation.
+Plugin arguments and DOM state cannot supply or override that binding. Session
+changes, close, policy denial, plugin deactivation, and generation disposal
+therefore clear the projection through outlet lifecycle state rather than a
+plugin-owned flag. Escape and pointer/keyboard reactivation use the same host
+close operation, and focus returns to the still-connected originating control
+when practical.
 
 A page descriptor and header action cannot contain DOM nodes, HTML, CSS,
 selectors, framework renderers, `children`, a header component, or a mount
@@ -217,11 +251,13 @@ the host-private adapter.
 
 ## Compatibility and downgrade
 
-All version-1 documents set their exact schema URL and `schemaVersion: 1`, use
+All documents set their exact versioned schema URL, use
 `additionalProperties: false`, and fail closed on unknown schema versions,
-unknown surface kinds, unknown condition operators, or unknown required
-fields. A version-1 host may preserve an invalid entry for diagnostics but must
-not render, execute, or navigate it.
+unknown surface kinds, unknown chrome or route behaviors, unknown condition
+operators, or unknown required fields. Version-1 pages remain frozen and imply
+standard chrome. Version-2 surface contributions remain frozen and imply
+`routeBehavior: navigate`. Older hosts may preserve newer entries for
+diagnostics but must not render, execute, or navigate them.
 
 A host that does not implement this protocol cannot downgrade a structured
 entry to a free-DOM slot. A plugin targeting a newer version must remain
@@ -230,5 +266,5 @@ inactive with an explicit compatibility diagnostic.
 This version-1 surface vocabulary is frozen. The complete additive catalog,
 new structured families, and contextual invocation origin are defined by the
 [UI extension catalog protocol](../ui-extension-catalog/README.md) and
-`surface-contribution.v2`; they do not rename or restore any retired free-DOM
-slot.
+`surface-contribution.v2` and `surface-contribution.v3`; they do not rename or
+restore any retired free-DOM slot.

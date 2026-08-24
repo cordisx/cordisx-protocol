@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v3.schema.json",
+  "title": "CordisX Structured Surface Contribution v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "surface", "item"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v3.schema.json"
+    },
+    "schemaVersion": { "const": 3 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "surface": {
+      "enum": [
+        "sidebar.footer.before-control",
+        "sidebar.footer.after-control",
+        "sidebar.footer.menu",
+        "sidebar.account.menu",
+        "sidebar.navigation.items",
+        "sidebar.workspace.menu",
+        "sidebar.session.actions",
+        "sidebar.session.menu",
+        "workspace.toolbar.items",
+        "session.header.actions",
+        "session.tabs",
+        "session.banner.items",
+        "session.message.actions",
+        "session.turn.footer",
+        "session.tool.actions",
+        "composer.toolbar.items",
+        "composer.command-menu.items",
+        "composer.dock.above",
+        "composer.dock.below",
+        "panel.right.header-actions",
+        "panel.right.tabs",
+        "panel.bottom.header-actions",
+        "panel.bottom.tabs",
+        "environment.panel.header-actions",
+        "environment.panel.sections",
+        "environment.section.actions",
+        "environment.section.rows",
+        "environment.row.trailing-actions"
+      ]
+    },
+    "group": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$", "default": "default" },
+    "order": { "type": "integer", "minimum": -100000, "maximum": 100000, "default": 0 },
+    "when": { "$ref": "ui-common.v1.schema.json#/$defs/condition" },
+    "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+    "item": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "surface": {
+              "enum": [
+                "sidebar.footer.before-control",
+                "sidebar.footer.after-control",
+                "sidebar.footer.menu",
+                "sidebar.account.menu",
+                "sidebar.workspace.menu",
+                "session.header.actions",
+                "composer.command-menu.items",
+                "panel.right.header-actions",
+                "panel.bottom.header-actions"
+              ]
+            },
+            "item": { "$ref": "#/$defs/action" }
+          }
+        },
+        {
+          "properties": {
+            "surface": {
+              "enum": [
+                "sidebar.session.actions",
+                "sidebar.session.menu",
+                "session.message.actions",
+                "session.tool.actions"
+              ]
+            },
+            "item": { "$ref": "#/$defs/action" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "sidebar.navigation.items" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/navigationItem" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "workspace.toolbar.items" },
+            "item": { "$ref": "#/$defs/workspaceToolbarAction" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "composer.toolbar.items" },
+            "item": { "$ref": "#/$defs/composerToolbarAction" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "enum": ["session.tabs", "panel.right.tabs", "panel.bottom.tabs"] },
+            "item": { "$ref": "surface-contribution.v2.schema.json#/$defs/tab" }
+          }
+        },
+        {
+          "properties": {
+            "surface": {
+              "enum": ["session.banner.items", "session.turn.footer", "composer.dock.above", "composer.dock.below"]
+            },
+            "item": { "$ref": "surface-contribution.v2.schema.json#/$defs/presenter" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.panel.header-actions" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/action" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.panel.sections" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentSection" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.section.actions" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentSectionAction" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.section.rows" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentRow" }
+          }
+        },
+        {
+          "properties": {
+            "surface": { "const": "environment.row.trailing-actions" },
+            "item": { "$ref": "surface-contribution.v1.schema.json#/$defs/environmentRowAction" }
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "anyOf": [
+        { "required": ["command"], "properties": { "command": true } },
+        { "required": ["route"], "properties": { "route": true } }
+      ],
+      "properties": {
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "ariaLabel": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" },
+        "command": { "$ref": "ui-common.v1.schema.json#/$defs/commandReference" },
+        "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+        "routeBehavior": { "enum": ["navigate", "toggle"], "default": "navigate" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "routeBehavior": true }, "required": ["routeBehavior"] },
+          "then": { "required": ["route"] }
+        },
+        {
+          "if": {
+            "properties": { "routeBehavior": { "const": "toggle" } },
+            "required": ["routeBehavior"]
+          },
+          "then": {
+            "required": ["route"],
+            "properties": { "command": false }
+          }
+        }
+      ]
+    },
+    "workspaceToolbarAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor", "placement", "label"],
+      "anyOf": [
+        { "required": ["command"], "properties": { "command": true } },
+        { "required": ["route"], "properties": { "route": true } }
+      ],
+      "properties": {
+        "anchor": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "placement": { "enum": ["before", "after", "menu"] },
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "ariaLabel": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" },
+        "command": { "$ref": "ui-common.v1.schema.json#/$defs/commandReference" },
+        "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+        "routeBehavior": { "enum": ["navigate", "toggle"], "default": "navigate" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "routeBehavior": true }, "required": ["routeBehavior"] },
+          "then": { "required": ["route"] }
+        },
+        {
+          "if": { "properties": { "routeBehavior": { "const": "toggle" } }, "required": ["routeBehavior"] },
+          "then": { "required": ["route"], "properties": { "command": false } }
+        }
+      ]
+    },
+    "composerToolbarAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor", "placement", "label"],
+      "anyOf": [
+        { "required": ["command"], "properties": { "command": true } },
+        { "required": ["route"], "properties": { "route": true } }
+      ],
+      "properties": {
+        "anchor": { "enum": ["leading", "model", "submit"] },
+        "placement": { "enum": ["before", "after", "menu"] },
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "ariaLabel": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" },
+        "command": { "$ref": "ui-common.v1.schema.json#/$defs/commandReference" },
+        "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+        "routeBehavior": { "enum": ["navigate", "toggle"], "default": "navigate" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "routeBehavior": true }, "required": ["routeBehavior"] },
+          "then": { "required": ["route"] }
+        },
+        {
+          "if": { "properties": { "routeBehavior": { "const": "toggle" } }, "required": ["routeBehavior"] },
+          "then": { "required": ["route"], "properties": { "command": false } }
+        }
+      ]
+    }
+  }
+}

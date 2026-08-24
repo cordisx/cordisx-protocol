@@ -1,0 +1,37 @@
+{
+  "owner": "trace",
+  "catalogs": [],
+  "commands": [],
+  "contributions": [],
+  "routes": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "timeline",
+      "path": "/sessions/:sessionId/trace",
+      "outlet": "session.content",
+      "page": "timeline"
+    }
+  ],
+  "pages": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v2.schema.json",
+      "schemaVersion": 2,
+      "id": "timeline",
+      "title": { "key": "trace.title", "fallback": "Trace" },
+      "icon": "host:history",
+      "chrome": "body-only"
+    }
+  ],
+  "outlets": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/outlet.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "session.content",
+      "authority": "host-adapter",
+      "scope": "session",
+      "preferredPlacement": "absolute",
+      "contextPolicy": "semantic"
+    }
+  ]
+}
