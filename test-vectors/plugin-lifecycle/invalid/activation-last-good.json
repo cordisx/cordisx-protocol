@@ -1,0 +1,13 @@
+{
+  "case": "activation",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-activation.v1.schema.json",
+    "schemaVersion": 1,
+    "recordKind": "active",
+    "profileId": "work",
+    "revision": 2,
+    "lastGoodRevision": 3,
+    "runtimeGeneration": "runtime-1",
+    "plugins": []
+  }
+}

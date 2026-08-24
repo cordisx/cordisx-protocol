@@ -35,3 +35,7 @@ behavior or that a real credentialed adapter exists.
 Plugin configuration conformance covers redacted descriptors, profile/plugin/
 generation scope, revision-fenced JSON mutations, last-good ordering, reserved
 secret roles, owner-bounded namespace renderers, and closed result outcomes.
+Plugin lifecycle conformance covers package/runtime identity, exact and acyclic
+dependency graphs, enabled dependency readiness, activation/last-good ordering,
+absolute local input boundaries, matching permission decisions, minimum apply
+scope, safe share availability, and path/secret-free results and snapshots.

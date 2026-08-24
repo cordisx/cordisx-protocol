@@ -1,0 +1,35 @@
+{
+  "case": "result",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-result.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "request-1",
+    "profileId": "work",
+    "operation": "inspect-local",
+    "outcome": "planned",
+    "revision": 7,
+    "runtimeGeneration": "runtime-4",
+    "scope": "plugin-generation",
+    "affectedPluginIds": ["notes"],
+    "candidateId": "candidate-8",
+    "impactToken": "impact-8",
+    "package": {
+      "id": "notes",
+      "name": "Notes",
+      "version": "1.2.0",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "dependencies": [{ "id": "storage", "version": "1.0.0" }],
+      "canonicalSource": "https://plugins.example/notes"
+    },
+    "authorizationPlan": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v1.schema.json",
+      "schemaVersion": 1,
+      "planId": "permission-8",
+      "operation": "install",
+      "profileId": "work",
+      "identity": { "source": "https://plugins.example/notes", "pluginId": "notes" },
+      "defaultDecision": "allow",
+      "declarations": []
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-activation.v1.schema.json",
+  "title": "CordisX Profile Plugin Activation Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "recordKind",
+    "profileId",
+    "revision",
+    "lastGoodRevision",
+    "runtimeGeneration",
+    "plugins"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-activation.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "recordKind": { "enum": ["active", "candidate", "last-good"] },
+    "transactionId": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" },
+    "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "revision": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/revision" },
+    "lastGoodRevision": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/revision" },
+    "runtimeGeneration": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/generation" },
+    "plugins": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "digest",
+          "moduleGeneration",
+          "enabled",
+          "dependencies"
+        ],
+        "properties": {
+          "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+          "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+          "digest": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" },
+          "moduleGeneration": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/generation" },
+          "enabled": { "type": "boolean" },
+          "dependencies": {
+            "type": "array",
+            "maxItems": 32,
+            "items": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/dependency" }
+          },
+          "canonicalSource": {
+            "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/canonicalPublicSource"
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "recordKind": { "const": "candidate" } },
+        "required": ["recordKind"]
+      },
+      "then": {
+        "required": ["transactionId"],
+        "properties": {
+          "transactionId": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" }
+        }
+      },
+      "else": { "not": { "required": ["transactionId"] } }
+    }
+  ]
+}

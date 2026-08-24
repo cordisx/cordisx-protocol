@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-runtime-snapshot.v1.schema.json",
+  "title": "CordisX Manager Plugin Runtime Snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "profileId",
+    "revision",
+    "runtimeGeneration",
+    "operationsAvailable",
+    "plugins"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-runtime-snapshot.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "revision": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/revision" },
+    "runtimeGeneration": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/generation" },
+    "operationsAvailable": { "type": "boolean" },
+    "plugins": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "version",
+          "digest",
+          "moduleGeneration",
+          "enabled",
+          "status",
+          "dependencies",
+          "dependents",
+          "favorite",
+          "availableOperations"
+        ],
+        "properties": {
+          "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+          "digest": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" },
+          "moduleGeneration": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/generation" },
+          "enabled": { "type": "boolean" },
+          "status": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/pluginStatus" },
+          "dependencies": {
+            "type": "array",
+            "maxItems": 32,
+            "items": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+          },
+          "dependents": {
+            "type": "array",
+            "maxItems": 256,
+            "items": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+          },
+          "favorite": { "type": "boolean" },
+          "availableOperations": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 6,
+            "items": {
+              "enum": ["update", "enable", "disable", "reload", "share", "uninstall"]
+            }
+          },
+          "canonicalSource": {
+            "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/canonicalPublicSource"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "string", "minLength": 1, "maxLength": 100 },
+              "message": { "type": "string", "minLength": 1, "maxLength": 1000 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

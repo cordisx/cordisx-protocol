@@ -1,0 +1,21 @@
+{
+  "case": "package",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v1.schema.json",
+    "schemaVersion": 1,
+    "id": "notes",
+    "version": "1.2.0",
+    "entry": "./dist/index.js",
+    "readme": "./README.md",
+    "canonicalSource": "https://plugins.example/notes",
+    "compatibility": { "runtimeAbi": 1, "protocol": 1 },
+    "dependencies": [{ "id": "storage", "version": "1.0.0" }],
+    "runtimeManifest": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+      "schemaVersion": 1,
+      "id": "notes",
+      "name": "Notes",
+      "capabilities": []
+    }
+  }
+}

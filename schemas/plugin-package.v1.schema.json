@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v1.schema.json",
+  "title": "CordisX Local Plugin Package Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "id",
+    "version",
+    "entry",
+    "compatibility",
+    "dependencies",
+    "runtimeManifest"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+    "entry": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 512,
+      "pattern": "^\\./[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\\.(?:mjs|js|ts)$"
+    },
+    "readme": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^\\./[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\\.(?:md|markdown)$"
+    },
+    "canonicalSource": {
+      "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/canonicalPublicSource"
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtimeAbi", "protocol"],
+      "properties": {
+        "runtimeAbi": { "const": 1 },
+        "protocol": { "const": 1 }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "maxItems": 32,
+      "items": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/dependency" }
+    },
+    "runtimeManifest": { "$ref": "plugin-manifest.v1.schema.json" }
+  }
+}

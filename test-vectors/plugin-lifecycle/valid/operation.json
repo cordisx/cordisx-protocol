@@ -1,0 +1,15 @@
+{
+  "case": "operation",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-lifecycle-operation.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "request-1",
+    "profileId": "work",
+    "expectedRevision": 7,
+    "runtimeGeneration": "runtime-4",
+    "operation": {
+      "kind": "inspect-local",
+      "sourceDirectory": "/Users/example/plugins/notes"
+    }
+  }
+}
