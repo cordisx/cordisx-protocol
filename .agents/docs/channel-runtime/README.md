@@ -113,14 +113,31 @@ fences old claims and then calls its bounded dispose path. Restart recovers
 durable leases, queues, bindings, replay ids, cursor/checkpoint, generation,
 and last-good revision.
 
+The Host projects the runtime as a Node-side Cordis `channel` service. Adapter
+plugins contribute connections through fiber-owned effects; other Node plugins
+may consume only brokered connection-list, sourced-message subscription, and
+queued-send methods. The Host derives package source, plugin id, and generation
+from the requesting Cordis child context on every call. Callers cannot provide
+their own identity, receive the raw adapter connection, or retain a facade past
+generation disposal.
+
+`channel.events.receive` is adapter authority to accept and durably normalize
+platform ingress. It does not grant a consumer plugin access to message
+content. Cross-plugin consumption requires the separate
+`channel.events.subscribe` declaration. Subscriptions expose the sourced
+user-input envelope only after durable acceptance and never expose raw callback
+bodies, transports, secrets, or task-gateway handles.
+
 ## Capabilities and scopes
 
 Channel adds these declarations to the existing Permission Broker model:
 
 | Capability | Minimum use | Default requirement |
 | --- | --- | --- |
+| `channel.accounts.read` | list or watch redacted connection metadata | required for consumer connection discovery |
 | `channel.accounts.connect` | start a real account transport | required for live adapters |
 | `channel.events.receive` | authenticate, persist, and normalize inbound events | required for inbound adapters |
+| `channel.events.subscribe` | consume sourced normalized messages across Node plugins | required for consumer subscriptions |
 | `channel.messages.send` | reply, notify, update, or recall where supported | required for bidirectional adapters |
 | `channel.bindings.read` | resolve endpoint/task bindings | required for query/continue |
 | `channel.bindings.write` | create, rebind, archive, or restore bindings | required for create/bind control |
