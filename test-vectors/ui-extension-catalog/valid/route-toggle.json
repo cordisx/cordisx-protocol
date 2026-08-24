@@ -1,0 +1,52 @@
+{
+  "complete": false,
+  "generation": "generation-42",
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v2.schema.json",
+    "schemaVersion": 2,
+    "points": [
+      {
+        "id": "session.header.actions",
+        "kind": "surface",
+        "title": { "key": "session.header.actions.title", "fallback": "Session header actions" },
+        "description": { "key": "session.header.actions.description", "fallback": "Session view actions" },
+        "icon": "host:more",
+        "payloadFamily": "contextual-action",
+        "stability": "stable",
+        "availability": "available"
+      }
+    ]
+  },
+  "contributions": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v3.schema.json",
+      "schemaVersion": 3,
+      "id": "trace",
+      "surface": "session.header.actions",
+      "group": "action",
+      "order": 10,
+      "item": {
+        "label": { "key": "trace.toggle", "fallback": "Toggle Agent Trace" },
+        "icon": "host:history",
+        "route": { "id": "timeline" },
+        "routeBehavior": "toggle"
+      }
+    }
+  ],
+  "accesses": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-access.v2.schema.json",
+      "schemaVersion": 2,
+      "generation": "generation-42",
+      "operation": "surface.route.navigate",
+      "identity": {
+        "source": "file:///plugins/trace.mjs",
+        "pluginId": "trace",
+        "pointId": "session.header.actions"
+      },
+      "contributionId": "trace:trace",
+      "routeId": "trace:timeline"
+    }
+  ],
+  "contexts": []
+}

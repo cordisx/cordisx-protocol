@@ -12,6 +12,7 @@ const schemaNames = [
   'surface-contribution.v1.schema.json',
   'route.v1.schema.json',
   'page.v1.schema.json',
+  'page.v2.schema.json',
   'outlet.v1.schema.json',
 ]
 const schemas = new Map()
@@ -21,13 +22,21 @@ for (const name of schemaNames) {
 
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 for (const schema of schemas.values()) ajv.addSchema(schema)
+const compatiblePageSchema = {
+  $id: 'urn:cordisx:compatible-page',
+  oneOf: [
+    { $ref: schemas.get('page.v1.schema.json').$id },
+    { $ref: schemas.get('page.v2.schema.json').$id },
+  ],
+}
+ajv.addSchema(compatiblePageSchema)
 
 const validators = {
   catalogs: ajv.getSchema(schemas.get('locale-catalog.v1.schema.json').$id),
   commands: ajv.getSchema(schemas.get('command.v1.schema.json').$id),
   contributions: ajv.getSchema(schemas.get('surface-contribution.v1.schema.json').$id),
   routes: ajv.getSchema(schemas.get('route.v1.schema.json').$id),
-  pages: ajv.getSchema(schemas.get('page.v1.schema.json').$id),
+  pages: ajv.getSchema(compatiblePageSchema.$id),
   outlets: ajv.getSchema(schemas.get('outlet.v1.schema.json').$id),
 }
 for (const [kind, validator] of Object.entries(validators)) {
@@ -202,6 +211,7 @@ export function validateSuite(suite) {
   const commandIds = new Set(commands.map(command => qualify(owner, command.id)))
   const routeIds = new Set(routes.map(route => qualify(owner, route.id)))
   const pageIds = new Set(pages.map(page => qualify(owner, page.id)))
+  const pagesById = new Map(pages.map(page => [qualify(owner, page.id), page]))
   const outletIds = new Set(outlets.map(outlet => outlet.id))
 
   for (const contribution of contributions) {
@@ -236,6 +246,10 @@ export function validateSuite(suite) {
     if (duplicates.length > 0) errors.push(`route ${route.id} repeats parameter ${duplicates[0]}`)
     if (expected === 'session.content' && !route.path.split('/').includes(':sessionId')) {
       errors.push(`session route ${route.id} must declare :sessionId`)
+    }
+    const page = pagesById.get(qualify(owner, route.page))
+    if (page?.chrome === 'body-only' && route.outlet !== 'session.content') {
+      errors.push(`body-only page ${page.id} requires an outlet with persistent external chrome; received ${route.outlet}`)
     }
   }
 

@@ -12,9 +12,13 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   including distinct native footer/help and account/profile menu actions;
 - `surface-contribution.v2.schema.json`: the additive complete surface
   vocabulary and bounded action, contextual-action, tab, and presenter families;
+- `surface-contribution.v3.schema.json`: version-2 surface vocabulary plus the
+  host-owned `navigate`/`toggle` behavior for structured route actions;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `page.v1.schema.json`: host-owned page header metadata and structured header
   actions; trusted-local mounts render the page body only;
+- `page.v2.schema.json`: page-v1 metadata plus the bounded `standard` or
+  `body-only` host chrome policy;
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
 - `plugin-manifest.v1.schema.json`: one runtime plugin manifest with
   versioned Platform capability declarations, reasons, and maximum scopes.

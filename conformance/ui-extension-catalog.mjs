@@ -9,6 +9,7 @@ const schemaNames = [
   'ui-common.v1.schema.json',
   'surface-contribution.v1.schema.json',
   'surface-contribution.v2.schema.json',
+  'surface-contribution.v3.schema.json',
   'extension-point-common.v1.schema.json',
   'host-extension-point-catalog.v2.schema.json',
   'extension-point-access.v2.schema.json',
@@ -20,10 +21,18 @@ for (const name of schemaNames) schemas.set(name, JSON.parse(await readFile(path
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv)
 for (const schema of schemas.values()) ajv.addSchema(schema)
+const compatibleContributionSchema = {
+  $id: 'urn:cordisx:compatible-surface-contribution',
+  oneOf: [
+    { $ref: schemas.get('surface-contribution.v2.schema.json').$id },
+    { $ref: schemas.get('surface-contribution.v3.schema.json').$id },
+  ],
+}
+ajv.addSchema(compatibleContributionSchema)
 
 const validators = {
   catalog: ajv.getSchema(schemas.get('host-extension-point-catalog.v2.schema.json').$id),
-  contribution: ajv.getSchema(schemas.get('surface-contribution.v2.schema.json').$id),
+  contribution: ajv.getSchema(compatibleContributionSchema.$id),
   access: ajv.getSchema(schemas.get('extension-point-access.v2.schema.json').$id),
   context: ajv.getSchema(schemas.get('surface-invocation-context.v1.schema.json').$id),
 }
