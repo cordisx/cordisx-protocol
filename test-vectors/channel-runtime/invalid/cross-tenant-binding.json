@@ -1,0 +1,39 @@
+{
+  "case": "binding",
+  "value": {
+    "contract": "cordisx.channel-binding/v1",
+    "schemaVersion": 1,
+    "bindingId": "binding-cross-tenant",
+    "channel": {
+      "adapterId": "simulator",
+      "accountId": "local",
+      "tenantId": "tenant-a",
+      "conversationId": "direct-alice",
+      "kind": "direct",
+      "threadId": "direct-alice",
+      "semantics": "conversation"
+    },
+    "session": { "providerId": "codex", "remoteSessionId": "thread-1" },
+    "createdBy": {
+      "adapterId": "simulator",
+      "accountId": "local",
+      "tenantId": "tenant-b",
+      "userId": "alice"
+    },
+    "createdFrom": {
+      "adapterId": "simulator",
+      "accountId": "local",
+      "tenantId": "tenant-a",
+      "conversationId": "direct-alice",
+      "kind": "direct",
+      "threadId": "direct-alice",
+      "semantics": "conversation",
+      "eventId": "event-1"
+    },
+    "routeId": "default",
+    "revision": 1,
+    "state": "active",
+    "createdAt": "2026-08-24T01:00:00.000Z",
+    "updatedAt": "2026-08-24T01:00:00.000Z"
+  }
+}

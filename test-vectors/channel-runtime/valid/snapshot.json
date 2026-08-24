@@ -1,0 +1,56 @@
+{
+  "case": "snapshot",
+  "value": {
+    "contract": "cordisx.channel-runtime-snapshot/v1",
+    "schemaVersion": 1,
+    "observedAt": "2026-08-24T01:05:00.000Z",
+    "accounts": [
+      {
+        "ref": { "adapterId": "simulator", "accountId": "local", "tenantId": "test" },
+        "adapterKind": "simulator",
+        "implementationStatus": "verified",
+        "connectionState": "ready",
+        "secretState": "unavailable",
+        "generation": 2,
+        "lastGoodRevision": 3,
+        "cursorUpdatedAt": "2026-08-24T01:04:59.000Z",
+        "inbound": { "pending": 0, "retrying": 0, "deadLetter": 0 },
+        "outbound": { "pending": 1, "retrying": 0, "deadLetter": 0 }
+      }
+    ],
+    "bindings": [
+      {
+        "bindingId": "binding-codex",
+        "channel": {
+          "adapterId": "simulator",
+          "accountId": "local",
+          "tenantId": "test",
+          "conversationId": "direct-alice",
+          "kind": "direct",
+          "threadId": "direct-alice",
+          "semantics": "conversation"
+        },
+        "session": { "providerId": "codex", "remoteSessionId": "thread-1" },
+        "routeId": "default",
+        "revision": 1,
+        "state": "active"
+      },
+      {
+        "bindingId": "binding-zcode",
+        "channel": {
+          "adapterId": "simulator",
+          "accountId": "local",
+          "tenantId": "test",
+          "conversationId": "direct-alice",
+          "kind": "direct",
+          "threadId": "direct-alice",
+          "semantics": "conversation"
+        },
+        "session": { "providerId": "zcode", "remoteSessionId": "thread-1" },
+        "routeId": "alternate",
+        "revision": 1,
+        "state": "active"
+      }
+    ]
+  }
+}

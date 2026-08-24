@@ -23,3 +23,7 @@ version 3 so the closed version-2/version-3 vocabularies remain unchanged. It
 validates structured host headers, ordering/collisions, same-owner route/page
 dependencies, pending states, body-only outlet policy, access origin, and
 lifecycle cleanup/fallback.
+Channel runtime conformance covers manifest-v2 service and capability identity,
+capability-family scope separation, sourced user-only input, complete binding
+lineage, redacted manager snapshots, account coverage, and one active binding
+per endpoint/route. It does not claim transport exactly-once behavior.

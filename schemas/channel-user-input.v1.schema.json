@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-user-input.v1.schema.json",
+  "title": "CordisX Sourced Channel User Input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "role", "content", "source", "receivedAt"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-user-input/v1" },
+    "schemaVersion": { "const": 1 },
+    "role": { "const": "user" },
+    "content": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/contentBlock" }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "event"],
+      "properties": {
+        "kind": { "const": "channel" },
+        "event": { "$ref": "channel-common.v1.schema.json#/$defs/eventRef" }
+      }
+    },
+    "receivedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "contentBlock": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "text"],
+          "properties": {
+            "type": { "const": "text" },
+            "text": { "type": "string", "minLength": 1, "maxLength": 100000 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "handle", "mediaType", "size"],
+          "properties": {
+            "type": { "const": "attachment" },
+            "handle": { "$ref": "channel-common.v1.schema.json#/$defs/opaqueId" },
+            "mediaType": { "type": "string", "minLength": 1, "maxLength": 255 },
+            "name": { "type": "string", "minLength": 1, "maxLength": 1024 },
+            "size": { "type": "integer", "minimum": 0, "maximum": 1073741824 }
+          }
+        }
+      ]
+    }
+  }
+}

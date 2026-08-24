@@ -42,3 +42,9 @@ Manager settings suites live in `manager-settings-tabs/valid` and
 boundary, host-only tab headers, deterministic built-in merge, same-owner
 route/page wiring, pending dependencies, body-only content, authorization
 origin, and lifecycle cleanup/fallback.
+
+Channel runtime suites live in `channel-runtime/valid` and
+`channel-runtime/invalid`. They cover manifest-v2 service/capability boundaries,
+complete Channel and Platform identities, sourced user-only input, binding
+lineage, redacted snapshots, active binding uniqueness, and safe package entry
+resolution.

@@ -25,6 +25,16 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
 - `plugin-manifest.v1.schema.json`: one runtime plugin manifest with
   versioned Platform capability declarations, reasons, and maximum scopes.
+- `plugin-manifest.v2.schema.json`: exact-version Channel capabilities/scopes
+  and launcher-resolved `channel-adapter` services;
+- `channel-common.v1.schema.json`: complete Channel account, tenant,
+  conversation, thread, user, and event identities;
+- `channel-user-input.v1.schema.json`: attributed, user-role-only ingress with
+  opaque quarantined attachment handles;
+- `channel-binding.v1.schema.json`: durable endpoint/route to complete Platform
+  session binding;
+- `channel-runtime-snapshot.v1.schema.json`: bounded and redacted manager
+  health/binding projection;
 - `platform-model.v1.schema.json`: one provider-aware model descriptor keyed by
   `(providerId, modelId)`;
 - `platform-model-page.v1.schema.json`: one provider-filtered model catalog;

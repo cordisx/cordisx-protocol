@@ -1,0 +1,19 @@
+{
+  "case": "manifest",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "over-scoped-agent",
+    "capabilities": [
+      {
+        "name": "agent.events.read",
+        "required": false,
+        "reason": { "key": "events", "fallback": "Read events" },
+        "scope": {
+          "sessions": [{ "providerId": "codex", "remoteSessionId": "thread-1" }]
+        }
+      }
+    ],
+    "services": []
+  }
+}

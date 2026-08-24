@@ -21,6 +21,9 @@ Specified areas:
 - `manager-settings-tabs/`: structured manager settings surface version 4,
   catalog version 3, controlled body-only outlet, deterministic projection,
   authorization origin, and lifecycle.
+- `channel-runtime/`: structured Channel identity, sourced user input,
+  persistent Platform session bindings, redacted runtime snapshots, scoped
+  permissions, and launcher-side service declarations.
 
 Planned areas include isolated execution, signed package identity,
 distribution, activation, and rollback.

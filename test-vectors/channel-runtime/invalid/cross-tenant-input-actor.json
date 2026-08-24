@@ -1,0 +1,29 @@
+{
+  "case": "input",
+  "value": {
+    "contract": "cordisx.channel-user-input/v1",
+    "schemaVersion": 1,
+    "role": "user",
+    "content": [{ "type": "text", "text": "Continue." }],
+    "source": {
+      "kind": "channel",
+      "event": {
+        "adapterId": "simulator",
+        "accountId": "local",
+        "tenantId": "tenant-a",
+        "conversationId": "direct-alice",
+        "kind": "direct",
+        "threadId": "direct-alice",
+        "semantics": "conversation",
+        "eventId": "event-cross-tenant",
+        "actor": {
+          "adapterId": "simulator",
+          "accountId": "local",
+          "tenantId": "tenant-b",
+          "userId": "alice"
+        }
+      }
+    },
+    "receivedAt": "2026-08-24T01:00:00.000Z"
+  }
+}

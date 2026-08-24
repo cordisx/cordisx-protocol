@@ -1,0 +1,12 @@
+{
+  "case": "manifest",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v2.schema.json",
+    "schemaVersion": 2,
+    "id": "unsafe-channel",
+    "capabilities": [],
+    "services": [
+      { "id": "unsafe", "kind": "channel-adapter", "entry": "../outside.js" }
+    ]
+  }
+}
