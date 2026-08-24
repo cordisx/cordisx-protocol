@@ -7,13 +7,17 @@ import addFormats from 'ajv-formats'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const schemaNames = [
   'ui-common.v1.schema.json',
+  'extension-point-common.v1.schema.json',
   'platform-model.v1.schema.json',
   'platform-session.v1.schema.json',
   'channel-common.v1.schema.json',
   'channel-user-input.v1.schema.json',
   'channel-binding.v1.schema.json',
   'channel-runtime-snapshot.v1.schema.json',
+  'channel-service-config.v1.schema.json',
+  'channel-service-config-descriptor.v1.schema.json',
   'plugin-manifest.v2.schema.json',
+  'plugin-manifest.v3.schema.json',
 ]
 const schemas = new Map()
 for (const name of schemaNames) {
@@ -31,10 +35,13 @@ function schemaValidator(name) {
 }
 
 const validators = {
-  manifest: schemaValidator('plugin-manifest.v2.schema.json'),
+  manifestV2: schemaValidator('plugin-manifest.v2.schema.json'),
+  manifestV3: schemaValidator('plugin-manifest.v3.schema.json'),
   input: schemaValidator('channel-user-input.v1.schema.json'),
   binding: schemaValidator('channel-binding.v1.schema.json'),
   snapshot: schemaValidator('channel-runtime-snapshot.v1.schema.json'),
+  config: schemaValidator('channel-service-config.v1.schema.json'),
+  configDescriptor: schemaValidator('channel-service-config-descriptor.v1.schema.json'),
 }
 
 function validatorErrors(validator) {
@@ -76,7 +83,8 @@ function validateEventActor(event, label) {
 
 export function validateManifest(manifest) {
   const errors = []
-  if (!validators.manifest(manifest)) errors.push(...validatorErrors(validators.manifest))
+  const validator = manifest?.schemaVersion === 3 ? validators.manifestV3 : validators.manifestV2
+  if (!validator(manifest)) errors.push(...validatorErrors(validator))
 
   const capabilities = new Set()
   for (const declaration of manifest?.capabilities ?? []) {
@@ -108,6 +116,46 @@ export function validateManifest(manifest) {
   for (const service of manifest?.services ?? []) {
     if (services.has(service.id)) errors.push(`duplicate service declaration: ${service.id}`)
     services.add(service.id)
+  }
+  return errors
+}
+
+function validateConfiguredTopology(config) {
+  const errors = []
+  const connections = new Set()
+  for (const connection of config.connections) {
+    const key = tenantKey(connection.ref)
+    if (connections.has(key)) errors.push(`duplicate configured connection: ${key}`)
+    connections.add(key)
+  }
+
+  const routes = new Set()
+  for (const route of config.routes) {
+    if (routes.has(route.id)) errors.push(`duplicate configured route: ${route.id}`)
+    routes.add(route.id)
+    if (!connections.has(tenantKey(route.connection))) {
+      errors.push(`configured route ${route.id} references a missing connection`)
+    }
+  }
+  if (config.reliability.retry.baseDelayMs > config.reliability.retry.maxDelayMs) {
+    errors.push('retry baseDelayMs exceeds maxDelayMs')
+  }
+  if (config.reliability.retry.maxDelayMs > config.reliability.retry.maxAgeMs) {
+    errors.push('retry maxDelayMs exceeds maxAgeMs')
+  }
+  return errors
+}
+
+export function validateServiceConfig(config) {
+  if (!validators.config(config)) return validatorErrors(validators.config)
+  return validateConfiguredTopology(config)
+}
+
+export function validateServiceConfigDescriptor(descriptor) {
+  if (!validators.configDescriptor(descriptor)) return validatorErrors(validators.configDescriptor)
+  const errors = validateConfiguredTopology(descriptor.configuration)
+  if (descriptor.lastGoodRevision > descriptor.revision) {
+    errors.push('Channel service config lastGoodRevision exceeds revision')
   }
   return errors
 }
@@ -175,6 +223,8 @@ const caseValidators = {
   input: validateInput,
   binding: validateBinding,
   snapshot: validateSnapshot,
+  config: validateServiceConfig,
+  configDescriptor: validateServiceConfigDescriptor,
 }
 
 function validateVector(vector) {
@@ -207,11 +257,13 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/channel-runtime
   }
 }
 
-const publicSchemas = JSON.stringify(schemaNames.map(name => schemas.get(name)))
+const hostConfigSchema = JSON.stringify(schemas.get('channel-service-config.v1.schema.json'))
+const rendererSafeSchemas = JSON.stringify(schemaNames
+  .filter(name => name !== 'channel-service-config.v1.schema.json')
+  .map(name => schemas.get(name)))
 for (const forbidden of [
   'additionalContext',
   'secretValue',
-  'secretRef',
   'rawBody',
   'rawEvent',
   'messageText',
@@ -220,10 +272,18 @@ for (const forbidden of [
   'electronBridge',
   'rawBridge',
 ]) {
-  if (publicSchemas.includes(forbidden)) {
-    console.error(`Channel public schemas must not expose ${forbidden}`)
+  if (hostConfigSchema.includes(forbidden) || rendererSafeSchemas.includes(forbidden)) {
+    console.error(`Channel schemas must not expose ${forbidden}`)
     failures += 1
   }
+}
+if (!hostConfigSchema.includes('secretRef')) {
+  console.error('Launcher-owned Channel config schema must retain an opaque secretRef')
+  failures += 1
+}
+if (rendererSafeSchemas.includes('secretRef')) {
+  console.error('Channel renderer-safe schemas must not expose secretRef')
+  failures += 1
 }
 
 if (failures > 0) throw new Error(`${failures} Channel runtime conformance case(s) failed`)

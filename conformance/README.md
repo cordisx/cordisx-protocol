@@ -26,10 +26,12 @@ version 3 so the closed version-2/version-3 vocabularies remain unchanged. It
 validates structured host headers, ordering/collisions, same-owner route/page
 dependencies, pending states, body-only outlet policy, access origin, and
 lifecycle cleanup/fallback.
-Channel runtime conformance covers manifest-v2 service and capability identity,
-capability-family scope separation, sourced user-only input, complete binding
-lineage, redacted manager snapshots, account coverage, and one active binding
-per endpoint/route. It does not claim transport exactly-once behavior.
+Channel runtime conformance covers manifest-v2 compatibility, manifest-v3
+service configuration declarations, capability identity/family scopes,
+sourced user-only input, complete binding lineage, redacted runtime and config
+Manager projections, connection/route integrity, bounded retry ordering, and one
+active binding per endpoint/route. It does not claim transport exactly-once
+behavior or that a real credentialed adapter exists.
 Plugin configuration conformance covers redacted descriptors, profile/plugin/
 generation scope, revision-fenced JSON mutations, last-good ordering, reserved
 secret roles, owner-bounded namespace renderers, and closed result outcomes.

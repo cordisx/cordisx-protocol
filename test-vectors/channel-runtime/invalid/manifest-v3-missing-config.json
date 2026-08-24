@@ -1,0 +1,12 @@
+{
+  "case": "manifest",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v3.schema.json",
+    "schemaVersion": 3,
+    "id": "missing-config-contract",
+    "capabilities": [],
+    "services": [
+      { "id": "adapter", "kind": "channel-adapter", "entry": "./dist/adapter.js" }
+    ]
+  }
+}

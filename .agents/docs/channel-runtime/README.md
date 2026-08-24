@@ -1,10 +1,10 @@
 # Channel runtime protocol
 
-Status: normative version 1 Channel data contracts and version 2 runtime
-manifest. This specification reserves the minimum public boundary required by
-the approved Channel architecture. It does not claim that the launcher service
-host, Channel core, renderer settings projection, or a real platform adapter is
-available.
+Status: normative version 1 Channel data/configuration contracts, legacy
+version 2 runtime manifest, and configuration-complete version 3 runtime
+manifest. The host-neutral Channel core and simulator have landed in the owning
+Host repository; the production service loader, Manager Channel page, and real
+platform adapters remain separate delivery claims.
 
 ## Contracts
 
@@ -18,13 +18,22 @@ The machine-readable contracts are:
   Platform session binding;
 - `channel-runtime-snapshot.v1.schema.json`: a bounded, redacted manager
   snapshot; and
-- `plugin-manifest.v2.schema.json`: Channel capabilities/scopes plus a
-  launcher-resolved `channel-adapter` service entry.
+- `channel-service-config.v1.schema.json`: launcher-only connections, routes,
+  task mappings, policy, notification, retry, rate, and attachment limits;
+- `channel-service-config-descriptor.v1.schema.json`: the Host-generated,
+  renderer-safe Manager projection with secret readiness only;
+- `plugin-manifest.v2.schema.json`: the preserved legacy Channel
+  capabilities/service boundary; and
+- `plugin-manifest.v3.schema.json`: the same boundary plus mandatory explicit
+  `host` or `none` service-configuration declarations.
 
-Manifest v2 is an exact version boundary. A v1-only host rejects it instead of
-ignoring `services` or Channel declarations. A v2 host may continue to load a
-v1 renderer-only manifest through its existing v1 path, but it must not infer a
-Node service from renderer files.
+Manifest v2 remains an exact, closed compatibility boundary. It cannot be
+extended with an optional configuration field because a conforming v2 Host
+rejects unknown fields. A user-configurable Channel service therefore requires
+manifest v3. A v1/v2-only Host rejects v3 instead of silently starting a service
+without its configuration contract. A v3 Host may continue to accept v1
+renderer-only and v2 legacy manifests through their versioned paths, but it must
+not treat a v2 service as configuration-complete.
 
 ## Composite identities
 
@@ -83,17 +92,58 @@ Adapters and the core provide at-least-once handling plus durable idempotency.
 The replay identity is `(adapterId, accountId, eventId)`. A duplicate returns
 the durable prior outcome. This protocol never claims exactly-once delivery.
 
-## Node service declaration
+## Node service declaration and configuration
 
-Manifest v2 adds a closed launcher service declaration:
+Manifest v3 retains the launcher service declaration and requires one explicit
+configuration mode:
 
 ```json
 {
   "id": "simulator",
   "kind": "channel-adapter",
-  "entry": "./dist/simulator.js"
+  "entry": "./dist/simulator.js",
+  "configuration": {
+    "kind": "host",
+    "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-service-config.v1.schema.json",
+    "configApplies": "restart"
+  }
 }
 ```
+
+A service with no user configuration declares
+`"configuration": { "kind": "none" }`. It receives no invented empty object,
+revision, dummy field, or Manager form. A configured service uses the exact
+Host schema and `restart` application mode: candidate validation, persistence,
+service-fiber replacement, and last-good publication form one fenced operation.
+
+The Channel config document covers every current user-controlled axis:
+
+- tenant-qualified adapter connections, enabled state, official transport mode,
+  and an optional Host-only `secretRef`;
+- route-to-connection mapping, allowed conversation/user ids, direct/group
+  triggers, command prefixes, and explicit provider/model/profile/workspace
+  selectors;
+- subscribed completion/failure/approval notifications; and
+- lease, bounded retry/backoff/age/jitter, account/user/conversation rate,
+  concurrency/backlog, and attachment limits.
+
+`secretRef` identifies a Host credential-store record; it is not credential
+material. It is legal only in the launcher-owned source config. It is removed
+before any renderer projection, default form, log, diagnostic, snapshot, custom
+renderer, or adapter definition. The corresponding Manager connection contains
+only `secretState=missing|ready|unavailable`. A plaintext secret-like field or a
+`secretRef` in the Manager descriptor fails conformance.
+
+This service configuration intentionally does not use a renderer plugin's
+`Config` export. The service owns long-lived Node transports and its
+configuration changes the staged Node generation, while plugin configuration
+protocol v1 (`cordisx-protocol#19`) scopes `Config`, Schemastery fields, and
+`configApplies` to a renderer plugin fiber. If the same package also contains a
+renderer plugin with product preferences, that module should use Schemastery
+`Config` and its own `configApplies`; the two documents are never copied or
+merged. The dedicated Channel Settings page consumes the redacted service
+descriptor because connections, routes, lifecycle, diagnostics, and Host-owned
+credential actions are not an ordinary plugin default form.
 
 The entry is a package-relative JavaScript module path with no parent segment,
 URL, or absolute path. The launcher resolves it inside the verified package and
@@ -183,20 +233,27 @@ launcher forwarding are not compatible behavior.
 
 At this protocol revision:
 
-- structured identities, sourced input, binding, snapshot, capabilities, and
-  service declarations are `implemented` after this repository revision lands;
+- structured identities, sourced input, binding, runtime snapshot,
+  configuration, redacted configuration descriptor, capabilities, and manifest
+  v3 declarations are `implemented` after this repository revision lands;
 - their conformance vectors are `verified` only when the named CI run passes;
-- launcher service loading, durable Channel core, simulator, Settings UI, and
-  real Feishu/WeCom/WeChat adapters remain `planned` until their owning PRs
-  land and pass their own validation;
+- the host-neutral Channel core and simulator are implemented/verified in the
+  owning Host repository; launcher manifest-v3 loading, credential broker,
+  production configuration writer, and actual Manager Channel UI remain
+  `planned` until their own Host PRs land;
+- schema-validated Host parsing and redacted descriptor generation may be
+  implemented before that loader/UI, but must be labeled separately from an
+  operational connection editor;
+- real Feishu/WeCom/WeChat adapters remain `planned` until credentialed smoke;
 - personal WeChat client automation is `unavailable`; and
 - protocol presence alone never upgrades a runtime feature to implemented.
 
 ## Conformance
 
-`conformance/channel-runtime.mjs` validates every schema and fixture, duplicate
-capability/service identity, capability-family scope separation, binding
-lineage, active-binding uniqueness, account coverage, and forbidden public
-fields. The mandatory simulator and real-adapter matrices live in the owning
-host architecture and implementation suites; protocol vectors do not substitute
-for transport or renderer smoke.
+`conformance/channel-runtime.mjs` validates every schema and fixture, manifest
+v2/v3 selection, explicit service configuration, duplicate capability/service,
+connection, and route identity, route/connection coverage, retry ordering,
+capability-family scope separation, binding lineage, active-binding uniqueness,
+account coverage, and renderer-secret exclusion. The mandatory simulator and
+real-adapter matrices live in the owning host architecture and implementation
+suites; protocol vectors do not substitute for transport or renderer smoke.

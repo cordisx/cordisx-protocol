@@ -1,0 +1,79 @@
+{
+  "case": "configDescriptor",
+  "value": {
+    "contract": "cordisx.channel-service-config-descriptor/v1",
+    "schemaVersion": 1,
+    "identity": {
+      "source": "file:///opt/cordisx/plugins/channel-simulator.mjs",
+      "pluginId": "channel-simulator",
+      "serviceId": "simulator"
+    },
+    "scope": { "profileId": "work", "generation": "launcher-3" },
+    "revision": 4,
+    "lastGoodRevision": 4,
+    "configApplies": "restart",
+    "writable": true,
+    "configuration": {
+      "contract": "cordisx.channel-service-config/v1",
+      "schemaVersion": 1,
+      "connections": [
+        {
+          "ref": { "adapterId": "simulator", "accountId": "local", "tenantId": "test" },
+          "adapterKind": "simulator",
+          "enabled": true,
+          "transport": { "mode": "simulator" },
+          "secretState": "unavailable"
+        },
+        {
+          "ref": { "adapterId": "feishu", "accountId": "operations", "tenantId": "tenant-a" },
+          "adapterKind": "feishu",
+          "enabled": false,
+          "transport": { "mode": "websocket" },
+          "secretState": "ready"
+        }
+      ],
+      "routes": [
+        {
+          "id": "default",
+          "connection": { "adapterId": "simulator", "accountId": "local", "tenantId": "test" },
+          "enabled": true,
+          "policy": {
+            "conversationKinds": ["direct", "group"],
+            "allowedUserIds": ["alice"],
+            "groupTrigger": "mention-or-command",
+            "commandPrefixes": ["/cordisx"]
+          },
+          "task": {
+            "provider": { "id": "codex" },
+            "model": { "useDefault": true },
+            "profile": { "id": "work" },
+            "workspaceAlias": "cordisx"
+          },
+          "notifications": ["completion", "failure", "approval-required"]
+        }
+      ],
+      "reliability": {
+        "leaseMs": 30000,
+        "retry": {
+          "maxAttempts": 5,
+          "baseDelayMs": 1000,
+          "maxDelayMs": 60000,
+          "maxAgeMs": 86400000,
+          "jitterRatio": 0.2
+        },
+        "rateLimit": {
+          "perAccountPerMinute": 120,
+          "perUserPerMinute": 20,
+          "perConversationPerMinute": 60,
+          "maxConcurrent": 8,
+          "maxBacklog": 1000
+        },
+        "attachments": {
+          "maxFiles": 4,
+          "maxBytesPerFile": 10485760,
+          "allowedMediaTypes": ["image/png", "text/plain"]
+        }
+      }
+    }
+  }
+}
