@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v2.schema.json",
+  "schemaVersion": 2,
+  "id": "author-mismatch",
+  "fallbackLocale": "en",
+  "name": "Author Mismatch",
+  "description": "Has an ambiguous localized author projection.",
+  "localizations": {
+    "zh-CN": { "authors": ["第一位", "额外作者"] }
+  },
+  "version": "1.0.0",
+  "source": "https://github.com/example/author-mismatch",
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "First" }]
+}

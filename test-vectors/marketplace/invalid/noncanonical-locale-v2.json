@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v2.schema.json",
+  "schemaVersion": 2,
+  "id": "bad-locale",
+  "fallbackLocale": "EN",
+  "name": "Bad Locale",
+  "description": "Uses a non-canonical locale identifier.",
+  "version": "1.0.0",
+  "source": "https://github.com/example/bad-locale",
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "Example" }]
+}

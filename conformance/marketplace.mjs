@@ -5,14 +5,16 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchema = JSON.parse(await readFile(path.join(root, 'schemas/marketplace-plugin.v1.schema.json'), 'utf8'))
-const feedSchema = JSON.parse(await readFile(path.join(root, 'schemas/marketplace-feed.v1.schema.json'), 'utf8'))
+const pluginSchemas = [1, 2].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8')))
+const feedSchemas = [1, 2].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8')))
+const resolvedPluginSchemas = await Promise.all(pluginSchemas)
+const resolvedFeedSchemas = await Promise.all(feedSchemas)
 const ajv = new Ajv2020({ allErrors: true, strict: true })
 addFormats(ajv)
-ajv.addSchema(pluginSchema)
-const validatePluginSchema = ajv.getSchema(pluginSchema.$id)
-const validateFeedSchema = ajv.compile(feedSchema)
-if (validatePluginSchema === undefined) throw new Error('plugin schema was not registered')
+for (const schema of resolvedPluginSchemas) ajv.addSchema(schema)
+const pluginValidators = new Map(resolvedPluginSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.getSchema(schema.$id)]))
+const feedValidators = new Map(resolvedFeedSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.compile(schema)]))
+if ([...pluginValidators.values()].some(validator => validator === undefined)) throw new Error('plugin schema was not registered')
 
 export function canonicalSource(value) {
   const url = new URL(value)
@@ -23,14 +25,69 @@ export function canonicalSource(value) {
   return url.href
 }
 
-export function validatePlugin(plugin) {
-  if (!validatePluginSchema(plugin)) return validatePluginSchema.errors ?? []
-  try {
-    if (canonicalSource(plugin.source) !== plugin.source) return [{ message: 'source must use canonical serialization' }]
-  } catch (error) {
-    return [{ message: error instanceof Error ? error.message : String(error) }]
+function canonicalLocale(value) {
+  const [canonical] = Intl.getCanonicalLocales(value)
+  if (canonical === undefined) throw new Error(`invalid locale: ${value}`)
+  return canonical
+}
+
+function localeErrors(value, label, authorCount) {
+  const errors = []
+  if (canonicalLocale(value.fallbackLocale) !== value.fallbackLocale) errors.push({ message: `${label}.fallbackLocale must use canonical serialization` })
+  for (const [locale, localization] of Object.entries(value.localizations ?? {})) {
+    if (canonicalLocale(locale) !== locale) errors.push({ message: `${label}.localizations locale must use canonical serialization: ${locale}` })
+    if (locale === value.fallbackLocale) errors.push({ message: `${label}.localizations must not repeat fallbackLocale ${locale}` })
+    if (authorCount !== undefined && localization.authors !== undefined && localization.authors.length !== authorCount) {
+      errors.push({ message: `${label}.localizations.${locale}.authors must match the base author order and length` })
+    }
   }
-  return []
+  return errors
+}
+
+function localizedField(raw, localizations, field, currentLocale, fallbackLocale) {
+  const current = canonicalLocale(currentLocale)
+  for (const locale of [...new Set([current, fallbackLocale, 'en'])]) {
+    if (locale === fallbackLocale) return raw
+    const candidate = localizations?.[locale]?.[field]
+    if (candidate !== undefined) return candidate
+  }
+  return raw
+}
+
+/** Deterministic display/search projection; stable identity and canonical URLs never enter localization. */
+export function projectPluginMetadata(plugin, currentLocale) {
+  const fallbackLocale = plugin.schemaVersion === 2 ? plugin.fallbackLocale : 'en'
+  const localizations = plugin.schemaVersion === 2 ? plugin.localizations : undefined
+  return {
+    name: localizedField(plugin.name, localizations, 'name', currentLocale, fallbackLocale),
+    description: localizedField(plugin.description, localizations, 'description', currentLocale, fallbackLocale),
+    authors: localizedField(plugin.authors.map(author => author.name), localizations, 'authors', currentLocale, fallbackLocale),
+    keywords: localizedField(plugin.keywords ?? [], localizations, 'keywords', currentLocale, fallbackLocale),
+  }
+}
+
+export function projectFeedName(feed, currentLocale) {
+  const fallbackLocale = feed.schemaVersion === 2 ? feed.fallbackLocale : 'en'
+  return localizedField(feed.name, feed.schemaVersion === 2 ? feed.localizations : undefined, 'name', currentLocale, fallbackLocale)
+}
+
+export function validatePlugin(plugin) {
+  const validatePluginSchema = pluginValidators.get(plugin?.schemaVersion)
+  if (validatePluginSchema === undefined || !validatePluginSchema(plugin)) return validatePluginSchema?.errors ?? [{ message: 'unsupported marketplace plugin schemaVersion' }]
+  const errors = []
+  try {
+    if (canonicalSource(plugin.source) !== plugin.source) errors.push({ message: 'source must use canonical serialization' })
+  } catch (error) {
+    errors.push({ message: error instanceof Error ? error.message : String(error) })
+  }
+  if (plugin.schemaVersion === 2) {
+    try {
+      errors.push(...localeErrors(plugin, 'plugin', plugin.authors.length))
+    } catch (error) {
+      errors.push({ message: error instanceof Error ? error.message : String(error) })
+    }
+  }
+  return errors
 }
 
 function comparePlugins(left, right) {
@@ -41,7 +98,16 @@ function comparePlugins(left, right) {
 
 export function validateFeed(feed) {
   const errors = []
-  if (!validateFeedSchema(feed)) errors.push(...(validateFeedSchema.errors ?? []))
+  const validateFeedSchema = feedValidators.get(feed?.schemaVersion)
+  if (validateFeedSchema === undefined) errors.push({ message: 'unsupported marketplace feed schemaVersion' })
+  else if (!validateFeedSchema(feed)) errors.push(...(validateFeedSchema.errors ?? []))
+  if (feed?.schemaVersion === 2) {
+    try {
+      errors.push(...localeErrors(feed, 'feed'))
+    } catch (error) {
+      errors.push({ message: error instanceof Error ? error.message : String(error) })
+    }
+  }
   if (!Array.isArray(feed?.plugins)) return errors
   const identities = new Set()
   for (const [index, plugin] of feed.plugins.entries()) {
@@ -87,6 +153,25 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/marketplace/fee
     console.error(`${path.relative(root, file)} should ${shouldPass ? 'pass' : 'fail'}`, validateFeed(value))
     failures += 1
   }
+}
+
+const localizedFeed = JSON.parse(await readFile(path.join(root, 'test-vectors/marketplace/feeds/valid-localized-v2.json'), 'utf8'))
+const localizedPlugin = localizedFeed.plugins[0]
+const zhProjection = projectPluginMetadata(localizedPlugin, 'zh-CN')
+if (projectFeedName(localizedFeed, 'zh-CN') !== 'CordisX 插件商店'
+  || zhProjection.name !== '点位展示'
+  || zhProjection.description !== '展示结构化 CordisX 扩展点。'
+  || JSON.stringify(zhProjection.authors) !== JSON.stringify(['CordisX 团队'])
+  || JSON.stringify(zhProjection.keywords) !== JSON.stringify(['扩展点', '界面'])) {
+  console.error('marketplace v2 zh-CN projection is incorrect', zhProjection)
+  failures += 1
+}
+const fallbackProjection = projectPluginMetadata(localizedPlugin, 'fr-FR')
+if (projectFeedName(localizedFeed, 'fr-FR') !== 'CordisX Marketplace'
+  || fallbackProjection.name !== 'Slot Showcase'
+  || fallbackProjection.description !== 'Shows structured CordisX extension points.') {
+  console.error('marketplace v2 fallback projection is incorrect', fallbackProjection)
+  failures += 1
 }
 
 if (failures > 0) throw new Error(`${failures} marketplace conformance case(s) failed`)
