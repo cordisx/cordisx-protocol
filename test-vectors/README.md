@@ -65,6 +65,14 @@ same-owner route-v2/page-v3 wiring, pending dependencies, standard page
 chrome, generation-fenced origins, close/reopen selection, and cleanup to the
 Host Settings fallback.
 
+Generic Manager content navigation suites live in
+`manager-content-navigation/valid` and
+`manager-content-navigation/invalid`. They cover same-owner subroute and
+parameter references, standard Manager content pages, parent hierarchy,
+dynamic renderer-safe record titles, Host-derived breadcrumbs/back/history,
+tab route mapping, and rejection of DOM, selectors, secrets, raw bridges, and
+plugin-owned history.
+
 Channel runtime suites live in `channel-runtime/valid` and
 `channel-runtime/invalid`. They cover manifest-v2 compatibility and manifest-v3
 explicit service configuration, complete Channel and Platform identities,

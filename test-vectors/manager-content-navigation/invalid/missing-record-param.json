@@ -1,0 +1,6 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "declarations.1.document.header.title.recordIdParam", "value": "secretId" }
+  ]
+}

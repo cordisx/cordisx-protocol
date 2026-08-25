@@ -31,6 +31,11 @@ version 3 so the closed version-2/version-3 vocabularies remain unchanged. It
 validates structured host headers, ordering/collisions, same-owner route/page
 dependencies, pending states, body-only outlet policy, access origin, and
 lifecycle cleanup/fallback.
+Manager content navigation conformance covers the additive generic subroute
+declaration and Host-only renderer-safe projection: route parameters, parent
+hierarchy, dynamic record title redaction shape, exact tab route mapping, and
+Host-derived breadcrumb/back/history states. It rejects DOM, selectors,
+secrets, raw bridges, and plugin-controlled history.
 Channel runtime conformance covers manifest-v2 compatibility, manifest-v3
 service configuration declarations, capability identity/family scopes,
 sourced user-only input, complete binding lineage, redacted runtime and config

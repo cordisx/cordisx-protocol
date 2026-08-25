@@ -1,0 +1,7 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "projection.header.bridge", "value": "window.__cordisx" },
+    { "op": "set", "path": "projection.header.secretRef", "value": "keychain:channels/42" }
+  ]
+}

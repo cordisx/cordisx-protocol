@@ -18,6 +18,12 @@ version 2, Platform capabilities, Agent events, and extension-point management
 contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
 conformance vectors in this repository.
 
+The additive Manager Content v1 contract separates plugin-declared subroute
+and tab route references from the Host-owned renderer-safe header, breadcrumb,
+back, and history projection. It supports dynamic opaque record titles without
+granting DOM, raw bridge, router, or secret access. See
+`.agents/docs/manager-content-navigation/README.md`.
+
 Dynamic local packages and plugin generations are defined by the frozen
 package/operation/result v1 schemas, the explicit-local source v1, separate
 package/operation/result v2 schemas, permission-aware package v3,

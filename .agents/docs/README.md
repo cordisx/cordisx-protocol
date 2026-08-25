@@ -28,6 +28,9 @@ Specified areas:
 - `manager-settings-navigation/`: top-level Manager settings-adjacent
   navigation items in surface version 5/catalog version 4, standard page
   shell, deterministic host/plugin merge, authorization, and lifecycle.
+- `manager-content-navigation/`: generic Manager subroute declarations plus
+  the separate Host-owned header/breadcrumb/back/history/tab projection,
+  including dynamic renderer-safe record titles.
 - `channel-runtime/`: structured Channel identity, sourced user input,
   persistent Platform session bindings, redacted runtime snapshots, scoped
   permissions, and launcher-side service declarations.
