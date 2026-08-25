@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-manager-request.v1.schema.json",
+  "title": "CordisX Channel Manager Operation Request v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "requestId", "expectedRevision", "profileId", "hostGeneration", "operation", "target"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-manager-request/v1" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "$ref": "channel-manager-common.v1.schema.json#/$defs/requestId" },
+    "expectedRevision": { "$ref": "channel-manager-common.v1.schema.json#/$defs/revision" },
+    "profileId": { "$ref": "channel-manager-common.v1.schema.json#/$defs/profileId" },
+    "hostGeneration": { "$ref": "channel-manager-common.v1.schema.json#/$defs/hostGeneration" },
+    "operation": { "$ref": "channel-manager-common.v1.schema.json#/$defs/operation" },
+    "target": { "$ref": "channel-manager-common.v1.schema.json#/$defs/target" },
+    "draft": { "$ref": "channel-manager-common.v1.schema.json#/$defs/connectionDraft" },
+    "query": { "$ref": "channel-manager-common.v1.schema.json#/$defs/logQuery" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "operation": { "const": "credential.capture" } }, "required": ["operation"] },
+      "then": { "properties": { "target": { "$ref": "channel-manager-common.v1.schema.json#/$defs/credentialCaptureTarget" }, "draft": false, "query": false } }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "connection.create" } }, "required": ["operation"] },
+      "then": { "required": ["draft"], "properties": { "target": { "$ref": "channel-manager-common.v1.schema.json#/$defs/connectionDraftTarget" }, "draft": {} } }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "connection.rotate-credential" } }, "required": ["operation"] },
+      "then": { "required": ["draft"], "properties": { "target": { "$ref": "channel-manager-common.v1.schema.json#/$defs/connectionTarget" }, "draft": {} } }
+    },
+    {
+      "if": { "properties": { "operation": { "enum": ["connection.enable", "connection.disable", "connection.reconnect"] } }, "required": ["operation"] },
+      "then": { "properties": { "target": { "$ref": "channel-manager-common.v1.schema.json#/$defs/connectionTarget" }, "draft": false, "query": false } }
+    },
+    {
+      "if": { "properties": { "operation": { "enum": ["binding.open", "binding.archive", "binding.restore", "binding.unbind"] } }, "required": ["operation"] },
+      "then": { "properties": { "target": { "$ref": "channel-manager-common.v1.schema.json#/$defs/bindingTarget" }, "draft": false, "query": false } }
+    },
+    {
+      "if": { "properties": { "operation": { "enum": ["logs.query", "logs.export"] } }, "required": ["operation"] },
+      "then": { "required": ["query"], "properties": { "target": { "$ref": "channel-manager-common.v1.schema.json#/$defs/logTarget" }, "draft": false, "query": {} } }
+    }
+  ]
+}

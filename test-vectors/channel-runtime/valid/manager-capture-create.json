@@ -1,0 +1,18 @@
+{
+  "case": "manager-request",
+  "context": {
+    "snapshot": { "contract": "cordisx.channel-runtime-snapshot/v2", "schemaVersion": 2, "profileId": "default", "hostGeneration": "host-4", "revision": 8, "observedAt": "2026-08-25T01:00:00.000Z", "availableOperations": ["credential.capture"], "accounts": [], "bindings": [] },
+    "authorizedAt": "2026-08-25T01:30:00.000Z",
+    "issuedTokens": [{ "token": "chm1_Y2FwdHVyZWNhcHR1cmVjYXB0dXJlY2FwdHVyZWNhcHR", "kind": "credential-capture", "profileId": "default", "hostGeneration": "host-4", "target": { "kind": "credential-capture", "captureToken": "chm1_Y2FwdHVyZWNhcHR1cmVjYXB0dXJlY2FwdHVyZWNhcHR" }, "expiresAt": "2026-08-25T02:00:00.000Z" }]
+  },
+  "value": {
+    "contract": "cordisx.channel-manager-request/v1",
+    "schemaVersion": 1,
+    "requestId": "capture-draft-1",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "credential.capture",
+    "target": { "kind": "credential-capture", "captureToken": "chm1_Y2FwdHVyZWNhcHR1cmVjYXB0dXJlY2FwdHVyZWNhcHR" }
+  }
+}

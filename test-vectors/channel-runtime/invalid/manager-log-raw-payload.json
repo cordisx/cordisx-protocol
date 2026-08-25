@@ -1,0 +1,31 @@
+{
+  "case": "log-page",
+  "value": {
+    "contract": "cordisx.channel-manager-log-page/v1",
+    "schemaVersion": 1,
+    "requestId": "query-log-8",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "snapshotRevision": 8,
+    "target": {
+      "kind": "log",
+      "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29"
+    },
+    "generatedAt": "2026-08-25T01:02:00.000Z",
+    "entries": [
+      {
+        "entryId": "log-1",
+        "occurredAt": "2026-08-25T01:01:00.000Z",
+        "level": "info",
+        "event": "connection.ready",
+        "code": "CONNECTION.READY",
+        "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29",
+        "rawPayload": "must-not-pass"
+      }
+    ]
+  },
+  "expectedErrors": [
+    "/entries/0 must NOT have additional properties"
+  ]
+}

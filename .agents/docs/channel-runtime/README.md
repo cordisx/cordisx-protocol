@@ -18,6 +18,17 @@ The machine-readable contracts are:
   Platform session binding;
 - `channel-runtime-snapshot.v1.schema.json`: a bounded, redacted manager
   snapshot; and
+- `channel-runtime-snapshot.v2.schema.json`: the profile-scoped,
+  revision- and Host-generation-fenced Channel Manager projection;
+- `channel-manager-request.v1.schema.json` and
+  `channel-manager-result.v1.schema.json`: exact-target Manager operations
+  and their redacted outcomes;
+- `channel-manager-log-page.v1.schema.json` and
+  `channel-manager-log-export-result.v1.schema.json`: structured safe-log
+  projection and an opaque, expiring Host export result; and
+- `channel-inbound-message-intent.v1.schema.json` and
+  `channel-sourced-gateway-request.v1.schema.json`: adapter-neutral ingress
+  intent plus the complete-origin Host gateway boundary;
 - `channel-service-config.v1.schema.json`: launcher-only connections, routes,
   task mappings, policy, notification, retry, rate, and attachment limits;
 - `channel-service-config-descriptor.v1.schema.json`: the Host-generated,
@@ -223,6 +234,96 @@ message text, attachment path, user content, or generic diagnostic payload.
 Host-rendered Settings headers and actions consume this snapshot; controlled
 plugin content never receives a raw bridge.
 
+## Channel Manager v2 operations, logs, and ingress
+
+`cordisx.channel-runtime-snapshot/v2` is an additive Manager projection; it
+does not alter the frozen v1 snapshot. It adds a complete `profileId`, the
+publishing `hostGeneration`, and a monotonically scoped `revision`. Its account
+and binding records use Host-issued, profile-local opaque tokens only: they do
+not project platform account, user, conversation, thread, route, or Platform
+session identifiers. Accounts and bindings declare only their currently
+executable operation ids. The Host uses those ids to decide whether to present
+an action; a client cannot infer authority from a visual state alone.
+
+Every Channel Manager operation is represented by
+`cordisx.channel-manager-request/v1`. It contains one stable `requestId`,
+`expectedRevision`, `profileId`, `hostGeneration`, one enumerated operation,
+and one exact opaque connection, binding, log, or draft target. Every Manager
+token has the `chm1_` version prefix and a 256-bit URL-safe MAC or random
+capability encoding; the Host verifies its scope and expiry before use. Raw
+platform ids cannot satisfy this shape. The Host rejects
+stale profile/generation/revision combinations before any stateful work. Binding
+operations additionally carry the exact binding revision as their local CAS
+fence. The operation vocabulary covers connection creation, reconnect, enable,
+disable, and rotation; binding open/archive/restore/unbind; log query/export;
+and `credential.capture`. The latter is only a Host-owned capture intent: its
+renderer-safe request contains only a Host-issued capture token. A successful
+capture result establishes a Host-issued credential-draft token. Connection
+creation and credential rotation can then carry only display name, adapter kind,
+that captured token, and non-identity selectors; app/tenant/route identity
+stays in the Host-owned capture prompt/private draft. The Host accepts a create
+or rotation only when the draft token exists in its durable captured-draft
+state. No Manager request carries a value, reference, or handle. Its matching result
+repeats the request identity and exact target and returns only an
+applied/conflict/rejected/unavailable state, stable code, retry hint, and new
+revision. It never returns process objects, configuration documents, or
+diagnostic blobs.
+
+Safe logs are event records, not a general console or transport dump. A
+`cordisx.channel-manager-log-page/v1` is associated with the exact query
+`requestId` and `expectedRevision`; each record contains a bounded event kind,
+stable code, opaque connection token, optional binding token, count, severity,
+and time.
+It has no arbitrary message, raw platform event, attachment, link, or local
+filesystem field. Export is initiated as `logs.export`; the matching
+`cordisx.channel-manager-log-export-result/v1` returns an opaque Host export
+id, JSON media type, item count, and expiry only. Resolving or writing the
+export remains a Host-owned local action outside this renderer-safe protocol.
+
+The public protocol conformance helpers require Host context; token shape alone
+is never authority. `validateManagerRequest(request, context)` consumes the
+current validated v2 snapshot plus a Host-private token registry carrying its
+`profileId` and `hostGeneration`. Snapshot
+root, account, and binding `availableOperations` are the exact authorization
+source: a known token alone does not authorize an operation. Snapshot tokens
+are projections, never issued authority. The Host-private registry is the sole
+authority source for every connection, binding, capture, connection-draft, and
+credential-draft token. Each registry record binds an exact target identity,
+kind, profile, Host generation, binding revision where applicable, and expiry.
+That registry is conformance/server context, never a renderer-safe wire field.
+Its `authorizedAt` is the Host's authoritative request-received clock; neither
+the renderer request nor snapshot observation time can supply or replace it.
+It rejects a token that is syntactically `chm1_`-shaped but absent, wrong-kind,
+wrong-target, wrong-profile, wrong-generation, expired, stale, or paired with
+an unavailable operation. `validateLogPage(page,
+queryRequest, context)` first validates that same context, then requires the
+page request id, expected revision, profile, generation, and exact log target
+to equal the originating `logs.query` request. Page `snapshotRevision` must
+equal both that query's expected revision and the current v2 snapshot revision.
+
+An adapter first produces
+`cordisx.channel-inbound-message-intent/v1`: a complete Channel account/event
+identity, bounded user content/opaque attachment handles, and the same
+request/profile/generation/revision fence. It does not publish a transport
+object or adapter-specific callback body. The Host gateway accepts that intent
+only through `cordisx.channel-sourced-gateway-request/v1`, requires every fence
+and exact target to agree, validates tenancy and user-role policy, then maps it
+to the existing sourced user-input contract. This keeps the Channel source
+attached through durable acceptance without allowing an adapter to create a
+trusted prompt or invoke a generic Host RPC.
+
+Inbound intent and gateway request are launcher-private contracts. They are
+not renderer-safe schemas and are deliberately excluded from the Manager
+projection/log/export safety scan. Their complete adapter/event/actor identity
+and bounded message content are required only for durable authorization and
+source preservation inside the launcher; none of those values may be copied
+into a Manager token, safe-log record, or export result.
+
+The contracts intentionally provide no credential value, reference, or editing
+field. Material belongs to a narrow launcher-owned writer/broker with a
+separate Host implementation and security review; it must not be modeled as
+Manager data, a plugin configuration value, a log entry, or an inbound intent.
+
 ## Compatibility and delivery status
 
 The Channel facade may mirror a high-level DSH/OneWorks connection lifecycle
@@ -237,6 +338,10 @@ At this protocol revision:
   configuration, redacted configuration descriptor, capabilities, and manifest
   v3 declarations are `implemented` after this repository revision lands;
 - their conformance vectors are `verified` only when the named CI run passes;
+- the v2 Manager operation/log/ingress contracts are defined by this protocol
+  revision but remain `planned` for an implementation until an owning Host
+  revision consumes the formal Protocol merge and independently verifies the
+  full lifecycle;
 - the host-neutral Channel core and simulator are implemented/verified in the
   owning Host repository; launcher manifest-v3 loading, credential broker,
   production configuration writer, and actual Manager Channel UI remain

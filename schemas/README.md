@@ -51,6 +51,25 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   session binding;
 - `channel-runtime-snapshot.v1.schema.json`: bounded and redacted manager
   health/binding projection;
+- `channel-runtime-snapshot.v2.schema.json`: revision- and Host-generation-
+  fenced Channel Manager account/binding projection with profile-local opaque
+  tokens and executable operation availability;
+- `channel-manager-common.v1.schema.json`: common Channel Manager operation,
+  exact Host-issued opaque target, profile, Host-generation, revision, and
+  stable result-code types;
+- `channel-manager-request.v1.schema.json`: one fenced Channel Manager
+  capture/create/reconnect/binding/log request with no credential value,
+  reference, or raw platform identity;
+- `channel-manager-result.v1.schema.json`: one redacted applied, conflict,
+  rejected, or unavailable result for a Channel Manager request;
+- `channel-manager-log-page.v1.schema.json`: a bounded, structured safe-log
+  projection with no arbitrary diagnostic payload;
+- `channel-manager-log-export-result.v1.schema.json`: an opaque, expiring
+  Host export handle result with no path or link;
+- `channel-inbound-message-intent.v1.schema.json`: adapter-neutral, complete-
+  origin user-message intent; and
+- `channel-sourced-gateway-request.v1.schema.json`: a fenced Host gateway
+  request that preserves the complete source intent;
 - `channel-service-config.v1.schema.json`: launcher-owned adapter connection,
   route/task mapping, policy, notification, reliability, rate, and attachment
   configuration with opaque credential references only;

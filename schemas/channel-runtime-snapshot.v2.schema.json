@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-runtime-snapshot.v2.schema.json",
+  "title": "CordisX Channel Manager Runtime Snapshot v2",
+  "type": "object", "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "profileId", "hostGeneration", "revision", "observedAt", "availableOperations", "accounts", "bindings"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-runtime-snapshot/v2" },
+    "schemaVersion": { "const": 2 },
+    "profileId": { "$ref": "channel-manager-common.v1.schema.json#/$defs/profileId" },
+    "hostGeneration": { "$ref": "channel-manager-common.v1.schema.json#/$defs/hostGeneration" },
+    "revision": { "$ref": "channel-manager-common.v1.schema.json#/$defs/revision" },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "availableOperations": { "type": "array", "maxItems": 2, "uniqueItems": true, "items": { "enum": ["credential.capture", "connection.create"] } },
+    "accounts": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/accountSnapshot" } },
+    "bindings": { "type": "array", "maxItems": 10000, "items": { "$ref": "#/$defs/bindingSnapshot" } }
+  },
+  "$defs": {
+    "implementationStatus": { "enum": ["implemented", "verified", "experimental", "unavailable", "planned"] },
+    "queueSnapshot": {
+      "type": "object", "additionalProperties": false, "required": ["pending", "retrying", "deadLetter"],
+      "properties": { "pending": { "type": "integer", "minimum": 0 }, "retrying": { "type": "integer", "minimum": 0 }, "deadLetter": { "type": "integer", "minimum": 0 } }
+    },
+    "accountSnapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["connectionToken", "adapterKind", "implementationStatus", "connectionState", "configurationState", "generation", "lastGoodRevision", "inbound", "outbound", "availableOperations"],
+      "properties": {
+        "connectionToken": { "$ref": "channel-manager-common.v1.schema.json#/$defs/opaqueToken" },
+        "adapterKind": { "$ref": "channel-service-config.v1.schema.json#/$defs/adapterKind" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "implementationStatus": { "$ref": "#/$defs/implementationStatus" },
+        "connectionState": { "enum": ["disabled", "starting", "ready", "retrying", "unavailable", "stopped"] },
+        "configurationState": { "enum": ["ready", "incomplete", "unavailable"] },
+        "generation": { "type": "integer", "minimum": 1 },
+        "lastGoodRevision": { "type": "integer", "minimum": 0 },
+        "cursorUpdatedAt": { "type": "string", "format": "date-time" },
+        "lastErrorCode": { "$ref": "channel-manager-common.v1.schema.json#/$defs/resultCode" },
+        "inbound": { "$ref": "#/$defs/queueSnapshot" },
+        "outbound": { "$ref": "#/$defs/queueSnapshot" },
+        "availableOperations": { "type": "array", "maxItems": 6, "uniqueItems": true, "items": { "enum": ["connection.rotate-credential", "connection.enable", "connection.disable", "connection.reconnect", "logs.query", "logs.export"] } }
+      }
+    },
+    "bindingSnapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["bindingToken", "connectionToken", "sessionToken", "routeToken", "bindingRevision", "state", "availableOperations"],
+      "properties": {
+        "bindingToken": { "$ref": "channel-manager-common.v1.schema.json#/$defs/opaqueToken" },
+        "connectionToken": { "$ref": "channel-manager-common.v1.schema.json#/$defs/opaqueToken" },
+        "sessionToken": { "$ref": "channel-manager-common.v1.schema.json#/$defs/opaqueToken" },
+        "routeToken": { "$ref": "channel-manager-common.v1.schema.json#/$defs/opaqueToken" },
+        "bindingRevision": { "type": "integer", "minimum": 1 },
+        "state": { "enum": ["active", "archived", "unavailable"] },
+        "availableOperations": { "type": "array", "maxItems": 4, "uniqueItems": true, "items": { "enum": ["binding.open", "binding.archive", "binding.restore", "binding.unbind"] } }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "case": "manager-request",
+  "context": {
+    "snapshot": {
+      "contract": "cordisx.channel-runtime-snapshot/v2",
+      "schemaVersion": 2,
+      "profileId": "default",
+      "hostGeneration": "host-4",
+      "revision": 8,
+      "observedAt": "2026-08-25T01:00:00.000Z",
+      "availableOperations": [],
+      "accounts": [],
+      "bindings": []
+    },
+    "issuedTokens": [
+      {
+        "token": "chm1_Y2FwdHVyZWNhcHR1cmVjYXB0dXJlY2FwdHVyZWNhcHR",
+        "kind": "credential-capture",
+        "profileId": "default",
+        "hostGeneration": "host-4",
+        "target": {
+          "kind": "credential-capture",
+          "captureToken": "chm1_Y2FwdHVyZWNhcHR1cmVjYXB0dXJlY2FwdHVyZWNhcHR"
+        },
+        "expiresAt": "2026-08-25T02:00:00.000Z"
+      }
+    ],
+    "authorizedAt": "2026-08-25T01:30:00.000Z"
+  },
+  "value": {
+    "contract": "cordisx.channel-manager-request/v1",
+    "schemaVersion": 1,
+    "requestId": "capture-without-offer",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "credential.capture",
+    "target": {
+      "kind": "credential-capture",
+      "captureToken": "chm1_Y2FwdHVyZWNhcHR1cmVjYXB0dXJlY2FwdHVyZWNhcHR"
+    }
+  },
+  "expectedErrors": [
+    "Channel Manager operation is not authorized by the current snapshot: credential.capture"
+  ]
+}

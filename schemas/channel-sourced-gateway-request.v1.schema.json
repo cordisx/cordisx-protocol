@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-sourced-gateway-request.v1.schema.json",
+  "title": "CordisX Sourced Channel Gateway Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "requestId", "expectedRevision", "profileId", "hostGeneration", "operation", "target", "intent"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-sourced-gateway-request/v1" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "$ref": "channel-manager-common.v1.schema.json#/$defs/requestId" },
+    "expectedRevision": { "$ref": "channel-manager-common.v1.schema.json#/$defs/revision" },
+    "profileId": { "$ref": "channel-manager-common.v1.schema.json#/$defs/profileId" },
+    "hostGeneration": { "$ref": "channel-manager-common.v1.schema.json#/$defs/hostGeneration" },
+    "operation": { "const": "gateway.accept-inbound-message" },
+    "target": { "$ref": "channel-inbound-message-intent.v1.schema.json#/$defs/inboundTarget" },
+    "intent": { "$ref": "channel-inbound-message-intent.v1.schema.json" }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "case": "manager-request",
+  "context": {
+    "snapshot": { "contract": "cordisx.channel-runtime-snapshot/v2", "schemaVersion": 2, "profileId": "default", "hostGeneration": "host-4", "revision": 9, "observedAt": "2026-08-25T01:00:00.000Z", "availableOperations": ["connection.create"], "accounts": [], "bindings": [] },
+    "authorizedAt": "2026-08-25T01:30:00.000Z",
+    "issuedTokens": [
+      { "token": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29", "kind": "connection-draft", "profileId": "default", "hostGeneration": "host-4", "target": { "kind": "connection-draft", "connectionDraftToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29" }, "expiresAt": "2026-08-25T02:00:00.000Z" },
+      { "token": "chm1_Y3JlZGVudGlhbGNyZWRlbnRpYWxjcmVkZW50aWFsY3J", "kind": "credential-draft", "profileId": "default", "hostGeneration": "host-4", "target": { "kind": "credential-draft", "credentialDraftToken": "chm1_Y3JlZGVudGlhbGNyZWRlbnRpYWxjcmVkZW50aWFsY3J" }, "expiresAt": "2026-08-25T02:00:00.000Z" }
+    ]
+  },
+  "value": {
+    "contract": "cordisx.channel-manager-request/v1", "schemaVersion": 1, "requestId": "create-connection-1", "expectedRevision": 9, "profileId": "default", "hostGeneration": "host-4", "operation": "connection.create",
+    "target": { "kind": "connection-draft", "connectionDraftToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29" },
+    "draft": { "displayName": "Feishu demo", "adapterKind": "feishu", "credentialDraftToken": "chm1_Y3JlZGVudGlhbGNyZWRlbnRpYWxjcmVkZW50aWFsY3J", "selectors": ["direct", "mentions"] }
+  }
+}

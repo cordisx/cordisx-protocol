@@ -1,0 +1,38 @@
+{
+  "case": "snapshot-v2",
+  "value": {
+    "contract": "cordisx.channel-runtime-snapshot/v2",
+    "schemaVersion": 2,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "revision": 8,
+    "observedAt": "2026-08-25T01:00:00.000Z",
+    "availableOperations": [],
+    "accounts": [
+      {
+        "connectionToken": "cli_aaba90fcc4389cb3",
+        "adapterKind": "feishu",
+        "implementationStatus": "implemented",
+        "connectionState": "ready",
+        "configurationState": "ready",
+        "generation": 4,
+        "lastGoodRevision": 8,
+        "inbound": {
+          "pending": 0,
+          "retrying": 0,
+          "deadLetter": 0
+        },
+        "outbound": {
+          "pending": 0,
+          "retrying": 0,
+          "deadLetter": 0
+        },
+        "availableOperations": []
+      }
+    ],
+    "bindings": []
+  },
+  "expectedErrors": [
+    "/accounts/0/connectionToken must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\""
+  ]
+}

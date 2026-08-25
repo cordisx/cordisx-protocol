@@ -1,0 +1,34 @@
+{
+  "case": "manager-request",
+  "value": {
+    "contract": "cordisx.channel-manager-request/v1",
+    "schemaVersion": 1,
+    "requestId": "reconnect-raw-token",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "connection.reconnect",
+    "target": {
+      "kind": "connection",
+      "connectionToken": "cli_aaba90fcc4389cb3"
+    }
+  },
+  "expectedErrors": [
+    "/ must match \"then\" schema",
+    "/target must NOT have additional properties",
+    "/target must NOT have additional properties",
+    "/target must NOT have additional properties",
+    "/target must have required property 'bindingRevision'",
+    "/target must have required property 'bindingToken'",
+    "/target must have required property 'captureToken'",
+    "/target must have required property 'connectionDraftToken'",
+    "/target must match exactly one schema in oneOf",
+    "/target/connectionToken must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\"",
+    "/target/connectionToken must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\"",
+    "/target/connectionToken must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\"",
+    "/target/kind must be equal to constant",
+    "/target/kind must be equal to constant",
+    "/target/kind must be equal to constant",
+    "/target/kind must be equal to constant"
+  ]
+}

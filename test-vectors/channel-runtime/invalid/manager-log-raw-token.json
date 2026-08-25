@@ -1,0 +1,21 @@
+{
+  "case": "log-page",
+  "value": {
+    "contract": "cordisx.channel-manager-log-page/v1",
+    "schemaVersion": 1,
+    "requestId": "query-log-8",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "snapshotRevision": 8,
+    "target": {
+      "kind": "log",
+      "connectionToken": "cli_aaba90fcc4389cb3"
+    },
+    "generatedAt": "2026-08-25T01:02:00.000Z",
+    "entries": []
+  },
+  "expectedErrors": [
+    "/target/connectionToken must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\""
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "case": "gateway-request",
+  "value": {
+    "contract": "cordisx.channel-sourced-gateway-request/v1",
+    "schemaVersion": 1,
+    "requestId": "ingress-8",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "gateway.accept-inbound-message",
+    "target": {
+      "kind": "inbound-message",
+      "account": { "adapterId": "feishu", "accountId": "cli-aaba", "tenantId": "tenant-demo" }
+    },
+    "intent": {
+      "contract": "cordisx.channel-inbound-message-intent/v1",
+      "schemaVersion": 1,
+      "requestId": "ingress-8",
+      "expectedRevision": 8,
+      "profileId": "default",
+      "hostGeneration": "host-4",
+      "target": {
+        "kind": "inbound-message",
+        "account": { "adapterId": "feishu", "accountId": "cli-aaba", "tenantId": "tenant-demo" }
+      },
+      "event": {
+        "adapterId": "feishu",
+        "accountId": "cli-aaba",
+        "tenantId": "tenant-demo",
+        "conversationId": "oc-demo",
+        "kind": "group",
+        "threadId": "oc-demo",
+        "semantics": "conversation",
+        "eventId": "evt-demo",
+        "actor": { "adapterId": "feishu", "accountId": "cli-aaba", "tenantId": "tenant-demo", "userId": "ou-demo" }
+      },
+      "content": [{ "type": "text", "text": "hello" }],
+      "receivedAt": "2026-08-25T01:04:00.000Z"
+    }
+  }
+}

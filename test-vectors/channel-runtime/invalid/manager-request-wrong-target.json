@@ -1,0 +1,20 @@
+{
+  "case": "manager-request",
+  "value": {
+    "contract": "cordisx.channel-manager-request/v1",
+    "schemaVersion": 1,
+    "requestId": "request-bad-target",
+    "expectedRevision": 7,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "connection.reconnect",
+    "target": {
+      "kind": "log",
+      "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29"
+    }
+  },
+  "expectedErrors": [
+    "/ must match \"then\" schema",
+    "/target/kind must be equal to constant"
+  ]
+}
