@@ -4,6 +4,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 
 - `marketplace-plugin.v1.schema.json`: one discovery-only plugin entry;
 - `marketplace-feed.v1.schema.json`: one aggregate marketplace feed;
+- `marketplace-plugin.v4.schema.json` and `marketplace-feed.v4.schema.json`:
+  versioned localized Marketplace discovery with optional external-publisher
+  commerce descriptors (no price or payment state);
 - `ui-common.v1.schema.json`: shared identifiers, command/route references,
   host icon tokens, conditions, and disabled state;
 - `locale-catalog.v1.schema.json`: one namespace-by-locale ICU message dictionary;

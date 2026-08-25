@@ -5,14 +5,14 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchemas = [1, 2, 3].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8')))
-const feedSchemas = [1, 2, 3].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8')))
+const pluginSchemas = [1, 2, 3, 4].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8')))
+const feedSchemas = [1, 2, 3, 4].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8')))
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
 const resolvedFeedSchemas = await Promise.all(feedSchemas)
 const marketplaceSourceSchema = JSON.parse(await readFile(path.join(root, 'schemas/marketplace-source.v1.schema.json'), 'utf8'))
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv)
-for (const dependency of ['ui-common.v1.schema.json', 'plugin-lifecycle-common.v1.schema.json', 'marketplace-official.v1.schema.json', 'marketplace-certification.v1.schema.json']) {
+for (const dependency of ['ui-common.v1.schema.json', 'plugin-lifecycle-common.v1.schema.json', 'marketplace-official.v1.schema.json', 'marketplace-certification.v1.schema.json', 'commerce-descriptor.v1.schema.json']) {
   ajv.addSchema(JSON.parse(await readFile(path.join(root, 'schemas', dependency), 'utf8')))
 }
 for (const schema of resolvedPluginSchemas) ajv.addSchema(schema)
@@ -114,7 +114,7 @@ export function validatePlugin(plugin) {
       errors.push({ message: error instanceof Error ? error.message : String(error) })
     }
   }
-  if (plugin.schemaVersion === 3 && plugin.artifact !== undefined
+  if (plugin.schemaVersion >= 3 && plugin.artifact !== undefined
     && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)) {
     errors.push({ message: 'artifact.packageName must belong to artifact.packageNamespace' })
   }

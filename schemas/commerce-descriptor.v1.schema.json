@@ -4,7 +4,7 @@
   "title": "CordisX External Commerce Descriptor v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "schemaVersion", "mode", "authorization"],
+  "required": ["$schema", "schemaVersion", "mode", "purchaseUrl", "authorization"],
   "properties": {
     "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/commerce-descriptor.v1.schema.json" },
     "schemaVersion": { "const": 1 },
@@ -22,12 +22,6 @@
       }
     }
   },
-  "allOf": [
-    {
-      "if": { "properties": { "authorization": { "properties": { "method": { "const": "publisher-grant.v1" } }, "required": ["method"] } }, "required": ["authorization"] },
-      "then": { "required": ["purchaseUrl"] }
-    }
-  ],
   "$defs": {
     "externalUrl": {
       "type": "string",

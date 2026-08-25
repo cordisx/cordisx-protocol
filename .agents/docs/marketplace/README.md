@@ -16,6 +16,9 @@ The machine-readable contracts are:
 - `schemas/marketplace-plugin.v3.schema.json` and
   `schemas/marketplace-feed.v3.schema.json` for external artifact identity and
   top-level trust records; and
+- `schemas/marketplace-plugin.v4.schema.json` and
+  `schemas/marketplace-feed.v4.schema.json` for optional external-publisher
+  commerce descriptors; and
 - `schemas/marketplace-source.v1.schema.json` for importing one Host-managed
   catalog source; and
 - `schemas/marketplace-official.v1.schema.json` and
@@ -31,6 +34,12 @@ fields from a newer document.
 Version 3 composes localized discovery with the independent trust contract in
 [`trust.md`](trust.md). It does not change the Marketplace's metadata-only
 ownership boundary.
+
+Version 4 preserves the version-3 trust envelope and may embed one validated
+`commerce-descriptor.v1` in a plugin entry. It is an external entry-point and
+authorization-method reference only: it never carries a price, currency,
+order, payment state, checkout token, or payment outcome. A client that does
+not support version 4 must reject it rather than stripping the field.
 
 ## Host-managed sources
 
@@ -125,6 +134,11 @@ Version 3 preserves the same localization projection and may add `artifact`.
 Artifact fields are stable machine identity and never localized. Their
 presence alone does not imply official or certified status.
 
+Version 4 may additionally add `commerce`. The descriptor is intentionally
+not localized or inferred from an artifact: purchase, management, and recovery
+URLs belong to the developer, and the signed PublisherGrant remains the sole
+authorization input. Its presence does not establish that a payment happened.
+
 Host display projection is field-wise and deterministic:
 
 1. the current Host locale when that localized field exists;
@@ -169,6 +183,10 @@ not a claim that the original prose was authored in English.
 Version-3 consumers may accept versions 1 and 2 as discovery-only feeds. They
 must project neither Official nor Certified for those feeds: absence of the
 version-3 trust envelope is not a downgrade-compatible positive claim.
+
+Version-4 consumers may accept versions 1--3 using their documented discovery
+projections. They must not invent a commerce action for those records. Older
+consumers reject a version-4 feed rather than ignoring `commerce`.
 
 ## Multiple feeds
 
