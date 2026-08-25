@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-task-lifecycle-range.v1.schema.json",
+  "title": "CordisX Launcher-private Platform Task Lifecycle Range v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "session", "afterSequence", "nextAfterSequence", "events"],
+  "properties": {
+    "contract": { "const": "cordisx.platform-task-lifecycle-range/v1" },
+    "schemaVersion": { "const": 1 },
+    "session": { "$ref": "platform-session.v1.schema.json#/$defs/sessionRef" },
+    "afterSequence": { "type": "integer", "minimum": 0 },
+    "nextAfterSequence": { "type": "integer", "minimum": 0 },
+    "events": {
+      "type": "array",
+      "maxItems": 500,
+      "items": { "$ref": "platform-task-lifecycle-event.v1.schema.json" }
+    }
+  }
+}

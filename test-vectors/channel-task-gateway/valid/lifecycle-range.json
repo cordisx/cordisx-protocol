@@ -1,0 +1,67 @@
+{
+  "case": "lifecycle-range",
+  "value": {
+    "contract": "cordisx.platform-task-lifecycle-range/v1",
+    "schemaVersion": 1,
+    "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+    "afterSequence": 0,
+    "nextAfterSequence": 4,
+    "events": [
+      {
+        "contract": "cordisx.platform-task-lifecycle-event/v1",
+        "schemaVersion": 1,
+        "eventId": "event-lifecycle-1",
+        "sequence": 1,
+        "providerGeneration": "provider-generation-3",
+        "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+        "turnId": "turn-1",
+        "operationId": "channel-op-1",
+        "type": "turn.started",
+        "provenance": "observed",
+        "observedAt": "2026-08-25T01:00:01.000Z"
+      },
+      {
+        "contract": "cordisx.platform-task-lifecycle-event/v1",
+        "schemaVersion": 1,
+        "eventId": "event-lifecycle-2",
+        "sequence": 2,
+        "providerGeneration": "provider-generation-3",
+        "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+        "turnId": "turn-1",
+        "operationId": "channel-op-1",
+        "type": "approval.required",
+        "provenance": "observed",
+        "approval": { "approvalId": "approval-1", "kind": "command", "state": "pending" },
+        "observedAt": "2026-08-25T01:00:02.000Z"
+      },
+      {
+        "contract": "cordisx.platform-task-lifecycle-event/v1",
+        "schemaVersion": 1,
+        "eventId": "event-lifecycle-3",
+        "sequence": 3,
+        "providerGeneration": "provider-generation-3",
+        "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+        "turnId": "turn-1",
+        "operationId": "channel-op-1",
+        "type": "approval.resolved",
+        "provenance": "observed",
+        "approval": { "approvalId": "approval-1", "kind": "command", "state": "resolved", "outcome": "approved" },
+        "observedAt": "2026-08-25T01:00:03.000Z"
+      },
+      {
+        "contract": "cordisx.platform-task-lifecycle-event/v1",
+        "schemaVersion": 1,
+        "eventId": "event-lifecycle-4",
+        "sequence": 4,
+        "providerGeneration": "provider-generation-3",
+        "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+        "turnId": "turn-1",
+        "operationId": "channel-op-1",
+        "type": "turn.completed",
+        "provenance": "observed",
+        "output": [{ "type": "text", "text": "Task completed." }],
+        "observedAt": "2026-08-25T01:00:04.000Z"
+      }
+    ]
+  }
+}

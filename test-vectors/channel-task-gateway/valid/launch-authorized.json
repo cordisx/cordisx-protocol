@@ -1,0 +1,113 @@
+{
+  "case": "launch-authorization",
+  "request": {
+    "contract": "cordisx.channel-task-launch-request/v1",
+    "schemaVersion": 1,
+    "operationId": "channel-op-1",
+    "routeId": "route-primary",
+    "serviceGeneration": "channel-generation-7",
+    "configurationRevision": 12,
+    "source": {
+      "adapterId": "adapter.generic",
+      "accountId": "account-1",
+      "tenantId": "tenant-1",
+      "conversationId": "conversation-1",
+      "kind": "direct",
+      "threadId": "conversation-1",
+      "semantics": "conversation",
+      "eventId": "event-1",
+      "actor": {
+        "adapterId": "adapter.generic",
+        "accountId": "account-1",
+        "tenantId": "tenant-1",
+        "userId": "user-1"
+      }
+    },
+    "selectors": {
+      "provider": { "id": "provider-main" },
+      "model": { "id": "model-main" },
+      "profile": { "id": "profile-main" },
+      "workspaceAlias": "cordisx"
+    }
+  },
+  "value": {
+    "contract": "cordisx.channel-task-launch-authorization/v1",
+    "schemaVersion": 1,
+    "grantToken": "chtl1_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "operationId": "channel-op-1",
+    "routeId": "route-primary",
+    "serviceGeneration": "channel-generation-7",
+    "configurationRevision": 12,
+    "source": {
+      "adapterId": "adapter.generic",
+      "accountId": "account-1",
+      "tenantId": "tenant-1",
+      "conversationId": "conversation-1",
+      "kind": "direct",
+      "threadId": "conversation-1",
+      "semantics": "conversation",
+      "eventId": "event-1",
+      "actor": {
+        "adapterId": "adapter.generic",
+        "accountId": "account-1",
+        "tenantId": "tenant-1",
+        "userId": "user-1"
+      }
+    },
+    "target": {
+      "model": { "providerId": "provider-main", "modelId": "model-main" },
+      "profileId": "profile-main",
+      "workspace": { "alias": "cordisx", "cwd": "/srv/workspaces/cordisx" }
+    },
+    "authorization": {
+      "decision": "allow",
+      "capabilities": ["tasks.create", "turns.submit"],
+      "scopeFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "use": "single-use",
+      "authorizedAt": "2026-08-25T01:00:00.000Z",
+      "expiresAt": "2026-08-25T01:01:00.000Z"
+    }
+  },
+  "context": {
+    "authorizedAt": "2026-08-25T01:00:30.000Z",
+    "issuedGrants": [
+      {
+        "grantToken": "chtl1_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "operationId": "channel-op-1",
+        "routeId": "route-primary",
+        "serviceGeneration": "channel-generation-7",
+        "configurationRevision": 12,
+        "source": {
+          "adapterId": "adapter.generic",
+          "accountId": "account-1",
+          "tenantId": "tenant-1",
+          "conversationId": "conversation-1",
+          "kind": "direct",
+          "threadId": "conversation-1",
+          "semantics": "conversation",
+          "eventId": "event-1",
+          "actor": {
+            "adapterId": "adapter.generic",
+            "accountId": "account-1",
+            "tenantId": "tenant-1",
+            "userId": "user-1"
+          }
+        },
+        "target": {
+          "model": { "providerId": "provider-main", "modelId": "model-main" },
+          "profileId": "profile-main",
+          "workspace": { "alias": "cordisx", "cwd": "/srv/workspaces/cordisx" }
+        },
+        "authorization": {
+          "decision": "allow",
+          "capabilities": ["tasks.create", "turns.submit"],
+          "scopeFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "use": "single-use",
+          "authorizedAt": "2026-08-25T01:00:00.000Z",
+          "expiresAt": "2026-08-25T01:01:00.000Z"
+        },
+        "consumed": false
+      }
+    ]
+  }
+}

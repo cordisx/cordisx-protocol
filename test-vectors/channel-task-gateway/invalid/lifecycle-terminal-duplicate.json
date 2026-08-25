@@ -1,0 +1,38 @@
+{
+  "case": "lifecycle-range",
+  "value": {
+    "contract": "cordisx.platform-task-lifecycle-range/v1",
+    "schemaVersion": 1,
+    "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+    "afterSequence": 0,
+    "nextAfterSequence": 2,
+    "events": [
+      {
+        "contract": "cordisx.platform-task-lifecycle-event/v1",
+        "schemaVersion": 1,
+        "eventId": "event-lifecycle-1",
+        "sequence": 1,
+        "providerGeneration": "provider-generation-3",
+        "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+        "turnId": "turn-1",
+        "type": "turn.completed",
+        "provenance": "observed",
+        "output": [{ "type": "text", "text": "Done." }],
+        "observedAt": "2026-08-25T01:00:01.000Z"
+      },
+      {
+        "contract": "cordisx.platform-task-lifecycle-event/v1",
+        "schemaVersion": 1,
+        "eventId": "event-lifecycle-2",
+        "sequence": 2,
+        "providerGeneration": "provider-generation-3",
+        "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+        "turnId": "turn-1",
+        "type": "turn.failed",
+        "provenance": "snapshot-reconciled",
+        "failure": { "code": "TURN_FAILED", "retryable": false },
+        "observedAt": "2026-08-25T01:00:02.000Z"
+      }
+    ]
+  }
+}

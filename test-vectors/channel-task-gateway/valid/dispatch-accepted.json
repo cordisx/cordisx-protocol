@@ -1,0 +1,20 @@
+{
+  "case": "dispatch-result",
+  "value": {
+    "contract": "cordisx.platform-task-dispatch-result/v1",
+    "schemaVersion": 1,
+    "operationId": "channel-op-1",
+    "operation": "create",
+    "status": "accepted",
+    "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+    "turn": {
+      "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+      "turnId": "turn-1"
+    },
+    "lifecycle": {
+      "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+      "afterSequence": 0
+    },
+    "observedAt": "2026-08-25T01:00:01.000Z"
+  }
+}

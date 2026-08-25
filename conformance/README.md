@@ -42,6 +42,12 @@ sourced user-only input, complete binding lineage, redacted runtime and config
 Manager projections, connection/route integrity, bounded retry ordering, and one
 active binding per endpoint/route. It does not claim transport exactly-once
 behavior or that a real credentialed adapter exists.
+Channel task gateway conformance covers path-free launch requests, absolute
+workspace resolution, exact selector/source/generation/revision binding,
+Host-issued single-use grants, partial create preservation, complete-session
+dispatch correlation, contiguous lifecycle replay, unique terminal turns, and
+raw provider payload rejection. It is launcher-private prerequisite evidence,
+not renderer availability or a real provider smoke.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

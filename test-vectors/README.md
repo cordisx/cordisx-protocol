@@ -80,6 +80,13 @@ sourced user-only input, binding lineage, launcher-only secret references,
 redacted Manager descriptors, route/connection integrity, retry ordering,
 active binding uniqueness, and safe package entry resolution.
 
+Channel task gateway suites live in `channel-task-gateway/valid` and
+`channel-task-gateway/invalid`. They cover Host-only alias resolution and
+single-use authorization, complete model/session correlation, created-session
+retention on initial-turn failure, replayable lifecycle ordering, one terminal
+event per turn, and rejection of relative cwd, stale authority, session drift,
+sequence gaps, and raw app-server payloads.
+
 Channel Manager v2 vectors additionally cover strict snapshot/request/result
 identity, profile and Host-generation fencing, operation-to-exact-target
 matching, stale-operation suppression, account-scoped safe-log pages, opaque

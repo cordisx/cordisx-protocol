@@ -70,6 +70,19 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   origin user-message intent; and
 - `channel-sourced-gateway-request.v1.schema.json`: a fenced Host gateway
   request that preserves the complete source intent;
+- `channel-task-launch-request.v1.schema.json`: a launcher-private, path-free
+  Channel create request bound to the route, source, selectors, service
+  generation, and configuration revision;
+- `channel-task-launch-authorization.v1.schema.json`: a Host-issued,
+  single-use launch grant containing the resolved complete model/profile and
+  authorized absolute cwd; it is never renderer-safe;
+- `platform-task-dispatch-result.v1.schema.json`: a launcher-private
+  create/follow-up acceptance or rejection that preserves a created session
+  when initial turn submission fails;
+- `platform-task-lifecycle-event.v1.schema.json`: one sanitized,
+  generation-fenced Platform turn/approval lifecycle event; and
+- `platform-task-lifecycle-range.v1.schema.json`: one contiguous,
+  cursor-replayable lifecycle event range for a complete Platform session;
 - `channel-service-config.v1.schema.json`: launcher-owned adapter connection,
   route/task mapping, policy, notification, reliability, rate, and attachment
   configuration with opaque credential references only;

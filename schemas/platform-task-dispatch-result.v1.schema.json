@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-task-dispatch-result.v1.schema.json",
+  "title": "CordisX Launcher-private Platform Task Dispatch Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "operationId", "operation", "status", "observedAt"],
+  "properties": {
+    "contract": { "const": "cordisx.platform-task-dispatch-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "operationId": { "$ref": "channel-task-launch-request.v1.schema.json#/$defs/operationId" },
+    "operation": { "enum": ["create", "followup"] },
+    "status": { "enum": ["accepted", "created-initial-turn-failed", "rejected"] },
+    "session": { "$ref": "platform-session.v1.schema.json#/$defs/sessionRef" },
+    "turn": { "$ref": "#/$defs/turnRef" },
+    "lifecycle": { "$ref": "#/$defs/lifecycleCursor" },
+    "failure": { "$ref": "#/$defs/failure" },
+    "observedAt": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "const": "accepted" } }
+      },
+      "then": {
+        "required": ["session", "turn", "lifecycle"],
+        "properties": { "session": true, "turn": true, "lifecycle": true, "failure": false }
+      }
+    },
+    {
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "const": "created-initial-turn-failed" } }
+      },
+      "then": {
+        "required": ["session", "lifecycle", "failure"],
+        "properties": {
+          "operation": { "const": "create" },
+          "session": true,
+          "lifecycle": true,
+          "failure": true,
+          "turn": false
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "const": "rejected" } }
+      },
+      "then": {
+        "required": ["failure"],
+        "properties": {
+          "failure": true,
+          "session": false,
+          "turn": false,
+          "lifecycle": false
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "turnRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session", "turnId"],
+      "properties": {
+        "session": { "$ref": "platform-session.v1.schema.json#/$defs/sessionRef" },
+        "turnId": { "$ref": "platform-model.v1.schema.json#/$defs/opaqueId" }
+      }
+    },
+    "lifecycleCursor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session", "afterSequence"],
+      "properties": {
+        "session": { "$ref": "platform-session.v1.schema.json#/$defs/sessionRef" },
+        "afterSequence": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "retryable"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Z][A-Z0-9._-]{0,127}$"
+        },
+        "retryable": { "type": "boolean" }
+      }
+    }
+  }
+}

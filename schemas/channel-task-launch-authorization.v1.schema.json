@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-task-launch-authorization.v1.schema.json",
+  "title": "CordisX Launcher-private Channel Task Launch Authorization v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "grantToken",
+    "operationId",
+    "routeId",
+    "serviceGeneration",
+    "configurationRevision",
+    "source",
+    "target",
+    "authorization"
+  ],
+  "properties": {
+    "contract": { "const": "cordisx.channel-task-launch-authorization/v1" },
+    "schemaVersion": { "const": 1 },
+    "grantToken": {
+      "type": "string",
+      "pattern": "^chtl1_[A-Za-z0-9_-]{43}$"
+    },
+    "operationId": { "$ref": "channel-task-launch-request.v1.schema.json#/$defs/operationId" },
+    "routeId": { "$ref": "channel-common.v1.schema.json#/$defs/opaqueId" },
+    "serviceGeneration": { "$ref": "channel-task-launch-request.v1.schema.json#/$defs/generation" },
+    "configurationRevision": { "type": "integer", "minimum": 1 },
+    "source": { "$ref": "channel-common.v1.schema.json#/$defs/eventRef" },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "profileId", "workspace"],
+      "properties": {
+        "model": { "$ref": "platform-model.v1.schema.json#/$defs/modelRef" },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "workspace": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["alias", "cwd"],
+          "properties": {
+            "alias": { "$ref": "channel-task-launch-request.v1.schema.json#/$defs/workspaceAlias" },
+            "cwd": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "^(?:/.*|[A-Za-z]:[\\\\/].*|\\\\\\\\.+)$"
+            }
+          }
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "capabilities", "scopeFingerprint", "use", "authorizedAt", "expiresAt"],
+      "properties": {
+        "decision": { "const": "allow" },
+        "capabilities": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "tasks.create" },
+            { "const": "turns.submit" }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "scopeFingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "use": { "const": "single-use" },
+        "authorizedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

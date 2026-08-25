@@ -1,0 +1,24 @@
+{
+  "case": "lifecycle-range",
+  "value": {
+    "contract": "cordisx.platform-task-lifecycle-range/v1",
+    "schemaVersion": 1,
+    "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+    "afterSequence": 4,
+    "nextAfterSequence": 6,
+    "events": [
+      {
+        "contract": "cordisx.platform-task-lifecycle-event/v1",
+        "schemaVersion": 1,
+        "eventId": "event-lifecycle-6",
+        "sequence": 6,
+        "providerGeneration": "provider-generation-3",
+        "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+        "turnId": "turn-2",
+        "type": "turn.started",
+        "provenance": "observed",
+        "observedAt": "2026-08-25T01:02:00.000Z"
+      }
+    ]
+  }
+}
