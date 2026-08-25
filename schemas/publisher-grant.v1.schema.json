@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/publisher-grant.v1.schema.json",
+  "title": "CordisX Publisher Authorization Statement v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "kind", "issuer", "statementId", "issuedAt", "payload", "signature"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/publisher-grant.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "kind": { "enum": ["grant", "renew", "revoke", "transfer"] },
+    "issuer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "keyId", "environment"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+        "keyId": { "type": "string", "pattern": "^[A-Za-z0-9._-]{1,128}$" },
+        "environment": { "enum": ["sandbox", "live"] }
+      }
+    },
+    "statementId": { "type": "string", "pattern": "^[A-Za-z0-9._-]{16,128}$" },
+    "issuedAt": { "type": "string", "format": "date-time", "maxLength": 40 },
+    "payload": { "type": "object" },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "value": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "grant" } }, "required": ["kind"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/authorization" } } }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "renew" } }, "required": ["kind"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/authorization" } } }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "revoke" } }, "required": ["kind"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/revocation" } } }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "transfer" } }, "required": ["kind"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/transfer" } } }
+    }
+  ],
+  "$defs": {
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grantId", "pluginId", "offerId", "devicePublicKeyHash", "nonce", "notBefore", "expiresAt", "refreshAfter", "offlineGraceSeconds", "versionRange", "features"],
+      "properties": {
+        "grantId": { "type": "string", "pattern": "^[A-Za-z0-9._-]{16,160}$" },
+        "pluginId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$" },
+        "offerId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+        "devicePublicKeyHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "nonce": { "type": "string", "pattern": "^[A-Za-z0-9_-]{32,128}$" },
+        "notBefore": { "type": "string", "format": "date-time", "maxLength": 40 },
+        "expiresAt": { "type": "string", "format": "date-time", "maxLength": 40 },
+        "refreshAfter": { "type": "string", "format": "date-time", "maxLength": 40 },
+        "offlineGraceSeconds": { "type": "integer", "minimum": 0, "maximum": 2592000 },
+        "versionRange": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "features": { "type": "array", "maxItems": 128, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$" } }
+      }
+    },
+    "revocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grantId", "effectiveAt"],
+      "properties": {
+        "grantId": { "type": "string", "pattern": "^[A-Za-z0-9._-]{16,160}$" },
+        "effectiveAt": { "type": "string", "format": "date-time", "maxLength": 40 },
+        "reason": { "type": "string", "maxLength": 280 }
+      }
+    },
+    "transfer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grantId", "fromDevicePublicKeyHash", "toDevicePublicKeyHash", "nonce", "notBefore", "expiresAt"],
+      "properties": {
+        "grantId": { "type": "string", "pattern": "^[A-Za-z0-9._-]{16,160}$" },
+        "fromDevicePublicKeyHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "toDevicePublicKeyHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "nonce": { "type": "string", "pattern": "^[A-Za-z0-9_-]{32,128}$" },
+        "notBefore": { "type": "string", "format": "date-time", "maxLength": 40 },
+        "expiresAt": { "type": "string", "format": "date-time", "maxLength": 40 }
+      }
+    }
+  }
+}

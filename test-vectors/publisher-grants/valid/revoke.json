@@ -1,0 +1,13 @@
+{
+  "kind": "statement",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/publisher-grant.v1.schema.json",
+    "schemaVersion": 1,
+    "kind": "revoke",
+    "issuer": { "id": "example.publisher", "keyId": "live-2026-01", "environment": "live" },
+    "statementId": "revoke-00000000001",
+    "issuedAt": "2026-09-20T00:00:00Z",
+    "payload": { "grantId": "grant-000000000001", "effectiveAt": "2026-09-20T00:00:00Z", "reason": "publisher-cancelled" },
+    "signature": { "algorithm": "Ed25519", "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" }
+  }
+}

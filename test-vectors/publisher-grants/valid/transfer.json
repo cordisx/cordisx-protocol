@@ -1,0 +1,20 @@
+{
+  "kind": "statement",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/publisher-grant.v1.schema.json",
+    "schemaVersion": 1,
+    "kind": "transfer",
+    "issuer": { "id": "example.publisher", "keyId": "live-2026-01", "environment": "live" },
+    "statementId": "transfer-0000000001",
+    "issuedAt": "2026-09-20T00:00:00Z",
+    "payload": {
+      "grantId": "grant-000000000001",
+      "fromDevicePublicKeyHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "toDevicePublicKeyHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "nonce": "abcdefghijklmnopqrstuvwxyz012345",
+      "notBefore": "2026-09-20T00:00:00Z",
+      "expiresAt": "2026-09-21T00:00:00Z"
+    },
+    "signature": { "algorithm": "Ed25519", "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" }
+  }
+}
