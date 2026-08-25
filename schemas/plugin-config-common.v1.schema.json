@@ -74,6 +74,31 @@
         "icon": { "$ref": "#/$defs/formIcon" }
       }
     },
+    "formPresenter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "kind"],
+      "properties": {
+        "version": { "const": 1 },
+        "kind": {
+          "enum": [
+            "choice.select", "choice.radio", "choice.segmented",
+            "number.input", "number.stepper", "number.slider",
+            "array.scalar-tags", "array.scalar-rows",
+            "array.object-auto", "array.object-dialog", "array.object-page"
+          ]
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "density": { "enum": ["compact", "regular"] },
+            "maxInlineItems": { "type": "integer", "minimum": 1, "maximum": 64 },
+            "allowReorder": { "type": "boolean" }
+          }
+        }
+      }
+    },
     "formFieldPresentation": {
       "type": "object",
       "additionalProperties": false,
@@ -81,7 +106,8 @@
       "properties": {
         "path": { "$ref": "#/$defs/fieldPath" },
         "icon": { "$ref": "#/$defs/formIcon" },
-        "group": { "$ref": "#/$defs/formGroup" }
+        "group": { "$ref": "#/$defs/formGroup" },
+        "presenter": { "$ref": "#/$defs/formPresenter" }
       }
     },
     "formPresentation": {

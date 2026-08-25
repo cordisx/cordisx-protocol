@@ -12,21 +12,11 @@
         "form": {
           "version": 1,
           "fields": [
-            {
-              "path": ["reviewDate"],
-              "icon": "host:calendar",
-              "presenter": { "version": 1, "kind": "choice.segmented", "options": { "density": "compact" } },
-              "group": {
-                "id": "schedule",
-                "title": { "en": "Schedule", "zh-CN": "日程" },
-                "icon": "host:clock"
-              }
-            }
-          ],
-          "actions": { "save": "host:save", "reset": "host:reset" }
+            { "path": ["entries"], "presenter": { "version": 1, "kind": "overlay" } }
+          ]
         }
       },
-      "value": { "reviewDate": "2026-08-26" },
+      "value": { "entries": [] },
       "revision": 1,
       "lastGoodRevision": 1,
       "applies": "live",
