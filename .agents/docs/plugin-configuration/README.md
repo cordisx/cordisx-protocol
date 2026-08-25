@@ -24,6 +24,27 @@ The Host owns default controls, labels, descriptions, validation messages,
 keyboard behavior, focus, `aria-*`, directionality, disabled/loading/error
 states, and cleanup. Schema data never grants DOM ownership.
 
+## Bounded form presentation metadata
+
+`schema.kind=schemastery` may carry the optional closed `schema.form`
+projection defined by
+`plugin-config-common.v1.schema.json#/$defs/formPresentation`. It is limited to
+field paths, a small Host-owned icon vocabulary, semantic groups, and optional
+save/reset icon hints. It never carries SVG, image URLs, CSS, component names,
+DOM, selectors, callbacks, or popup targets.
+
+The Host resolves icons and localized group copy itself; unknown or
+out-of-scope metadata is ignored with a bounded diagnostic. `form.fields` is
+unique by exact path. A Schemastery implementation can derive the same data
+from its serializable `meta.extra.cordisxForm` annotations, but that annotation
+is not a renderer grant and must normalize to this projection before
+cross-process transport.
+
+Array affordances are derived from the serialized schema, not presentation
+metadata: a finite scalar union maps to a multi-select, and only a finite
+primitive array maps to a tag input. Object arrays, unbounded arrays, and
+unknown element schemas remain unavailable with a compact Host diagnostic.
+
 ## Identity and scope
 
 Every descriptor, mutation, result, and renderer snapshot carries a canonical
