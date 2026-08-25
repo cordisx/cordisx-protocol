@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-manager-common.v2.schema.json",
+  "title": "CordisX Channel Manager Common Types v2",
+  "$defs": {
+    "requestId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "opaqueToken": { "type": "string", "pattern": "^chm1_[A-Za-z0-9_-]{43}$", "description": "Host-issued opaque random or MAC capability; renderer shape is never authority." },
+    "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "connectionTarget": { "type": "object", "additionalProperties": false, "required": ["kind", "connectionToken"], "properties": { "kind": { "const": "connection" }, "connectionToken": { "$ref": "#/$defs/opaqueToken" } } },
+    "connectionDraftTarget": { "type": "object", "additionalProperties": false, "required": ["kind", "connectionDraftToken"], "properties": { "kind": { "const": "connection-draft" }, "connectionDraftToken": { "$ref": "#/$defs/opaqueToken" } } },
+    "credentialCaptureTarget": { "type": "object", "additionalProperties": false, "required": ["kind", "captureToken"], "properties": { "kind": { "const": "credential-capture" }, "captureToken": { "$ref": "#/$defs/opaqueToken" } } },
+    "credentialDraftTarget": { "type": "object", "additionalProperties": false, "required": ["kind", "credentialDraftToken"], "properties": { "kind": { "const": "credential-draft" }, "credentialDraftToken": { "$ref": "#/$defs/opaqueToken" } } },
+    "bindingTarget": { "type": "object", "additionalProperties": false, "required": ["kind", "bindingToken", "bindingRevision"], "properties": { "kind": { "const": "binding" }, "bindingToken": { "$ref": "#/$defs/opaqueToken" }, "bindingRevision": { "type": "integer", "minimum": 1 } } },
+    "logTarget": { "type": "object", "additionalProperties": false, "required": ["kind", "connectionToken"], "properties": { "kind": { "const": "log" }, "connectionToken": { "$ref": "#/$defs/opaqueToken" } } },
+    "permissionRequestTarget": { "type": "object", "additionalProperties": false, "required": ["kind", "permissionRequestToken"], "properties": { "kind": { "const": "permission-request" }, "permissionRequestToken": { "$ref": "#/$defs/opaqueToken" } } },
+    "target": { "oneOf": [{ "$ref": "#/$defs/connectionTarget" }, { "$ref": "#/$defs/connectionDraftTarget" }, { "$ref": "#/$defs/credentialCaptureTarget" }, { "$ref": "#/$defs/bindingTarget" }, { "$ref": "#/$defs/logTarget" }, { "$ref": "#/$defs/permissionRequestTarget" }] },
+    "connectionCreatePatch": { "type": "object", "additionalProperties": false, "required": ["displayName"], "properties": { "displayName": { "type": "string", "minLength": 1, "maxLength": 256 }, "selectors": { "type": "array", "maxItems": 4, "uniqueItems": true, "items": { "enum": ["direct", "group", "mentions", "replies"] } } } },
+    "connectionUpdatePatch": { "type": "object", "additionalProperties": false, "minProperties": 1, "properties": { "displayName": { "type": "string", "minLength": 1, "maxLength": 256 }, "selectors": { "type": "array", "maxItems": 4, "uniqueItems": true, "items": { "enum": ["direct", "group", "mentions", "replies"] } } } },
+    "credentialRotationDraft": { "type": "object", "additionalProperties": false, "required": ["credentialDraftToken"], "properties": { "credentialDraftToken": { "$ref": "#/$defs/opaqueToken" } } },
+    "operation": { "enum": ["credential.capture", "connection.create", "connection.update", "connection.rotate-credential", "connection.enable", "connection.disable", "connection.reconnect", "binding.open", "binding.archive", "binding.restore", "binding.unbind", "logs.query", "logs.export", "permission.allow-once", "permission.allow-persistent", "permission.deny-once", "permission.deny-persistent"] },
+    "issuanceOperation": { "enum": ["target.credential.capture.create", "target.credential.capture.rotate", "target.connection.create", "target.connection.create.simulator"] },
+    "permissionDecision": { "enum": ["allow-once", "allow-persistent", "deny-once", "deny-persistent"] },
+    "safePermissionReadback": { "type": "object", "additionalProperties": false, "required": ["state", "capability"], "properties": { "state": { "enum": ["granted-once", "granted-persistent", "denied"] }, "capability": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z][a-z0-9.-]{0,127}$" } } },
+    "resultCode": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Z0-9][A-Z0-9._-]*$" }
+  }
+}

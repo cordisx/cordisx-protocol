@@ -362,3 +362,50 @@ capability-family scope separation, binding lineage, active-binding uniqueness,
 account coverage, and renderer-secret exclusion. The mandatory simulator and
 real-adapter matrices live in the owning host architecture and implementation
 suites; protocol vectors do not substitute for transport or renderer smoke.
+
+## Channel Manager bootstrap v2/v3
+
+The published v1 request/result and v2 snapshot remain frozen. New Hosts may
+instead opt into `channel-manager-common/v2`, request/result v2, snapshot v3,
+and target issuance v1. These versions intentionally separate a
+renderer-safe wire projection from Host-private authority: every visible
+target is an opaque `chm1_` token, and shape is never authority.
+
+The Host issues every target through its private registry. A registry record
+binds profile, Host generation, exact issued revision, operation, target kind,
+expiry and consumed state. Credential capture, credential draft and connection
+draft records additionally bind their purpose, adapter kind and source lineage.
+The Host rejects absent, expired, cross-profile, cross-generation,
+cross-purpose, cross-connection, cross-adapter and replayed records. A target
+issuance or Manager result is a pre/post transition: an applied result consumes
+its input and registers its exact output atomically; a failed result changes
+neither registry nor snapshot revision.
+
+Credential material, app/tenant/account/route identifiers, exact scopes,
+security fingerprints, paths, callbacks and raw gateway payloads are never
+renderer fields. Native capture prompts and durable drafts remain Host-private.
+Simulator connection drafts are explicitly credential-free; all other
+connection drafts originate from a consumed `create` credential draft. Rotation
+accepts only a credential-draft token bound to the exact existing connection.
+
+Snapshot v3 also adds bounded pending authorization projections. Renderer code
+can see only a pending opaque `permissionRequestToken`, product-safe capability,
+state and exact allowed decision operations. `permission.allow-once`,
+`permission.allow-persistent`, `permission.deny-once`, and
+`permission.deny-persistent` consume that one Host-issued record and return
+only a safe state/capability readback. The private record binds canonical
+identity, resolved scope, manifest fingerprint, inbound operation/record and
+lease; remote Channel events can create pending records but cannot approve
+themselves. `binding.open` remains a defined operation but snapshot v3 never
+advertises it until an owning Host has an opener semantic.
+
+`conformance/channel-manager-v2.mjs` runs exact-error pre/post vectors for
+simulator issuance, capture/create lineage, and permission decisions. It is a
+protocol check, not proof of an adapter, credential broker or transport.
+
+The v2 `logs.query` and `logs.export` response contracts are independently
+versioned safe log page/export results. Their validation binds request id,
+expected revision, profile, generation and exact opaque log target to the
+originating v2 request; a page additionally binds `snapshotRevision` to the
+current v3 snapshot. They contain opaque references and bounded event metadata
+only, never gateway payloads, account identifiers or filesystem paths.

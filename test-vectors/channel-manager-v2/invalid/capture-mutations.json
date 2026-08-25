@@ -1,0 +1,1 @@
+{"case":"mutation-matrix","baseFile":"capture-create.json","mutations":[{"id":"capture-create-to-rotate","patches":[{"path":"/preContext/issuedTokens/0/operation","value":"target.credential.capture.rotate"},{"path":"/postContext/issuedTokens/0/operation","value":"target.credential.capture.rotate"}],"expectedErrors":["capture target issuance lineage mismatch"]}]}

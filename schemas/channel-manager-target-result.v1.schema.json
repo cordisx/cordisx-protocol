@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-manager-target-result.v1.schema.json",
+  "title": "CordisX Channel Manager Target Issuance Result v1", "type": "object", "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "requestId", "expectedRevision", "profileId", "hostGeneration", "operation", "status", "code", "revision"],
+  "properties": { "contract": { "const": "cordisx.channel-manager-target-result/v1" }, "schemaVersion": { "const": 1 }, "requestId": { "$ref": "channel-manager-common.v2.schema.json#/$defs/requestId" }, "expectedRevision": { "$ref": "channel-manager-common.v2.schema.json#/$defs/revision" }, "profileId": { "$ref": "channel-manager-common.v2.schema.json#/$defs/profileId" }, "hostGeneration": { "$ref": "channel-manager-common.v2.schema.json#/$defs/hostGeneration" }, "operation": { "$ref": "channel-manager-common.v2.schema.json#/$defs/issuanceOperation" }, "status": { "enum": ["applied", "conflict", "rejected", "unavailable"] }, "code": { "$ref": "channel-manager-common.v2.schema.json#/$defs/resultCode" }, "revision": { "$ref": "channel-manager-common.v2.schema.json#/$defs/revision" }, "target": { "oneOf": [{ "$ref": "channel-manager-common.v2.schema.json#/$defs/credentialCaptureTarget" }, { "$ref": "channel-manager-common.v2.schema.json#/$defs/connectionDraftTarget" }] }, "expiresAt": { "type": "string", "format": "date-time" } },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "applied" } }, "required": ["status"] }, "then": { "required": ["target", "expiresAt"], "properties": { "target": { "oneOf": [{ "$ref": "channel-manager-common.v2.schema.json#/$defs/credentialCaptureTarget" }, { "$ref": "channel-manager-common.v2.schema.json#/$defs/connectionDraftTarget" }] }, "expiresAt": { "type": "string", "format": "date-time" } } }, "else": { "properties": { "target": false, "expiresAt": false } } },
+    { "if": { "properties": { "operation": { "enum": ["target.credential.capture.create", "target.credential.capture.rotate"] } }, "required": ["operation"] }, "then": { "properties": { "target": { "$ref": "channel-manager-common.v2.schema.json#/$defs/credentialCaptureTarget" } } } },
+    { "if": { "properties": { "operation": { "enum": ["target.connection.create", "target.connection.create.simulator"] } }, "required": ["operation"] }, "then": { "properties": { "target": { "$ref": "channel-manager-common.v2.schema.json#/$defs/connectionDraftTarget" } } } }
+  ]
+}
