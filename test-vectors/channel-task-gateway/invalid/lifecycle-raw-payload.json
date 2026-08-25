@@ -1,0 +1,17 @@
+{
+  "case": "lifecycle-event",
+  "value": {
+    "contract": "cordisx.platform-task-lifecycle-event/v1",
+    "schemaVersion": 1,
+    "eventId": "event-lifecycle-1",
+    "sequence": 1,
+    "providerGeneration": "provider-generation-3",
+    "session": { "providerId": "provider-main", "remoteSessionId": "session-1" },
+    "turnId": "turn-1",
+    "type": "turn.completed",
+    "provenance": "observed",
+    "output": [{ "type": "text", "text": "Done." }],
+    "rawEvent": { "method": "turn/completed" },
+    "observedAt": "2026-08-25T01:00:01.000Z"
+  }
+}

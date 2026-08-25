@@ -1,0 +1,17 @@
+{
+  "case": "dispatch-result",
+  "value": {
+    "contract": "cordisx.platform-task-dispatch-result/v1",
+    "schemaVersion": 1,
+    "operationId": "channel-op-2",
+    "operation": "create",
+    "status": "created-initial-turn-failed",
+    "session": { "providerId": "provider-main", "remoteSessionId": "session-2" },
+    "lifecycle": {
+      "session": { "providerId": "provider-main", "remoteSessionId": "session-2" },
+      "afterSequence": 0
+    },
+    "failure": { "code": "TURN_START_FAILED", "retryable": true },
+    "observedAt": "2026-08-25T01:00:01.000Z"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-task-launch-request.v1.schema.json",
+  "title": "CordisX Launcher-private Channel Task Launch Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "operationId",
+    "routeId",
+    "serviceGeneration",
+    "configurationRevision",
+    "source",
+    "selectors"
+  ],
+  "properties": {
+    "contract": { "const": "cordisx.channel-task-launch-request/v1" },
+    "schemaVersion": { "const": 1 },
+    "operationId": { "$ref": "#/$defs/operationId" },
+    "routeId": { "$ref": "channel-common.v1.schema.json#/$defs/opaqueId" },
+    "serviceGeneration": { "$ref": "#/$defs/generation" },
+    "configurationRevision": { "type": "integer", "minimum": 1 },
+    "source": { "$ref": "channel-common.v1.schema.json#/$defs/eventRef" },
+    "selectors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model", "profile", "workspaceAlias"],
+      "properties": {
+        "provider": { "$ref": "channel-service-config.v1.schema.json#/$defs/selector" },
+        "model": { "$ref": "channel-service-config.v1.schema.json#/$defs/selector" },
+        "profile": { "$ref": "channel-service-config.v1.schema.json#/$defs/selector" },
+        "workspaceAlias": { "$ref": "#/$defs/workspaceAlias" }
+      }
+    }
+  },
+  "$defs": {
+    "operationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "generation": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "workspaceAlias": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    }
+  }
+}

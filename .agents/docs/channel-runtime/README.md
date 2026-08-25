@@ -29,6 +29,15 @@ The machine-readable contracts are:
 - `channel-inbound-message-intent.v1.schema.json` and
   `channel-sourced-gateway-request.v1.schema.json`: adapter-neutral ingress
   intent plus the complete-origin Host gateway boundary;
+- `channel-task-launch-request.v1.schema.json` and
+  `channel-task-launch-authorization.v1.schema.json`: launcher-private,
+  path-free selection followed by one exact, single-use authorized launch
+  target;
+- `platform-task-dispatch-result.v1.schema.json`,
+  `platform-task-lifecycle-event.v1.schema.json`, and
+  `platform-task-lifecycle-range.v1.schema.json`: launcher-private
+  create/follow-up acceptance and durable sanitized completion/failure/
+  approval observation;
 - `channel-service-config.v1.schema.json`: launcher-only connections, routes,
   task mappings, policy, notification, retry, rate, and attachment limits;
 - `channel-service-config-descriptor.v1.schema.json`: the Host-generated,
@@ -91,6 +100,12 @@ quarantine, and content checks. Reading it also requires
 The existing plain-string Platform turn input is not a conforming Channel
 gateway. A host must preserve the sourced envelope through its Platform/Agent
 mapping before enabling real ingress.
+
+Workspace aliases and Provider Fleet lifecycle are specified separately in
+[`channel-task-gateway`](../channel-task-gateway/README.md). A Channel adapter
+cannot resolve an alias to an absolute cwd, and it cannot use the renderer
+current-connection Agent ledger as proof that an external provider turn
+completed.
 
 ## Binding and replay
 
@@ -342,6 +357,10 @@ At this protocol revision:
   revision but remain `planned` for an implementation until an owning Host
   revision consumes the formal Protocol merge and independently verifies the
   full lifecycle;
+- launcher-private workspace authorization, dispatch results, and Platform
+  task lifecycle contracts are defined by this protocol revision but remain
+  `planned` until an owning Host formal merge consumes them; protocol presence
+  alone does not make Channel-to-task execution available;
 - the host-neutral Channel core and simulator are implemented/verified in the
   owning Host repository; launcher manifest-v3 loading, credential broker,
   production configuration writer, and actual Manager Channel UI remain

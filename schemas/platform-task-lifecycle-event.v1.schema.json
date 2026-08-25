@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-task-lifecycle-event.v1.schema.json",
+  "title": "CordisX Launcher-private Platform Task Lifecycle Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "eventId",
+    "sequence",
+    "providerGeneration",
+    "session",
+    "turnId",
+    "type",
+    "provenance",
+    "observedAt"
+  ],
+  "properties": {
+    "contract": { "const": "cordisx.platform-task-lifecycle-event/v1" },
+    "schemaVersion": { "const": 1 },
+    "eventId": { "$ref": "platform-model.v1.schema.json#/$defs/opaqueId" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "providerGeneration": { "$ref": "channel-task-launch-request.v1.schema.json#/$defs/generation" },
+    "session": { "$ref": "platform-session.v1.schema.json#/$defs/sessionRef" },
+    "turnId": { "$ref": "platform-model.v1.schema.json#/$defs/opaqueId" },
+    "operationId": { "$ref": "channel-task-launch-request.v1.schema.json#/$defs/operationId" },
+    "type": {
+      "enum": [
+        "turn.started",
+        "turn.completed",
+        "turn.failed",
+        "approval.required",
+        "approval.resolved"
+      ]
+    },
+    "provenance": { "enum": ["observed", "snapshot-reconciled"] },
+    "output": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/outputBlock" }
+    },
+    "failure": { "$ref": "platform-task-dispatch-result.v1.schema.json#/$defs/failure" },
+    "approval": { "$ref": "#/$defs/approval" },
+    "observedAt": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "turn.completed" } } },
+      "then": { "required": ["output"], "properties": { "output": true, "failure": false, "approval": false } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "turn.failed" } } },
+      "then": { "required": ["failure"], "properties": { "failure": true, "output": false, "approval": false } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "enum": ["approval.required", "approval.resolved"] } } },
+      "then": { "required": ["approval"], "properties": { "approval": true, "output": false, "failure": false } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "approval.required" } } },
+      "then": { "properties": { "approval": { "type": "object", "required": ["approvalId", "kind", "state"], "properties": { "approvalId": true, "kind": true, "state": { "const": "pending" }, "outcome": false } } } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "approval.resolved" } } },
+      "then": { "properties": { "approval": { "type": "object", "required": ["approvalId", "kind", "state", "outcome"], "properties": { "approvalId": true, "kind": true, "state": { "const": "resolved" }, "outcome": true } } } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "turn.started" } } },
+      "then": { "properties": { "output": false, "failure": false, "approval": false } }
+    }
+  ],
+  "$defs": {
+    "outputBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "text"],
+      "properties": {
+        "type": { "const": "text" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 100000 }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approvalId", "kind", "state"],
+      "properties": {
+        "approvalId": { "$ref": "platform-model.v1.schema.json#/$defs/opaqueId" },
+        "kind": { "enum": ["command", "file-change", "external-action", "other"] },
+        "state": { "enum": ["pending", "resolved"] },
+        "outcome": { "enum": ["approved", "denied", "expired", "cancelled"] }
+      }
+    }
+  }
+}
