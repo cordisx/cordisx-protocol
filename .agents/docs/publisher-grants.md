@@ -47,8 +47,9 @@ publish a signed revoke when a key is compromised. Sandbox and live registries
 are disjoint.
 
 `statementId` is an idempotency/replay identifier. Hosts reject a duplicate
-statement that is not byte-identical and activation registries must make the
-binding request idempotent on `(issuer, grantId, devicePublicKeyHash, nonce)`.
+statement that is not byte-identical. A registry-enhanced implementation must
+also make its binding request idempotent on `(issuer, grantId,
+devicePublicKeyHash, nonce)`.
 
 ## Device and activation
 
@@ -60,25 +61,40 @@ publisher-signed transfer. Multiple `CORDISX_HOME` configurations on one
 machine share an authorization only when they use the same Host device-key
 provider; independent keys are independent devices.
 
-Activation sends a new nonce and proof-of-possession signed by the device key
-to a minimal CordisX activation registry. The registry atomically records only
-`issuer + grantId -> pluginId + devicePublicKeyHash + activationStatus` (and
-the environment/idempotency data necessary to operate it). It must reject a
-second device hash for the same active grant. It stores no price, currency,
-order, payment, or payment-status data. Local wrapping alone is insufficient:
-without this registry, a Host must fail closed for a single-machine grant and
-must not claim cross-machine uniqueness.
+The default v1 mode is **direct-device-bound**: a developer receives the
+device public-key digest/challenge from the Host and signs a `grant` already
+bound to that exact key. The Host verifies the issuer/key id, statement,
+plugin/offer/version/features, device hash, and proof-of-possession locally.
+Copying the statement to another device fails because its device key has a
+different digest. No CordisX service or first-claim redemption exists in this
+mode.
+
+An optional **registry-enhanced** mode may send the nonce and
+proof-of-possession to a minimal CordisX activation registry. It atomically
+records only `issuer + grantId -> pluginId + devicePublicKeyHash +
+activationStatus` (and required environment/idempotency data), and can reject
+a second active device hash. It stores no price, currency, order, payment, or
+payment-status data. This is an enhancement for products that choose a
+first-claim workflow; it is not required for a pre-bound grant and a Host must
+not report `unavailable` merely because this optional service is absent.
 
 ## Time, expiry, and enforcement
 
-Hosts persist the last registry-attested time and never move their effective
-time backwards when the wall clock is rolled back. A network failure may retain
-an already activated grant only through `expiresAt + offlineGraceSeconds` from
-that monotonic effective time; a new activation, a renewal, or expiry beyond
-grace requires a registry response. All grants have `expiresAt`. Publishers
-normally issue 7--30 day renewable subscription leases; perpetual purchases use
-a longer lease and silent renewals. `refreshAfter` asks the Host to refresh and
-does not itself extend authorization.
+Hosts persist the last trusted time and never move their effective time
+backwards when the wall clock is rolled back. A registry response may advance
+that time, while direct-device-bound mode uses the accepted signed statement's
+issued time as a lower bound and the non-decreasing local record thereafter. A
+network failure may retain an already accepted grant only through `expiresAt +
+offlineGraceSeconds`; all grants have `expiresAt`. Publishers normally issue
+7--30 day renewable subscription leases; perpetual purchases use a longer
+lease and silent renewals. `refreshAfter` asks the Host to refresh and does not
+itself extend authorization.
+
+Refund and cancellation are not inferred from payment state. The developer
+signs `revoke` or stops issuing `renew`; when fully offline, a Host cannot learn
+an immediate revoke and expiry/offline grace is the latest local stop point.
+For a new device, a developer signs a new direct-bound grant. The Host never
+transfers a grant itself.
 
 The Host gates installation, update, activation, and feature projection within
 CordisX against the current grant. It cannot claim to prevent copied source or
@@ -89,6 +105,7 @@ trusted renderer runtime into a sandbox.
 
 Conforming implementations reject unknown fields, invalid timing order,
 cross-environment key use, duplicate statement ids with changed bytes, device
-hash mismatch, non-fresh activation nonce, a transfer whose source and target
-are equal, and a second active binding for a different device. Fixtures cover
-valid grant/renew/revoke/transfer shapes and each of these rejection classes.
+hash mismatch, a transfer whose source and target are equal, and an attempted
+local self-transfer. Fixtures cover valid grant/renew/revoke/transfer shapes
+and each of these rejection classes. A direct-device-bound grant requires no
+registry receipt; an optional registry response cannot widen its claims.
