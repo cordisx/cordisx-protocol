@@ -409,3 +409,11 @@ expected revision, profile, generation and exact opaque log target to the
 originating v2 request; a page additionally binds `snapshotRevision` to the
 current v3 snapshot. They contain opaque references and bounded event metadata
 only, never gateway payloads, account identifiers or filesystem paths.
+
+`logs.query` is explicitly read-only: its page keeps the snapshot revision
+unchanged. A Host-private, expiring `log-cursor` binds the exact profile,
+generation, connection target, snapshot revision, and canonical query
+fingerprint; it is consumed once by the following page. Export creation yields
+an expiring private `log-export` record. The additive v1 readback request and
+acknowledgement consume that record once and expose no payload, path, URL, or
+download handle to renderer code.

@@ -6,12 +6,12 @@ import addFormats from 'ajv-formats'
 import { createHash } from 'node:crypto'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const schemaNames = ['ui-common.v1.schema.json', 'channel-common.v1.schema.json', 'channel-service-config.v1.schema.json', 'channel-manager-common.v2.schema.json', 'channel-runtime-snapshot.v3.schema.json', 'channel-manager-request.v2.schema.json', 'channel-manager-result.v2.schema.json', 'channel-manager-target-request.v1.schema.json', 'channel-manager-target-result.v1.schema.json', 'channel-manager-log-page.v2.schema.json', 'channel-manager-log-export-result.v2.schema.json']
+const schemaNames = ['ui-common.v1.schema.json', 'channel-common.v1.schema.json', 'channel-service-config.v1.schema.json', 'channel-manager-common.v2.schema.json', 'channel-runtime-snapshot.v3.schema.json', 'channel-manager-request.v2.schema.json', 'channel-manager-result.v2.schema.json', 'channel-manager-target-request.v1.schema.json', 'channel-manager-target-result.v1.schema.json', 'channel-manager-log-page.v2.schema.json', 'channel-manager-log-export-result.v2.schema.json', 'channel-manager-log-export-readback-request.v1.schema.json', 'channel-manager-log-export-readback-result.v1.schema.json']
 const schemas = await Promise.all(schemaNames.map(async name => JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8'))))
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv); schemas.forEach(schema => ajv.addSchema(schema))
 const validate = name => ajv.getSchema(schemas.find(schema => schema.$id.endsWith(`/${name}`)).$id)
-const validators = Object.fromEntries(['snapshot', 'managerRequest', 'managerResult', 'targetRequest', 'targetResult', 'logPage', 'logExport'].map(key => [key, validate({ snapshot: 'channel-runtime-snapshot.v3.schema.json', managerRequest: 'channel-manager-request.v2.schema.json', managerResult: 'channel-manager-result.v2.schema.json', targetRequest: 'channel-manager-target-request.v1.schema.json', targetResult: 'channel-manager-target-result.v1.schema.json', logPage: 'channel-manager-log-page.v2.schema.json', logExport: 'channel-manager-log-export-result.v2.schema.json' }[key])]))
+const validators = Object.fromEntries(['snapshot', 'managerRequest', 'managerResult', 'targetRequest', 'targetResult', 'logPage', 'logExport', 'exportReadbackRequest', 'exportReadbackResult'].map(key => [key, validate({ snapshot: 'channel-runtime-snapshot.v3.schema.json', managerRequest: 'channel-manager-request.v2.schema.json', managerResult: 'channel-manager-result.v2.schema.json', targetRequest: 'channel-manager-target-request.v1.schema.json', targetResult: 'channel-manager-target-result.v1.schema.json', logPage: 'channel-manager-log-page.v2.schema.json', logExport: 'channel-manager-log-export-result.v2.schema.json', exportReadbackRequest: 'channel-manager-log-export-readback-request.v1.schema.json', exportReadbackResult: 'channel-manager-log-export-readback-result.v1.schema.json' }[key])]))
 const tokenPattern = /^chm1_[A-Za-z0-9_-]{43}$/
 const tokenOf = target => target?.connectionToken ?? target?.connectionDraftToken ?? target?.captureToken ?? target?.credentialDraftToken ?? target?.bindingToken ?? target?.permissionRequestToken
 const envelope = ['requestId', 'expectedRevision', 'profileId', 'hostGeneration', 'operation']
@@ -306,6 +306,34 @@ export function validateLogResponse(response, request, contextValue, exportResul
   return errors
 }
 
+export function validateExportReadback(result, request, preValue, postValue) {
+  const errors = []
+  schemaOk('exportReadbackRequest', request, errors); schemaOk('exportReadbackResult', result, errors)
+  const pre = privateContext(preValue, 'readback pre', errors); const post = privateContext(postValue, 'readback post', errors)
+  if (errors.length) return errors
+  for (const field of ['requestId', 'profileId', 'hostGeneration', 'expectedRevision', 'operation']) if (result[field] !== request[field]) errors.push(`export readback ${field} mismatch`)
+  if (stable(result.target) !== stable(request.target)) errors.push('export readback target mismatch')
+  const record = pre.get(request.target.exportId)
+  if (!record || record.kind !== 'log-export' || record.consumed || record.profileId !== request.profileId || record.hostGeneration !== request.hostGeneration || record.issuedRevision !== request.expectedRevision || record.snapshotRevision !== request.expectedRevision) errors.push('export readback registry mismatch')
+  if (result.status === 'acknowledged') {
+    if (result.revision !== request.expectedRevision + 1 || postValue.snapshot.revision !== result.revision || !post.get(request.target.exportId)?.consumed) errors.push('export readback consume mismatch')
+    exactTokenDelta(pre, post, request.target.exportId, undefined, errors, 'export readback')
+  } else unchangedOnFailure(preValue, postValue, errors, 'export readback')
+  return errors
+}
+
+export function validateCursorTransition(value) {
+  const errors = []
+  const { first, second, context } = value
+  const tokens = privateContext(context, 'cursor context', errors)
+  if (errors.length) return errors
+  if (!first?.query || stable(first.query) !== stable(second?.query) || first.profileId !== second?.profileId || first.hostGeneration !== second?.hostGeneration || first.connectionToken !== second?.connectionToken || first.snapshotRevision !== second?.snapshotRevision) errors.push('cursor continuity mismatch')
+  const cursor = tokens.get(first.nextCursor)
+  if (!cursor || cursor.kind !== 'log-cursor' || cursor.consumed || cursor.connectionToken !== first.connectionToken || cursor.snapshotRevision !== first.snapshotRevision || cursor.queryFingerprint !== fingerprint(first.query)) errors.push('cursor issuance mismatch')
+  if (second.cursor !== first.nextCursor || !second.consume || second.consume !== first.nextCursor) errors.push('cursor consume target mismatch')
+  return errors
+}
+
 let failures = 0
 const mutationAt = (value, pointer, replacement) => {
   const parts = pointer.split('/').slice(1)
@@ -313,9 +341,9 @@ const mutationAt = (value, pointer, replacement) => {
   for (const part of parts.slice(0, -1)) target = target[part]
   target[parts.at(-1)] = replacement
 }
-const requiredMutations = new Set(['permission-cross-decision', 'permission-private-field-mutation', 'capture-create-to-rotate', 'simulator-to-feishu', 'create-unrelated-account', 'replay-connection-draft', 'extra-issued-token', 'expired-capture', 'binding-cross-lineage', 'binding-revision-replay', 'selectors-change-display-name', 'unrelated-token-mutation', 'failure-state-mutation', 'log-result-expiry-mismatch', 'unknown-private-kind'])
+const requiredMutations = new Set(['permission-cross-decision', 'permission-private-field-mutation', 'capture-create-to-rotate', 'simulator-to-feishu', 'create-unrelated-account', 'replay-connection-draft', 'extra-issued-token', 'expired-capture', 'binding-cross-lineage', 'binding-revision-replay', 'selectors-change-display-name', 'unrelated-token-mutation', 'failure-state-mutation', 'log-result-expiry-mismatch', 'unknown-private-kind', 'cursor-unregistered', 'cursor-expired', 'cursor-replay', 'cursor-wrong-connection', 'cursor-wrong-filter', 'cursor-wrong-revision', 'export-expired', 'export-replay', 'export-unregistered', 'export-cross-profile'])
 const seenMutations = new Set()
-const requiredVectors = new Set(['valid/persistent-connection-across-revision.json', 'valid/binding-archive-v2.json', 'valid/log-page-v2.json', 'valid/log-export-v2.json', 'invalid/permission-raw-scope.json', 'invalid/permission-token-unregistered.json', 'invalid/private-registry-mutations.json', 'invalid/operation-deltas.json', 'invalid/log-mutations.json'])
+const requiredVectors = new Set(['valid/persistent-connection-across-revision.json', 'valid/binding-archive-v2.json', 'valid/log-page-v2.json', 'valid/log-export-v2.json', 'valid/log-cursor-transition-v1.json', 'valid/log-export-readback-v1.json', 'invalid/permission-raw-scope.json', 'invalid/permission-token-unregistered.json', 'invalid/private-registry-mutations.json', 'invalid/operation-deltas.json', 'invalid/log-mutations.json', 'invalid/log-cursor-mutations-v1.json', 'invalid/log-export-readback-mutations-v1.json'])
 const seenVectors = new Set()
 for (const kind of ['valid', 'invalid']) {
   const directory = path.join(root, 'test-vectors/channel-manager-v2', kind)
@@ -329,6 +357,8 @@ for (const kind of ['valid', 'invalid']) {
     for (const item of cases) {
       if (item.id) seenMutations.add(item.id)
       const errors = item.case === 'target-transition' ? validateTargetTransition(item.result, item.request, item.preContext, item.postContext)
+        : item.case === 'cursor-transition' ? validateCursorTransition(item)
+        : item.case === 'export-readback' ? validateExportReadback(item.result, item.request, item.preContext, item.postContext)
         : item.case === 'log-response' ? validateLogResponse(item.response, item.request, item.context, item.exportResult, item.postContext)
           : validateManagerTransition(item.result, item.request, item.preContext, item.postContext)
       const expected = kind === 'valid' ? [] : item.expectedErrors
