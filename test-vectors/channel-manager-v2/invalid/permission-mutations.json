@@ -1,0 +1,1 @@
+{"case":"mutation-matrix","baseFile":"permission-allow-once.json","mutations":[{"id":"permission-cross-decision","patches":[{"path":"/preContext/issuedTokens/0/operation","value":"permission.deny-once"},{"path":"/postContext/issuedTokens/0/operation","value":"permission.deny-once"}],"expectedErrors":["permission request operation mismatch"]}]}

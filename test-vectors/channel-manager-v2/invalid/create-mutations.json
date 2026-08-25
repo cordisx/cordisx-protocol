@@ -1,0 +1,6 @@
+{"case":"mutation-matrix","baseFile":"create-consumes-draft.json","mutations":[
+{"id":"simulator-to-feishu","patches":[{"path":"/preContext/issuedTokens/0/adapterKind","value":"feishu"},{"path":"/postContext/issuedTokens/0/adapterKind","value":"feishu"}],"expectedErrors":["pre invalid simulator draft lineage","post invalid simulator draft lineage"]},
+{"id":"create-unrelated-account","patches":[{"path":"/postContext/snapshot/accounts/0/displayName","value":"tampered"}],"expectedErrors":["manager create account display name mismatch"]},
+{"id":"replay-connection-draft","patches":[{"path":"/preContext/issuedTokens/0/consumed","value":true}],"expectedErrors":["manager target replayed"]},
+{"id":"extra-issued-token","patches":[{"path":"/postContext/issuedTokens/1/operation","value":"target.connection.create"}],"expectedErrors":["post invalid connection lineage"]}
+]}

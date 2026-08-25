@@ -1,0 +1,1 @@
+{"case":"mutation-matrix","baseFile":"log-export-v2.json","mutations":[{"id":"log-result-expiry-mismatch","patches":[{"path":"/response/expiresAt","value":"2026-08-25T03:00:00.000Z"}],"expectedErrors":["log export registry mismatch"]}]}
