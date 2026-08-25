@@ -1,0 +1,8 @@
+{
+  "input": {
+    "z": [true, null, "text"],
+    "signature": { "algorithm": "Ed25519", "value": "ignored" },
+    "a": { "second": 2, "first": 1 }
+  },
+  "expected": "{\"a\":{\"first\":1,\"second\":2},\"z\":[true,null,\"text\"]}"
+}

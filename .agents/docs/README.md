@@ -50,6 +50,10 @@ Specified areas:
   minimum apply scopes, revision/generation/package-fenced staged lifecycle
   operations, atomic registry publication, immutable activation records,
   last-good rollback, and redacted manager snapshots.
+- `publisher-grants.md`: external-publisher commerce descriptors, signed
+  `grant`/`renew`/`revoke`/`transfer` statements, device-key binding, minimal
+  activation-registry boundary, trusted-time/offline behavior, and conformance.
 
-Planned areas include isolated execution, remote distribution, publisher
-signatures, transparency, and public marketplace activation.
+Planned areas include isolated execution, remote distribution, publisher-key
+registration UX, activation-registry deployment, transparency, and public
+marketplace activation.

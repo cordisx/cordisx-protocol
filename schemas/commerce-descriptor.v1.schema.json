@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/commerce-descriptor.v1.schema.json",
+  "title": "CordisX External Commerce Descriptor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "mode", "authorization"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/commerce-descriptor.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "mode": { "const": "external-publisher-v1" },
+    "purchaseUrl": { "$ref": "#/$defs/externalUrl" },
+    "manageUrl": { "$ref": "#/$defs/externalUrl" },
+    "recoveryUrl": { "$ref": "#/$defs/externalUrl" },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "environment"],
+      "properties": {
+        "method": { "const": "publisher-grant.v1" },
+        "environment": { "enum": ["sandbox", "live"] }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "authorization": { "properties": { "method": { "const": "publisher-grant.v1" } }, "required": ["method"] } }, "required": ["authorization"] },
+      "then": { "required": ["purchaseUrl"] }
+    }
+  ],
+  "$defs": {
+    "externalUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^\\s]+$",
+      "maxLength": 2048
+    }
+  }
+}
