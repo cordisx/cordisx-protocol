@@ -1,0 +1,6 @@
+{
+  "base": "valid/complete.json",
+  "operations": [
+    { "op": "set", "path": "projection.history.canGoBack", "value": false }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v1.schema.json",
+  "title": "CordisX Manager Content Navigation Declaration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "route", "header"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "route": { "$ref": "#/$defs/sameOwnerRouteReference" },
+    "parentRoute": { "$ref": "#/$defs/sameOwnerRouteReference" },
+    "header": { "$ref": "#/$defs/headerDescription" },
+    "tabs": {
+      "type": "array",
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/tabDescription" }
+    }
+  },
+  "$defs": {
+    "sameOwnerRouteReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "params": {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9]*$" },
+          "additionalProperties": { "$ref": "ui-common.v1.schema.json#/$defs/scalar" }
+        }
+      }
+    },
+    "headerDescription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": {
+          "oneOf": [
+            { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "route" } } },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "recordIdParam", "fallback"],
+              "properties": {
+                "kind": { "const": "record" },
+                "recordIdParam": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$" },
+                "fallback": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "tabDescription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "route"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "route": { "$ref": "#/$defs/sameOwnerRouteReference" }
+      }
+    }
+  }
+}

@@ -30,6 +30,12 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   `body-only` host chrome policy;
 - `page.v3.schema.json`: page-v2 chrome metadata plus a required localized
   product description;
+- `manager-content-navigation.v1.schema.json`: a same-owner Manager content
+  subroute declaration with an optional parent route, Host-resolved title
+  source, and tab-to-route map;
+- `manager-content-projection.v1.schema.json`: a renderer-safe, Host-generated
+  Manager header/breadcrumb/back/history/tab projection, including opaque
+  dynamic-record titles;
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
 - `plugin-manifest.v1.schema.json`: one runtime plugin manifest with
   versioned Platform capability declarations, reasons, and maximum scopes.

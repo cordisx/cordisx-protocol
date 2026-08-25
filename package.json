@@ -5,12 +5,14 @@
   "type": "module",
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "check": "node conformance/marketplace.mjs && node conformance/marketplace-trust.mjs && node conformance/ui.mjs && node conformance/platform.mjs && node conformance/permission-v2.mjs && node conformance/extension-points.mjs && node conformance/extension-point-status.mjs && node conformance/agent-events.mjs && node conformance/agent-events-v2.mjs && node conformance/agent-history.mjs && node conformance/ui-extension-catalog.mjs && node conformance/manager-settings-tabs.mjs && node conformance/manager-settings-navigation.mjs && node conformance/channel-runtime.mjs && node conformance/plugin-configuration.mjs && node conformance/service-configuration.mjs && node conformance/plugin-lifecycle.mjs && node conformance/plugin-console.mjs"
+    "typecheck": "tsc -p types/tsconfig.json",
+    "check": "npm run typecheck && node conformance/marketplace.mjs && node conformance/marketplace-trust.mjs && node conformance/ui.mjs && node conformance/platform.mjs && node conformance/permission-v2.mjs && node conformance/extension-points.mjs && node conformance/extension-point-status.mjs && node conformance/agent-events.mjs && node conformance/agent-events-v2.mjs && node conformance/agent-history.mjs && node conformance/ui-extension-catalog.mjs && node conformance/manager-settings-tabs.mjs && node conformance/manager-settings-navigation.mjs && node conformance/manager-content-navigation.mjs && node conformance/channel-runtime.mjs && node conformance/plugin-configuration.mjs && node conformance/service-configuration.mjs && node conformance/plugin-lifecycle.mjs && node conformance/plugin-console.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "intl-messageformat": "11.2.14"
+    "intl-messageformat": "11.2.14",
+    "typescript": "5.9.2"
   },
   "engines": {
     "node": ">=22.19"

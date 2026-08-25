@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v1.schema.json",
+  "title": "CordisX Renderer-safe Manager Content Projection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "route", "header", "breadcrumbs", "back", "history", "tabs"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+    "header": { "$ref": "#/$defs/headerProjection" },
+    "breadcrumbs": {
+      "type": "array",
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/breadcrumb" }
+    },
+    "back": { "$ref": "#/$defs/backProjection" },
+    "history": { "$ref": "#/$defs/historyProjection" },
+    "tabs": {
+      "type": "array",
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/tabProjection" }
+    }
+  },
+  "$defs": {
+    "displayText": {
+      "allOf": [
+        { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        { "type": "object", "required": ["fallback"], "properties": { "fallback": true } }
+      ]
+    },
+    "headerProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "text"],
+              "properties": { "kind": { "const": "route" }, "text": { "$ref": "#/$defs/displayText" } }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "recordId", "text"],
+              "properties": {
+                "kind": { "const": "record" },
+                "recordId": { "type": "string", "minLength": 1, "maxLength": 512 },
+                "text": { "$ref": "#/$defs/displayText" }
+              }
+            }
+          ]
+        },
+        "description": { "$ref": "#/$defs/displayText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" }
+      }
+    },
+    "breadcrumb": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route", "text"],
+      "properties": {
+        "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+        "text": { "$ref": "#/$defs/displayText" }
+      }
+    },
+    "backProjection": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["available"], "properties": { "available": { "const": false } } },
+        { "type": "object", "additionalProperties": false, "required": ["available", "route"], "properties": { "available": { "const": true }, "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" } } }
+      ]
+    },
+    "historyProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "length", "canGoBack", "canGoForward"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+        "length": { "type": "integer", "minimum": 1, "maximum": 1000001 },
+        "canGoBack": { "type": "boolean" },
+        "canGoForward": { "type": "boolean" }
+      }
+    },
+    "tabProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "route", "text", "active", "disabled"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+        "text": { "$ref": "#/$defs/displayText" },
+        "active": { "type": "boolean" },
+        "disabled": { "type": "boolean" }
+      }
+    }
+  }
+}
