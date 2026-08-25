@@ -40,10 +40,51 @@ from its serializable `meta.extra.cordisxForm` annotations, but that annotation
 is not a renderer grant and must normalize to this projection before
 cross-process transport.
 
-Array affordances are derived from the serialized schema, not presentation
-metadata: a finite scalar union maps to a multi-select, and only a finite
-primitive array maps to a tag input. Object arrays, unbounded arrays, and
-unknown element schemas remain unavailable with a compact Host diagnostic.
+### Host Form Presenter Catalog v1
+
+Each field may carry one optional closed `presenter` object with explicit
+`version: 1`, a catalog `kind`, and bounded `options` (`density`,
+`maxInlineItems`, and `allowReorder`). Version 1 recognizes only these kinds:
+
+- `choice.select`, `choice.radio`, and `choice.segmented` for finite scalar
+  enum values;
+- `number.input`, `number.stepper`, and `number.slider` for bounded numbers;
+- `array.scalar-tags` and `array.scalar-rows` for bounded scalar arrays; and
+- `array.object-auto`, `array.object-dialog`, and `array.object-page` for
+  bounded object arrays.
+
+This is semantic negotiation, not a renderer grant. The Host resolves one
+supported catalog presenter from the field schema plus `version/kind/options`,
+then owns its DOM, component library, CSS, theme, keyboard behavior, values,
+validation, accessibility, portal lifecycle, and disposal. A missing hint
+uses the Host's stable automatic presenter; an unsupported version, kind, or
+schema-incompatible hint falls back to the semantically compatible basic
+control when possible, otherwise it has a compact bounded diagnostic. It never
+falls through to arbitrary HTML, CSS, SVG, component names, callbacks, popup
+targets, or plugin renderer code.
+
+Catalog capability is versioned by the form-presentation version and the
+presenter version. A Host that does not negotiate v1 must ignore this metadata
+and preserve its compatible base form. The same resolved presenter must be
+used when a field appears in the Manager, a Host-owned object-array dialog, or
+a Host-owned object-array subpage. A future third-party presenter provider is
+a separate trusted/signed Host-extension capability; it is not a Config or
+Schemastery authority.
+
+For arrays, `array.object-auto` is the stable default: bounded scalar items
+are edited inline, shallow object items use a Host dialog, and deeply nested or
+workflow-shaped object items use a Host subpage. Scalar-array presenters only
+apply to scalar items; object-array presenters only apply to object items. An
+incompatible hint is ignored with a bounded diagnostic; it does not turn a
+complex value into a JSON text area or an arbitrary plugin renderer.
+
+The Host owns array add/edit/delete/reorder/duplicate, min/max and unique
+validation, opaque per-draft item identities, keyboard/focus/scroll restore,
+and the one shared draft/save/reset transaction. Object-array dialogs and
+subpages are only Host chrome around the same recursively projected schema
+renderer; they do not receive plugin DOM, a second form store, or independent
+page headers/footers. Closing or returning preserves the parent draft and
+restores focus to the originating item action.
 
 ## Identity and scope
 
