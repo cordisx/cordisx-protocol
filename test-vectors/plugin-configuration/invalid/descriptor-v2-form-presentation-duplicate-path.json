@@ -1,0 +1,28 @@
+{
+  "case": "descriptor-v2-modes",
+  "values": [
+    {
+      "version": 2,
+      "identity": { "source": "file:///opt/cordisx/plugins/example.mjs", "pluginId": "example" },
+      "scope": { "profileId": "default", "generation": "generation-7" },
+      "namespace": "example.preferences",
+      "schema": {
+        "kind": "schemastery",
+        "envelope": { "type": "object" },
+        "form": {
+          "version": 1,
+          "fields": [
+            { "path": ["reviewDate"], "icon": "host:calendar" },
+            { "path": ["reviewDate"], "icon": "host:calendar" }
+          ]
+        }
+      },
+      "value": { "reviewDate": "2026-08-26" },
+      "revision": 1,
+      "lastGoodRevision": 1,
+      "applies": "live",
+      "writable": true,
+      "secrets": []
+    }
+  ]
+}

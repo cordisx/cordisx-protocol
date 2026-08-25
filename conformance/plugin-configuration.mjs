@@ -90,6 +90,15 @@ export function validateDescriptorV2(value) {
       errors.push(`secret path is exposed: ${secret.path.join('.')}`)
     }
   }
+  const form = value.schema?.kind === 'schemastery' ? value.schema.form : undefined
+  if (form !== undefined) {
+    const seen = new Set()
+    for (const field of form.fields) {
+      const key = JSON.stringify(field.path)
+      if (seen.has(key)) errors.push(`form field path is duplicated: ${field.path.join('.')}`)
+      seen.add(key)
+    }
+  }
   return errors
 }
 

@@ -52,7 +52,9 @@ Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,
 last-good ordering, reserved secret roles, owner-bounded namespace renderers,
-and closed result outcomes.
+closed result outcomes, and closed form-presentation metadata: unique field
+paths plus Host-owned semantic group, icon, and action hints without DOM or
+renderer authority.
 Service configuration conformance covers plugin/service ownership, form-safe
 schema projection, exact CAS/generation scope, fixed service/app restart
 planes, desired-versus-active startup state, CLIProxy composite-provider model
