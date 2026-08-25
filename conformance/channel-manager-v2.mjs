@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
+import { createHash } from 'node:crypto'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const schemaNames = ['ui-common.v1.schema.json', 'channel-common.v1.schema.json', 'channel-service-config.v1.schema.json', 'channel-manager-common.v2.schema.json', 'channel-runtime-snapshot.v3.schema.json', 'channel-manager-request.v2.schema.json', 'channel-manager-result.v2.schema.json', 'channel-manager-target-request.v1.schema.json', 'channel-manager-target-result.v1.schema.json', 'channel-manager-log-page.v2.schema.json', 'channel-manager-log-export-result.v2.schema.json']
@@ -15,6 +16,7 @@ const tokenPattern = /^chm1_[A-Za-z0-9_-]{43}$/
 const tokenOf = target => target?.connectionToken ?? target?.connectionDraftToken ?? target?.captureToken ?? target?.credentialDraftToken ?? target?.bindingToken ?? target?.permissionRequestToken
 const envelope = ['requestId', 'expectedRevision', 'profileId', 'hostGeneration', 'operation']
 const stable = value => JSON.stringify(value)
+const fingerprint = value => createHash('sha256').update(stable(value)).digest('hex')
 const schemaOk = (name, value, errors) => { if (!validators[name](value)) errors.push(`${name} schema invalid`) }
 
 function privateContext(value, name, errors) {
@@ -23,9 +25,9 @@ function privateContext(value, name, errors) {
   const tokens = new Map()
   if (!Array.isArray(value?.issuedTokens)) { errors.push(`${name} missing issued tokens`); return tokens }
   for (const record of value.issuedTokens) {
-    if (!record || typeof record !== 'object' || !tokenPattern.test(record.token) || !['connection', 'binding', 'credential-capture', 'credential-draft', 'connection-draft', 'permission-request', 'log-export'].includes(record.kind) || typeof record.operation !== 'string' || !Number.isInteger(record.issuedRevision) || typeof record.consumed !== 'boolean') { errors.push(`${name} malformed issued token`); continue }
+    if (!record || typeof record !== 'object' || !tokenPattern.test(record.token) || !['connection', 'binding', 'session', 'route', 'credential-capture', 'credential-draft', 'connection-draft', 'permission-request', 'log-cursor', 'log-export'].includes(record.kind) || typeof record.operation !== 'string' || !Number.isInteger(record.issuedRevision) || typeof record.consumed !== 'boolean') { errors.push(`${name} malformed issued token`); continue }
     if (record.profileId !== value.snapshot?.profileId || record.hostGeneration !== value.snapshot?.hostGeneration) { errors.push(`${name} token outside snapshot scope`); continue }
-    const ephemeral = ['credential-capture', 'credential-draft', 'connection-draft', 'permission-request', 'log-export'].includes(record.kind)
+    const ephemeral = ['credential-capture', 'credential-draft', 'connection-draft', 'permission-request', 'log-cursor', 'log-export'].includes(record.kind)
     if (ephemeral && (typeof record.expiresAt !== 'string' || Number.isNaN(Date.parse(record.expiresAt)) || (!record.consumed && Date.parse(record.expiresAt) <= Date.parse(value.authorizedAt)))) { errors.push(`${name} token expired`); continue }
     if (!ephemeral && record.expiresAt !== undefined) { errors.push(`${name} persistent token has expiry`); continue }
     if (tokens.has(record.token)) errors.push(`${name} duplicate issued token`)
@@ -50,10 +52,12 @@ function privateContext(value, name, errors) {
       } else if (!credential || credential.kind !== 'credential-draft' || credential.purpose !== 'create' || credential.adapterKind !== record.adapterKind) errors.push(`${name} invalid credentialed draft lineage`)
     } else if (record.kind === 'permission-request') {
       const pending = value.snapshot.pendingAuthorizations.find(item => item.permissionRequestToken === record.token)
-      if (!record.capability || !Array.isArray(record.allowedOperations) || (!record.consumed && stable(record.allowedOperations) !== stable(pending?.availableOperations)) || record.source !== 'host-pending-inbound' || !record.canonicalIdentity || !record.resolvedScope || !record.securityFingerprint || !record.inboxRecordId || !Number.isInteger(record.leaseGeneration)) errors.push(`${name} invalid permission lineage`)
+      if (!record.capability || !Array.isArray(record.allowedOperations) || stable(record.allowedOperations) !== stable(record.allowedOperations.slice().sort()) || (!record.consumed && stable(record.allowedOperations) !== stable(pending?.availableOperations)) || record.source !== 'host-pending-inbound' || !record.canonicalIdentity || typeof record.canonicalIdentity !== 'object' || Array.isArray(record.canonicalIdentity) || !Object.keys(record.canonicalIdentity).every(key => ['source', 'pluginId'].includes(key)) || typeof record.canonicalIdentity.source !== 'string' || (record.canonicalIdentity.pluginId !== undefined && typeof record.canonicalIdentity.pluginId !== 'string') || !['private', 'profile', 'workspace'].includes(record.resolvedScope) || !/^sha256:[a-f0-9]{64}$/.test(record.securityFingerprint) || typeof record.inboxRecordId !== 'string' || !/^[A-Za-z0-9._:-]{1,128}$/.test(record.inboxRecordId) || !Number.isInteger(record.leaseGeneration) || record.leaseGeneration < 0) errors.push(`${name} invalid permission lineage`)
     } else if (record.kind === 'binding') {
       const binding = value.snapshot.bindings.find(item => item.bindingToken === record.token)
-      if (!tokenPattern.test(record.connectionToken ?? '') || !tokenPattern.test(record.sessionToken ?? '') || !tokenPattern.test(record.routeToken ?? '') || !Number.isInteger(record.bindingRevision) || !binding || stable({ connectionToken: record.connectionToken, sessionToken: record.sessionToken, routeToken: record.routeToken, bindingRevision: record.bindingRevision }) !== stable({ connectionToken: binding.connectionToken, sessionToken: binding.sessionToken, routeToken: binding.routeToken, bindingRevision: binding.bindingRevision })) errors.push(`${name} invalid binding lineage`)
+      if (record.operation !== 'binding.open' || source(record.connectionToken)?.kind !== 'connection' || source(record.sessionToken)?.kind !== 'session' || source(record.routeToken)?.kind !== 'route' || !Number.isInteger(record.bindingRevision) || !binding || stable({ connectionToken: record.connectionToken, sessionToken: record.sessionToken, routeToken: record.routeToken, bindingRevision: record.bindingRevision }) !== stable({ connectionToken: binding.connectionToken, sessionToken: binding.sessionToken, routeToken: binding.routeToken, bindingRevision: binding.bindingRevision })) errors.push(`${name} invalid binding lineage`)
+    } else if (record.kind === 'log-cursor') {
+      if (record.operation !== 'logs.query' || !tokenPattern.test(record.connectionToken ?? '') || !Number.isInteger(record.snapshotRevision) || typeof record.queryFingerprint !== 'string' || !/^[a-f0-9]{64}$/.test(record.queryFingerprint)) errors.push(`${name} invalid log cursor lineage`)
     } else if (record.kind === 'log-export') {
       if (record.operation !== 'logs.export' || !tokenPattern.test(record.connectionToken ?? '') || !Number.isInteger(record.snapshotRevision) || !tokenPattern.test(record.sourceConnectionToken ?? '') || record.connectionToken !== record.sourceConnectionToken) errors.push(`${name} invalid log export lineage`)
     }
@@ -217,7 +221,7 @@ export function validateManagerTransition(result, request, preValue, postValue) 
   snapshotFence(preValue, postValue, request, result, errors, 'manager')
   snapshotDelta(preValue, postValue, request, result, errors, 'manager')
   if (result.status !== 'applied') { unchangedOnFailure(preValue, postValue, errors, 'manager'); return errors }
-  if (result.revision <= request.expectedRevision) errors.push('manager result revision did not advance')
+  if (result.revision !== request.expectedRevision + 1) errors.push('manager result revision mismatch')
   permitted(preValue.snapshot, request.target, request.operation, errors)
   const inputValue = tokenOf(request.target); const kinds = { connection: 'connection', 'connection-draft': 'connection-draft', 'credential-capture': 'credential-capture', binding: 'binding', log: 'connection', 'permission-request': 'permission-request' }
   const primary = pre.get(inputValue); token(primary, kinds[request.target.kind], request, errors, 'manager target')
@@ -265,7 +269,7 @@ export function validateManagerTransition(result, request, preValue, postValue) 
 
 export function validateLogResponse(response, request, contextValue, exportResult = false, postValue = contextValue) {
   const errors = []
-  schemaOk(exportResult ? 'logExport' : 'logPage', response, errors)
+  schemaOk('managerRequest', request, errors); schemaOk(exportResult ? 'logExport' : 'logPage', response, errors)
   const tokens = privateContext(contextValue, 'context', errors); const post = privateContext(postValue, 'log post', errors)
   if (errors.length) return errors
   if (request?.operation !== (exportResult ? 'logs.export' : 'logs.query')) errors.push('log request operation mismatch')
@@ -276,10 +280,23 @@ export function validateLogResponse(response, request, contextValue, exportResul
   permitted(contextValue.snapshot, request.target, request.operation, errors)
   if (!exportResult) {
     if (stable(contextValue.snapshot) !== stable(postValue.snapshot) || stable(contextValue.issuedTokens) !== stable(postValue.issuedTokens)) errors.push('log page changed state')
-    const query = request.query ?? { limit: 1000 }
+    const query = request.query
     if (!query || !Number.isInteger(query.limit) || query.limit < 1 || query.limit > 1000) errors.push('log query invalid')
     if (response.entries.length > query.limit) errors.push('log page exceeds limit')
-    for (const entry of response.entries) if (entry.connectionToken !== request.target.connectionToken) errors.push('log entry target mismatch')
+    for (const entry of response.entries) {
+      if (entry.connectionToken !== request.target.connectionToken) errors.push('log entry target mismatch')
+      if (query.filter?.levels && !query.filter.levels.includes(entry.level)) errors.push('log entry level filter mismatch')
+      if (query.filter?.events && !query.filter.events.includes(entry.event)) errors.push('log entry event filter mismatch')
+      if (entry.bindingToken) {
+        const binding = contextValue.snapshot.bindings.find(item => item.bindingToken === entry.bindingToken)
+        const privateBinding = tokens.get(entry.bindingToken)
+        if (!binding || privateBinding?.kind !== 'binding' || binding.connectionToken !== request.target.connectionToken) errors.push('log entry binding lineage mismatch')
+      }
+    }
+    if (response.nextCursor) {
+      const cursor = post.get(response.nextCursor)
+      if (!cursor || cursor.kind !== 'log-cursor' || cursor.consumed || cursor.connectionToken !== request.target.connectionToken || cursor.snapshotRevision !== contextValue.snapshot.revision || cursor.queryFingerprint !== fingerprint(query)) errors.push('log cursor registry mismatch')
+    }
   } else if (response.status === 'created') {
     if (stable(contextValue.snapshot) !== stable(postValue.snapshot)) errors.push('log export changed snapshot')
     const record = post.get(response.exportId)
