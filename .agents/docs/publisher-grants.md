@@ -17,7 +17,8 @@ remains usable through `expiresAt`.
 
 ## Commerce descriptor
 
-`commerce-descriptor.v1` is optional, stable discovery metadata. Its sole
+`commerce-descriptor.v1` is optional, stable discovery metadata. Marketplace
+feed version 4 is the first catalog envelope that may carry it. Its sole
 mode is `external-publisher-v1`; it names external HTTPS entry points and the
 authorization method/environment. Hosts label its primary action "前往开发者购买"
 (or the locale equivalent) and say that payment, refunds, and support are the

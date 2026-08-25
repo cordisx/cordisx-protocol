@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v4.schema.json",
+  "schemaVersion": 4,
+  "generatedAt": "2026-08-26T00:00:00Z",
+  "trust": {
+    "authority": "cordisx.marketplace.codeowners/v1",
+    "root": "https://example.com/marketplace.json",
+    "grantModel": "protected-merge-chain-v1",
+    "cryptographicAttestation": "unsupported"
+  },
+  "fallbackLocale": "en",
+  "name": "Example Marketplace",
+  "homepage": "https://example.com/marketplace",
+  "plugins": [{
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v4.schema.json",
+    "schemaVersion": 4,
+    "id": "notes-pro",
+    "fallbackLocale": "en",
+    "name": "Notes Pro",
+    "description": "A publisher-authorized notes plugin.",
+    "version": "1.3.0",
+    "source": "https://github.com/example/notes-pro",
+    "license": "Proprietary",
+    "compatibility": { "cordisx": "^0.1.0" },
+    "authors": [{ "name": "Example Publisher" }],
+    "commerce": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/commerce-descriptor.v1.schema.json",
+      "schemaVersion": 1,
+      "mode": "external-publisher-v1",
+      "purchaseUrl": "https://example.com/notes-pro/buy",
+      "authorization": { "method": "publisher-grant.v1", "environment": "live" }
+    }
+  }],
+  "official": [],
+  "certifications": []
+}
