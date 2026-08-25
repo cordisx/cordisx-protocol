@@ -1,0 +1,23 @@
+{
+  "case": "manager-result",
+  "value": {
+    "contract": "cordisx.channel-manager-result/v1",
+    "schemaVersion": 1,
+    "requestId": "request-refresh-7",
+    "expectedRevision": 7,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "connection.reconnect",
+    "target": {
+      "kind": "connection",
+      "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29"
+    },
+    "status": "applied",
+    "revision": 8,
+    "observedAt": "2026-08-25T01:01:00.000Z",
+    "accountId": "raw-account"
+  },
+  "expectedErrors": [
+    "/ must NOT have additional properties"
+  ]
+}

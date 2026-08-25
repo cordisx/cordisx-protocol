@@ -1,0 +1,39 @@
+{
+  "case": "snapshot-v2",
+  "value": {
+    "contract": "cordisx.channel-runtime-snapshot/v2",
+    "schemaVersion": 2,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "revision": 8,
+    "observedAt": "2026-08-25T01:00:00.000Z",
+    "availableOperations": [],
+    "accounts": [
+      {
+        "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29",
+        "adapterKind": "feishu",
+        "implementationStatus": "implemented",
+        "connectionState": "ready",
+        "configurationState": "ready",
+        "generation": 4,
+        "lastGoodRevision": 8,
+        "inbound": {
+          "pending": 0,
+          "retrying": 0,
+          "deadLetter": 0
+        },
+        "outbound": {
+          "pending": 0,
+          "retrying": 0,
+          "deadLetter": 0
+        },
+        "availableOperations": [],
+        "conversationId": "oc-forbidden"
+      }
+    ],
+    "bindings": []
+  },
+  "expectedErrors": [
+    "/accounts/0 must NOT have additional properties"
+  ]
+}

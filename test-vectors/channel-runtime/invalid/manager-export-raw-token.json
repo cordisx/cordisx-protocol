@@ -1,0 +1,24 @@
+{
+  "case": "log-export-result",
+  "value": {
+    "contract": "cordisx.channel-manager-log-export-result/v1",
+    "schemaVersion": 1,
+    "requestId": "request-export-8",
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "expectedRevision": 8,
+    "target": {
+      "kind": "log",
+      "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29"
+    },
+    "status": "created",
+    "observedAt": "2026-08-25T01:03:00.000Z",
+    "exportId": "raw-export-id",
+    "mimeType": "application/json",
+    "entryCount": 1,
+    "expiresAt": "2026-08-25T02:03:00.000Z"
+  },
+  "expectedErrors": [
+    "/exportId must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\""
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "case": "manager-result",
+  "value": {
+    "contract": "cordisx.channel-manager-result/v1",
+    "schemaVersion": 1,
+    "requestId": "capture-draft-1",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "credential.capture",
+    "target": { "kind": "credential-capture", "captureToken": "chm1_Y2FwdHVyZWNhcHR1cmVjYXB0dXJlY2FwdHVyZWNhcHR" },
+    "status": "applied",
+    "revision": 9,
+    "observedAt": "2026-08-25T01:01:00.000Z",
+    "credentialDraftToken": "chm1_Y3JlZGVudGlhbGNyZWRlbnRpYWxjcmVkZW50aWFsY3J"
+  }
+}

@@ -80,6 +80,27 @@ sourced user-only input, binding lineage, launcher-only secret references,
 redacted Manager descriptors, route/connection integrity, retry ordering,
 active binding uniqueness, and safe package entry resolution.
 
+Channel Manager v2 vectors additionally cover strict snapshot/request/result
+identity, profile and Host-generation fencing, operation-to-exact-target
+matching, stale-operation suppression, account-scoped safe-log pages, opaque
+expiring export handles, and adapter-neutral inbound intents preserved through
+the sourced gateway boundary. They deliberately reject unknown raw payload
+fields and do not carry credentials, local paths, callback bodies, or direct
+adapter objects.
+
+Manager operation and safe-log vectors also supply the required current v2
+snapshot plus Host-private issued-token context. The snapshot root, account,
+and binding `availableOperations` are the operation authorization source; a
+known token cannot grant an unavailable action. Snapshot tokens are not issued
+authority: the Host-private registry alone proves each exact target identity,
+kind, profile, Host generation, expiry, and (for a binding) current revision.
+Its `authorizedAt` is Host-authoritative request-received time, never a
+renderer or snapshot time. It is never a renderer-safe wire field. Log-page vectors bind every page to the originating
+`logs.query` request and reject request-id, expected-revision, snapshot-revision,
+or target drift. Every invalid Channel Manager vector also asserts its intended
+rejection message, so a newly-required context field cannot mask its original
+authorization, CAS, identity, or safe-log fence.
+
 Plugin lifecycle suites live in `plugin-lifecycle/valid` and
 `plugin-lifecycle/invalid`. They cover the frozen embedded package v1 plus
 separate-runtime-manifest package v2, all three explicit-local source forms,

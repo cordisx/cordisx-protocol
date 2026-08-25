@@ -1,0 +1,35 @@
+{
+  "case": "manager-result",
+  "value": {
+    "contract": "cordisx.channel-manager-result/v1",
+    "schemaVersion": 1,
+    "requestId": "request-refresh-7",
+    "expectedRevision": 7,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "connection.reconnect",
+    "target": {
+      "kind": "connection",
+      "connectionToken": "cli_aaba90fcc4389cb3"
+    },
+    "status": "applied",
+    "revision": 8,
+    "observedAt": "2026-08-25T01:01:00.000Z"
+  },
+  "expectedErrors": [
+    "/target must NOT have additional properties",
+    "/target must NOT have additional properties",
+    "/target must NOT have additional properties",
+    "/target must have required property 'bindingRevision'",
+    "/target must have required property 'bindingToken'",
+    "/target must have required property 'captureToken'",
+    "/target must have required property 'connectionDraftToken'",
+    "/target must match exactly one schema in oneOf",
+    "/target/connectionToken must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\"",
+    "/target/connectionToken must match pattern \"^chm1_[A-Za-z0-9_-]{43}$\"",
+    "/target/kind must be equal to constant",
+    "/target/kind must be equal to constant",
+    "/target/kind must be equal to constant",
+    "/target/kind must be equal to constant"
+  ]
+}

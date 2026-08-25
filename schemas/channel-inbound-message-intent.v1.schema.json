@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-inbound-message-intent.v1.schema.json",
+  "title": "CordisX Adapter-neutral Inbound Channel Message Intent v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "requestId", "expectedRevision", "profileId", "hostGeneration", "target", "event", "content", "receivedAt"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-inbound-message-intent/v1" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "$ref": "channel-manager-common.v1.schema.json#/$defs/requestId" },
+    "expectedRevision": { "$ref": "channel-manager-common.v1.schema.json#/$defs/revision" },
+    "profileId": { "$ref": "channel-manager-common.v1.schema.json#/$defs/profileId" },
+    "hostGeneration": { "$ref": "channel-manager-common.v1.schema.json#/$defs/hostGeneration" },
+    "target": { "$ref": "#/$defs/inboundTarget" },
+    "event": { "$ref": "channel-common.v1.schema.json#/$defs/eventRef" },
+    "content": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "channel-user-input.v1.schema.json#/$defs/contentBlock" } },
+    "receivedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "inboundTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "account"],
+      "properties": {
+        "kind": { "const": "inbound-message" },
+        "account": { "$ref": "channel-common.v1.schema.json#/$defs/tenantRef" }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "case": "manager-request",
+  "context": {
+    "snapshot": {
+      "contract": "cordisx.channel-runtime-snapshot/v2",
+      "schemaVersion": 2,
+      "profileId": "default",
+      "hostGeneration": "host-4",
+      "revision": 9,
+      "observedAt": "2026-08-25T01:00:00.000Z",
+      "availableOperations": [],
+      "accounts": [],
+      "bindings": []
+    },
+    "issuedTokens": [],
+    "authorizedAt": "2026-08-25T01:30:00.000Z"
+  },
+  "value": {
+    "contract": "cordisx.channel-manager-request/v1",
+    "schemaVersion": 1,
+    "requestId": "binding-archive-3",
+    "expectedRevision": 9,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "binding.archive",
+    "target": {
+      "kind": "binding",
+      "bindingToken": "chm1_YmluZGluZ2JpbmRpbmdiaW5kaW5nYmluZGluZ2JpbmR",
+      "bindingRevision": 3
+    }
+  },
+  "expectedErrors": [
+    "Channel Manager binding revision is stale",
+    "Channel Manager binding token was not issued by the Host",
+    "Channel Manager operation is not authorized by the current snapshot: binding.archive"
+  ]
+}

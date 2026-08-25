@@ -1,0 +1,57 @@
+{
+  "case": "manager-request",
+  "context": {
+    "snapshot": {
+      "contract": "cordisx.channel-runtime-snapshot/v2",
+      "schemaVersion": 2,
+      "profileId": "default",
+      "hostGeneration": "host-4",
+      "revision": 8,
+      "observedAt": "2026-08-25T01:00:00.000Z",
+      "availableOperations": [],
+      "accounts": [
+        {
+          "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29",
+          "adapterKind": "feishu",
+          "implementationStatus": "implemented",
+          "connectionState": "ready",
+          "configurationState": "ready",
+          "generation": 4,
+          "lastGoodRevision": 8,
+          "inbound": {
+            "pending": 0,
+            "retrying": 0,
+            "deadLetter": 0
+          },
+          "outbound": {
+            "pending": 0,
+            "retrying": 0,
+            "deadLetter": 0
+          },
+          "availableOperations": [
+            "connection.reconnect"
+          ]
+        }
+      ],
+      "bindings": []
+    },
+    "issuedTokens": [],
+    "authorizedAt": "2026-08-25T01:30:00.000Z"
+  },
+  "value": {
+    "contract": "cordisx.channel-manager-request/v1",
+    "schemaVersion": 1,
+    "requestId": "snapshot-token-unregistered",
+    "expectedRevision": 8,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "operation": "connection.reconnect",
+    "target": {
+      "kind": "connection",
+      "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29"
+    }
+  },
+  "expectedErrors": [
+    "Channel Manager connection token was not issued by the Host"
+  ]
+}

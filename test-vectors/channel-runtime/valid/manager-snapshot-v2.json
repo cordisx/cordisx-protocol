@@ -1,0 +1,38 @@
+{
+  "case": "snapshot-v2",
+  "value": {
+    "contract": "cordisx.channel-runtime-snapshot/v2",
+    "schemaVersion": 2,
+    "profileId": "default",
+    "hostGeneration": "host-4",
+    "revision": 7,
+    "observedAt": "2026-08-25T01:00:00.000Z",
+    "availableOperations": ["credential.capture", "connection.create"],
+    "accounts": [
+      {
+        "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29",
+        "adapterKind": "feishu",
+        "displayName": "Feishu demo",
+        "implementationStatus": "implemented",
+        "connectionState": "ready",
+        "configurationState": "ready",
+        "generation": 4,
+        "lastGoodRevision": 7,
+        "inbound": { "pending": 0, "retrying": 0, "deadLetter": 0 },
+        "outbound": { "pending": 0, "retrying": 0, "deadLetter": 0 },
+        "availableOperations": ["connection.rotate-credential", "connection.disable", "connection.reconnect"]
+      }
+    ],
+    "bindings": [
+      {
+        "bindingToken": "chm1_YmluZGluZ2JpbmRpbmdiaW5kaW5nYmluZGluZ2JpbmR",
+        "connectionToken": "chm1_Y29ubmVjdGlvbmNvbm5lY3Rpb25jb25uZWN0aW9uY29",
+        "sessionToken": "chm1_c2Vzc2lvbnNlc3Npb25zZXNzaW9uc2Vzc2lvbnNlc3N",
+        "routeToken": "chm1_cm91dGVyb3V0ZXJvdXRlcm91dGVyb3V0ZXJvdXRlcm9",
+        "bindingRevision": 3,
+        "state": "active",
+        "availableOperations": ["binding.open", "binding.archive", "binding.unbind"]
+      }
+    ]
+  }
+}
