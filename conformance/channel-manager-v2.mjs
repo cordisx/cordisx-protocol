@@ -23,16 +23,18 @@ function privateContext(value, name, errors) {
   const tokens = new Map()
   if (!Array.isArray(value?.issuedTokens)) { errors.push(`${name} missing issued tokens`); return tokens }
   for (const record of value.issuedTokens) {
-    if (!record || typeof record !== 'object' || !tokenPattern.test(record.token) || typeof record.kind !== 'string' || typeof record.operation !== 'string' || !Number.isInteger(record.issuedRevision) || typeof record.consumed !== 'boolean' || typeof record.expiresAt !== 'string' || Number.isNaN(Date.parse(record.expiresAt))) { errors.push(`${name} malformed issued token`); continue }
+    if (!record || typeof record !== 'object' || !tokenPattern.test(record.token) || !['connection', 'binding', 'credential-capture', 'credential-draft', 'connection-draft', 'permission-request', 'log-export'].includes(record.kind) || typeof record.operation !== 'string' || !Number.isInteger(record.issuedRevision) || typeof record.consumed !== 'boolean') { errors.push(`${name} malformed issued token`); continue }
     if (record.profileId !== value.snapshot?.profileId || record.hostGeneration !== value.snapshot?.hostGeneration) { errors.push(`${name} token outside snapshot scope`); continue }
-    if (Date.parse(record.expiresAt) <= Date.parse(value.authorizedAt)) { errors.push(`${name} token expired`); continue }
+    const ephemeral = ['credential-capture', 'credential-draft', 'connection-draft', 'permission-request', 'log-export'].includes(record.kind)
+    if (ephemeral && (typeof record.expiresAt !== 'string' || Number.isNaN(Date.parse(record.expiresAt)) || (!record.consumed && Date.parse(record.expiresAt) <= Date.parse(value.authorizedAt)))) { errors.push(`${name} token expired`); continue }
+    if (!ephemeral && record.expiresAt !== undefined) { errors.push(`${name} persistent token has expiry`); continue }
     if (tokens.has(record.token)) errors.push(`${name} duplicate issued token`)
     tokens.set(record.token, record)
   }
   for (const record of tokens.values()) {
     const source = reference => reference && tokens.get(reference)
     if (record.kind === 'connection') {
-      if (record.operation !== 'connection.create' || typeof record.adapterKind !== 'string' || !source(record.sourceConnectionDraftToken)) errors.push(`${name} invalid connection lineage`)
+      if (record.operation !== 'connection.create' || typeof record.adapterKind !== 'string' || !tokenPattern.test(record.sourceConnectionDraftToken ?? '')) errors.push(`${name} invalid connection lineage`)
     } else if (record.kind === 'credential-capture') {
       if (!['target.credential.capture.create', 'target.credential.capture.rotate'].includes(record.operation) || !['create', 'rotate'].includes(record.purpose) || typeof record.adapterKind !== 'string') errors.push(`${name} invalid capture lineage`)
       if ((record.purpose === 'rotate') !== Boolean(record.sourceConnectionToken)) errors.push(`${name} invalid capture source`)
@@ -47,7 +49,13 @@ function privateContext(value, name, errors) {
         if (record.adapterKind !== 'simulator' || record.sourceCredentialDraftToken) errors.push(`${name} invalid simulator draft lineage`)
       } else if (!credential || credential.kind !== 'credential-draft' || credential.purpose !== 'create' || credential.adapterKind !== record.adapterKind) errors.push(`${name} invalid credentialed draft lineage`)
     } else if (record.kind === 'permission-request') {
-      if (!record.capability || record.source !== 'host-pending-inbound' || !record.canonicalIdentity || !record.resolvedScope || !record.securityFingerprint || !record.inboxRecordId || !Number.isInteger(record.leaseGeneration)) errors.push(`${name} invalid permission lineage`)
+      const pending = value.snapshot.pendingAuthorizations.find(item => item.permissionRequestToken === record.token)
+      if (!record.capability || !Array.isArray(record.allowedOperations) || (!record.consumed && stable(record.allowedOperations) !== stable(pending?.availableOperations)) || record.source !== 'host-pending-inbound' || !record.canonicalIdentity || !record.resolvedScope || !record.securityFingerprint || !record.inboxRecordId || !Number.isInteger(record.leaseGeneration)) errors.push(`${name} invalid permission lineage`)
+    } else if (record.kind === 'binding') {
+      const binding = value.snapshot.bindings.find(item => item.bindingToken === record.token)
+      if (!tokenPattern.test(record.connectionToken ?? '') || !tokenPattern.test(record.sessionToken ?? '') || !tokenPattern.test(record.routeToken ?? '') || !Number.isInteger(record.bindingRevision) || !binding || stable({ connectionToken: record.connectionToken, sessionToken: record.sessionToken, routeToken: record.routeToken, bindingRevision: record.bindingRevision }) !== stable({ connectionToken: binding.connectionToken, sessionToken: binding.sessionToken, routeToken: binding.routeToken, bindingRevision: binding.bindingRevision })) errors.push(`${name} invalid binding lineage`)
+    } else if (record.kind === 'log-export') {
+      if (record.operation !== 'logs.export' || !tokenPattern.test(record.connectionToken ?? '') || !Number.isInteger(record.snapshotRevision) || !tokenPattern.test(record.sourceConnectionToken ?? '') || record.connectionToken !== record.sourceConnectionToken) errors.push(`${name} invalid log export lineage`)
     }
   }
   return tokens
@@ -60,7 +68,7 @@ function token(record, kind, request, errors, label) {
   if (!record) { errors.push(`${label} not issued`); return }
   if (record.kind !== kind) errors.push(`${label} wrong kind`)
   if (record.profileId !== request.profileId || record.hostGeneration !== request.hostGeneration) errors.push(`${label} wrong scope`)
-  if (record.issuedRevision !== request.expectedRevision) errors.push(`${label} wrong revision`)
+  if (['credential-capture', 'credential-draft', 'connection-draft', 'permission-request'].includes(kind) && record.issuedRevision !== request.expectedRevision) errors.push(`${label} wrong revision`)
 }
 function permitted(snapshot, target, operation, errors) {
   let operations
@@ -115,10 +123,36 @@ function snapshotDelta(preValue, postValue, request, result, errors, prefix) {
     if (!sameExceptRevision(before, after)) errors.push(`${prefix} capture changed snapshot`)
     return
   }
+  if (request.operation.startsWith('binding.')) {
+    const beforeBindings = new Map(before.bindings.map(binding => [binding.bindingToken, binding]))
+    const afterBindings = new Map(after.bindings.map(binding => [binding.bindingToken, binding]))
+    for (const [key, binding] of beforeBindings) {
+      if (key === request.target.bindingToken) continue
+      if (stable(binding) !== stable(afterBindings.get(key))) errors.push(`${prefix} changed unrelated binding`)
+    }
+    const beforeTarget = beforeBindings.get(request.target.bindingToken)
+    const target = afterBindings.get(request.target.bindingToken)
+    if (request.operation === 'binding.open') errors.push(`${prefix} binding.open is not advertised`)
+    else if (request.operation === 'binding.unbind' ? target !== undefined : target?.state !== (request.operation === 'binding.archive' ? 'archived' : 'active')) errors.push(`${prefix} binding delta mismatch`)
+    else if (target && stable({ ...target, state: beforeTarget?.state }) !== stable(beforeTarget)) errors.push(`${prefix} binding changed beyond state`)
+    if (stable(before.accounts) !== stable(after.accounts) || stable(before.pendingAuthorizations) !== stable(after.pendingAuthorizations)) errors.push(`${prefix} binding changed unrelated snapshot`)
+    return
+  }
   const sourceToken = request.target.connectionToken
   const beforeAccounts = before.accounts.filter(account => account.connectionToken !== sourceToken)
   const afterAccounts = after.accounts.filter(account => account.connectionToken !== sourceToken)
   if (stable(beforeAccounts) !== stable(afterAccounts) || stable(before.bindings) !== stable(after.bindings) || stable(before.pendingAuthorizations) !== stable(after.pendingAuthorizations)) errors.push(`${prefix} changed unrelated snapshot`)
+  const beforeTarget = before.accounts.find(account => account.connectionToken === sourceToken)
+  const afterTarget = after.accounts.find(account => account.connectionToken === sourceToken)
+  if (request.operation === 'connection.update') {
+    const beforeSafe = { ...beforeTarget }; const afterSafe = { ...afterTarget }; delete beforeSafe.displayName; delete afterSafe.displayName
+    const displayName = request.patch.displayName === undefined ? beforeTarget?.displayName : request.patch.displayName
+    if (stable(beforeSafe) !== stable(afterSafe) || afterTarget?.displayName !== displayName) errors.push(`${prefix} update account delta mismatch`)
+  } else if (['connection.enable', 'connection.disable', 'connection.reconnect'].includes(request.operation)) {
+    const expectedState = { 'connection.enable': 'starting', 'connection.disable': 'disabled', 'connection.reconnect': 'retrying' }[request.operation]
+    const beforeSafe = { ...beforeTarget }; const afterSafe = { ...afterTarget }; delete beforeSafe.connectionState; delete afterSafe.connectionState
+    if (afterTarget?.connectionState !== expectedState || stable(beforeSafe) !== stable(afterSafe)) errors.push(`${prefix} connection state delta mismatch`)
+  } else if (['connection.rotate-credential', 'logs.query', 'logs.export'].includes(request.operation) && stable(beforeTarget) !== stable(afterTarget)) errors.push(`${prefix} operation changed target snapshot`)
 }
 function exactTokenDelta(pre, post, inputToken, outputToken, errors, prefix) {
   for (const [key, before] of pre) {
@@ -188,6 +222,7 @@ export function validateManagerTransition(result, request, preValue, postValue) 
   const inputValue = tokenOf(request.target); const kinds = { connection: 'connection', 'connection-draft': 'connection-draft', 'credential-capture': 'credential-capture', binding: 'binding', log: 'connection', 'permission-request': 'permission-request' }
   const primary = pre.get(inputValue); token(primary, kinds[request.target.kind], request, errors, 'manager target')
   if (primary?.consumed) errors.push('manager target replayed')
+  if (request.target.kind === 'binding' && (primary?.bindingRevision !== request.target.bindingRevision || preValue.snapshot.bindings.find(binding => binding.bindingToken === inputValue)?.bindingRevision !== request.target.bindingRevision)) errors.push('binding revision mismatch')
   if (request.operation === 'credential.capture') {
     if (!['target.credential.capture.create', 'target.credential.capture.rotate'].includes(primary?.operation) || primary?.purpose !== primary?.operation.split('.').at(-1)) errors.push('capture target issuance lineage mismatch')
     inputConsumed(pre, post, inputValue, errors, 'capture target')
@@ -211,21 +246,27 @@ export function validateManagerTransition(result, request, preValue, postValue) 
     inputConsumed(pre, post, request.draft?.credentialDraftToken, errors, 'rotation credential draft')
     exactTokenDelta(pre, post, request.draft?.credentialDraftToken, undefined, errors, 'manager')
   } else if (request.operation.startsWith('permission.')) {
-    if (primary?.operation !== request.operation) errors.push('permission request operation mismatch')
+    if (primary?.operation !== request.operation || !primary?.allowedOperations?.includes(request.operation)) errors.push('permission request operation mismatch')
     inputConsumed(pre, post, inputValue, errors, 'permission request')
     const desired = request.operation.replace('permission.', '')
     const expected = desired === 'allow-once' ? 'granted-once' : desired === 'allow-persistent' ? 'granted-persistent' : 'denied'
     if (result.permission?.state !== expected || result.permission?.capability !== primary?.capability) errors.push('permission readback mismatch')
     if (primary?.source !== 'host-pending-inbound') errors.push('remote event cannot self-approve')
     exactTokenDelta(pre, post, inputValue, undefined, errors, 'manager')
+  } else if (request.operation.startsWith('binding.')) {
+    exactTokenDelta(pre, post, undefined, undefined, errors, 'manager')
+  } else if (request.operation.startsWith('logs.')) {
+    exactTokenDelta(pre, post, undefined, undefined, errors, 'manager')
+  } else {
+    exactTokenDelta(pre, post, undefined, undefined, errors, 'manager')
   }
   return errors
 }
 
-export function validateLogResponse(response, request, contextValue, exportResult = false) {
+export function validateLogResponse(response, request, contextValue, exportResult = false, postValue = contextValue) {
   const errors = []
   schemaOk(exportResult ? 'logExport' : 'logPage', response, errors)
-  const tokens = privateContext(contextValue, 'context', errors)
+  const tokens = privateContext(contextValue, 'context', errors); const post = privateContext(postValue, 'log post', errors)
   if (errors.length) return errors
   if (request?.operation !== (exportResult ? 'logs.export' : 'logs.query')) errors.push('log request operation mismatch')
   for (const field of ['requestId', 'expectedRevision', 'profileId', 'hostGeneration']) if (response?.[field] !== request?.[field]) errors.push(`log response ${field} mismatch`)
@@ -233,6 +274,18 @@ export function validateLogResponse(response, request, contextValue, exportResul
   if (!exportResult && response.snapshotRevision !== contextValue.snapshot.revision) errors.push('log response snapshot revision mismatch')
   token(tokens.get(request?.target?.connectionToken), 'connection', request, errors, 'log connection')
   permitted(contextValue.snapshot, request.target, request.operation, errors)
+  if (!exportResult) {
+    if (stable(contextValue.snapshot) !== stable(postValue.snapshot) || stable(contextValue.issuedTokens) !== stable(postValue.issuedTokens)) errors.push('log page changed state')
+    const query = request.query ?? { limit: 1000 }
+    if (!query || !Number.isInteger(query.limit) || query.limit < 1 || query.limit > 1000) errors.push('log query invalid')
+    if (response.entries.length > query.limit) errors.push('log page exceeds limit')
+    for (const entry of response.entries) if (entry.connectionToken !== request.target.connectionToken) errors.push('log entry target mismatch')
+  } else if (response.status === 'created') {
+    if (stable(contextValue.snapshot) !== stable(postValue.snapshot)) errors.push('log export changed snapshot')
+    const record = post.get(response.exportId)
+    if (!record || record.kind !== 'log-export' || record.consumed || record.connectionToken !== request.target.connectionToken || record.snapshotRevision !== contextValue.snapshot.revision || record.expiresAt !== response.expiresAt || record.issuedRevision !== request.expectedRevision) errors.push('log export registry mismatch')
+    exactTokenDelta(tokens, post, undefined, response.exportId, errors, 'log export')
+  }
   return errors
 }
 
@@ -243,11 +296,14 @@ const mutationAt = (value, pointer, replacement) => {
   for (const part of parts.slice(0, -1)) target = target[part]
   target[parts.at(-1)] = replacement
 }
-const requiredMutations = new Set(['permission-cross-decision', 'capture-create-to-rotate', 'simulator-to-feishu', 'create-unrelated-account', 'replay-connection-draft', 'extra-issued-token'])
+const requiredMutations = new Set(['permission-cross-decision', 'permission-private-field-mutation', 'capture-create-to-rotate', 'simulator-to-feishu', 'create-unrelated-account', 'replay-connection-draft', 'extra-issued-token', 'expired-capture', 'binding-cross-lineage', 'binding-revision-replay', 'selectors-change-display-name', 'unrelated-token-mutation', 'failure-state-mutation', 'log-result-expiry-mismatch', 'unknown-private-kind'])
 const seenMutations = new Set()
+const requiredVectors = new Set(['valid/persistent-connection-across-revision.json', 'valid/binding-archive-v2.json', 'valid/log-page-v2.json', 'valid/log-export-v2.json', 'invalid/permission-raw-scope.json', 'invalid/permission-token-unregistered.json', 'invalid/private-registry-mutations.json', 'invalid/operation-deltas.json', 'invalid/log-mutations.json'])
+const seenVectors = new Set()
 for (const kind of ['valid', 'invalid']) {
   const directory = path.join(root, 'test-vectors/channel-manager-v2', kind)
   for (const file of (await readdir(directory)).filter(file => file.endsWith('.json')).sort()) {
+    seenVectors.add(`${kind}/${file}`)
     const vector = JSON.parse(await readFile(path.join(directory, file), 'utf8'))
     const base = vector.baseFile ? JSON.parse(await readFile(path.join(root, 'test-vectors/channel-manager-v2/valid', vector.baseFile), 'utf8')) : vector.base
     const cases = vector.case === 'mutation-matrix'
@@ -255,12 +311,15 @@ for (const kind of ['valid', 'invalid']) {
       : [vector]
     for (const item of cases) {
       if (item.id) seenMutations.add(item.id)
-      const errors = item.case === 'target-transition' ? validateTargetTransition(item.result, item.request, item.preContext, item.postContext) : validateManagerTransition(item.result, item.request, item.preContext, item.postContext)
+      const errors = item.case === 'target-transition' ? validateTargetTransition(item.result, item.request, item.preContext, item.postContext)
+        : item.case === 'log-response' ? validateLogResponse(item.response, item.request, item.context, item.exportResult, item.postContext)
+          : validateManagerTransition(item.result, item.request, item.preContext, item.postContext)
       const expected = kind === 'valid' ? [] : item.expectedErrors
       if (stable([...errors].sort()) !== stable([...expected].sort())) { console.error(`${kind}/${file}${item.id ? `#${item.id}` : ''}`, { expected, errors }); failures += 1 }
     }
   }
 }
 for (const id of requiredMutations) if (!seenMutations.has(id)) { console.error(`missing required mutation: ${id}`); failures += 1 }
+for (const file of requiredVectors) if (!seenVectors.has(file)) { console.error(`missing required vector: ${file}`); failures += 1 }
 if (failures) throw new Error(`${failures} Channel Manager v2 transition vector(s) failed`)
 console.log('Channel Manager v2 transition conformance: all vectors passed')
