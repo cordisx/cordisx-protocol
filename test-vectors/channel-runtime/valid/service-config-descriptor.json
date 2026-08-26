@@ -9,6 +9,14 @@
       "serviceId": "simulator"
     },
     "scope": { "profileId": "work", "generation": "launcher-3" },
+    "schema": {
+      "id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-service-config.v1.schema.json",
+      "projection": {
+        "kind": "schemastery",
+        "envelope": { "type": "object", "properties": { "connections": { "type": "array" } } },
+        "form": { "version": 1, "fields": [{ "path": ["connections"], "presenter": { "version": 1, "kind": "array.object-page" } }] }
+      }
+    },
     "revision": 4,
     "lastGoodRevision": 4,
     "configApplies": "restart",
@@ -31,49 +39,7 @@
           "transport": { "mode": "websocket" },
           "secretState": "ready"
         }
-      ],
-      "routes": [
-        {
-          "id": "default",
-          "connection": { "adapterId": "simulator", "accountId": "local", "tenantId": "test" },
-          "enabled": true,
-          "policy": {
-            "conversationKinds": ["direct", "group"],
-            "allowedUserIds": ["alice"],
-            "groupTrigger": "mention-or-command",
-            "commandPrefixes": ["/cordisx"]
-          },
-          "task": {
-            "provider": { "id": "codex" },
-            "model": { "useDefault": true },
-            "profile": { "id": "work" },
-            "workspaceAlias": "cordisx"
-          },
-          "notifications": ["completion", "failure", "approval-required"]
-        }
-      ],
-      "reliability": {
-        "leaseMs": 30000,
-        "retry": {
-          "maxAttempts": 5,
-          "baseDelayMs": 1000,
-          "maxDelayMs": 60000,
-          "maxAgeMs": 86400000,
-          "jitterRatio": 0.2
-        },
-        "rateLimit": {
-          "perAccountPerMinute": 120,
-          "perUserPerMinute": 20,
-          "perConversationPerMinute": 60,
-          "maxConcurrent": 8,
-          "maxBacklog": 1000
-        },
-        "attachments": {
-          "maxFiles": 4,
-          "maxBytesPerFile": 10485760,
-          "allowedMediaTypes": ["image/png", "text/plain"]
-        }
-      }
+      ]
     }
   }
 }

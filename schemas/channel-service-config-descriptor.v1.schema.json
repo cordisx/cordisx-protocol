@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-service-config-descriptor.v1.schema.json",
-  "title": "CordisX Redacted Channel Service Configuration Descriptor v1",
+  "title": "CordisX Redacted Channel Connection Configuration Descriptor v1",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -9,6 +9,7 @@
     "schemaVersion",
     "identity",
     "scope",
+    "schema",
     "revision",
     "lastGoodRevision",
     "configApplies",
@@ -40,6 +41,7 @@
         }
       }
     },
+    "schema": { "$ref": "service-config-common.v1.schema.json#/$defs/schema" },
     "revision": { "type": "integer", "minimum": 0 },
     "lastGoodRevision": { "type": "integer", "minimum": 0 },
     "configApplies": { "const": "restart" },
@@ -47,22 +49,16 @@
     "configuration": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["contract", "schemaVersion", "connections", "routes", "reliability"],
+      "required": ["contract", "schemaVersion", "connections"],
       "properties": {
         "contract": { "const": "cordisx.channel-service-config/v1" },
         "schemaVersion": { "const": 1 },
         "connections": {
           "type": "array",
-          "minItems": 1,
+          "minItems": 0,
           "maxItems": 64,
           "items": { "$ref": "#/$defs/connectionProjection" }
-        },
-        "routes": {
-          "type": "array",
-          "maxItems": 256,
-          "items": { "$ref": "channel-service-config.v1.schema.json#/$defs/route" }
-        },
-        "reliability": { "$ref": "channel-service-config.v1.schema.json#/$defs/reliability" }
+        }
       }
     }
   },

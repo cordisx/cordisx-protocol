@@ -86,11 +86,12 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   generation-fenced Platform turn/approval lifecycle event; and
 - `platform-task-lifecycle-range.v1.schema.json`: one contiguous,
   cursor-replayable lifecycle event range for a complete Platform session;
-- `channel-service-config.v1.schema.json`: launcher-owned adapter connection,
-  route/task mapping, policy, notification, reliability, rate, and attachment
+- `channel-service-config.v1.schema.json`: launcher-owned adapter connection
   configuration with opaque credential references only;
-- `channel-service-config-descriptor.v1.schema.json`: redacted Host projection
-  for the dedicated Manager Channel settings page;
+- `channel-service-config-descriptor.v1.schema.json`: redacted Host-owned
+  Schemastery descriptor for the connection configuration;
+- `channel-task-routing-config.v1.schema.json`: optional consumer-owned task
+  subscription/routing configuration, separate from Channel core;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

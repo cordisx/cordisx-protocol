@@ -1,10 +1,10 @@
 # Channel runtime protocol
 
-Status: normative version 1 Channel data/configuration contracts, legacy
-version 2 runtime manifest, and configuration-complete version 3 runtime
-manifest. The host-neutral Channel core and simulator have landed in the owning
-Host repository; the production service loader, Manager Channel page, and real
-platform adapters remain separate delivery claims.
+Status: normative version 1 Channel connection contracts. Channel is a base
+messaging service: it connects accounts, durably receives and sends attributed
+messages, exposes Channel thread/session identity, emits normalized events,
+and reports health. It does not select a model, workspace, provider, task,
+notification policy, or downstream consumer.
 
 ## Contracts
 
@@ -14,8 +14,8 @@ The machine-readable contracts are:
   thread, user, and event identities;
 - `channel-user-input.v1.schema.json`: sourced, user-role-only input with
   quarantined attachment handles;
-- `channel-binding.v1.schema.json`: a persistent Channel endpoint to complete
-  Platform session binding;
+- `channel-binding.v1.schema.json`: an optional task-consumer binding; it is
+  not Channel-core state;
 - `channel-runtime-snapshot.v1.schema.json`: a bounded, redacted manager
   snapshot; and
 - `channel-runtime-snapshot.v2.schema.json`: the profile-scoped,
@@ -38,10 +38,12 @@ The machine-readable contracts are:
   `platform-task-lifecycle-range.v1.schema.json`: launcher-private
   create/follow-up acceptance and durable sanitized completion/failure/
   approval observation;
-- `channel-service-config.v1.schema.json`: launcher-only connections, routes,
-  task mappings, policy, notification, retry, rate, and attachment limits;
-- `channel-service-config-descriptor.v1.schema.json`: the Host-generated,
-  renderer-safe Manager projection with secret readiness only;
+- `channel-service-config.v1.schema.json`: launcher-only account connection
+  configuration, with opaque credential references only;
+- `channel-service-config-descriptor.v1.schema.json`: a Host-generated,
+  renderer-safe Schemastery descriptor for that connection configuration;
+- `channel-task-routing-config.v1.schema.json`: an optional consumer-owned
+  task routing document. It is intentionally separate from Channel core;
 - `plugin-manifest.v2.schema.json`: the preserved legacy Channel
   capabilities/service boundary; and
 - `plugin-manifest.v3.schema.json`: the same boundary plus mandatory explicit
@@ -55,27 +57,38 @@ without its configuration contract. A v3 Host may continue to accept v1
 renderer-only and v2 legacy manifests through their versioned paths, but it must
 not treat a v2 service as configuration-complete.
 
+## Channel-core service boundary
+
+The Channel core has exactly these responsibilities:
+
+- **connect**: activate and retire account transports using connection-only
+  configuration;
+- **receive**: validate, deduplicate, durably accept, and publish sourced
+  user messages;
+- **send**: queue and deliver a consumer-authored reply to a Channel thread;
+- **session and event**: preserve the complete Channel account/conversation/
+  thread/event identity without translating it into a Platform session; and
+- **health**: publish redacted per-connection state and bounded queue health.
+
+Other Node plugins consume the brokered event subscription and send interface.
+They never receive an adapter transport, queue/store handle, credential, or
+consumer configuration owned by another plugin. A task dispatcher is one such
+consumer, not a Channel dependency.
+
 ## Composite identities
 
 Display names and unqualified platform ids are never keys. The canonical
 Channel endpoint is:
 
 ```text
-(adapterId, accountId, tenantId, conversationId, threadId, routeId)
+(adapterId, accountId, tenantId, conversationId, threadId)
 ```
 
-The bound task identity remains:
-
-```text
-(providerId, remoteSessionId)
-```
-
-Every derived identity repeats its parent key fields deliberately. This keeps
+Every Channel identity repeats its parent key fields deliberately. This keeps
 serialized identities self-contained and prevents an account-local id from
-being separated from its adapter, account, or tenant. Conformance additionally
-requires `createdBy`, `createdFrom`, and `channel` in a binding to agree on
-their complete parent identity. If `createdFrom.actor` is present, it must be
-the complete `createdBy` user identity.
+being separated from its adapter, account, or tenant. An optional consumer
+binding may additionally use a Platform `(providerId, remoteSessionId)`, but
+that identity belongs to that consumer contract rather than Channel core.
 
 A direct conversation without a native topic uses its stable conversation id
 as `threadId` and `semantics=conversation`. A native topic uses
@@ -101,18 +114,14 @@ The existing plain-string Platform turn input is not a conforming Channel
 gateway. A host must preserve the sourced envelope through its Platform/Agent
 mapping before enabling real ingress.
 
-Workspace aliases and Provider Fleet lifecycle are specified separately in
+Workspace aliases and Provider Fleet lifecycle belong to an optional consumer
+and are specified separately in
 [`channel-task-gateway`](../channel-task-gateway/README.md). A Channel adapter
 cannot resolve an alias to an absolute cwd, and it cannot use the renderer
 current-connection Agent ledger as proof that an external provider turn
 completed.
 
-## Binding and replay
-
-`cordisx.channel-binding/v1` stores both complete identities, creator, source
-event, route, revision, and state. One endpoint plus route may have at most one
-active binding in a runtime snapshot. Rebinding creates a new revision/history
-record; it does not silently replace the previous task.
+## Event replay
 
 Adapters and the core provide at-least-once handling plus durable idempotency.
 The replay identity is `(adapterId, accountId, eventId)`. A duplicate returns
@@ -142,16 +151,15 @@ revision, dummy field, or Manager form. A configured service uses the exact
 Host schema and `restart` application mode: candidate validation, persistence,
 service-fiber replacement, and last-good publication form one fenced operation.
 
-The Channel config document covers every current user-controlled axis:
+The Channel config document covers only connection-owned axes:
 
 - tenant-qualified adapter connections, enabled state, official transport mode,
   and an optional Host-only `secretRef`;
-- route-to-connection mapping, allowed conversation/user ids, direct/group
-  triggers, command prefixes, and explicit provider/model/profile/workspace
-  selectors;
-- subscribed completion/failure/approval notifications; and
-- lease, bounded retry/backoff/age/jitter, account/user/conversation rate,
-  concurrency/backlog, and attachment limits.
+
+Task routing, trigger policy, downstream model/workspace selection,
+notifications, and task-specific retry policy are not legal fields in this
+document. A consumer that needs them owns a separate
+`channel-task-routing-config/v1` document and subscribes to Channel events.
 
 `secretRef` identifies a Host credential-store record; it is not credential
 material. It is legal only in the launcher-owned source config. It is removed
@@ -178,24 +186,24 @@ granted capabilities, and opaque secret handles. The module cannot choose or
 replace its canonical identity.
 
 The corresponding Host facade is narrow and launcher-owned. It supplies
-service lifecycle, clocks, sanitized logging, durable inbox/outbox and binding
-transactions, attachment quarantine handles, secret-handle operations, and a
-Channel task gateway. It supplies no renderer/DOM, CDP, raw bridge, generic
-app-server RPC, provider process handle, or exported secret value.
+service lifecycle, clocks, sanitized logging, durable inbound/outbound queues,
+attachment quarantine handles, secret-handle operations, and health snapshots.
+It supplies no renderer/DOM, CDP, raw bridge, generic app-server RPC, provider
+process handle, task gateway, or exported secret value.
 
 Service activation is staged. A candidate generation starts and validates
 before becoming current; failure retains the last-good generation. Replacement
 fences old claims and then calls its bounded dispose path. Restart recovers
-durable leases, queues, bindings, replay ids, cursor/checkpoint, generation,
-and last-good revision.
+durable queues, replay ids, cursor/checkpoint, generation, and last-good
+revision.
 
 The Host projects the runtime as a Node-side Cordis `channel` service. Adapter
 plugins contribute connections through fiber-owned effects; other Node plugins
-may consume only brokered connection-list, sourced-message subscription, and
-queued-send methods. The Host derives package source, plugin id, and generation
-from the requesting Cordis child context on every call. Callers cannot provide
-their own identity, receive the raw adapter connection, or retain a facade past
-generation disposal.
+may consume only brokered connection-list, sourced-message subscription,
+queued-send, and health methods. The Host derives package source, plugin id,
+and generation from the requesting Cordis child context on every call. Callers
+cannot provide their own identity, receive the raw adapter connection, or
+retain a facade past generation disposal.
 
 `channel.events.receive` is adapter authority to accept and durably normalize
 platform ingress. It does not grant a consumer plugin access to message
@@ -215,8 +223,6 @@ Channel adds these declarations to the existing Permission Broker model:
 | `channel.events.receive` | authenticate, persist, and normalize inbound events | required for inbound adapters |
 | `channel.events.subscribe` | consume sourced normalized messages across Node plugins | required for consumer subscriptions |
 | `channel.messages.send` | reply, notify, update, or recall where supported | required for bidirectional adapters |
-| `channel.bindings.read` | resolve endpoint/task bindings | required for query/continue |
-| `channel.bindings.write` | create, rebind, archive, or restore bindings | required for create/bind control |
 | `channel.attachments.read` | fetch and open quarantined inbound media | optional |
 
 Channel declarations may use only `channelAccounts`, `channelTenants`,
@@ -241,8 +247,10 @@ cannot approve itself.
   `planned`;
 - connection/secret readiness, generation, last-good revision, cursor age,
   bounded error code, and inbox/outbox counts; and
-- binding identity, complete Platform session reference, route, revision, and
-  state.
+
+Optional task-consumer products may project their own binding state through
+their own contract; a connection-only Channel core does not persist or project
+Platform sessions or task routes.
 
 It contains no credential, secret value, secret handle string, raw event,
 message text, attachment path, user content, or generic diagnostic payload.
@@ -254,7 +262,7 @@ plugin content never receives a raw bridge.
 `cordisx.channel-runtime-snapshot/v2` is an additive Manager projection; it
 does not alter the frozen v1 snapshot. It adds a complete `profileId`, the
 publishing `hostGeneration`, and a monotonically scoped `revision`. Its account
-and binding records use Host-issued, profile-local opaque tokens only: they do
+and optional consumer binding records use Host-issued, profile-local opaque tokens only: they do
 not project platform account, user, conversation, thread, route, or Platform
 session identifiers. Accounts and bindings declare only their currently
 executable operation ids. The Host uses those ids to decide whether to present
@@ -342,10 +350,11 @@ Manager data, a plugin configuration value, a log entry, or an inbound intent.
 ## Compatibility and delivery status
 
 The Channel facade may mirror a high-level DSH/OneWorks connection lifecycle
-(`define`, `start`, normalize, send, acknowledge, dispose), while its task
-methods continue to delegate to CordisX Platform and Agent APIs. Bare session
-ids, full message-batch mutation, adapter-authored system prompts, and raw
-launcher forwarding are not compatible behavior.
+(`define`, `start`, normalize, send, acknowledge, dispose). Task dispatch is
+not a Channel facade method: an optional consumer subscribes to sourced events
+and uses its own Platform/Agent authority. Bare session ids, full message-batch
+mutation, adapter-authored system prompts, and raw launcher forwarding are not
+compatible behavior.
 
 At this protocol revision:
 
@@ -375,12 +384,14 @@ At this protocol revision:
 ## Conformance
 
 `conformance/channel-runtime.mjs` validates every schema and fixture, manifest
-v2/v3 selection, explicit service configuration, duplicate capability/service,
-connection, and route identity, route/connection coverage, retry ordering,
-capability-family scope separation, binding lineage, active-binding uniqueness,
-account coverage, and renderer-secret exclusion. The mandatory simulator and
-real-adapter matrices live in the owning host architecture and implementation
-suites; protocol vectors do not substitute for transport or renderer smoke.
+v2/v3 selection, explicit service configuration, duplicate capability/service
+and connection identity, capability-family scope separation, account coverage,
+Schemastery descriptor projection, and renderer-secret exclusion.
+`conformance/channel-task-gateway.mjs` separately validates the optional task
+consumer routing configuration plus its private gateway contracts. The
+mandatory simulator and real-adapter matrices live in the owning Host
+architecture and implementation suites; protocol vectors do not substitute for
+transport or renderer smoke.
 
 ## Channel Manager bootstrap v2/v3
 

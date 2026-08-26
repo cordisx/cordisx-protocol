@@ -1,0 +1,9 @@
+{
+  "case": "config",
+  "value": {
+    "contract": "cordisx.channel-service-config/v1",
+    "schemaVersion": 1,
+    "connections": [],
+    "routes": []
+  }
+}

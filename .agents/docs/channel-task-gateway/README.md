@@ -1,19 +1,20 @@
 # Channel task gateway protocol
 
-Status: normative version 1 launcher-private task launch and Platform task
-lifecycle contracts. They are adapter-neutral prerequisites; their presence
-does not claim that a Host has wired a real provider or that a Channel adapter
-has completed an end-to-end task.
+Status: normative version 1 launcher-private task-consumer launch and Platform
+task lifecycle contracts. They are adapter-neutral prerequisites; their
+presence does not claim that a Host has wired a real provider or that a Channel
+adapter has completed an end-to-end task.
 
 ## Ownership and boundary
 
-Channel routes keep only selectors: provider, model, profile, and a stable
-workspace alias. The Node Channel service and adapters cannot translate an
-alias to a path, read a workspace registry, choose an unauthorized default, or
-call a Provider Fleet directly. The launcher owns one resolver/authorization
-authority and one Platform task lifecycle ledger.
+An optional task consumer owns `channel-task-routing-config/v1`, including its
+subscription policy, provider/model/profile/workspace selectors, and
+notifications. The Node Channel service and adapters never read that document,
+translate an alias to a path, read a workspace registry, choose an unauthorized
+default, or call a Provider Fleet directly. The launcher owns one
+resolver/authorization authority and one Platform task lifecycle ledger.
 
-The contracts are launcher-private:
+The task-consumer contracts are launcher-private:
 
 - `channel-task-launch-request.v1.schema.json` carries the exact Channel
   operation, route, service generation, configuration revision, complete
@@ -29,12 +30,13 @@ The contracts are launcher-private:
   `platform-task-lifecycle-range.v1.schema.json` expose sanitized, durable,
   cursor-replayable launcher events for that complete Platform session.
 
-None is a renderer, Manager, plugin Config, Channel safe-log, public adapter
-transport, or current-connection Agent event contract. A Host must not install
-their values into a CDP binding. In particular the resolved `cwd`, grant token,
-scope fingerprint, complete Channel source, raw provider notification, and
-provider callback stay in Node. A renderer-safe Channel projection may show a
-configured workspace alias, but never its resolution or launch authority.
+None is a renderer, Manager, Channel-core configuration, plugin Config,
+Channel safe-log, public adapter transport, or current-connection Agent event
+contract. A Host must not install their values into a CDP binding. In
+particular the resolved `cwd`, grant token, scope fingerprint, complete Channel
+source, raw provider notification, and provider callback stay in Node. A
+renderer-safe task-consumer projection may show a configured workspace alias,
+but never its resolution or launch authority.
 
 The existing Platform session contract has its own permission-scoped `cwd`
 projection. This gateway does not copy a Channel workspace grant into that
