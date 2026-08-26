@@ -1,25 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-service-config.v1.schema.json",
-  "title": "CordisX Launcher-owned Channel Service Configuration v1",
+  "title": "CordisX Launcher-owned Channel Connection Configuration v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contract", "schemaVersion", "connections", "routes", "reliability"],
+  "required": ["contract", "schemaVersion", "connections"],
   "properties": {
     "contract": { "const": "cordisx.channel-service-config/v1" },
     "schemaVersion": { "const": 1 },
     "connections": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 0,
       "maxItems": 64,
       "items": { "$ref": "#/$defs/connection" }
-    },
-    "routes": {
-      "type": "array",
-      "maxItems": 256,
-      "items": { "$ref": "#/$defs/route" }
-    },
-    "reliability": { "$ref": "#/$defs/reliability" }
+    }
   },
   "$defs": {
     "adapterKind": {
@@ -110,159 +104,6 @@
           }
         }
       ]
-    },
-    "selector": {
-      "oneOf": [
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["useDefault"],
-          "properties": { "useDefault": { "const": true } }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["id"],
-          "properties": {
-            "id": { "type": "string", "minLength": 1, "maxLength": 128 }
-          }
-        }
-      ]
-    },
-    "idList": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 256,
-      "uniqueItems": true,
-      "items": { "$ref": "channel-common.v1.schema.json#/$defs/opaqueId" }
-    },
-    "routePolicy": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "conversationKinds": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 3,
-          "uniqueItems": true,
-          "items": { "enum": ["direct", "group", "broadcast"] }
-        },
-        "allowedUserIds": { "$ref": "#/$defs/idList" },
-        "allowedConversationIds": { "$ref": "#/$defs/idList" },
-        "groupTrigger": { "enum": ["deny", "mention", "reply", "command", "mention-or-command"] },
-        "commandPrefixes": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 16,
-          "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1, "maxLength": 32 }
-        }
-      },
-      "allOf": [
-        {
-          "if": {
-            "type": "object",
-            "required": ["groupTrigger"],
-            "properties": { "groupTrigger": { "enum": ["command", "mention-or-command"] } }
-          },
-          "then": {
-            "type": "object",
-            "required": ["commandPrefixes"],
-            "properties": { "commandPrefixes": true }
-          }
-        }
-      ]
-    },
-    "taskMapping": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["provider", "model", "profile", "workspaceAlias"],
-      "properties": {
-        "provider": { "$ref": "#/$defs/selector" },
-        "model": { "$ref": "#/$defs/selector" },
-        "profile": { "$ref": "#/$defs/selector" },
-        "workspaceAlias": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 128,
-          "pattern": "^[a-z0-9][a-z0-9._-]*$"
-        }
-      }
-    },
-    "route": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "connection", "enabled", "policy", "task", "notifications"],
-      "properties": {
-        "id": { "$ref": "channel-common.v1.schema.json#/$defs/opaqueId" },
-        "connection": { "$ref": "channel-common.v1.schema.json#/$defs/tenantRef" },
-        "enabled": { "type": "boolean" },
-        "policy": { "$ref": "#/$defs/routePolicy" },
-        "task": { "$ref": "#/$defs/taskMapping" },
-        "notifications": {
-          "type": "array",
-          "maxItems": 5,
-          "uniqueItems": true,
-          "items": {
-            "enum": ["completion", "failure", "approval-required", "approval-resolved", "approval-expired"]
-          }
-        }
-      }
-    },
-    "retry": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["maxAttempts", "baseDelayMs", "maxDelayMs", "maxAgeMs", "jitterRatio"],
-      "properties": {
-        "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 100 },
-        "baseDelayMs": { "type": "integer", "minimum": 1, "maximum": 3600000 },
-        "maxDelayMs": { "type": "integer", "minimum": 1, "maximum": 86400000 },
-        "maxAgeMs": { "type": "integer", "minimum": 1000, "maximum": 2592000000 },
-        "jitterRatio": { "type": "number", "minimum": 0, "maximum": 1 }
-      }
-    },
-    "rateLimit": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["perAccountPerMinute", "perUserPerMinute", "perConversationPerMinute", "maxConcurrent", "maxBacklog"],
-      "properties": {
-        "perAccountPerMinute": { "type": "integer", "minimum": 1, "maximum": 100000 },
-        "perUserPerMinute": { "type": "integer", "minimum": 1, "maximum": 10000 },
-        "perConversationPerMinute": { "type": "integer", "minimum": 1, "maximum": 10000 },
-        "maxConcurrent": { "type": "integer", "minimum": 1, "maximum": 1000 },
-        "maxBacklog": { "type": "integer", "minimum": 1, "maximum": 100000 }
-      }
-    },
-    "attachments": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["maxFiles", "maxBytesPerFile", "allowedMediaTypes"],
-      "properties": {
-        "maxFiles": { "type": "integer", "minimum": 0, "maximum": 32 },
-        "maxBytesPerFile": { "type": "integer", "minimum": 1, "maximum": 1073741824 },
-        "allowedMediaTypes": {
-          "type": "array",
-          "maxItems": 64,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 127,
-            "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+*-]+$"
-          }
-        }
-      }
-    },
-    "reliability": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["leaseMs", "retry", "rateLimit", "attachments"],
-      "properties": {
-        "leaseMs": { "type": "integer", "minimum": 1000, "maximum": 3600000 },
-        "retry": { "$ref": "#/$defs/retry" },
-        "rateLimit": { "$ref": "#/$defs/rateLimit" },
-        "attachments": { "$ref": "#/$defs/attachments" }
-      }
     }
   }
 }

@@ -1,0 +1,20 @@
+{
+  "case": "routing-config",
+  "value": {
+    "contract": "cordisx.channel-task-routing-config/v1",
+    "schemaVersion": 1,
+    "subscriptions": [{
+      "id": "codex-work",
+      "connection": { "adapterId": "simulator", "accountId": "local", "tenantId": "test" },
+      "enabled": true,
+      "policy": { "conversationKinds": ["direct"], "allowedUserIds": ["alice"] },
+      "task": {
+        "provider": { "id": "codex" },
+        "model": { "useDefault": true },
+        "profile": { "id": "work" },
+        "workspaceAlias": "cordisx"
+      },
+      "notifications": ["completion", "failure"]
+    }]
+  }
+}

@@ -27,9 +27,9 @@
       "additionalProperties": false,
       "required": ["provider", "model", "profile", "workspaceAlias"],
       "properties": {
-        "provider": { "$ref": "channel-service-config.v1.schema.json#/$defs/selector" },
-        "model": { "$ref": "channel-service-config.v1.schema.json#/$defs/selector" },
-        "profile": { "$ref": "channel-service-config.v1.schema.json#/$defs/selector" },
+        "provider": { "$ref": "channel-task-routing-config.v1.schema.json#/$defs/selector" },
+        "model": { "$ref": "channel-task-routing-config.v1.schema.json#/$defs/selector" },
+        "profile": { "$ref": "channel-task-routing-config.v1.schema.json#/$defs/selector" },
         "workspaceAlias": { "$ref": "#/$defs/workspaceAlias" }
       }
     }

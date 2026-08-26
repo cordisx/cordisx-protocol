@@ -1,0 +1,9 @@
+{
+  "case": "routing-config",
+  "value": {
+    "contract": "cordisx.channel-task-routing-config/v1",
+    "schemaVersion": 1,
+    "connections": [],
+    "subscriptions": []
+  }
+}

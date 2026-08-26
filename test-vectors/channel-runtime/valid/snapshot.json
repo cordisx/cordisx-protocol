@@ -17,40 +17,6 @@
         "inbound": { "pending": 0, "retrying": 0, "deadLetter": 0 },
         "outbound": { "pending": 1, "retrying": 0, "deadLetter": 0 }
       }
-    ],
-    "bindings": [
-      {
-        "bindingId": "binding-codex",
-        "channel": {
-          "adapterId": "simulator",
-          "accountId": "local",
-          "tenantId": "test",
-          "conversationId": "direct-alice",
-          "kind": "direct",
-          "threadId": "direct-alice",
-          "semantics": "conversation"
-        },
-        "session": { "providerId": "codex", "remoteSessionId": "thread-1" },
-        "routeId": "default",
-        "revision": 1,
-        "state": "active"
-      },
-      {
-        "bindingId": "binding-zcode",
-        "channel": {
-          "adapterId": "simulator",
-          "accountId": "local",
-          "tenantId": "test",
-          "conversationId": "direct-alice",
-          "kind": "direct",
-          "threadId": "direct-alice",
-          "semantics": "conversation"
-        },
-        "session": { "providerId": "zcode", "remoteSessionId": "thread-1" },
-        "routeId": "alternate",
-        "revision": 1,
-        "state": "active"
-      }
     ]
   }
 }

@@ -9,7 +9,7 @@ const schemaNames = [
   'platform-model.v1.schema.json',
   'platform-session.v1.schema.json',
   'channel-common.v1.schema.json',
-  'channel-service-config.v1.schema.json',
+  'channel-task-routing-config.v1.schema.json',
   'channel-task-launch-request.v1.schema.json',
   'channel-task-launch-authorization.v1.schema.json',
   'platform-task-dispatch-result.v1.schema.json',
@@ -32,6 +32,7 @@ function schemaValidator(name) {
 }
 
 const validators = {
+  routing: schemaValidator('channel-task-routing-config.v1.schema.json'),
   request: schemaValidator('channel-task-launch-request.v1.schema.json'),
   authorization: schemaValidator('channel-task-launch-authorization.v1.schema.json'),
   dispatch: schemaValidator('platform-task-dispatch-result.v1.schema.json'),
@@ -67,6 +68,17 @@ function validateSource(source, label) {
 export function validateLaunchRequest(request) {
   if (!validators.request(request)) return validatorErrors(validators.request)
   return validateSource(request.source, 'launch request source')
+}
+
+export function validateTaskRoutingConfig(config) {
+  if (!validators.routing(config)) return validatorErrors(validators.routing)
+  const ids = new Set()
+  const errors = []
+  for (const subscription of config.subscriptions) {
+    if (ids.has(subscription.id)) errors.push(`duplicate consumer subscription: ${subscription.id}`)
+    ids.add(subscription.id)
+  }
+  return errors
 }
 
 function validateGrantContext(grant, context) {
@@ -184,6 +196,7 @@ export function validateLifecycleRange(range) {
 }
 
 const caseValidators = {
+  'routing-config': vector => validateTaskRoutingConfig(vector.value),
   'launch-request': vector => validateLaunchRequest(vector.value),
   'launch-authorization': vector => validateLaunchAuthorization(vector.value, vector.request, vector.context),
   'dispatch-result': vector => validateDispatchResult(vector.value),
@@ -225,6 +238,23 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/channel-task-ga
       expected: vector.expectedErrors,
       actual: errors,
     })
+    failures += 1
+  }
+}
+
+for (const file of await jsonFiles(path.join(root, 'test-vectors/channel-task-routing/valid'))) {
+  const vector = JSON.parse(await readFile(file, 'utf8'))
+  const errors = validateTaskRoutingConfig(vector.value)
+  if (errors.length > 0) {
+    console.error(`${path.relative(root, file)} should be valid`, errors)
+    failures += 1
+  }
+}
+for (const file of await jsonFiles(path.join(root, 'test-vectors/channel-task-routing/invalid'))) {
+  const vector = JSON.parse(await readFile(file, 'utf8'))
+  const errors = validateTaskRoutingConfig(vector.value)
+  if (errors.length === 0) {
+    console.error(`${path.relative(root, file)} should be invalid`)
     failures += 1
   }
 }

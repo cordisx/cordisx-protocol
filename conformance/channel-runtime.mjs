@@ -8,6 +8,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const schemaNames = [
   'ui-common.v1.schema.json',
   'extension-point-common.v1.schema.json',
+  'plugin-config-common.v1.schema.json',
+  'plugin-config-common.v2.schema.json',
+  'service-config-common.v1.schema.json',
   'platform-model.v1.schema.json',
   'platform-session.v1.schema.json',
   'channel-common.v1.schema.json',
@@ -83,14 +86,6 @@ function userKey(ref) {
   return JSON.stringify([ref.adapterId, ref.accountId, ref.tenantId, ref.userId])
 }
 
-function sessionKey(ref) {
-  return JSON.stringify([ref.providerId, ref.remoteSessionId])
-}
-
-function endpointRouteKey(binding) {
-  return JSON.stringify([threadKey(binding.channel), binding.routeId])
-}
-
 function validateEventActor(event, label) {
   if (event.actor === undefined || tenantKey(event.actor) === tenantKey(event)) return []
   return [`${label} actor is outside the event account/tenant`]
@@ -135,7 +130,7 @@ export function validateManifest(manifest) {
   return errors
 }
 
-function validateConfiguredTopology(config) {
+function validateConfiguredConnections(config) {
   const errors = []
   const connections = new Set()
   for (const connection of config.connections) {
@@ -144,31 +139,20 @@ function validateConfiguredTopology(config) {
     connections.add(key)
   }
 
-  const routes = new Set()
-  for (const route of config.routes) {
-    if (routes.has(route.id)) errors.push(`duplicate configured route: ${route.id}`)
-    routes.add(route.id)
-    if (!connections.has(tenantKey(route.connection))) {
-      errors.push(`configured route ${route.id} references a missing connection`)
-    }
-  }
-  if (config.reliability.retry.baseDelayMs > config.reliability.retry.maxDelayMs) {
-    errors.push('retry baseDelayMs exceeds maxDelayMs')
-  }
-  if (config.reliability.retry.maxDelayMs > config.reliability.retry.maxAgeMs) {
-    errors.push('retry maxDelayMs exceeds maxAgeMs')
-  }
   return errors
 }
 
 export function validateServiceConfig(config) {
   if (!validators.config(config)) return validatorErrors(validators.config)
-  return validateConfiguredTopology(config)
+  return validateConfiguredConnections(config)
 }
 
 export function validateServiceConfigDescriptor(descriptor) {
   if (!validators.configDescriptor(descriptor)) return validatorErrors(validators.configDescriptor)
-  const errors = validateConfiguredTopology(descriptor.configuration)
+  const errors = validateConfiguredConnections(descriptor.configuration)
+  if (descriptor.schema?.projection?.kind !== 'schemastery') {
+    errors.push('Channel connection descriptor must use a Host-owned Schemastery projection')
+  }
   if (descriptor.lastGoodRevision > descriptor.revision) {
     errors.push('Channel service config lastGoodRevision exceeds revision')
   }
@@ -212,24 +196,6 @@ export function validateSnapshot(snapshot) {
     accountRefs.add(key)
   }
 
-  const bindingIds = new Set()
-  const activeEndpoints = new Set()
-  const sessionRefs = new Set()
-  for (const binding of snapshot.bindings) {
-    if (bindingIds.has(binding.bindingId)) {
-      errors.push(`duplicate binding id: ${binding.bindingId}`)
-    }
-    bindingIds.add(binding.bindingId)
-    sessionRefs.add(sessionKey(binding.session))
-    if (!accountRefs.has(tenantKey(binding.channel))) {
-      errors.push(`binding ${binding.bindingId} has no account snapshot`)
-    }
-    if (binding.state === 'active') {
-      const key = endpointRouteKey(binding)
-      if (activeEndpoints.has(key)) errors.push(`duplicate active endpoint/route: ${key}`)
-      activeEndpoints.add(key)
-    }
-  }
   return errors
 }
 

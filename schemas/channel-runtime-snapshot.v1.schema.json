@@ -4,7 +4,7 @@
   "title": "CordisX Redacted Channel Runtime Snapshot v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contract", "schemaVersion", "observedAt", "accounts", "bindings"],
+  "required": ["contract", "schemaVersion", "observedAt", "accounts"],
   "properties": {
     "contract": { "const": "cordisx.channel-runtime-snapshot/v1" },
     "schemaVersion": { "const": 1 },
@@ -13,11 +13,6 @@
       "type": "array",
       "maxItems": 256,
       "items": { "$ref": "#/$defs/accountSnapshot" }
-    },
-    "bindings": {
-      "type": "array",
-      "maxItems": 10000,
-      "items": { "$ref": "#/$defs/bindingSnapshot" }
     }
   },
   "$defs": {
@@ -77,19 +72,6 @@
         },
         "inbound": { "$ref": "#/$defs/queueSnapshot" },
         "outbound": { "$ref": "#/$defs/queueSnapshot" }
-      }
-    },
-    "bindingSnapshot": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["bindingId", "channel", "session", "routeId", "revision", "state"],
-      "properties": {
-        "bindingId": { "$ref": "channel-common.v1.schema.json#/$defs/opaqueId" },
-        "channel": { "$ref": "channel-common.v1.schema.json#/$defs/threadRef" },
-        "session": { "$ref": "platform-session.v1.schema.json#/$defs/sessionRef" },
-        "routeId": { "$ref": "channel-common.v1.schema.json#/$defs/opaqueId" },
-        "revision": { "type": "integer", "minimum": 1 },
-        "state": { "enum": ["active", "archived", "unavailable"] }
       }
     }
   }
