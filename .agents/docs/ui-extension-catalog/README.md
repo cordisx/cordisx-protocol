@@ -84,6 +84,13 @@ continuity, restoration, and cleanup. The complete behavior and failure rules
 are specified by
 [`reasoning-intensity-presentation`](../reasoning-intensity-presentation/README.md).
 
+Version 7 adds `session.backdrop` with the separate
+`session-backdrop-presentation` family. It is a pointer-inert, Host-owned
+session stage driven by the native reasoning value. Plugins provide closed
+material/ambience tokens and bounded embedded PNG portraits; the Host owns
+decoding, responsive placement, contrast, motion, and cleanup. See
+[`session-backdrop-presentation`](../session-backdrop-presentation/README.md).
+
 Contribution options retain `group`, `order`, `when`, and disabled state. The
 host decides direct-action capacity, overflow, keyboard hints, focus,
 accessibility, error presentation, and native-menu integration. A contribution
