@@ -27,6 +27,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `surface-contribution.v6.schema.json`: the additive Host-owned native
   reasoning-intensity presentation family with bounded variant, motion, and
   semantic material stages;
+- `surface-contribution.v7.schema.json`: the additive session backdrop
+  presentation family driven by native reasoning progress, with closed ambience
+  tokens and bounded embedded PNG portraits;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `route.v2.schema.json`: route-v1 navigation fields plus required localized
   product title and description metadata;
