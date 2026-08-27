@@ -20,8 +20,10 @@ Specified areas:
   opaque pagination/tail, payload policy, provenance, and privacy contract
   version 1.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
-  structured contribution versions 2 and 3, availability, contextual
+  structured contribution versions 2 through 6, availability, contextual
   invocation, DSH intent mapping, and explicit replacement refusals.
+- `reasoning-intensity-presentation/`: Host-owned projection of the native
+  reasoning range with bounded semantic material stages and strict cleanup.
 - `manager-settings-tabs/`: structured Manager settings content-tab surface
   versions 4/5, catalog versions 3/4, controlled body-only outlet,
   deterministic projection, authorization origin, and lifecycle.

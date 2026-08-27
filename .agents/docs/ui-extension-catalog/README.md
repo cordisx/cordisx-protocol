@@ -1,7 +1,7 @@
 # UI extension catalog protocol
 
 This specification is normative for the host-neutral CordisX UI extension
-catalog, structured surface contribution versions 2 through 5, and host-generated
+catalog, structured surface contribution versions 2 through 6, and host-generated
 invocation context version 1. It is independent of Codex selectors, React,
 native DOM layout, and distribution format.
 
@@ -75,6 +75,15 @@ of localized destination title and description. Page v3 must declare a
 `host:*` icon for this point and is the sole icon source for both navigation
 and the standard page header.
 
+Version 6 adds `composer.reasoning-intensity` with the separate
+`reasoning-intensity-presentation` family. It is a Host-owned projection of a
+uniquely resolved native range, not whole-composer replacement. The plugin
+supplies only a localized title and ordered semantic material stages; the Host
+owns native discovery, visual rendering, motion, focus, accessibility, event
+continuity, restoration, and cleanup. The complete behavior and failure rules
+are specified by
+[`reasoning-intensity-presentation`](../reasoning-intensity-presentation/README.md).
+
 Contribution options retain `group`, `order`, `when`, and disabled state. The
 host decides direct-action capacity, overflow, keyboard hints, focus,
 accessibility, error presentation, and native-menu integration. A contribution
@@ -135,7 +144,8 @@ The complete version-2 vocabulary contains the eleven v1 surfaces plus:
   `session.message.actions`, `session.turn.footer`, and
   `session.tool.actions`;
 - `composer.toolbar.items`, `composer.command-menu.items`,
-  `composer.dock.above`, and `composer.dock.below`;
+  `composer.reasoning-intensity`, `composer.dock.above`, and
+  `composer.dock.below`;
 - `sidebar.workspace.menu`, `sidebar.session.actions`, and
   `sidebar.session.menu`;
 - `panel.right.header-actions`, `panel.right.tabs`,
@@ -188,3 +198,8 @@ description, or icon duplicated inside a navigation item, a missing/non-host
 page icon, DOM/CSS/selector/header callbacks, or a qualified cross-owner route. Catalog v4,
 route v2, and page v3 remain closed, so older validators reject them rather
 than projecting incomplete navigation or headers.
+
+Version 6 additionally fails closed on arbitrary visual code or assets,
+unknown variants, motion modes or material tokens, fewer than two or more than
+eight stages, and any attempt to select, hide, or mutate native DOM from the
+contribution.

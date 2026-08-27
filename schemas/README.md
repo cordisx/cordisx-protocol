@@ -24,6 +24,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   content-tab family plus top-level settings-adjacent navigation items with a
   same-owner route and closed before/after Settings groups; route-v2/page-v3
   metadata supplies all navigation/header display data;
+- `surface-contribution.v6.schema.json`: the additive Host-owned native
+  reasoning-intensity presentation family with bounded variant, motion, and
+  semantic material stages;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `route.v2.schema.json`: route-v1 navigation fields plus required localized
   product title and description metadata;
