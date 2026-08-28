@@ -81,6 +81,11 @@ exchanges, Host-issued principal/user authorization, bounded denied and
 unavailable outcomes, run-to-conversation binding, registration replacement
 and disposal fencing, redacted snapshots, and serialized snapshot replay before
 live consumption. It rejects raw bridges and a second connection surface.
+Bound Connector client conformance freezes the plugin-visible Host-injected
+surface separately from the Host-only principal/user/authorization binding. It
+requires exact registration-qualified run bindings, an ordered subscription
+page stream with unsubscribe/dispose lifetime, replay through the fixed
+snapshot before live pages, and no caller identity construction by plugins.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

@@ -133,6 +133,12 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `connector-event-subscription.v1.schema.json` and
   `connector-event-page.v1.schema.json`: snapshot-fenced serialized replay
   and live event consumption;
+- `connector-client-binding.v1.schema.json`: Host-only principal/user and
+  exact authorization issuance record; and
+- `connector-bound-client.v1.schema.json`,
+  `connector-bound-client-call.v1.schema.json`, and
+  `connector-bound-client-result.v1.schema.json`: Host-injected bound-client
+  surface plus typed discover/execute/subscribe outcomes;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

@@ -46,7 +46,7 @@ Specified areas:
   lifecycle events, and Channel outbox correlation contract version 1.
 - `connector-service/`: room-neutral connector descriptor, registration,
   command, message/event, generation, disposal, public consumer,
-  authorization, and serialized subscription contracts version 1.
+  Host-bound authorization, and serialized subscription contracts version 1.
 - `plugin-configuration/`: Standard Schema validation, Schemastery form
   metadata, profile/plugin/generation scope, revision-fenced mutations,
   live/restart application, last-good rollback, secret handling, and

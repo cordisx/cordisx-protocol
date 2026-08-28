@@ -18,10 +18,12 @@ adapter; it does not define a product, consumer, task, or UI.
   `message.send`, `run.stop`, or `conversation.close` request.
 - `connector-event.v1.schema.json` is one ordered conversation, message, run,
   close, or disposal observation.
-- `connector-client-request.v1.schema.json` and
-  `connector-client-result.v1.schema.json` are the public plugin-consumer
-  discovery, execution, and subscription exchange, including typed denied or
-  unavailable outcomes.
+- `connector-client-binding.v1.schema.json` is the Host-only issuance and
+  binding record for principal, user, and authorization grants.
+- `connector-bound-client.v1.schema.json`,
+  `connector-bound-client-call.v1.schema.json`, and
+  `connector-bound-client-result.v1.schema.json` define the plugin-visible,
+  Host-injected discover/execute/subscribe/dispose surface and typed outcomes.
 - `connector-client-snapshot.v1.schema.json`,
   `connector-event-subscription.v1.schema.json`, and
   `connector-event-page.v1.schema.json` are the redacted discovery and
@@ -52,20 +54,26 @@ new generation rather than reviving the disposed one. The protocol makes no
 claim about task execution, message delivery guarantees, retries, persistence,
 or external-service semantics.
 
-## Public consumer boundary
+## Host-bound consumer boundary
 
-A consumer sends one data-only client request. Its `caller` repeats a
-Host-issued opaque principal handle, plugin generation, opaque user handle, and
-the exact capability/target being requested. The Host, not the caller, decides
-the request and returns `accepted`, `denied`, or `unavailable` with a bounded
-authorization outcome. A result never contains a callable service object,
-transport, second connection, generic bridge, or arbitrary command payload.
+The Host creates the principal/user/authorization binding and injects one
+fiber-owned `BoundConnectorClient`. A plugin neither receives nor serializes a
+caller principal, user, grant, binding id, or generic invocation route. It can
+only call the bound client's `discover`, `execute`, and `subscribe` methods;
+the Host derives caller identity and evaluates the exact authorization target.
+The client is disposed with its owner. Each subscription provides a typed
+ordered page stream and explicit `unsubscribe`; neither is a transport or a
+second connection.
+
+The Host returns `accepted`, `denied`, or `unavailable` with a bounded outcome.
+It never returns a callable service object, transport, generic bridge, or
+arbitrary command payload.
 
 An accepted command result is typed. In particular, `run.stopped` repeats one
-`(conversation, run)` binding; a run cannot be stopped through another
-conversation. Discovery returns only a redacted registration/capability/
-availability snapshot, never client principals, user identity, message text,
-or service internals.
+`(registration, conversation, run)` binding; a run cannot be stopped through a
+different registration or conversation. Discovery returns only a redacted
+registration/capability/availability snapshot, never client principals, user
+identity, message text, or service internals.
 
 Subscription first fixes `snapshotSequence`. Replay pages advance exactly from
 `afterSequence` through that snapshot; only after the final replay cursor may a

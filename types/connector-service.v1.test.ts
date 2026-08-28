@@ -1,4 +1,4 @@
-import type { ConnectorClientRequest, ConnectorClientResult, ConnectorCommand, ConnectorEvent, ConnectorRegistration, ConnectorServiceDescriptor } from './connector-service.v1.js'
+import type { BoundConnectorClient, ConnectorCommand, ConnectorEvent, ConnectorRegistration, ConnectorServiceDescriptor, HostConnectorClientRequest, HostConnectorClientResult } from './connector-service.v1.js'
 
 const descriptor = {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json',
@@ -57,7 +57,7 @@ const clientRequest = {
   type: 'connector.command.execute',
   registration: registration.registration,
   command,
-} satisfies ConnectorClientRequest
+} satisfies HostConnectorClientRequest
 
 const clientResult = {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json',
@@ -68,7 +68,10 @@ const clientResult = {
   status: 'accepted',
   authorization: { capability: 'connector.command.execute', state: 'allowed', code: 'allowed' },
   execution: { kind: 'message.sent', conversation: 'conversation-1', messageId: 'message-1' },
-} satisfies ConnectorClientResult
+} satisfies HostConnectorClientResult
 
 void clientRequest
 void clientResult
+
+declare const boundClient: BoundConnectorClient
+void boundClient

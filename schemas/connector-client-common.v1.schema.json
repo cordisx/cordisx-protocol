@@ -58,8 +58,9 @@
     "runBinding": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["conversation", "run"],
+      "required": ["registration", "conversation", "run"],
       "properties": {
+        "registration": { "$ref": "connector-common.v1.schema.json#/$defs/registration" },
         "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
         "run": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" }
       }

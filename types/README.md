@@ -12,8 +12,11 @@ markup, style, URL, callback, accessibility, or local-path type.
 
 `connector-service.v1.d.ts` exposes the versioned Connector descriptor,
 registration identity, command/event unions, and the public client caller,
-request, authorization, and typed execute-result unions. Handles stay `string`
-because their values are opaque; the declarations expose no transport, DOM,
-callback, bridge, credential, platform, or task type.
+request, authorization, and typed execute-result unions. Host-only caller
+issuance types are separate from `BoundConnectorClient`: the plugin-visible
+surface has only discover/execute/subscribe/dispose, with an ordered async page
+stream plus unsubscribe lifetime. Handles stay `string` because their values
+are opaque; the declarations expose no transport, DOM, callback, bridge,
+credential, platform, or task type.
 
 Run `npm run typecheck` to compile the strict positive and negative fixtures.

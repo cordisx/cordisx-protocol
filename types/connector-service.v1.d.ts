@@ -65,7 +65,7 @@ export type ConnectorAuthorizationOutcome =
   | { capability: ConnectorClientCapability; state: 'denied'; code: 'user-denied' | 'policy-denied' }
   | { capability: ConnectorClientCapability; state: 'unavailable'; code: 'principal-unavailable' | 'registration-unavailable' | 'unsupported' }
 
-export type ConnectorClientRequest =
+export type HostConnectorClientRequest =
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json'; contract: 'cordisx.connector-client-request/v1'; schemaVersion: 1; requestId: string; caller: ConnectorCaller; type: 'connector.discover' }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json'; contract: 'cordisx.connector-client-request/v1'; schemaVersion: 1; requestId: string; caller: ConnectorCaller; type: 'connector.command.execute'; registration: ConnectorRegistrationIdentity; command: ConnectorCommand }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json'; contract: 'cordisx.connector-client-request/v1'; schemaVersion: 1; requestId: string; caller: ConnectorCaller; type: 'connector.events.subscribe'; registration: ConnectorRegistrationIdentity; afterSequence: number }
@@ -93,9 +93,42 @@ export interface ConnectorEventSubscription {
   snapshotSequence: number
 }
 
-export type ConnectorClientResult =
-  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: ConnectorClientRequest['type']; status: 'denied'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'denied' }> }
-  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: ConnectorClientRequest['type']; status: 'unavailable'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'unavailable' }> }
+export type HostConnectorClientResult =
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: HostConnectorClientRequest['type']; status: 'denied'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'denied' }> }
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: HostConnectorClientRequest['type']; status: 'unavailable'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'unavailable' }> }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: 'connector.discover'; status: 'accepted'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'allowed' }>; snapshot: ConnectorClientSnapshot }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: 'connector.command.execute'; status: 'accepted'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'allowed' }>; execution: { kind: 'conversation.opened'; conversation: string } | { kind: 'message.sent'; conversation: string; messageId: string } | { kind: 'run.stopped'; binding: { conversation: string; run: string } } | { kind: 'conversation.closed'; conversation: string } }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: 'connector.events.subscribe'; status: 'accepted'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'allowed' }>; subscription: ConnectorEventSubscription }
+
+export type ConnectorClientCall =
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-call.v1.schema.json'; contract: 'cordisx.bound-connector-client-call/v1'; schemaVersion: 1; callId: string; type: 'discover' }
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-call.v1.schema.json'; contract: 'cordisx.bound-connector-client-call/v1'; schemaVersion: 1; callId: string; type: 'execute'; registration: ConnectorRegistrationIdentity; command: ConnectorCommand }
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-call.v1.schema.json'; contract: 'cordisx.bound-connector-client-call/v1'; schemaVersion: 1; callId: string; type: 'subscribe'; registration: ConnectorRegistrationIdentity; afterSequence: number }
+
+export interface ConnectorEventPage {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-event-page.v1.schema.json'
+  contract: 'cordisx.connector-event-page/v1'
+  schemaVersion: 1
+  subscription: ConnectorEventSubscription
+  afterSequence: number
+  phase: 'replay' | 'live'
+  events: readonly ConnectorEvent[]
+  nextAfterSequence: number
+  hasMore: boolean
+}
+
+export interface ConnectorSubscription {
+  readonly subscription: ConnectorEventSubscription
+  readonly pages: AsyncIterable<ConnectorEventPage>
+  unsubscribe(): void
+}
+
+export interface BoundConnectorClient {
+  readonly $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client.v1.schema.json'
+  readonly contract: 'cordisx.bound-connector-client/v1'
+  readonly schemaVersion: 1
+  discover(): Promise<HostConnectorClientResult>
+  execute(command: ConnectorCommand): Promise<HostConnectorClientResult>
+  subscribe(registration: ConnectorRegistrationIdentity, afterSequence: number): Promise<ConnectorSubscription>
+  dispose(): void
+}

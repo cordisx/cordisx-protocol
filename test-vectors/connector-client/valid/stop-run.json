@@ -15,6 +15,6 @@
   "result": {
     "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json", "contract": "cordisx.connector-client-result/v1", "schemaVersion": 1, "requestId": "request-2", "type": "connector.command.execute", "status": "accepted",
     "authorization": { "capability": "connector.command.execute", "state": "allowed", "code": "allowed" },
-    "execution": { "kind": "run.stopped", "binding": { "conversation": "conversation-1", "run": "run-1" } }
+    "execution": { "kind": "run.stopped", "binding": { "registration": { "registrationId": "registration-1", "connectorId": "agent.connector", "generation": 1 }, "conversation": "conversation-1", "run": "run-1" } }
   }
 }
