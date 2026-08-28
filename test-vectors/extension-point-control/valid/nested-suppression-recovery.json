@@ -2,6 +2,7 @@
   "principals": [
     { "handle": "principal:model-shell", "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "origin": "explicit" },
     { "handle": "principal:reasoning", "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "origin": "legacy-structured" },
+    { "handle": "principal:reasoning-explicit", "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "origin": "explicit" },
     { "handle": "principal:reasoning-two", "source": "https://plugins.example/reasoning-two", "pluginId": "reasoning-two", "origin": "legacy-structured" },
     { "handle": "principal:denied-reasoning", "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "origin": "explicit" },
     { "handle": "principal:child-renderer", "source": "https://plugins.example/child-renderer", "pluginId": "child-renderer", "origin": "explicit" }
@@ -63,6 +64,15 @@
       "origin": "legacy-structured",
       "identity": { "source": "https://plugins.example/reasoning-two", "pluginId": "reasoning-two", "pointId": "model.reasoning-intensity" },
       "claimId": "reasoning.two", "contributionId": "reasoning.two", "mode": "compose", "priority": 5, "legacyOrder": -5,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:reasoning-explicit",
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+      "claimId": "reasoning.explicit", "contributionId": "reasoning.explicit", "mode": "compose", "priority": 2,
       "requestedBindings": { "properties": [], "commands": [], "events": [] }
     },
     {
@@ -151,6 +161,12 @@
             "claimId": "reasoning.two", "contributionId": "reasoning.two", "mode": "compose", "priority": 5,
             "authorization": "allowed", "state": "suppressed", "reason": "ancestor.ownership"
           }, {
+            "principalHandle": "principal:reasoning-explicit",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.explicit", "contributionId": "reasoning.explicit", "mode": "compose", "priority": 2,
+            "authorization": "allowed", "state": "suppressed", "reason": "ancestor.ownership"
+          }, {
             "principalHandle": "principal:denied-reasoning",
             "origin": "explicit",
             "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
@@ -211,6 +227,14 @@
             "origin": "legacy-structured",
             "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
             "claimId": "reasoning.control", "contributionId": "reasoning.control", "mode": "compose", "priority": 0,
+            "authorization": "allowed", "state": "selected", "reason": "policy.ordered",
+            "selection": { "authority": "host-policy", "hostGeneration": "host-21", "rank": 2, "reason": "policy.ordered" },
+            "bindings": { "properties": [], "commands": [], "events": [] }
+          }, {
+            "principalHandle": "principal:reasoning-explicit",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.explicit", "contributionId": "reasoning.explicit", "mode": "compose", "priority": 2,
             "authorization": "allowed", "state": "selected", "reason": "policy.ordered",
             "selection": { "authority": "host-policy", "hostGeneration": "host-21", "rank": 1, "reason": "policy.ordered" },
             "bindings": { "properties": [], "commands": [], "events": [] }

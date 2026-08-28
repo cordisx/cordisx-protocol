@@ -36,7 +36,10 @@ of an underlying denial while its descendant is suppressed, and the
 legacy structured compose-only downgrade. It rejects DOM/selector/callback
 authority, incomplete snapshots, group-level cardinality/decision drift,
 registration-order ties, cross-owner principal spoofing, and any legacy
-escalation into a new control mode.
+escalation into a new control mode. Host-priority vectors also freeze the
+non-empty top-winner rule and the empty native/none fallback, while principal
+vectors permit separate explicit and legacy handles for the same owner but
+reject handle reuse across either origin.
 Manager settings conformance separately covers surface version 4 and catalog
 version 3 so the closed version-2/version-3 vocabularies remain unchanged. It
 validates structured host headers, ordering/collisions, same-owner route/page

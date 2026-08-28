@@ -114,7 +114,7 @@ function validatePrincipals(suite, errors) {
     if (!['explicit', 'legacy-structured'].includes(principal.origin)) errors.push(`principals[${index}] has an invalid origin`)
     validateCanonicalIdentity(errors, `principals[${index}]`, principal)
     if (byHandle.has(principal.handle)) errors.push(`duplicate Host principal handle: ${principal.handle}`)
-    const ownerKey = `${principal.source}\u0000${principal.pluginId}`
+    const ownerKey = `${principal.source}\u0000${principal.pluginId}\u0000${principal.origin}`
     if (owners.has(ownerKey)) errors.push(`duplicate Host principal owner: ${ownerKey}`)
     owners.add(ownerKey)
     byHandle.set(principal.handle, principal)
@@ -418,11 +418,16 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
         const candidate = candidateByKey.get(claimKey(decision.selectedClaim))
         if (candidate === undefined || candidate.state !== 'selected') errors.push(`group decision does not select a live candidate: ${point.id}/${group.id}`)
         else if (candidate.selection?.exclusiveGroup !== group.id || candidate.selection.authority !== decision.authority) errors.push(`candidate selection stamp mismatches group decision: ${point.id}/${group.id}`)
-        if (candidate !== undefined && group.selection === 'host-priority') {
-          const eligible = candidates
-            .filter(item => group.modes.includes(item.mode) && item.authorization === 'allowed' && !['denied', 'suppressed', 'pending'].includes(item.state))
-            .sort((left, right) => right.priority - left.priority || claimSortKey(left).localeCompare(claimSortKey(right)))
-          if (eligible[0] !== candidate) errors.push(`host-priority group did not select its deterministic winner: ${point.id}/${group.id}`)
+      }
+      if (group.selection === 'host-priority') {
+        const eligible = candidates
+          .filter(item => group.modes.includes(item.mode) && item.authorization === 'allowed' && !['denied', 'suppressed', 'pending'].includes(item.state))
+          .sort((left, right) => right.priority - left.priority || claimSortKey(left).localeCompare(claimSortKey(right)))
+        if (eligible.length > 0) {
+          if (decision.outcome !== 'selected' || !sameClaim(eligible[0], decision.selectedClaim) || eligible[0].state !== 'selected') errors.push(`host-priority group must select its deterministic top eligible claim: ${point.id}/${group.id}`)
+        } else {
+          const expectedOutcome = group.nativeFallback ? 'native' : 'none'
+          if (decision.outcome !== expectedOutcome) errors.push(`empty host-priority group must resolve deterministic fallback ${expectedOutcome}: ${point.id}/${group.id}`)
         }
       }
       const groupSelected = selected.filter(candidate => group.modes.includes(candidate.mode))
@@ -678,6 +683,24 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
     delete candidate.selection
     delete candidate.bindings
     point.candidates.push(candidate)
+  } else if (vector.mutation === 'host-priority-eligible-native' || vector.mutation === 'host-priority-eligible-none') {
+    const pointPolicy = suite.catalog.points.find(point => point.id === 'composer.reasoning-intensity')
+    const groupPolicy = pointPolicy.exclusiveGroups.find(group => group.id === 'renderer')
+    groupPolicy.selection = 'host-priority'
+    groupPolicy.nativeFallback = vector.mutation === 'host-priority-eligible-native'
+    const point = suite.snapshots[0].points.find(item => item.id === 'composer.reasoning-intensity')
+    const candidate = point.candidates.find(item => item.identity.pluginId === 'compact')
+    candidate.state = 'eligible'
+    candidate.reason = 'policy.eligible'
+    delete candidate.selection
+    delete candidate.bindings
+    point.groupDecisions[0] = {
+      groupId: 'renderer',
+      outcome: groupPolicy.nativeFallback ? 'native' : 'none',
+      authority: 'host-policy',
+      hostGeneration: 'host-17',
+      reason: groupPolicy.nativeFallback ? 'policy.native' : 'policy.none',
+    }
   } else if (vector.mutation === 'candidate-wrong-point') {
     const source = suite.snapshots[0].points.find(point => point.id === 'composer.reasoning-intensity')
     const target = suite.snapshots[0].points.find(point => point.id === 'composer.model-control')
@@ -739,6 +762,8 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
     selected[1].selection.rank = 0
   } else if (vector.mutation === 'cross-owner-declaration') {
     suite.declarations[0].identity.pluginId = 'sync'
+  } else if (vector.mutation === 'principal-cross-handle-spoof') {
+    suite.declarations[0].principalHandle = 'principal:compact'
   } else if (vector.mutation === 'cross-owner-authorization') {
     suite.authorizations[0].principalHandle = 'principal:sync'
   } else if (vector.mutation === 'cross-owner-candidate') {
@@ -749,6 +774,8 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
     suite.catalog.points[0].pluginId = 'spoof'
   } else if (vector.mutation === 'legacy-origin-spoof') {
     suite.declarations.find(declaration => declaration.origin === 'legacy-structured').origin = 'explicit'
+  } else if (vector.mutation === 'principal-cross-origin-spoof') {
+    suite.declarations.find(declaration => declaration.principalHandle === 'principal:reasoning-explicit').principalHandle = 'principal:reasoning'
   } else if (vector.mutation === 'cross-group-noncoexistence') {
     const point = suite.catalog.points.find(item => item.id === 'composer.reasoning-intensity')
     const proxy = point.modes.find(mode => mode.id === 'proxy')

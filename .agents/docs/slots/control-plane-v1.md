@@ -62,6 +62,12 @@ unknown handles or any source/plugin/origin mismatch. The Host control catalog,
 snapshot authority, command result, and event authority are likewise
 Host-derived; a plugin-provided field cannot override them.
 
+Principal uniqueness is `(source, pluginId, origin)`, not only source and plugin
+id. The same installed owner may therefore have one `legacy-structured` handle
+for normalized old contributions and a different `explicit` handle for v1
+claims at the same time. A handle belongs to exactly one origin and cannot be
+reused across origins or owners.
+
 Install and enable planning may persist multiple exact authorization records so
 the user can allow a plugin while disabling selected points or modes. The Host
 must present these partial effects before applying activation.
@@ -124,6 +130,13 @@ breakers. It stamps that decision as `host-policy`; `host-priority` is the
 catalog algorithm, not a runtime authority value. Plugins cannot self-select.
 Every selected candidate and group decision is owner-qualified and stamped with
 `authority` and the exact Host generation.
+
+Host-priority resolution is unconditional. The Host first computes the complete
+authorized, non-pending eligible set for that group. A non-empty set must yield
+`selected` for its exact deterministic top claim. An empty set yields `native`
+when `nativeFallback` is true and `none` when it is false. A Host-priority group
+cannot publish user choice, choose native despite an eligible claim, or choose
+none despite an eligible claim.
 
 The runtime resolution order is:
 

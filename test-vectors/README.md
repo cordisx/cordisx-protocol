@@ -33,7 +33,9 @@ and rejection of free DOM,
 selectors, callbacks, sensitive projections, forged selections/events, implicit
 coexistence, incomplete candidate/point inventories, group-level cardinality or
 decision drift, cross-owner principal stamps, unstable legacy order, arbitrary
-command results, and legacy authority escalation.
+command results, eligible host-priority native/none drift, cross-origin handle
+reuse, and legacy authority escalation. The nested valid suite includes
+simultaneous explicit and legacy claims for one source/plugin owner.
 
 Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,
