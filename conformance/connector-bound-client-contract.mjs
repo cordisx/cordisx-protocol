@@ -146,7 +146,7 @@ function subscriptionVector(result, pages) {
   }
 }
 
-function fakeHostBoundClient({ ignoreCancellation = false } = {}) {
+function fakeHostBoundClient({ ignoreCancellation = false, calls = { discover: 0, execute: 0 } } = {}) {
   let disposed = false
   const records = []
 
@@ -158,6 +158,7 @@ function fakeHostBoundClient({ ignoreCancellation = false } = {}) {
 
   return {
     async discover() {
+      calls.discover += 1
       if (disposed) return buildUnavailable('discover', 'discover-disposed')
       const result = {
         $schema: schema('connector-bound-client-result.v1.schema.json'),
@@ -172,7 +173,7 @@ function fakeHostBoundClient({ ignoreCancellation = false } = {}) {
           contract: 'cordisx.connector-client-snapshot/v1',
           schemaVersion: 1,
           observedAt: '2026-08-28T00:00:00.000Z',
-          registrations: [{ registration, capabilities: ['conversation.open', 'events.subscribe'], availability: 'available' }]
+          registrations: [{ registration, capabilities: ['conversation.open', 'events.receive'], availability: 'available' }]
         }
       }
       validateResult(result)
@@ -180,6 +181,7 @@ function fakeHostBoundClient({ ignoreCancellation = false } = {}) {
     },
 
     async execute(command) {
+      calls.execute += 1
       if (disposed) return buildUnavailable('execute', 'execute-disposed')
       assert.deepEqual(command, stopCommand)
       const result = {
@@ -284,7 +286,18 @@ unsubscribeClient.releaseAll()
 assert.equal((await unsubscribeIterator.next()).done, true)
 assert.deepEqual(validateSubscription(subscriptionVector(unsubscribeSubscribe.result, [unsubscribeFirst.value])), [])
 
-const ownerClient = fakeHostBoundClient()
+const ownerCalls = { discover: 0, execute: 0 }
+const ownerClient = fakeHostBoundClient({ calls: ownerCalls })
+const activeDiscover = await ownerClient.discover()
+assert.equal(activeDiscover.status, 'accepted')
+validateResult(activeDiscover)
+const invalidActiveDiscover = structuredClone(activeDiscover)
+invalidActiveDiscover.snapshot.registrations[0].capabilities[1] = 'events.subscribe'
+assert.equal(validateResultSchema(invalidActiveDiscover), false, 'AJV must reject non-capability events.subscribe in an active discovery snapshot')
+const activeExecute = await ownerClient.execute(stopCommand)
+assert.equal(activeExecute.status, 'accepted')
+validateResult(activeExecute)
+assert.deepEqual(ownerCalls, { discover: 1, execute: 1 }, 'pre-gate must exercise accepted discover and execute exactly once before dispose')
 const ownerSubscribe = await ownerClient.subscribe(registration, -1)
 const ownerIterator = ownerSubscribe.handle.pages[Symbol.asyncIterator]()
 const ownerFirst = await ownerIterator.next()
