@@ -40,6 +40,12 @@ const common = schemas.get('icon-theme-common.v1.schema.json').$defs
 const catalogDigest = `sha256:${createHash('sha256').update(JSON.stringify(common.semanticIconKey.enum)).digest('hex')}`
 expect('closed catalog proof digest matches canonical key serialization', common.completeCoverageProof.properties.catalogDigest.const === catalogDigest)
 expect('complete proof tuple count matches catalog Cartesian product', common.completeCoverageProof.properties.tupleCount.const === common.semanticIconKey.enum.length * common.variant.enum.length * common.state.enum.length)
+expect('closed catalog has 51 keys', common.semanticIconKey.enum.length === 51)
+expect('complete proof has 51 keys', common.completeCoverageProof.properties.keyCount.const === 51)
+expect('complete proof has 1,224 tuples', common.completeCoverageProof.properties.tupleCount.const === 1224)
+expect('certified trust semantic is closed and present', common.semanticIconKey.enum.includes('trust.certified'))
+expect('official trust semantic is closed and present', common.semanticIconKey.enum.includes('trust.official'))
+expect('trust semantics remain distinct', common.semanticIconKey.enum.indexOf('trust.certified') !== common.semanticIconKey.enum.indexOf('trust.official'))
 
 function schemaNameFor(value) {
   const name = value.$schema?.split('/').at(-1)
@@ -56,7 +62,7 @@ function providerBindingIsValid(value) {
 }
 
 function completeCoverageIsValid(coverage, providerGeneration, identity) {
-  return coverage.kind === 'complete' && coverage.proof.providerId === identity.providerId && coverage.proof.namespace === identity.namespace && coverage.proof.providerVersion === identity.providerVersion && coverage.proof.providerGeneration === providerGeneration && coverage.proof.rawDataExported === false && coverage.proof.tupleCount === 1176
+  return coverage.kind === 'complete' && coverage.proof.providerId === identity.providerId && coverage.proof.namespace === identity.namespace && coverage.proof.providerVersion === identity.providerVersion && coverage.proof.providerGeneration === providerGeneration && coverage.proof.rawDataExported === false && coverage.proof.keyCount === 51 && coverage.proof.tupleCount === 1224
 }
 
 function coverageIsValid(coverage, providerGeneration, identity) {
@@ -130,6 +136,7 @@ function lifecycleTransitionIsValid(context, result) {
 }
 
 function semanticIsValid(schemaName, value, context, semantic) {
+  if (semantic === 'expected-semantic-key') return value.key === context.expectedKey
   if (semantic === 'resolution-exchange') return resolutionExchangeIsValid(context, value)
   if (semantic === 'lifecycle-transition') return lifecycleTransitionIsValid(context, value)
   if (semantic === 'selection-registration-pins') {
@@ -215,6 +222,13 @@ const boundaryValidator = validators.get('icon-theme-resolution-result.v1.schema
 expect('normalized command descriptor is valid public data', boundaryValidator(boundary.value), boundaryValidator.errors)
 expect('normalized command descriptor has no raw path or SVG payload', JSON.stringify(boundary.value).includes('"d"') === false && JSON.stringify(boundary.value).includes('<svg') === false)
 
+const trustSemantics = JSON.parse(await readFile(path.join(root, 'test-vectors/icon-theme/valid/trust-semantics.json'), 'utf8'))
+const requestValidator = validators.get('icon-theme-resolution-request.v1.schema.json')
+expect('certified trust request is valid', requestValidator(trustSemantics.certified), requestValidator.errors)
+expect('official trust request is valid', requestValidator(trustSemantics.official), requestValidator.errors)
+expect('certified and official use distinct semantic keys', trustSemantics.certified.key === 'trust.certified' && trustSemantics.official.key === 'trust.official' && trustSemantics.certified.key !== trustSemantics.official.key)
+expect('trust keys carry no user-facing text or raw source identity', ['label', 'accessibleName', 'publisherId', 'providerId', 'sourceId'].every(field => !(field in trustSemantics.certified) && !(field in trustSemantics.official)))
+
 function vectorContext(reference) {
   if (reference?.baseOperationRequestId !== undefined) {
     const base = structuredClone(transitionContexts.get(reference.baseOperationRequestId))
@@ -240,6 +254,7 @@ function vectorContext(reference) {
 }
 
 function contextIsValid(context) {
+  if (context?.expectedKey !== undefined) return common.semanticIconKey.enum.includes(context.expectedKey)
   if (context?.selection !== undefined && context?.operation !== undefined) {
     const selectionValidator = validators.get('icon-theme-selection.v1.schema.json')
     const operationValidator = validators.get('icon-theme-lifecycle-operation.v1.schema.json')

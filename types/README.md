@@ -9,6 +9,8 @@ callback, bridge, secret, router, or history-control type is available.
 exact tuple coverage and proof, normalized vector, profile-pinned selection,
 resolution, disposal, and rollback documents. The declarations intentionally expose no React component, DOM,
 markup, style, URL, callback, accessibility, or local-path type.
+The 51-key union keeps `trust.certified` distinct from `trust.official`; neither
+key carries accessible text or raw publisher/source identity.
 
 `connector-service.v1.d.ts` exposes the versioned Connector descriptor,
 registration identity, command/event unions, and the public client caller,

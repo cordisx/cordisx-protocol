@@ -13,6 +13,7 @@ export type SemanticIconKey =
   | 'navigation.overview' | 'navigation.plugins' | 'navigation.routes'
   | 'navigation.runtime' | 'navigation.store' | 'status.error' | 'status.info'
   | 'status.pending' | 'status.success' | 'status.warning'
+  | 'trust.certified' | 'trust.official'
 
 export type IconVariant = 'regular' | 'filled' | 'duotone'
 export type IconState = 'default' | 'hover' | 'active' | 'selected' | 'disabled' | 'danger' | 'success' | 'warning'
@@ -40,17 +41,17 @@ export type IconThemeCoverage =
         kind: 'host-conformance'
         proofId: string
         catalogVersion: 1
-        catalogDigest: 'sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565'
+        catalogDigest: 'sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77'
         providerId: `builtin:${string}` | `plugin:${string}:${string}`
         namespace: string
         providerVersion: string
         providerGeneration: string
         protocolVersion: 1
         descriptorFormatVersion: 1
-        keyCount: 49
+        keyCount: 51
         variantCount: 3
         stateCount: 8
-        tupleCount: 1176
+        tupleCount: 1224
         outcome: 'passed'
         rawDataExported: false
       }

@@ -1,0 +1,17 @@
+{
+  "case": "reject info status as an alias for official provenance",
+  "schema": "icon-theme-resolution-request.v1.schema.json",
+  "semantic": "expected-semantic-key",
+  "context": { "expectedKey": "trust.official" },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "trust_info_alias_0001",
+    "hostGeneration": "host-12",
+    "providerHandle": "iph_reicon0000000001",
+    "providerGeneration": "reicon-1",
+    "key": "status.info",
+    "variant": "regular",
+    "state": "default"
+  }
+}

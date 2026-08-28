@@ -34,17 +34,17 @@ const registration = {
       kind: 'host-conformance',
       proofId: 'proof_reicon_000001',
       catalogVersion: 1,
-      catalogDigest: 'sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565',
+      catalogDigest: 'sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77',
       providerId: 'builtin:reicon',
       namespace: 'reicon',
       providerVersion: '1.0.0',
       providerGeneration: 'reicon-1',
       protocolVersion: 1,
       descriptorFormatVersion: 1,
-      keyCount: 49,
+      keyCount: 51,
       variantCount: 3,
       stateCount: 8,
-      tupleCount: 1176,
+      tupleCount: 1224,
       outcome: 'passed',
       rawDataExported: false,
     },
@@ -75,6 +75,24 @@ const request = {
   key: 'action.save',
   variant: 'regular',
   state: 'default',
+} satisfies IconThemeResolutionRequest
+
+const certifiedRequest = {
+  ...request,
+  requestId: 'resolve_trust_certified_01',
+  key: 'trust.certified',
+} satisfies IconThemeResolutionRequest
+
+const officialRequest = {
+  ...request,
+  requestId: 'resolve_trust_official_001',
+  key: 'trust.official',
+} satisfies IconThemeResolutionRequest
+
+const forbiddenAccessibleLabel = {
+  ...certifiedRequest,
+  // @ts-expect-error accessible text belongs to the Host UI context
+  label: 'Certified',
 } satisfies IconThemeResolutionRequest
 
 const descriptor = {
@@ -123,6 +141,9 @@ const forbiddenDescriptor: NormalizedVectorDescriptor = {
 void registration
 void selection
 void request
+void certifiedRequest
+void officialRequest
+void forbiddenAccessibleLabel
 void result
 void rollback
 void forbiddenDescriptor
