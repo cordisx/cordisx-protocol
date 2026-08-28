@@ -1,0 +1,5 @@
+{
+  "base": "nested-suppression-recovery.json",
+  "mutation": "denied-recovery-eligible",
+  "expectedError": "denied candidate lost its effective denial outside suppression"
+}

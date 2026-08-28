@@ -28,7 +28,8 @@ Extension-point control v1 suites live in `extension-point-control/valid` and
 `extension-point-control/invalid`. They cover controlled reasoning properties
 and commands, user-switchable exclusive renderers, explicit overlay/proxy
 stacking, point/mode-specific authorization, Host-stamped candidate inventory,
-nested ownership suppression and recovery, and rejection of free DOM,
+nested ownership suppression and recovery without losing an underlying denial,
+and rejection of free DOM,
 selectors, callbacks, sensitive projections, forged selections/events, implicit
 coexistence, arbitrary command results, and legacy authority escalation.
 

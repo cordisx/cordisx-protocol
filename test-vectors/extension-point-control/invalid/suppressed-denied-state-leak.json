@@ -1,0 +1,5 @@
+{
+  "base": "nested-suppression-recovery.json",
+  "mutation": "suppressed-denied-state-leak",
+  "expectedError": "suppressed point has non-suppressed candidate"
+}

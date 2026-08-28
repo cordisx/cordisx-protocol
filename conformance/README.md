@@ -31,8 +31,8 @@ authorization, Host point-policy, and runtime-selection layers. It covers exact
 partial denials, explicit reciprocal mode coexistence, exclusive user/Host
 selection, renderer-safe scalar properties, Host-brokered commands,
 no-data command acknowledgements, Host-projected scalar events, owner- and
-generation-stamped decisions,
-transitive parent suppression/recovery, and the
+generation-stamped decisions, transitive parent suppression/recovery, retention
+of an underlying denial while its descendant is suppressed, and the
 legacy structured compose-only downgrade. It rejects DOM/selector/callback
 authority and any legacy escalation into a new control mode.
 Manager settings conformance separately covers surface version 4 and catalog

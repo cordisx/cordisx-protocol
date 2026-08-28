@@ -116,6 +116,14 @@ The runtime resolution order is:
 6. project only requested, catalog-declared bindings to selected candidates;
 7. publish one revision atomically.
 
+Authorization and presentation state are separate axes. A denied descendant
+under an owning ancestor keeps `authorization: denied` while its effective
+presentation `state` is `suppressed`, so both causes remain visible. Suppression
+takes precedence only for the presentation state. When the ancestor releases
+the subtree, the Host reevaluates the retained authorization; that candidate
+becomes `denied`, never `eligible` or `selected`. Outside a suppressed point,
+an authorization denial must always publish candidate state `denied`.
+
 ## Safe properties and commands
 
 The catalog's `safeProperties` are immutable renderer-safe scalar schemas. The

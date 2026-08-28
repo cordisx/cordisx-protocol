@@ -43,6 +43,14 @@
       "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
       "claimId": "control", "contributionId": "reasoning.control", "mode": "compose", "priority": 0,
       "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+      "claimId": "denied-control", "contributionId": "reasoning.denied-control", "mode": "compose", "priority": -10,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
     }
   ],
   "authorizations": [
@@ -51,6 +59,12 @@
       "schemaVersion": 1,
       "identity": { "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "pointId": "model.overlay" },
       "claimId": "shell", "mode": "replace", "policy": "allow"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+      "claimId": "denied-control", "mode": "compose", "policy": "deny"
     }
   ],
   "snapshots": [
@@ -87,6 +101,11 @@
             "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
             "claimId": "control", "contributionId": "reasoning.control", "mode": "compose", "priority": 0,
             "authorization": "allowed", "state": "suppressed", "reason": "ancestor.ownership"
+          }, {
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "denied-control", "contributionId": "reasoning.denied-control", "mode": "compose", "priority": -10,
+            "authorization": "denied", "state": "suppressed", "reason": "ancestor.ownership"
           }],
           "groupDecisions": [],
           "suppression": {
@@ -128,6 +147,11 @@
             "authorization": "allowed", "state": "selected", "reason": "policy.ordered",
             "selection": { "authority": "host-policy", "hostGeneration": "host-21", "reason": "policy.ordered" },
             "bindings": { "properties": [], "commands": [], "events": [] }
+          }, {
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "denied-control", "contributionId": "reasoning.denied-control", "mode": "compose", "priority": -10,
+            "authorization": "denied", "state": "denied", "reason": "authorization.denied"
           }],
           "groupDecisions": []
         }

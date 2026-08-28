@@ -289,6 +289,7 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
       const expectedAuthorization = effectiveAuthorization(declaration, authorizations, pointsById)
       if (candidate.authorization !== expectedAuthorization) errors.push(`runtime authorization drift: ${key}`)
       if (candidate.state === 'selected' && candidate.authorization !== 'allowed') errors.push(`denied candidate cannot be selected: ${key}`)
+      if (candidate.authorization === 'denied' && pointState.state !== 'suppressed' && candidate.state !== 'denied') errors.push(`denied candidate lost its effective denial outside suppression: ${key}`)
       if (candidate.selection !== undefined && candidate.selection.hostGeneration !== snapshot.hostGeneration) errors.push(`candidate selection generation drift: ${key}`)
 
       if (candidate.state === 'selected') {
@@ -584,6 +585,12 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
     delete child.suppression
     child.candidates[0].state = 'eligible'
     child.candidates[0].reason = 'policy.eligible'
+  } else if (vector.mutation === 'suppressed-denied-state-leak') {
+    const child = suite.snapshots[0].points.find(point => point.id === 'model.reasoning-intensity')
+    child.candidates.find(candidate => candidate.identity.pluginId === 'denied-reasoning').state = 'denied'
+  } else if (vector.mutation === 'denied-recovery-eligible') {
+    const child = suite.snapshots[1].points.find(point => point.id === 'model.reasoning-intensity')
+    child.candidates.find(candidate => candidate.identity.pluginId === 'denied-reasoning').state = 'eligible'
   } else if (vector.mutation === 'plugin-forged-selection') {
     const point = suite.snapshots[0].points.find(candidate => candidate.id === 'composer.reasoning-intensity')
     point.candidates.find(candidate => candidate.state === 'selected').selection.authority = 'plugin'

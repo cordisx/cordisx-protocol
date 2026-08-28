@@ -108,7 +108,7 @@
         },
         {
           "if": { "properties": { "authorization": { "const": "denied" } }, "required": ["authorization"] },
-          "then": { "properties": { "state": { "const": "denied" } } }
+          "then": { "properties": { "state": { "enum": ["denied", "suppressed"] } } }
         }
       ]
     },
