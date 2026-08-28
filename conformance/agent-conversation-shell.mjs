@@ -28,7 +28,7 @@ function traceErrors(trace) {
   let after = trace.subscription.afterSequence; let disposed = false
   if (after > trace.subscription.snapshotSequence) errors.push('after exceeds snapshot watermark')
   for (const current of trace.pages) {
-    if (!sameBinding(current.subscription.binding, trace.binding) || current.subscription.generation !== trace.generation) errors.push('page binding/generation drift')
+    if (!sameBinding(current.subscription.binding, trace.subscription.binding) || current.subscription.generation !== trace.subscription.generation || current.subscription.subscriptionId !== trace.subscription.subscriptionId || current.subscription.afterSequence !== trace.subscription.afterSequence || current.subscription.snapshotSequence !== trace.subscription.snapshotSequence) errors.push('page subscription descriptor drift')
     if (current.afterSequence !== after) errors.push('page cursor is not serialized')
     if (after < current.subscription.snapshotSequence && current.phase !== 'replay') errors.push('live precedes replay watermark')
     if (disposed || current.updates.some(update => update.kind === 'disposed') && current.hasMore) errors.push('terminal stream has later page')
@@ -43,7 +43,7 @@ function traceErrors(trace) {
 }
 const trace = { binding: snapshot.binding, generation: 'generation-1', result, subscription, pages: [page], context }
 assert.deepEqual(traceErrors(trace), [])
-for (const mutate of [x => { x.result.subscription.generation = 'other' }, x => { x.pages[0].subscription.generation = 'other' }, x => { x.pages[0].updates[0].sequence = 2 }, x => { x.pages[0].phase = 'live' }, x => { x.context.generation = 'stale' }, x => { x.pages[0].updates = [{ kind: 'disposed', sequence: 0, reason: 'explicit' }, { kind: 'item-appended', sequence: 1, item }]; x.pages[0].nextAfterSequence = 1 }]) { const bad = structuredClone(trace); mutate(bad); assert.notDeepEqual(traceErrors(bad), [], 'identity/order/terminal no-op mutant must leak') }
+for (const mutate of [x => { x.result.subscription.generation = 'other' }, x => { x.pages[0].subscription = { ...x.pages[0].subscription, subscriptionId: 'stale-subscription' } }, x => { x.pages[0].subscription = { ...x.pages[0].subscription, afterSequence: 0 } }, x => { x.pages[0].subscription = { ...x.pages[0].subscription, generation: 'other' } }, x => { x.pages[0].updates[0].sequence = 2 }, x => { x.pages[0].phase = 'live' }, x => { x.context.generation = 'stale' }, x => { x.pages[0].updates = [{ kind: 'disposed', sequence: 0, reason: 'explicit' }, { kind: 'item-appended', sequence: 1, item }]; x.pages[0].nextAfterSequence = 1 }]) { const bad = structuredClone(trace); mutate(bad); assert.notDeepEqual(traceErrors(bad), [], 'identity/order/terminal no-op mutant must leak') }
 for (const wire of [{ ...result, status: 'denied', code: 'policy-denied', subscription: undefined }, { ...result, status: 'unavailable', code: 'disposed', subscription: undefined }, { ...result, status: 'denied', code: 'allowed', subscription: undefined }]) assert.equal(v['agent-conversation-shell-result.v1.schema.json'](wire), wire.code !== 'allowed')
 for (const token of ['draft-changed', 'avatar', 'image', 'html', 'css', 'component', 'callback', 'selector', 'projection', 'fixture']) assert.ok(!JSON.stringify([...schemas.values()]).toLowerCase().includes(token), `forbidden ${token}`)
 console.log('Agent conversation shell conformance: all vectors passed')
