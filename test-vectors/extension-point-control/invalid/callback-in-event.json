@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "callback-in-event",
+  "expectedError": "events[0] schema"
+}

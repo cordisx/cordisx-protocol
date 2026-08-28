@@ -1,0 +1,271 @@
+{
+  "principals": [
+    { "handle": "principal:model-shell", "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "origin": "explicit" },
+    { "handle": "principal:reasoning", "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "origin": "legacy-structured" },
+    { "handle": "principal:reasoning-explicit", "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "origin": "explicit" },
+    { "handle": "principal:reasoning-two", "source": "https://plugins.example/reasoning-two", "pluginId": "reasoning-two", "origin": "legacy-structured" },
+    { "handle": "principal:denied-reasoning", "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "origin": "explicit" },
+    { "handle": "principal:child-renderer", "source": "https://plugins.example/child-renderer", "pluginId": "child-renderer", "origin": "explicit" }
+  ],
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-control-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "model.overlay",
+        "modes": [
+          { "id": "compose", "stacking": "ordered", "coexistsWith": [], "defaultAuthorization": "allow" },
+          { "id": "replace", "stacking": "exclusive", "exclusiveGroup": "ownership", "coexistsWith": [], "defaultAuthorization": "deny" }
+        ],
+        "exclusiveGroups": [{ "id": "ownership", "modes": ["replace"], "cardinality": "one", "selection": "user", "nativeFallback": true }],
+        "safeProperties": [],
+        "safeCommands": [],
+        "safeEvents": [],
+        "ownership": { "scope": "subtree", "suppressesDescendantsWhenModes": ["replace"] }
+      },
+      {
+        "id": "model.reasoning-intensity",
+        "parentPointId": "model.overlay",
+        "modes": [
+          { "id": "compose", "stacking": "ordered", "coexistsWith": ["replace"], "defaultAuthorization": "allow" },
+          { "id": "replace", "stacking": "exclusive", "exclusiveGroup": "renderer", "coexistsWith": ["compose"], "defaultAuthorization": "deny" }
+        ],
+        "exclusiveGroups": [{ "id": "renderer", "modes": ["replace"], "cardinality": "one", "selection": "user", "nativeFallback": true }],
+        "safeProperties": [],
+        "safeCommands": [],
+        "safeEvents": [],
+        "ownership": { "scope": "point", "suppressesDescendantsWhenModes": [] }
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:model-shell",
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "pointId": "model.overlay" },
+      "claimId": "shell", "contributionId": "model.shell", "mode": "replace", "priority": 50,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:reasoning",
+      "origin": "legacy-structured",
+      "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+      "claimId": "reasoning.control", "contributionId": "reasoning.control", "mode": "compose", "priority": 0, "legacyOrder": 0,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:reasoning-two",
+      "origin": "legacy-structured",
+      "identity": { "source": "https://plugins.example/reasoning-two", "pluginId": "reasoning-two", "pointId": "model.reasoning-intensity" },
+      "claimId": "reasoning.two", "contributionId": "reasoning.two", "mode": "compose", "priority": 5, "legacyOrder": -5,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:reasoning-explicit",
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+      "claimId": "reasoning.explicit", "contributionId": "reasoning.explicit", "mode": "compose", "priority": 2,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:denied-reasoning",
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+      "claimId": "denied-control", "contributionId": "reasoning.denied-control", "mode": "compose", "priority": -10,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:child-renderer",
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/child-renderer", "pluginId": "child-renderer", "pointId": "model.reasoning-intensity" },
+      "claimId": "renderer", "contributionId": "reasoning.renderer", "mode": "replace", "priority": 20,
+      "requestedBindings": { "properties": [], "commands": [], "events": [] }
+    }
+  ],
+  "authorizations": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:model-shell",
+      "identity": { "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "pointId": "model.overlay" },
+      "claimId": "shell", "mode": "replace", "policy": "allow"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:denied-reasoning",
+      "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+      "claimId": "denied-control", "mode": "compose", "policy": "deny"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:child-renderer",
+      "identity": { "source": "https://plugins.example/child-renderer", "pluginId": "child-renderer", "pointId": "model.reasoning-intensity" },
+      "claimId": "renderer", "mode": "replace", "policy": "allow"
+    }
+  ],
+  "snapshots": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-snapshot.v1.schema.json",
+      "schemaVersion": 1,
+      "authority": "host",
+      "hostGeneration": "host-21",
+      "revision": 1,
+      "points": [
+        {
+          "id": "model.overlay", "state": "active", "reason": "point.mounted",
+          "candidates": [{
+            "principalHandle": "principal:model-shell",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "pointId": "model.overlay" },
+            "claimId": "shell", "contributionId": "model.shell", "mode": "replace", "priority": 50,
+            "authorization": "allowed", "state": "selected", "reason": "user.selected",
+            "selection": { "authority": "user", "hostGeneration": "host-21", "exclusiveGroup": "ownership", "reason": "user.selected" },
+            "bindings": { "properties": [], "commands": [], "events": [] }
+          }],
+          "groupDecisions": [{
+            "groupId": "ownership", "outcome": "selected",
+            "selectedClaim": {
+              "principalHandle": "principal:model-shell",
+              "identity": { "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "pointId": "model.overlay" },
+              "claimId": "shell", "mode": "replace"
+            },
+            "authority": "user", "hostGeneration": "host-21", "reason": "user.selected"
+          }]
+        },
+        {
+          "id": "model.reasoning-intensity", "state": "suppressed", "reason": "ancestor.ownership",
+          "candidates": [{
+            "principalHandle": "principal:reasoning",
+            "origin": "legacy-structured",
+            "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.control", "contributionId": "reasoning.control", "mode": "compose", "priority": 0,
+            "authorization": "allowed", "state": "suppressed", "reason": "ancestor.ownership"
+          }, {
+            "principalHandle": "principal:reasoning-two",
+            "origin": "legacy-structured",
+            "identity": { "source": "https://plugins.example/reasoning-two", "pluginId": "reasoning-two", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.two", "contributionId": "reasoning.two", "mode": "compose", "priority": 5,
+            "authorization": "allowed", "state": "suppressed", "reason": "ancestor.ownership"
+          }, {
+            "principalHandle": "principal:reasoning-explicit",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.explicit", "contributionId": "reasoning.explicit", "mode": "compose", "priority": 2,
+            "authorization": "allowed", "state": "suppressed", "reason": "ancestor.ownership"
+          }, {
+            "principalHandle": "principal:denied-reasoning",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "denied-control", "contributionId": "reasoning.denied-control", "mode": "compose", "priority": -10,
+            "authorization": "denied", "state": "suppressed", "reason": "ancestor.ownership"
+          }, {
+            "principalHandle": "principal:child-renderer",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/child-renderer", "pluginId": "child-renderer", "pointId": "model.reasoning-intensity" },
+            "claimId": "renderer", "contributionId": "reasoning.renderer", "mode": "replace", "priority": 20,
+            "authorization": "allowed", "state": "suppressed", "reason": "ancestor.ownership"
+          }],
+          "groupDecisions": [],
+          "suppression": {
+            "kind": "ancestor-ownership",
+            "ancestorPointId": "model.overlay",
+            "ancestorClaim": {
+              "principalHandle": "principal:model-shell",
+              "identity": { "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "pointId": "model.overlay" },
+              "claimId": "shell", "mode": "replace"
+            },
+            "path": ["model.overlay", "model.reasoning-intensity"],
+            "hostGeneration": "host-21", "reason": "ancestor.ownership"
+          }
+        }
+      ]
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-snapshot.v1.schema.json",
+      "schemaVersion": 1,
+      "authority": "host",
+      "hostGeneration": "host-21",
+      "revision": 2,
+      "points": [
+        {
+          "id": "model.overlay", "state": "active", "reason": "point.mounted",
+          "candidates": [{
+            "principalHandle": "principal:model-shell",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/model-shell", "pluginId": "model-shell", "pointId": "model.overlay" },
+            "claimId": "shell", "contributionId": "model.shell", "mode": "replace", "priority": 50,
+            "authorization": "allowed", "state": "eligible", "reason": "user.native"
+          }],
+          "groupDecisions": [{ "groupId": "ownership", "outcome": "native", "authority": "user", "hostGeneration": "host-21", "reason": "user.native" }]
+        },
+        {
+          "id": "model.reasoning-intensity", "state": "active", "reason": "point.mounted",
+          "candidates": [{
+            "principalHandle": "principal:reasoning-two",
+            "origin": "legacy-structured",
+            "identity": { "source": "https://plugins.example/reasoning-two", "pluginId": "reasoning-two", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.two", "contributionId": "reasoning.two", "mode": "compose", "priority": 5,
+            "authorization": "allowed", "state": "selected", "reason": "policy.ordered",
+            "selection": { "authority": "host-policy", "hostGeneration": "host-21", "rank": 0, "reason": "policy.ordered" },
+            "bindings": { "properties": [], "commands": [], "events": [] }
+          }, {
+            "principalHandle": "principal:reasoning",
+            "origin": "legacy-structured",
+            "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.control", "contributionId": "reasoning.control", "mode": "compose", "priority": 0,
+            "authorization": "allowed", "state": "selected", "reason": "policy.ordered",
+            "selection": { "authority": "host-policy", "hostGeneration": "host-21", "rank": 2, "reason": "policy.ordered" },
+            "bindings": { "properties": [], "commands": [], "events": [] }
+          }, {
+            "principalHandle": "principal:reasoning-explicit",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/reasoning", "pluginId": "reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "reasoning.explicit", "contributionId": "reasoning.explicit", "mode": "compose", "priority": 2,
+            "authorization": "allowed", "state": "selected", "reason": "policy.ordered",
+            "selection": { "authority": "host-policy", "hostGeneration": "host-21", "rank": 1, "reason": "policy.ordered" },
+            "bindings": { "properties": [], "commands": [], "events": [] }
+          }, {
+            "principalHandle": "principal:denied-reasoning",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/denied-reasoning", "pluginId": "denied-reasoning", "pointId": "model.reasoning-intensity" },
+            "claimId": "denied-control", "contributionId": "reasoning.denied-control", "mode": "compose", "priority": -10,
+            "authorization": "denied", "state": "denied", "reason": "authorization.denied"
+          }, {
+            "principalHandle": "principal:child-renderer",
+            "origin": "explicit",
+            "identity": { "source": "https://plugins.example/child-renderer", "pluginId": "child-renderer", "pointId": "model.reasoning-intensity" },
+            "claimId": "renderer", "contributionId": "reasoning.renderer", "mode": "replace", "priority": 20,
+            "authorization": "allowed", "state": "selected", "reason": "user.selected",
+            "selection": { "authority": "user", "hostGeneration": "host-21", "exclusiveGroup": "renderer", "reason": "user.selected" },
+            "bindings": { "properties": [], "commands": [], "events": [] }
+          }],
+          "groupDecisions": [{
+            "groupId": "renderer", "outcome": "selected",
+            "selectedClaim": {
+              "principalHandle": "principal:child-renderer",
+              "identity": { "source": "https://plugins.example/child-renderer", "pluginId": "child-renderer", "pointId": "model.reasoning-intensity" },
+              "claimId": "renderer", "mode": "replace"
+            },
+            "authority": "user", "hostGeneration": "host-21", "reason": "user.selected"
+          }]
+        }
+      ]
+    }
+  ],
+  "events": [],
+  "accesses": []
+}

@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "denied-event-delivery",
+  "expectedError": "expected accepted=true, received false"
+}

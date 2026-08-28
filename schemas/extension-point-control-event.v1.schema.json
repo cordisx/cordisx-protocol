@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-event.v1.schema.json",
+  "title": "CordisX Host-projected Extension Point Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "authority", "principalHandle", "hostGeneration", "sequence", "identity", "claimId", "contributionId", "mode", "eventId", "payload"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-event.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "authority": { "const": "host" },
+    "principalHandle": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/principalHandle" },
+    "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+    "claimId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "contributionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "mode": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/mode" },
+    "eventId": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/bindingId" },
+    "payload": {
+      "type": "object",
+      "maxProperties": 16,
+      "propertyNames": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/bindingId" },
+      "additionalProperties": { "$ref": "ui-common.v1.schema.json#/$defs/scalar" }
+    }
+  }
+}

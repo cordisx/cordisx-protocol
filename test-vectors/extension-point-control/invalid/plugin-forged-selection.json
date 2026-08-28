@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "plugin-forged-selection",
+  "expectedError": "snapshots[0] schema"
+}

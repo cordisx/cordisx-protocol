@@ -1,0 +1,5 @@
+{
+  "base": "nested-suppression-recovery.json",
+  "mutation": "legacy-origin-spoof",
+  "expectedError": "origin is not Host-derived"
+}

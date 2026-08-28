@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "legacy-control-escalation",
+  "expectedError": "legacy structured contribution cannot gain control authority"
+}

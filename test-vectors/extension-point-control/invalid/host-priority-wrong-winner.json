@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "host-priority-wrong-winner",
+  "expectedError": "host-priority group must select its deterministic top eligible claim"
+}

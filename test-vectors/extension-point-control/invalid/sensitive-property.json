@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "sensitive-property",
+  "expectedError": "catalog schema"
+}

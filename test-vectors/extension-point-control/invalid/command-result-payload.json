@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "command-result-payload",
+  "expectedError": "accesses[0] result schema"
+}

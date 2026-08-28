@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+  "title": "CordisX Extension Point Control Authorization v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "principalHandle", "identity", "claimId", "mode", "policy"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "principalHandle": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/principalHandle" },
+    "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+    "claimId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "mode": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/mode" },
+    "policy": { "$ref": "extension-point-common.v1.schema.json#/$defs/pointPolicy" }
+  }
+}

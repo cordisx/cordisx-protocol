@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-snapshot.v1.schema.json",
+  "title": "CordisX Extension Point Control Runtime Snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "authority", "hostGeneration", "revision", "points"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-snapshot.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "authority": { "const": "host" },
+    "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "revision": { "type": "integer", "minimum": 0 },
+    "points": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/pointState" }
+    }
+  },
+  "$defs": {
+    "propertyProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "value"],
+      "properties": {
+        "id": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/bindingId" },
+        "value": { "$ref": "ui-common.v1.schema.json#/$defs/scalar" }
+      }
+    },
+    "commandProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "available"],
+      "properties": {
+        "id": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/bindingId" },
+        "available": { "type": "boolean" },
+        "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "available": { "const": false } }, "required": ["available"] },
+          "then": { "required": ["reason"], "properties": { "reason": true } }
+        },
+        {
+          "if": { "properties": { "available": { "const": true } }, "required": ["available"] },
+          "then": { "properties": { "reason": false } }
+        }
+      ]
+    },
+    "bindingsProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["properties", "commands", "events"],
+      "properties": {
+        "properties": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/propertyProjection" }
+        },
+        "commands": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/commandProjection" }
+        },
+        "events": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/commandProjection" }
+        }
+      }
+    },
+    "selectionStamp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "hostGeneration", "reason"],
+      "properties": {
+        "authority": { "enum": ["host-policy", "user"] },
+        "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "exclusiveGroup": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "rank": { "type": "integer", "minimum": 0 },
+        "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principalHandle", "origin", "identity", "claimId", "contributionId", "mode", "priority", "authorization", "state", "reason"],
+      "properties": {
+        "principalHandle": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/principalHandle" },
+        "origin": { "enum": ["explicit", "legacy-structured"] },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+        "claimId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "contributionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "mode": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/mode" },
+        "priority": { "type": "integer", "minimum": -100000, "maximum": 100000 },
+        "authorization": { "enum": ["allowed", "denied"] },
+        "state": { "enum": ["selected", "eligible", "denied", "conflicted", "suppressed", "pending"] },
+        "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" },
+        "selection": { "$ref": "#/$defs/selectionStamp" },
+        "bindings": { "$ref": "#/$defs/bindingsProjection" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "const": "selected" } }, "required": ["state"] },
+          "then": { "required": ["selection", "bindings"], "properties": { "selection": true, "bindings": true } }
+        },
+        {
+          "if": { "properties": { "state": { "not": { "const": "selected" } } }, "required": ["state"] },
+          "then": { "properties": { "selection": false, "bindings": false } }
+        },
+        {
+          "if": { "properties": { "authorization": { "const": "denied" } }, "required": ["authorization"] },
+          "then": { "properties": { "state": { "enum": ["denied", "suppressed"] } } }
+        }
+      ]
+    },
+    "groupDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["groupId", "outcome", "authority", "hostGeneration", "reason"],
+      "properties": {
+        "groupId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "outcome": { "enum": ["selected", "native", "none"] },
+        "selectedClaim": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/claimReference" },
+        "authority": { "enum": ["host-policy", "user"] },
+        "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "outcome": { "const": "selected" } }, "required": ["outcome"] },
+          "then": { "required": ["selectedClaim"], "properties": { "selectedClaim": true } }
+        },
+        {
+          "if": { "properties": { "outcome": { "enum": ["native", "none"] } }, "required": ["outcome"] },
+          "then": { "properties": { "selectedClaim": false } }
+        }
+      ]
+    },
+    "suppression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ancestorPointId", "ancestorClaim", "path", "hostGeneration", "reason"],
+      "properties": {
+        "kind": { "const": "ancestor-ownership" },
+        "ancestorPointId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "ancestorClaim": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/claimReference" },
+        "path": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 32,
+          "items": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+        },
+        "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" }
+      }
+    },
+    "pointState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "state", "reason", "candidates", "groupDecisions"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "state": { "enum": ["active", "inactive", "not-mounted", "suppressed", "pending"] },
+        "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" },
+        "candidates": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/candidate" }
+        },
+        "groupDecisions": {
+          "type": "array",
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/groupDecision" }
+        },
+        "suppression": { "$ref": "#/$defs/suppression" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "const": "suppressed" } }, "required": ["state"] },
+          "then": { "required": ["suppression"], "properties": { "suppression": true } }
+        },
+        {
+          "if": { "properties": { "state": { "not": { "const": "suppressed" } } }, "required": ["state"] },
+          "then": { "properties": { "suppression": false } }
+        }
+      ]
+    }
+  }
+}

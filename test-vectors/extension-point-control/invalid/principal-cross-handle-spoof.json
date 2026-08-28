@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "principal-cross-handle-spoof",
+  "expectedError": "cross-owner principal stamp mismatch"
+}

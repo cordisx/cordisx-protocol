@@ -1,0 +1,5 @@
+{
+  "base": "nested-suppression-recovery.json",
+  "mutation": "suppressed-decision-leak",
+  "expectedError": "suppressed point must not publish group decisions"
+}

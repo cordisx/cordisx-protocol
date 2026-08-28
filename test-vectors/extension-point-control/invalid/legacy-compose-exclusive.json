@@ -1,0 +1,5 @@
+{
+  "base": "nested-suppression-recovery.json",
+  "mutation": "legacy-compose-exclusive",
+  "expectedError": "must retain compatible ordered compose default allow"
+}

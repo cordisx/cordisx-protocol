@@ -24,6 +24,19 @@ Extension-point management v1 suites live in `extension-points/valid` and
 canonical plugin/point policy, compatible default access, surface command
 origin, and outlet route/page plus page-header command enforcement phases.
 
+Extension-point control v1 suites live in `extension-point-control/valid` and
+`extension-point-control/invalid`. They cover controlled reasoning properties
+and commands, user-switchable exclusive renderers, explicit overlay/proxy
+stacking, point/mode-specific authorization, Host-stamped candidate inventory,
+nested ownership suppression and recovery without losing an underlying denial,
+and rejection of free DOM,
+selectors, callbacks, sensitive projections, forged selections/events, implicit
+coexistence, incomplete candidate/point inventories, group-level cardinality or
+decision drift, cross-owner principal stamps, unstable legacy order, arbitrary
+command results, eligible host-priority native/none drift, cross-origin handle
+reuse, and legacy authority escalation. The nested valid suite includes
+simultaneous explicit and legacy claims for one source/plugin owner.
+
 Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,
 message delivery, chunk boundaries, paging, provenance, and causal parents.

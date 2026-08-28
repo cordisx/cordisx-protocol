@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-common.v1.schema.json",
+  "title": "CordisX Extension Point Control Common Definitions v1",
+  "$defs": {
+    "mode": {
+      "enum": ["compose", "replace", "overlay", "proxy", "hide-native"]
+    },
+    "principalHandle": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "claimReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principalHandle", "identity", "claimId", "mode"],
+      "properties": {
+        "principalHandle": { "$ref": "#/$defs/principalHandle" },
+        "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
+        "claimId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "mode": { "$ref": "#/$defs/mode" }
+      }
+    },
+    "bindingId": {
+      "type": "string",
+      "pattern": "^[a-z][a-zA-Z0-9]{0,63}$"
+    },
+    "valueType": {
+      "enum": ["string", "number", "integer", "boolean"]
+    },
+    "safeValueSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "$ref": "#/$defs/valueType" },
+        "nullable": { "type": "boolean", "default": false },
+        "enum": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "ui-common.v1.schema.json#/$defs/scalar" }
+        }
+      }
+    },
+    "argumentDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "schema", "required"],
+      "properties": {
+        "id": { "$ref": "#/$defs/bindingId" },
+        "schema": { "$ref": "#/$defs/safeValueSchema" },
+        "required": { "type": "boolean" }
+      }
+    },
+    "reasonCode": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$",
+      "maxLength": 128
+    }
+  }
+}
