@@ -1,0 +1,5 @@
+{
+  "case": "lifecycle",
+  "value": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-lifecycle.v1.schema.json", "contract": "cordisx.bound-connector-client-lifecycle/v1", "schemaVersion": 1, "clientState": "disposed", "subscriptions": [{ "subscriptionId": "subscription-1", "state": "owner-disposed" }] },
+  "attempt": { "kind": "call", "allowed": true }
+}

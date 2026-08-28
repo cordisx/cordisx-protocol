@@ -10,7 +10,7 @@ const schemaNames = [
   'connector-command.v1.schema.json', 'connector-event.v1.schema.json', 'connector-client-common.v1.schema.json',
   'connector-client-snapshot.v1.schema.json', 'connector-event-subscription.v1.schema.json', 'connector-event-page.v1.schema.json',
   'connector-client-result.v1.schema.json', 'connector-client-binding.v1.schema.json', 'connector-bound-client.v1.schema.json',
-  'connector-bound-client-call.v1.schema.json', 'connector-bound-client-result.v1.schema.json',
+  'connector-bound-client-call.v1.schema.json', 'connector-bound-client-result.v1.schema.json', 'connector-bound-client-lifecycle.v1.schema.json',
 ]
 const schemas = new Map()
 for (const name of schemaNames) schemas.set(name, JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')))
@@ -29,6 +29,7 @@ const validators = {
   call: schemaValidator('connector-bound-client-call.v1.schema.json'),
   result: schemaValidator('connector-bound-client-result.v1.schema.json'),
   page: schemaValidator('connector-event-page.v1.schema.json'),
+  lifecycle: schemaValidator('connector-bound-client-lifecycle.v1.schema.json'),
 }
 const errorsOf = validator => (validator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
 const sameRegistration = (left, right) => left?.registrationId === right?.registrationId && left?.connectorId === right?.connectorId && left?.generation === right?.generation
@@ -141,7 +142,17 @@ function validateSubscription(vector) {
   return errors
 }
 
-const validatorsByCase = { surface: vector => validateSurface(vector.value), exchange: validateExchange, subscription: validateSubscription }
+function validateLifecycle(vector) {
+  const errors = validators.lifecycle(vector.value) ? [] : errorsOf(validators.lifecycle)
+  if (errors.length > 0) return errors
+  const active = vector.attempt?.kind === 'call'
+    ? vector.value.clientState === 'active'
+    : vector.value.clientState === 'active' && vector.value.subscriptions.find(subscription => subscription.subscriptionId === vector.attempt.subscriptionId)?.state === 'active'
+  if (vector.attempt?.allowed !== active) errors.push('lifecycle attempt does not match terminal client/subscription state')
+  return errors
+}
+
+const validatorsByCase = { surface: vector => validateSurface(vector.value), result: vector => validators.result(vector.value) ? [] : errorsOf(validators.result), exchange: validateExchange, subscription: validateSubscription, lifecycle: validateLifecycle }
 async function jsonFiles(directory) { return (await readdir(directory, { withFileTypes: true })).filter(entry => entry.isFile() && entry.name.endsWith('.json')).map(entry => path.join(directory, entry.name)).sort() }
 let failures = 0
 for (const outcome of ['valid', 'invalid']) {

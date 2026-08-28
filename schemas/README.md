@@ -139,6 +139,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   `connector-bound-client-call.v1.schema.json`, and
   `connector-bound-client-result.v1.schema.json`: Host-injected bound-client
   surface plus typed discover/execute/subscribe outcomes;
+- `connector-bound-client-lifecycle.v1.schema.json`: executable client and
+  subscription terminal-state projection for unsubscribe and owner disposal;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

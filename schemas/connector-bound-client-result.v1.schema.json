@@ -19,7 +19,8 @@
   },
   "allOf": [
     { "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "allowed" } } } } } },
-    { "if": { "properties": { "status": { "enum": ["denied", "unavailable"] } }, "required": ["status"] }, "then": { "properties": { "snapshot": false, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "status": { "const": "denied" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "denied" } } }, "snapshot": false, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "unavailable" } } }, "snapshot": false, "execution": false, "subscription": false } } },
     { "if": { "properties": { "type": { "const": "discover" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["snapshot"], "properties": { "snapshot": true, "execution": false, "subscription": false } } },
     { "if": { "properties": { "type": { "const": "execute" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["execution"], "properties": { "snapshot": false, "execution": true, "subscription": false } } },
     { "if": { "properties": { "type": { "const": "subscribe" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["subscription"], "properties": { "snapshot": false, "execution": false, "subscription": true } } }

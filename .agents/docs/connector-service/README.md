@@ -81,6 +81,14 @@ live page begin. A page contains one contiguous sequence for the exact
 registration. Disposal is terminal, including during replay, so a late event
 for that registration is rejected.
 
+The lossless protocol invariant is one Host-owned serialized sequence per exact
+registration: a subscription observes each accepted sequence once in cursor
+order, replay through its fixed snapshot, then live events strictly after that
+cursor. The schema/conformance model makes ordering, terminal disposal, and
+unsubscribe/owner-dispose state testable. A real concurrent or reentrant
+producer race is a Host integration acceptance gate; static Protocol fixtures
+do not claim to prove its runtime scheduling behavior.
+
 The documents contain no Room, Agent product UI, model, provider, workspace,
 secret, external-platform identity, DOM, callback, raw bridge, absolute-path,
 or host-transport field. Host and adapters may implement those concerns behind

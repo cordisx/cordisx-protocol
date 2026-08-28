@@ -51,7 +51,7 @@ export type ConnectorEvent =
 
 export type ConnectorClientCapability = 'connector.discovery' | 'connector.command.execute' | 'connector.events.subscribe'
 
-export interface ConnectorCaller {
+interface ConnectorCaller {
   principal: { principalHandle: string; pluginId: string; generation: number }
   userHandle: string
   authorization: {
@@ -65,7 +65,7 @@ export type ConnectorAuthorizationOutcome =
   | { capability: ConnectorClientCapability; state: 'denied'; code: 'user-denied' | 'policy-denied' }
   | { capability: ConnectorClientCapability; state: 'unavailable'; code: 'principal-unavailable' | 'registration-unavailable' | 'unsupported' }
 
-export type HostConnectorClientRequest =
+type HostConnectorClientRequest =
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json'; contract: 'cordisx.connector-client-request/v1'; schemaVersion: 1; requestId: string; caller: ConnectorCaller; type: 'connector.discover' }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json'; contract: 'cordisx.connector-client-request/v1'; schemaVersion: 1; requestId: string; caller: ConnectorCaller; type: 'connector.command.execute'; registration: ConnectorRegistrationIdentity; command: ConnectorCommand }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json'; contract: 'cordisx.connector-client-request/v1'; schemaVersion: 1; requestId: string; caller: ConnectorCaller; type: 'connector.events.subscribe'; registration: ConnectorRegistrationIdentity; afterSequence: number }
@@ -93,7 +93,7 @@ export interface ConnectorEventSubscription {
   snapshotSequence: number
 }
 
-export type HostConnectorClientResult =
+type HostConnectorClientResult =
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: HostConnectorClientRequest['type']; status: 'denied'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'denied' }> }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: HostConnectorClientRequest['type']; status: 'unavailable'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'unavailable' }> }
   | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json'; contract: 'cordisx.connector-client-result/v1'; schemaVersion: 1; requestId: string; type: 'connector.discover'; status: 'accepted'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'allowed' }>; snapshot: ConnectorClientSnapshot }
@@ -123,12 +123,19 @@ export interface ConnectorSubscription {
   unsubscribe(): void
 }
 
+export type BoundConnectorClientResult =
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json'; contract: 'cordisx.bound-connector-client-result/v1'; schemaVersion: 1; callId: string; type: 'discover' | 'execute' | 'subscribe'; status: 'denied'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'denied' }> }
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json'; contract: 'cordisx.bound-connector-client-result/v1'; schemaVersion: 1; callId: string; type: 'discover' | 'execute' | 'subscribe'; status: 'unavailable'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'unavailable' }> }
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json'; contract: 'cordisx.bound-connector-client-result/v1'; schemaVersion: 1; callId: string; type: 'discover'; status: 'accepted'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'allowed' }>; snapshot: ConnectorClientSnapshot }
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json'; contract: 'cordisx.bound-connector-client-result/v1'; schemaVersion: 1; callId: string; type: 'execute'; status: 'accepted'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'allowed' }>; execution: { kind: 'conversation.opened'; conversation: string } | { kind: 'message.sent'; conversation: string; messageId: string } | { kind: 'run.stopped'; binding: { registration: ConnectorRegistrationIdentity; conversation: string; run: string } } | { kind: 'conversation.closed'; conversation: string } }
+  | { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json'; contract: 'cordisx.bound-connector-client-result/v1'; schemaVersion: 1; callId: string; type: 'subscribe'; status: 'accepted'; authorization: Extract<ConnectorAuthorizationOutcome, { state: 'allowed' }>; subscription: ConnectorSubscription }
+
 export interface BoundConnectorClient {
   readonly $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client.v1.schema.json'
   readonly contract: 'cordisx.bound-connector-client/v1'
   readonly schemaVersion: 1
-  discover(): Promise<HostConnectorClientResult>
-  execute(command: ConnectorCommand): Promise<HostConnectorClientResult>
-  subscribe(registration: ConnectorRegistrationIdentity, afterSequence: number): Promise<ConnectorSubscription>
+  discover(): Promise<Extract<BoundConnectorClientResult, { type: 'discover' }>>
+  execute(command: ConnectorCommand): Promise<Extract<BoundConnectorClientResult, { type: 'execute' }>>
+  subscribe(registration: ConnectorRegistrationIdentity, afterSequence: number): Promise<Extract<BoundConnectorClientResult, { type: 'subscribe' }>>
   dispose(): void
 }
