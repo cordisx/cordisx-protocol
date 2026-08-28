@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "candidate-wrong-point",
+  "expectedError": "runtime candidate is listed under the wrong point"
+}

@@ -26,6 +26,15 @@ catalog `maturity`, versioned `adapterSupport`, and a separate runtime-context
 snapshot. A supported stable point may be `not-mounted` without becoming
 unverified; unsupported/unverified points cannot report an active context, and
 legacy `availability` or live context fields are rejected from v5 descriptors.
+Extension-point control conformance freezes four separate claim,
+authorization, Host point-policy, and runtime-selection layers. It covers exact
+partial denials, explicit reciprocal mode coexistence, exclusive user/Host
+selection, renderer-safe scalar properties, Host-brokered commands,
+no-data command acknowledgements, Host-projected scalar events, owner- and
+generation-stamped decisions,
+transitive parent suppression/recovery, and the
+legacy structured compose-only downgrade. It rejects DOM/selector/callback
+authority and any legacy escalation into a new control mode.
 Manager settings conformance separately covers surface version 4 and catalog
 version 3 so the closed version-2/version-3 vocabularies remain unchanged. It
 validates structured host headers, ordering/collisions, same-owner route/page

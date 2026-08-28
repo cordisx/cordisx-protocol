@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "legacy-free-dom-mode",
+  "expectedError": "declarations[0] schema"
+}

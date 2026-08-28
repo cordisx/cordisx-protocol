@@ -143,6 +143,23 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   outlet route/page, and page-header command authorization origin metadata.
 - `extension-point-access.v2.schema.json`: generation-fenced origin metadata,
   including surface-origin checks for route navigation.
+- `extension-point-control-declaration.v1.schema.json`: one normalized explicit
+  or legacy-structured plugin claim for a semantic point and mode, with bounded
+  renderer-safe binding requests;
+- `extension-point-control-authorization.v1.schema.json`: one partial grant or
+  denial keyed by exact source/plugin/point/claim/mode, never a whole-plugin
+  policy;
+- `host-extension-point-control-catalog.v1.schema.json`: Host-owned mode,
+  coexistence, exclusive selection, safe binding, and nested ownership policy;
+- `extension-point-control-snapshot.v1.schema.json`: Host-authored runtime
+  candidate inventory, selection/conflict, safe projection, and transitive
+  suppression result;
+- `extension-point-control-access.v1.schema.json`: generation-fenced,
+  Host-brokered scalar command invocation origin with no callback or DOM value;
+- `extension-point-control-result.v1.schema.json`: correlated Host-stamped
+  accepted/rejected command acknowledgement with no arbitrary result data; and
+- `extension-point-control-event.v1.schema.json`: Host-authored,
+  generation-fenced scalar event projection for an exact selected claim.
 - `agent-event.v1.schema.json`: one sourced Session/Agent ledger event;
 - `agent-event-page.v1.schema.json`: one snapshot-bounded query page.
 - `agent-event.v2.schema.json`: one sourced event with delivery ownership and

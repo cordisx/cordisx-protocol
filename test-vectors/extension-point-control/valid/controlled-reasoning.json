@@ -1,0 +1,247 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-control-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "composer.model-control",
+        "modes": [
+          { "id": "compose", "stacking": "ordered", "coexistsWith": [], "defaultAuthorization": "allow" },
+          { "id": "replace", "stacking": "exclusive", "exclusiveGroup": "ownership", "coexistsWith": [], "defaultAuthorization": "deny" },
+          { "id": "hide-native", "stacking": "exclusive", "exclusiveGroup": "ownership", "coexistsWith": [], "defaultAuthorization": "deny" }
+        ],
+        "exclusiveGroups": [
+          { "id": "ownership", "modes": ["replace", "hide-native"], "cardinality": "one", "selection": "user", "nativeFallback": true }
+        ],
+        "safeProperties": [],
+        "safeCommands": [],
+        "safeEvents": [],
+        "ownership": { "scope": "subtree", "suppressesDescendantsWhenModes": ["replace", "hide-native"] }
+      },
+      {
+        "id": "composer.reasoning-intensity",
+        "parentPointId": "composer.model-control",
+        "modes": [
+          { "id": "compose", "stacking": "ordered", "coexistsWith": ["overlay", "proxy"], "defaultAuthorization": "allow" },
+          { "id": "replace", "stacking": "exclusive", "exclusiveGroup": "renderer", "coexistsWith": ["overlay"], "defaultAuthorization": "deny" },
+          { "id": "overlay", "stacking": "ordered", "coexistsWith": ["compose", "replace", "proxy"], "defaultAuthorization": "deny" },
+          { "id": "proxy", "stacking": "ordered", "coexistsWith": ["compose", "overlay"], "defaultAuthorization": "deny" },
+          { "id": "hide-native", "stacking": "exclusive", "exclusiveGroup": "renderer", "coexistsWith": [], "defaultAuthorization": "deny" }
+        ],
+        "exclusiveGroups": [
+          { "id": "renderer", "modes": ["replace", "hide-native"], "cardinality": "one", "selection": "user", "nativeFallback": true }
+        ],
+        "safeProperties": [
+          {
+            "id": "reasoningIntensity",
+            "schema": { "type": "string", "enum": ["low", "medium", "high"] },
+            "visibility": "renderer-safe",
+            "mutable": false
+          }
+        ],
+        "safeCommands": [
+          {
+            "id": "setReasoningIntensity",
+            "dispatch": "host-brokered",
+            "arguments": [
+              { "id": "value", "schema": { "type": "string", "enum": ["low", "medium", "high"] }, "required": true }
+            ]
+          }
+        ],
+        "safeEvents": [
+          {
+            "id": "reasoningIntensityChanged",
+            "delivery": "host-projected",
+            "payload": [
+              { "id": "value", "schema": { "type": "string", "enum": ["low", "medium", "high"] }, "required": true }
+            ]
+          }
+        ],
+        "ownership": { "scope": "point", "suppressesDescendantsWhenModes": [] }
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/ascension", "pluginId": "ascension", "pointId": "composer.reasoning-intensity" },
+      "claimId": "presentation",
+      "contributionId": "reasoning.presentation",
+      "mode": "overlay",
+      "priority": 20,
+      "requestedBindings": { "properties": ["reasoningIntensity"], "commands": ["setReasoningIntensity"], "events": ["reasoningIntensityChanged"] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/compact", "pluginId": "compact", "pointId": "composer.reasoning-intensity" },
+      "claimId": "renderer",
+      "contributionId": "reasoning.compact",
+      "mode": "replace",
+      "priority": 10,
+      "requestedBindings": { "properties": ["reasoningIntensity"], "commands": ["setReasoningIntensity"], "events": [] }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/sync", "pluginId": "sync", "pointId": "composer.reasoning-intensity" },
+      "claimId": "sync",
+      "contributionId": "reasoning.sync",
+      "mode": "proxy",
+      "priority": 30,
+      "requestedBindings": { "properties": ["reasoningIntensity"], "commands": ["setReasoningIntensity"], "events": ["reasoningIntensityChanged"] }
+    }
+  ],
+  "authorizations": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": { "source": "https://plugins.example/ascension", "pluginId": "ascension", "pointId": "composer.reasoning-intensity" },
+      "claimId": "presentation",
+      "mode": "overlay",
+      "policy": "allow"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": { "source": "https://plugins.example/compact", "pluginId": "compact", "pointId": "composer.reasoning-intensity" },
+      "claimId": "renderer",
+      "mode": "replace",
+      "policy": "allow"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "identity": { "source": "https://plugins.example/sync", "pluginId": "sync", "pointId": "composer.reasoning-intensity" },
+      "claimId": "sync",
+      "mode": "proxy",
+      "policy": "deny"
+    }
+  ],
+  "snapshots": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-snapshot.v1.schema.json",
+      "schemaVersion": 1,
+      "authority": "host",
+      "hostGeneration": "host-17",
+      "revision": 8,
+      "points": [
+        { "id": "composer.model-control", "state": "active", "reason": "point.mounted", "candidates": [], "groupDecisions": [{ "groupId": "ownership", "outcome": "native", "authority": "user", "hostGeneration": "host-17", "reason": "user.native" }] },
+        {
+          "id": "composer.reasoning-intensity",
+          "state": "active",
+          "reason": "point.mounted",
+          "candidates": [
+            {
+              "origin": "explicit",
+              "identity": { "source": "https://plugins.example/ascension", "pluginId": "ascension", "pointId": "composer.reasoning-intensity" },
+              "claimId": "presentation", "contributionId": "reasoning.presentation", "mode": "overlay", "priority": 20,
+              "authorization": "allowed", "state": "selected", "reason": "policy.ordered",
+              "selection": { "authority": "host-policy", "hostGeneration": "host-17", "reason": "policy.ordered" },
+              "bindings": {
+                "properties": [{ "id": "reasoningIntensity", "value": "high" }],
+                "commands": [{ "id": "setReasoningIntensity", "available": true }],
+                "events": [{ "id": "reasoningIntensityChanged", "available": true }]
+              }
+            },
+            {
+              "origin": "explicit",
+              "identity": { "source": "https://plugins.example/compact", "pluginId": "compact", "pointId": "composer.reasoning-intensity" },
+              "claimId": "renderer", "contributionId": "reasoning.compact", "mode": "replace", "priority": 10,
+              "authorization": "allowed", "state": "selected", "reason": "user.selected",
+              "selection": { "authority": "user", "hostGeneration": "host-17", "exclusiveGroup": "renderer", "reason": "user.selected" },
+              "bindings": {
+                "properties": [{ "id": "reasoningIntensity", "value": "high" }],
+                "commands": [{ "id": "setReasoningIntensity", "available": true }],
+                "events": []
+              }
+            },
+            {
+              "origin": "explicit",
+              "identity": { "source": "https://plugins.example/sync", "pluginId": "sync", "pointId": "composer.reasoning-intensity" },
+              "claimId": "sync", "contributionId": "reasoning.sync", "mode": "proxy", "priority": 30,
+              "authorization": "denied", "state": "denied", "reason": "authorization.denied"
+            }
+          ],
+          "groupDecisions": [
+            {
+              "groupId": "renderer", "outcome": "selected",
+              "selectedClaim": {
+                "identity": { "source": "https://plugins.example/compact", "pluginId": "compact", "pointId": "composer.reasoning-intensity" },
+                "claimId": "renderer", "mode": "replace"
+              },
+              "authority": "user", "hostGeneration": "host-17", "reason": "user.selected"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "event": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-event.v1.schema.json",
+        "schemaVersion": 1,
+        "authority": "host",
+        "hostGeneration": "host-17",
+        "sequence": 1,
+        "identity": { "source": "https://plugins.example/ascension", "pluginId": "ascension", "pointId": "composer.reasoning-intensity" },
+        "claimId": "presentation", "contributionId": "reasoning.presentation", "mode": "overlay",
+        "eventId": "reasoningIntensityChanged", "payload": { "value": "high" }
+      },
+      "expectedAccepted": true
+    }
+  ],
+  "accesses": [
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-access.v1.schema.json",
+        "schemaVersion": 1,
+        "invocationId": "invoke-1",
+        "hostGeneration": "host-17",
+        "operation": "point.host-command.invoke",
+        "identity": { "source": "https://plugins.example/compact", "pluginId": "compact", "pointId": "composer.reasoning-intensity" },
+        "claimId": "renderer", "contributionId": "reasoning.compact", "mode": "replace",
+        "commandId": "setReasoningIntensity", "arguments": { "value": "medium" }
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-result.v1.schema.json",
+        "schemaVersion": 1,
+        "authority": "host",
+        "invocationId": "invoke-1",
+        "hostGeneration": "host-17",
+        "revision": 9,
+        "outcome": "accepted",
+        "reason": "command.accepted"
+      },
+      "expectedAuthorized": true
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-access.v1.schema.json",
+        "schemaVersion": 1,
+        "invocationId": "invoke-2",
+        "hostGeneration": "host-17",
+        "operation": "point.host-command.invoke",
+        "identity": { "source": "https://plugins.example/sync", "pluginId": "sync", "pointId": "composer.reasoning-intensity" },
+        "claimId": "sync", "contributionId": "reasoning.sync", "mode": "proxy",
+        "commandId": "setReasoningIntensity", "arguments": { "value": "medium" }
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-result.v1.schema.json",
+        "schemaVersion": 1,
+        "authority": "host",
+        "invocationId": "invoke-2",
+        "hostGeneration": "host-17",
+        "revision": 9,
+        "outcome": "rejected",
+        "reason": "authorization.denied"
+      },
+      "expectedAuthorized": false
+    }
+  ]
+}

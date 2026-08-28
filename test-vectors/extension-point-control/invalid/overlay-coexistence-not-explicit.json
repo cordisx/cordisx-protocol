@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "overlay-coexistence-not-explicit",
+  "expectedError": "mode coexistence must be symmetric"
+}

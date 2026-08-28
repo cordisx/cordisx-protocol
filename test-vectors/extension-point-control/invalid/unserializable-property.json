@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "unserializable-property",
+  "expectedError": "snapshots[0] schema"
+}

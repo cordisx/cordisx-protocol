@@ -1,0 +1,5 @@
+{
+  "base": "nested-suppression-recovery.json",
+  "mutation": "descendant-not-suppressed",
+  "expectedError": "selected ancestor ownership did not suppress descendant"
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-result.v1.schema.json",
+  "title": "CordisX Host-brokered Extension Point Command Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "authority", "invocationId", "hostGeneration", "revision", "outcome", "reason"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-result.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "authority": { "const": "host" },
+    "invocationId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "revision": { "type": "integer", "minimum": 0 },
+    "outcome": { "enum": ["accepted", "rejected"] },
+    "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" }
+  }
+}
