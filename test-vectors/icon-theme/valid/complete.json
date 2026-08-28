@@ -12,7 +12,27 @@
       "identity": { "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0" },
       "providerGeneration": "reicon-1",
       "status": "ready",
-      "coverage": { "kind": "complete" }
+      "coverage": {
+        "kind": "complete",
+        "proof": {
+          "kind": "host-conformance",
+          "proofId": "proof_reicon_000001",
+          "catalogVersion": 1,
+          "catalogDigest": "sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565",
+          "providerId": "builtin:reicon",
+          "namespace": "reicon",
+          "providerVersion": "1.0.0",
+          "providerGeneration": "reicon-1",
+          "protocolVersion": 1,
+          "descriptorFormatVersion": 1,
+          "keyCount": 49,
+          "variantCount": 3,
+          "stateCount": 8,
+          "tupleCount": 1176,
+          "outcome": "passed",
+          "rawDataExported": false
+        }
+      }
     },
     {
       "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json",
@@ -28,24 +48,41 @@
       "coverage": {
         "kind": "partial",
         "entries": [
-          { "key": "action.save", "variants": ["regular", "filled"], "states": ["default", "hover", "active", "disabled"] },
-          { "key": "navigation.plugins", "variants": ["duotone"], "states": ["default", "selected"] }
+          { "key": "action.save", "variant": "regular", "state": "default" },
+          { "key": "action.save", "variant": "regular", "state": "hover" },
+          { "key": "action.save", "variant": "filled", "state": "active" },
+          { "key": "action.save", "variant": "filled", "state": "disabled" },
+          { "key": "navigation.plugins", "variant": "duotone", "state": "default" },
+          { "key": "navigation.plugins", "variant": "duotone", "state": "selected" }
         ]
       },
       "lastGoodGeneration": "aurora-2"
     }
   ],
+  "initialSelection": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-selection.v1.schema.json",
+    "schemaVersion": 1,
+    "authority": "host",
+    "profileId": "work",
+    "hostGeneration": "host-12",
+    "profileRevision": 4,
+    "defaultProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "profileRevision": 4 },
+    "selectedProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "profileRevision": 4 },
+    "fallbackProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "profileRevision": 4 },
+    "outcome": "default",
+    "reason": "host-default"
+  },
   "selection": {
     "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-selection.v1.schema.json",
     "schemaVersion": 1,
     "authority": "host",
     "profileId": "work",
     "hostGeneration": "host-12",
-    "revision": 5,
+    "profileRevision": 6,
     "requestedProviderHandle": "iph_aurora0000000001",
-    "defaultProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1" },
-    "selectedProvider": { "providerHandle": "iph_aurora0000000001", "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0", "providerGeneration": "aurora-3" },
-    "fallbackProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1" },
+    "defaultProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "profileRevision": 6 },
+    "selectedProvider": { "providerHandle": "iph_aurora0000000001", "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0", "providerGeneration": "aurora-3", "profileRevision": 6 },
+    "fallbackProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "profileRevision": 6 },
     "outcome": "selected",
     "reason": "user-selection"
   },
@@ -126,7 +163,7 @@
       "authority": "host",
       "requestId": "lifecycle_register_01",
       "profileId": "work",
-      "expectedRevision": 4,
+      "expectedProfileRevision": 4,
       "hostGeneration": "host-12",
       "operation": {
         "kind": "register",
@@ -134,7 +171,7 @@
         "principal": { "principalHandle": "ipp_aurora0000000001", "pluginId": "aurora" },
         "identity": { "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0" },
         "providerGeneration": "aurora-3",
-        "coverage": { "kind": "partial", "entries": [{ "key": "action.save", "variants": ["regular"], "states": ["default"] }] }
+        "coverage": { "kind": "partial", "entries": [{ "key": "action.save", "variant": "regular", "state": "default" }] }
       }
     },
     {
@@ -143,7 +180,7 @@
       "authority": "host",
       "requestId": "lifecycle_select_0001",
       "profileId": "work",
-      "expectedRevision": 5,
+      "expectedProfileRevision": 5,
       "hostGeneration": "host-12",
       "operation": { "kind": "select", "providerHandle": "iph_aurora0000000001", "providerGeneration": "aurora-3" }
     },
@@ -153,7 +190,7 @@
       "authority": "host",
       "requestId": "lifecycle_dispose_001",
       "profileId": "work",
-      "expectedRevision": 6,
+      "expectedProfileRevision": 6,
       "hostGeneration": "host-12",
       "operation": { "kind": "dispose", "providerHandle": "iph_aurora0000000001", "providerGeneration": "aurora-2" }
     },
@@ -163,7 +200,7 @@
       "authority": "host",
       "requestId": "lifecycle_rollback_01",
       "profileId": "work",
-      "expectedRevision": 6,
+      "expectedProfileRevision": 7,
       "hostGeneration": "host-12",
       "operation": { "kind": "rollback", "failedProviderHandle": "iph_aurora0000000001", "failedGeneration": "aurora-3", "restoreProviderHandle": "iph_reicon0000000001", "restoreGeneration": "reicon-1", "reason": "invalid-descriptor" }
     }
@@ -173,11 +210,37 @@
       "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json",
       "schemaVersion": 1,
       "authority": "host",
+      "requestId": "lifecycle_register_01",
+      "profileId": "work",
+      "operation": "register",
+      "outcome": "staged",
+      "profileRevision": 5,
+      "hostGeneration": "host-12",
+      "activeProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1" },
+      "affectedProviderHandle": "iph_aurora0000000001"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json",
+      "schemaVersion": 1,
+      "authority": "host",
+      "requestId": "lifecycle_select_0001",
+      "profileId": "work",
+      "operation": "select",
+      "outcome": "applied",
+      "profileRevision": 6,
+      "hostGeneration": "host-12",
+      "activeProvider": { "providerHandle": "iph_aurora0000000001", "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0", "providerGeneration": "aurora-3" },
+      "affectedProviderHandle": "iph_aurora0000000001"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json",
+      "schemaVersion": 1,
+      "authority": "host",
       "requestId": "lifecycle_dispose_001",
       "profileId": "work",
       "operation": "dispose",
       "outcome": "applied",
-      "revision": 7,
+      "profileRevision": 7,
       "hostGeneration": "host-12",
       "activeProvider": { "providerHandle": "iph_aurora0000000001", "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0", "providerGeneration": "aurora-3" },
       "affectedProviderHandle": "iph_aurora0000000001",
@@ -191,7 +254,7 @@
       "profileId": "work",
       "operation": "rollback",
       "outcome": "rolled-back",
-      "revision": 8,
+      "profileRevision": 8,
       "hostGeneration": "host-12",
       "activeProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1" },
       "affectedProviderHandle": "iph_aurora0000000001"

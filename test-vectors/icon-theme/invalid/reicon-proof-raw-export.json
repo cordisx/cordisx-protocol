@@ -1,0 +1,20 @@
+{
+  "case": "reject complete coverage proof that exported raw geometry",
+  "schema": "icon-theme-provider-registration.v1.schema.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json",
+    "schemaVersion": 1,
+    "authority": "host",
+    "hostGeneration": "host-12",
+    "revision": 4,
+    "providerHandle": "iph_reicon0000000001",
+    "principal": { "kind": "host" },
+    "identity": { "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0" },
+    "providerGeneration": "reicon-1",
+    "status": "ready",
+    "coverage": {
+      "kind": "complete",
+      "proof": { "kind": "host-conformance", "proofId": "proof_reicon_000003", "catalogVersion": 1, "catalogDigest": "sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565", "providerId": "builtin:reicon", "namespace": "reicon", "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "protocolVersion": 1, "descriptorFormatVersion": 1, "keyCount": 49, "variantCount": 3, "stateCount": 8, "tupleCount": 1176, "outcome": "passed", "rawDataExported": true }
+    }
+  }
+}

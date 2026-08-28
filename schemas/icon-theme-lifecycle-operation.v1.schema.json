@@ -4,14 +4,14 @@
   "title": "CordisX Host Icon Theme Lifecycle Operation v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "schemaVersion", "authority", "requestId", "profileId", "expectedRevision", "hostGeneration", "operation"],
+  "required": ["$schema", "schemaVersion", "authority", "requestId", "profileId", "expectedProfileRevision", "hostGeneration", "operation"],
   "properties": {
     "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-operation.v1.schema.json" },
     "schemaVersion": { "const": 1 },
     "authority": { "const": "host" },
     "requestId": { "$ref": "icon-theme-common.v1.schema.json#/$defs/opaqueId" },
     "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
-    "expectedRevision": { "type": "integer", "minimum": 0 },
+    "expectedProfileRevision": { "type": "integer", "minimum": 0 },
     "hostGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
     "operation": {
       "oneOf": [
@@ -64,7 +64,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["kind", "failedProviderHandle", "failedGeneration", "restoreProviderHandle", "restoreGeneration"],
+          "required": ["kind", "failedProviderHandle", "failedGeneration", "restoreProviderHandle", "restoreGeneration", "reason"],
           "properties": {
             "kind": { "const": "rollback" },
             "failedProviderHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },

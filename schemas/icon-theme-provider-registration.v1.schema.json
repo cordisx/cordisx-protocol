@@ -42,7 +42,22 @@
   "allOf": [
     {
       "if": { "properties": { "principal": { "type": "object", "properties": { "kind": { "const": "host" } }, "required": ["kind"] } }, "required": ["principal"] },
-      "then": { "properties": { "identity": { "type": "object", "properties": { "providerId": { "type": "string", "pattern": "^builtin:" } } } } }
+      "then": {
+        "properties": {
+          "identity": {
+            "type": "object",
+            "properties": {
+              "providerId": { "const": "builtin:reicon" },
+              "namespace": { "const": "reicon" }
+            }
+          },
+          "coverage": {
+            "type": "object",
+            "properties": { "kind": { "const": "complete" } },
+            "required": ["kind"]
+          }
+        }
+      }
     },
     {
       "if": { "properties": { "principal": { "type": "object", "properties": { "kind": { "const": "plugin" } }, "required": ["kind"] } }, "required": ["principal"] },

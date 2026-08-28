@@ -29,14 +29,38 @@ export interface IconThemeProviderReference extends IconThemeProviderIdentity {
   providerGeneration: string
 }
 
+export interface PinnedIconThemeProviderReference extends IconThemeProviderReference {
+  profileRevision: number
+}
+
 export type IconThemeCoverage =
-  | { kind: 'complete' }
+  | {
+      kind: 'complete'
+      proof: {
+        kind: 'host-conformance'
+        proofId: string
+        catalogVersion: 1
+        catalogDigest: 'sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565'
+        providerId: `builtin:${string}` | `plugin:${string}:${string}`
+        namespace: string
+        providerVersion: string
+        providerGeneration: string
+        protocolVersion: 1
+        descriptorFormatVersion: 1
+        keyCount: 49
+        variantCount: 3
+        stateCount: 8
+        tupleCount: 1176
+        outcome: 'passed'
+        rawDataExported: false
+      }
+    }
   | {
       kind: 'partial'
       entries: ReadonlyArray<{
         key: SemanticIconKey
-        variants: ReadonlyArray<IconVariant>
-        states: ReadonlyArray<IconState>
+        variant: IconVariant
+        state: IconState
       }>
     }
 
@@ -92,12 +116,12 @@ export interface IconThemeSelection {
   schemaVersion: 1
   authority: 'host'
   profileId: string
+  profileRevision: number
   hostGeneration: string
-  revision: number
   requestedProviderHandle?: `iph_${string}`
-  defaultProvider: IconThemeProviderReference & { providerId: 'builtin:reicon'; namespace: 'reicon' }
-  selectedProvider: IconThemeProviderReference
-  fallbackProvider: IconThemeProviderReference & { providerId: 'builtin:reicon'; namespace: 'reicon' }
+  defaultProvider: PinnedIconThemeProviderReference & { providerId: 'builtin:reicon'; namespace: 'reicon' }
+  selectedProvider: PinnedIconThemeProviderReference
+  fallbackProvider: PinnedIconThemeProviderReference & { providerId: 'builtin:reicon'; namespace: 'reicon' }
   outcome: 'default' | 'selected' | 'rolled-back'
   reason: 'user-selection' | 'host-default' | 'provider-unavailable' | 'prepare-failed' | 'resolution-failed' | 'invalid-descriptor'
 }
@@ -138,7 +162,7 @@ export interface IconThemeLifecycleOperation {
   authority: 'host'
   requestId: string
   profileId: string
-  expectedRevision: number
+  expectedProfileRevision: number
   hostGeneration: string
   operation:
     | {
@@ -168,7 +192,7 @@ export interface IconThemeLifecycleResult {
   profileId: string
   operation: 'register' | 'select' | 'dispose' | 'rollback'
   outcome: 'staged' | 'applied' | 'conflict' | 'rejected' | 'rolled-back' | 'rollback-failed'
-  revision: number
+  profileRevision: number
   hostGeneration: string
   activeProvider: IconThemeProviderReference
   affectedProviderHandle?: `iph_${string}`

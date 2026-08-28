@@ -1,0 +1,14 @@
+{
+  "case": "reject late result from a replaced provider generation",
+  "schema": "icon-theme-resolution-result.v1.schema.json",
+  "semantic": "resolution-exchange",
+  "context": { "baseResolutionRequestId": "resolve_request_0001" },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "resolve_request_0001",
+    "providerGeneration": "aurora-2",
+    "outcome": "stale-generation",
+    "reason": "generation-mismatch"
+  }
+}

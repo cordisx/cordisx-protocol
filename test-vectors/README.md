@@ -38,11 +38,13 @@ reuse, and legacy authority escalation. The nested valid suite includes
 simultaneous explicit and legacy claims for one source/plugin owner.
 
 Icon theme v1 vectors live in `icon-theme/valid` and `icon-theme/invalid`.
-They cover Reicon default/fallback identity, plugin-principal-bound namespaces,
-partial key/variant/state coverage, request/generation correlation, normalized
-fill/stroke geometry, exact disposal and rollback, and rejection of components,
+They cover Reicon default/fallback exact profile/version/generation pins,
+no-raw-data complete-coverage proof, plugin-principal-bound namespaces,
+partial exact key/variant/state tuples, request/generation correlation,
+normalized fill/stroke geometry, lifecycle outcome combinations, stale/late
+generation rejection, exact disposal and rollback, and rejection of components,
 DOM, raw SVG/HTML, style, URLs, selectors, callbacks, `foreignObject`, local
-paths, open semantic keys, and provider identity impersonation.
+paths, open semantic keys, coverage drift, and provider identity impersonation.
 
 Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,

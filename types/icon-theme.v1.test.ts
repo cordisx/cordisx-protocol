@@ -14,6 +14,7 @@ const reicon = {
   protocolVersion: 1,
   providerVersion: '1.0.0',
   providerGeneration: 'reicon-1',
+  profileRevision: 4,
 } as const
 
 const registration = {
@@ -27,7 +28,27 @@ const registration = {
   identity: { providerId: 'builtin:reicon', namespace: 'reicon', protocolVersion: 1, providerVersion: '1.0.0' },
   providerGeneration: 'reicon-1',
   status: 'active',
-  coverage: { kind: 'complete' },
+  coverage: {
+    kind: 'complete',
+    proof: {
+      kind: 'host-conformance',
+      proofId: 'proof_reicon_000001',
+      catalogVersion: 1,
+      catalogDigest: 'sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565',
+      providerId: 'builtin:reicon',
+      namespace: 'reicon',
+      providerVersion: '1.0.0',
+      providerGeneration: 'reicon-1',
+      protocolVersion: 1,
+      descriptorFormatVersion: 1,
+      keyCount: 49,
+      variantCount: 3,
+      stateCount: 8,
+      tupleCount: 1176,
+      outcome: 'passed',
+      rawDataExported: false,
+    },
+  },
 } satisfies IconThemeProviderRegistration
 
 const selection = {
@@ -36,7 +57,7 @@ const selection = {
   authority: 'host',
   profileId: 'work',
   hostGeneration: 'host-12',
-  revision: 4,
+  profileRevision: 4,
   defaultProvider: reicon,
   selectedProvider: reicon,
   fallbackProvider: reicon,
@@ -78,7 +99,7 @@ const rollback = {
   authority: 'host',
   requestId: 'lifecycle_rollback_01',
   profileId: 'work',
-  expectedRevision: 8,
+  expectedProfileRevision: 8,
   hostGeneration: 'host-12',
   operation: {
     kind: 'rollback',

@@ -1,0 +1,22 @@
+{
+  "case": "reject rollback that retires a different failed generation",
+  "schema": "icon-theme-lifecycle-result.v1.schema.json",
+  "semantic": "lifecycle-transition",
+  "context": {
+    "baseOperationRequestId": "lifecycle_rollback_01",
+    "operationOverride": { "operation": { "failedGeneration": "aurora-2" } }
+  },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json",
+    "schemaVersion": 1,
+    "authority": "host",
+    "requestId": "lifecycle_rollback_01",
+    "profileId": "work",
+    "operation": "rollback",
+    "outcome": "rolled-back",
+    "profileRevision": 8,
+    "hostGeneration": "host-12",
+    "activeProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1" },
+    "affectedProviderHandle": "iph_aurora0000000001"
+  }
+}

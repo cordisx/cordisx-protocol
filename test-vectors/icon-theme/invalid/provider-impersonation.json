@@ -13,6 +13,6 @@
     "identity": { "providerId": "plugin:other:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0" },
     "providerGeneration": "aurora-3",
     "status": "ready",
-    "coverage": { "kind": "partial", "entries": [{ "key": "action.save", "variants": ["regular"], "states": ["default"] }] }
+    "coverage": { "kind": "partial", "entries": [{ "key": "action.save", "variant": "regular", "state": "default" }] }
   }
 }

@@ -116,13 +116,53 @@
         "providerGeneration": { "$ref": "#/$defs/generation" }
       }
     },
+    "pinnedProviderReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerHandle", "providerId", "namespace", "protocolVersion", "providerVersion", "providerGeneration", "profileRevision"],
+      "properties": {
+        "providerHandle": { "$ref": "#/$defs/providerHandle" },
+        "providerId": { "$ref": "#/$defs/providerId" },
+        "namespace": { "$ref": "#/$defs/namespace" },
+        "protocolVersion": { "const": 1 },
+        "providerVersion": { "$ref": "#/$defs/semanticVersion" },
+        "providerGeneration": { "$ref": "#/$defs/generation" },
+        "profileRevision": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "completeCoverageProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "proofId", "catalogVersion", "catalogDigest", "providerId", "namespace", "providerVersion", "providerGeneration", "protocolVersion", "descriptorFormatVersion", "keyCount", "variantCount", "stateCount", "tupleCount", "outcome", "rawDataExported"],
+      "properties": {
+        "kind": { "const": "host-conformance" },
+        "proofId": { "$ref": "#/$defs/opaqueId" },
+        "catalogVersion": { "const": 1 },
+        "catalogDigest": { "const": "sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565" },
+        "providerId": { "$ref": "#/$defs/providerId" },
+        "namespace": { "$ref": "#/$defs/namespace" },
+        "providerVersion": { "$ref": "#/$defs/semanticVersion" },
+        "providerGeneration": { "$ref": "#/$defs/generation" },
+        "protocolVersion": { "const": 1 },
+        "descriptorFormatVersion": { "const": 1 },
+        "keyCount": { "const": 49 },
+        "variantCount": { "const": 3 },
+        "stateCount": { "const": 8 },
+        "tupleCount": { "const": 1176 },
+        "outcome": { "const": "passed" },
+        "rawDataExported": { "const": false }
+      }
+    },
     "coverage": {
       "oneOf": [
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["kind"],
-          "properties": { "kind": { "const": "complete" } }
+          "required": ["kind", "proof"],
+          "properties": {
+            "kind": { "const": "complete" },
+            "proof": { "$ref": "#/$defs/completeCoverageProof" }
+          }
         },
         {
           "type": "object",
@@ -133,29 +173,18 @@
             "entries": {
               "type": "array",
               "minItems": 1,
-              "maxItems": 384,
+              "maxItems": 1175,
               "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["key", "variants", "states"],
+                "required": ["key", "variant", "state"],
                 "properties": {
                   "key": { "$ref": "#/$defs/semanticIconKey" },
-                  "variants": {
-                    "type": "array",
-                    "minItems": 1,
-                    "maxItems": 3,
-                    "uniqueItems": true,
-                    "items": { "$ref": "#/$defs/variant" }
-                  },
-                  "states": {
-                    "type": "array",
-                    "minItems": 1,
-                    "maxItems": 8,
-                    "uniqueItems": true,
-                    "items": { "$ref": "#/$defs/state" }
-                  }
+                  "variant": { "$ref": "#/$defs/variant" },
+                  "state": { "$ref": "#/$defs/state" }
                 }
-              }
+              },
+              "uniqueItems": true
             }
           }
         }

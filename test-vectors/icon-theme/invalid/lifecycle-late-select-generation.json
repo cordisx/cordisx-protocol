@@ -1,0 +1,22 @@
+{
+  "case": "reject selection of an unregistered late provider generation",
+  "schema": "icon-theme-lifecycle-result.v1.schema.json",
+  "semantic": "lifecycle-transition",
+  "context": {
+    "baseOperationRequestId": "lifecycle_select_0001",
+    "operationOverride": { "operation": { "providerGeneration": "aurora-2" } }
+  },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json",
+    "schemaVersion": 1,
+    "authority": "host",
+    "requestId": "lifecycle_select_0001",
+    "profileId": "work",
+    "operation": "select",
+    "outcome": "applied",
+    "profileRevision": 6,
+    "hostGeneration": "host-12",
+    "activeProvider": { "providerHandle": "iph_aurora0000000001", "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.0.0", "providerGeneration": "aurora-2" },
+    "affectedProviderHandle": "iph_aurora0000000001"
+  }
+}

@@ -4,7 +4,7 @@
   "title": "CordisX Host Icon Theme Lifecycle Result v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "schemaVersion", "authority", "requestId", "profileId", "operation", "outcome", "revision", "hostGeneration", "activeProvider"],
+  "required": ["$schema", "schemaVersion", "authority", "requestId", "profileId", "operation", "outcome", "profileRevision", "hostGeneration", "activeProvider"],
   "properties": {
     "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json" },
     "schemaVersion": { "const": 1 },
@@ -13,7 +13,7 @@
     "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
     "operation": { "enum": ["register", "select", "dispose", "rollback"] },
     "outcome": { "enum": ["staged", "applied", "conflict", "rejected", "rolled-back", "rollback-failed"] },
-    "revision": { "type": "integer", "minimum": 0 },
+    "profileRevision": { "type": "integer", "minimum": 0 },
     "hostGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
     "activeProvider": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerReference" },
     "affectedProviderHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
@@ -41,8 +41,49 @@
       "then": { "required": ["affectedProviderHandle", "disposedGeneration"], "properties": { "affectedProviderHandle": true, "disposedGeneration": true } }
     },
     {
+      "if": { "properties": { "operation": { "const": "register" }, "outcome": { "enum": ["staged", "applied"] } }, "required": ["operation", "outcome"] },
+      "then": { "required": ["affectedProviderHandle"], "properties": { "affectedProviderHandle": true } }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "select" }, "outcome": { "enum": ["applied", "rolled-back"] } }, "required": ["operation", "outcome"] },
+      "then": { "required": ["affectedProviderHandle"], "properties": { "affectedProviderHandle": true } }
+    },
+    {
       "if": { "properties": { "operation": { "const": "rollback" }, "outcome": { "const": "rolled-back" } }, "required": ["operation", "outcome"] },
       "then": { "required": ["affectedProviderHandle"], "properties": { "affectedProviderHandle": true } }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "register" } }, "required": ["operation"] },
+      "then": {
+        "properties": { "outcome": { "enum": ["staged", "applied", "conflict", "rejected"] } }
+      }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "select" } }, "required": ["operation"] },
+      "then": {
+        "properties": { "outcome": { "enum": ["applied", "conflict", "rejected", "rolled-back"] } }
+      }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "dispose" } }, "required": ["operation"] },
+      "then": {
+        "properties": { "outcome": { "enum": ["applied", "conflict", "rejected"] } }
+      }
+    },
+    {
+      "if": { "properties": { "operation": { "const": "rollback" } }, "required": ["operation"] },
+      "then": {
+        "properties": { "outcome": { "enum": ["rolled-back", "rollback-failed", "conflict", "rejected"] } }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "properties": { "operation": { "const": "dispose" }, "outcome": { "const": "applied" } },
+          "required": ["operation", "outcome"]
+        }
+      },
+      "then": { "properties": { "disposedGeneration": false } }
     }
   ]
 }

@@ -68,18 +68,38 @@ built-in id, reuse another plugin id, assert a different source principal, or
 put its identity in a resolution result. Duplicate identities, namespaces, or
 handles are rejected by the Host registry.
 
-Coverage is either `complete` or an explicit partial list of key, variant, and
-state sets. Coverage is advisory for routing and diagnostics, not permission to
-return anything outside the requested tuple. Duplicate or overlapping partial
-entries for the same key are invalid. A custom provider may omit any tuple.
+Coverage is either `complete` or an explicit partial list of exact
+`(key, variant, state)` tuples. Coverage is advisory for routing and
+diagnostics, not permission to return anything outside the requested tuple.
+Duplicate tuples are invalid. A custom provider may omit any tuple, including
+one state or variant of an otherwise-covered key.
+
+`complete` is not a provider assertion. It requires a Host-authored
+`host-conformance` proof inside the exact registration generation. The Host
+privately resolves and schema-validates the Cartesian product of 49 keys, three
+variants, and eight states: 1,176 tuples. The exported proof carries only the
+closed-catalog digest, counts, protocol/descriptor versions, exact provider
+identity, namespace, version and generation, a passed outcome, and
+`rawDataExported: false`. It contains no icon geometry. Those provider pins
+must equal the enclosing registration; a proof from another Reicon version or
+generation is invalid.
+
+The version-1 catalog digest is lowercase SHA-256 over the UTF-8 bytes of the
+compact JSON array of `semanticIconKey.enum` values in schema order, with no
+whitespace. The conformance suite recomputes this digest and tuple count so a
+catalog edit cannot retain a stale proof constant.
 
 ## Selection and fallback
 
-Selection is profile-scoped, revisioned, Host-authored, and fenced to both the
-Host generation and exact provider generation. The Host prepares and validates
-a candidate generation before publishing it as selected. A selected custom
-provider does not replace the fallback reference: `builtin:reicon` remains
-pinned in the same selection snapshot.
+Selection is profile-scoped, Host-authored, and fenced to the Host generation
+and one `profileRevision`. Default, selected, and fallback references each pin
+provider handle, provider id, namespace, protocol version, provider version,
+provider generation, and that same profile revision. The default and fallback
+references must be field-for-field equal across those pins and identify
+`builtin:reicon`. A `selected` outcome must name the requested handle; a
+`default` outcome must select the exact default; a `rolled-back` outcome must
+select the exact fallback. The Host prepares and validates a candidate
+generation before publishing it as selected.
 
 For each requested tuple the Host follows this order:
 
@@ -96,7 +116,7 @@ Repeated provider failures may trigger the lifecycle rollback policy below.
 
 ## Resolution descriptor
 
-The only successful provider payload is
+The only successful public provider payload is
 `normalizedVectorDescriptor` version 1:
 
 - a fixed `0 0 24 24` view box;
@@ -110,16 +130,26 @@ Host supplies semantic color, sizing, state projection, mirroring policy, DOM,
 and accessibility. Unknown fields invalidate the entire descriptor.
 
 The schemas explicitly reject React or framework components, DOM nodes, raw
-SVG, raw HTML, CSS/style values, colors, URLs, selectors, callbacks, event
+SVG, raw HTML, SVG path `d` strings, CSS/style values, colors, URLs, selectors, callbacks, event
 handlers, `foreignObject`, transforms, images, fonts, local paths, and provider
 identity assertions. Structured numeric path commands are data; they are not
 raw SVG path strings and must never be injected as markup.
 
+A Host built-in may privately read vendored or generated Reicon geometry and
+compile it into the normalized command representation before crossing this
+public boundary. That Host-internal source format, conversion code, generated
+asset, and any raw path or SVG data are not protocol payloads and are not
+exported in the complete-coverage proof. External providers receive a
+serializable resolution request and return a serializable result; the public
+contract carries no provider callback, component factory, renderer, or raw
+geometry transport.
+
 ## Generation lifecycle, disposal, and rollback
 
-Every externally visible lifecycle operation carries an expected registry
+Every externally visible lifecycle operation carries an exact expected profile
 revision and Host generation. Provider work is isolated by provider handle and
-provider generation.
+provider generation. An applied/staged transition advances the profile revision
+by one; a conflict, rejection, or rollback failure does not advance it.
 
 - `register` stages a plugin-principal-bound identity, generation, and coverage.
   The Host validates representative resolutions before marking it ready.
@@ -132,11 +162,20 @@ provider generation.
   generation, normally the pinned Reicon generation when no custom last-good
   generation is usable. Selection publication and rollback are atomic.
 
-A failed prepare leaves the current selection unchanged. A failed dispose does
+A failed prepare leaves the current selection unchanged. A stale revision or
+late provider-generation result cannot be reported as applied. A failed dispose does
 not make an old generation eligible again. A failed rollback reports
 `rollback-failed` and the Host uses its non-provider safe fallback; it must not
 accept results from the failed generation. Revisions increase only for
 published registry state.
+
+The operation/result schemas permit only operation-specific outcomes:
+register may stage/apply, select may apply/roll back, dispose may apply, and
+rollback may roll back; each may also conflict or reject, while only rollback
+may report `rollback-failed`. Cross-document conformance additionally requires
+request/profile/Host-generation correlation, exact affected and disposed
+generations, non-disposal of the selected generation, and exact fallback
+restoration.
 
 The operation/result schemas are serializable lifecycle records. They do not
 define a JavaScript callback API or expose a transport. Provider invocation,
@@ -154,3 +193,7 @@ Consumers may rely on Reicon being the default and fallback identity only after
 the Host publishes a conforming version-1 selection. This protocol defines no
 claim about a particular Reicon package version or framework binding; those are
 Host implementation details behind the versioned provider identity.
+
+The repository conformance suite proves only these protocol documents and
+transitions. It is not evidence that a Host implementation, renderer, package,
+or real Reicon integration currently interoperates with the candidate.
