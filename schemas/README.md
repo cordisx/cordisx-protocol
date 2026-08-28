@@ -113,6 +113,34 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   Schemastery descriptor for the connection configuration;
 - `channel-task-routing-config.v1.schema.json`: optional consumer-owned task
   subscription/routing configuration, separate from Channel core;
+- `connector-common.v1.schema.json`: shared connector ids, opaque handles,
+  registration identity, capabilities, and structured text messages;
+- `connector-service-descriptor.v1.schema.json`: one versioned Connector
+  capability descriptor;
+- `connector-registration.v1.schema.json`: one Connector registration identity
+  and generation;
+- `connector-command.v1.schema.json`: one data-only open/send/stop/close
+  Connector command envelope; and
+- `connector-event.v1.schema.json`: one ordered data-only Connector event or
+  terminal disposal envelope;
+- `connector-client-common.v1.schema.json`: opaque caller principal/user,
+  bounded authorization outcome, and run/conversation binding types;
+- `connector-client-request.v1.schema.json` and
+  `connector-client-result.v1.schema.json`: public discovery, command, and
+  subscription exchange with typed denied/unavailable outcomes;
+- `connector-client-snapshot.v1.schema.json`: redacted public registration and
+  capability availability snapshot; and
+- `connector-event-subscription.v1.schema.json` and
+  `connector-event-page.v1.schema.json`: snapshot-fenced serialized replay
+  and live event consumption;
+- `connector-client-binding.v1.schema.json`: Host-only principal/user and
+  exact authorization issuance record; and
+- `connector-bound-client.v1.schema.json`,
+  `connector-bound-client-call.v1.schema.json`, and
+  `connector-bound-client-result.v1.schema.json`: Host-injected bound-client
+  surface plus typed discover/execute/subscribe outcomes;
+- `connector-bound-client-lifecycle.v1.schema.json`: executable client and
+  subscription terminal-state projection for unsubscribe and owner disposal;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

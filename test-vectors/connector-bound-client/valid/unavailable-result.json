@@ -1,0 +1,4 @@
+{
+  "case": "result",
+  "value": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json", "contract": "cordisx.bound-connector-client-result/v1", "schemaVersion": 1, "callId": "call-unavailable", "type": "execute", "status": "unavailable", "authorization": { "capability": "connector.command.execute", "state": "unavailable", "code": "registration-unavailable" } }
+}

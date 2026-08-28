@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-event.v1.schema.json",
+  "title": "CordisX Connector Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "eventId", "registration", "sequence", "occurredAt", "type"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-event.v1.schema.json" },
+    "contract": { "const": "cordisx.connector-event/v1" },
+    "schemaVersion": { "const": 1 },
+    "eventId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "registration": { "$ref": "connector-common.v1.schema.json#/$defs/registration" },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "type": { "enum": ["conversation.opened", "message.received", "message.sent", "run.started", "run.stopped", "conversation.closed", "connector.disposed"] },
+    "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "run": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "message": { "$ref": "connector-common.v1.schema.json#/$defs/message" },
+    "disposeReason": { "enum": ["explicit", "generation-replaced"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "conversation.opened" } }, "required": ["type"] },
+      "then": { "required": ["conversation"], "properties": { "conversation": true, "run": false, "message": false, "disposeReason": false } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "message.received" } }, "required": ["type"] },
+      "then": { "required": ["conversation", "message"], "properties": { "conversation": true, "run": false, "disposeReason": false, "message": { "allOf": [{ "$ref": "connector-common.v1.schema.json#/$defs/message" }, { "type": "object", "properties": { "direction": { "const": "inbound" } } }] } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "message.sent" } }, "required": ["type"] },
+      "then": { "required": ["conversation", "message"], "properties": { "conversation": true, "run": false, "disposeReason": false, "message": { "allOf": [{ "$ref": "connector-common.v1.schema.json#/$defs/message" }, { "type": "object", "properties": { "direction": { "const": "outbound" } } }] } } }
+    },
+    {
+      "if": { "properties": { "type": { "enum": ["run.started", "run.stopped"] } }, "required": ["type"] },
+      "then": { "required": ["conversation", "run"], "properties": { "conversation": true, "run": true, "message": false, "disposeReason": false } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "conversation.closed" } }, "required": ["type"] },
+      "then": { "required": ["conversation"], "properties": { "conversation": true, "run": false, "message": false, "disposeReason": false } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "connector.disposed" } }, "required": ["type"] },
+      "then": { "required": ["disposeReason"], "properties": { "disposeReason": true, "conversation": false, "run": false, "message": false } }
+    }
+  ]
+}

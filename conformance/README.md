@@ -71,6 +71,21 @@ Host-issued single-use grants, partial create preservation, complete-session
 dispatch correlation, contiguous lifecycle replay, unique terminal turns, and
 raw provider payload rejection. It is launcher-private prerequisite evidence,
 not renderer availability or a real provider smoke.
+Connector service conformance covers versioned descriptors, exact
+registration/generation identity, per-command capability matching, opaque
+conversation/run handles, structured inbound/outbound messages, contiguous
+events, and terminal disposal. It rejects Room, task, UI, model, provider,
+workspace, secret, callback, DOM, raw-bridge, and path fields.
+Connector client conformance covers public discovery/execute/subscribe
+exchanges, Host-issued principal/user authorization, bounded denied and
+unavailable outcomes, run-to-conversation binding, registration replacement
+and disposal fencing, redacted snapshots, and serialized snapshot replay before
+live consumption. It rejects raw bridges and a second connection surface.
+Bound Connector client conformance freezes the plugin-visible Host-injected
+surface separately from the Host-only principal/user/authorization binding. It
+requires exact registration-qualified run bindings, an ordered subscription
+page stream with unsubscribe/dispose lifetime, replay through the fixed
+snapshot before live pages, and no caller identity construction by plugins.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-snapshot.v1.schema.json",
+  "title": "CordisX Connector Client Snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "observedAt", "registrations"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-snapshot.v1.schema.json" },
+    "contract": { "const": "cordisx.connector-client-snapshot/v1" },
+    "schemaVersion": { "const": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "registrations": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/registration" } }
+  },
+  "$defs": {
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registration", "capabilities", "availability"],
+      "properties": {
+        "registration": { "$ref": "connector-common.v1.schema.json#/$defs/registration" },
+        "capabilities": { "type": "array", "maxItems": 7, "uniqueItems": true, "items": { "$ref": "connector-common.v1.schema.json#/$defs/capability" } },
+        "availability": { "enum": ["available", "unavailable"] },
+        "unavailableCode": { "enum": ["generation-replaced", "disposed", "unsupported"] }
+      },
+      "allOf": [
+        { "if": { "properties": { "availability": { "const": "available" } }, "required": ["availability"] }, "then": { "properties": { "unavailableCode": false } } },
+        { "if": { "properties": { "availability": { "const": "unavailable" } }, "required": ["availability"] }, "then": { "required": ["unavailableCode"], "properties": { "unavailableCode": true } } }
+      ]
+    }
+  }
+}

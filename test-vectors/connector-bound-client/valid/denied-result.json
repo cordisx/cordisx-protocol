@@ -1,0 +1,4 @@
+{
+  "case": "result",
+  "value": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json", "contract": "cordisx.bound-connector-client-result/v1", "schemaVersion": 1, "callId": "call-denied", "type": "discover", "status": "denied", "authorization": { "capability": "connector.discovery", "state": "denied", "code": "user-denied" } }
+}

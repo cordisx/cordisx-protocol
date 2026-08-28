@@ -1,0 +1,21 @@
+{
+  "case": "events",
+  "descriptor": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json",
+    "contract": "cordisx.connector-service-descriptor/v1",
+    "schemaVersion": 1,
+    "connectorId": "agent.connector",
+    "protocolVersion": 1,
+    "capabilities": ["events.receive", "lifecycle.dispose"]
+  },
+  "registration": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-registration.v1.schema.json",
+    "contract": "cordisx.connector-registration/v1",
+    "schemaVersion": 1,
+    "registration": { "registrationId": "reg-1", "connectorId": "agent.connector", "generation": 1 }
+  },
+  "events": [
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-event.v1.schema.json", "contract": "cordisx.connector-event/v1", "schemaVersion": 1, "eventId": "event-0", "registration": { "registrationId": "reg-1", "connectorId": "agent.connector", "generation": 1 }, "sequence": 0, "occurredAt": "2026-08-28T00:00:00.000Z", "type": "connector.disposed", "disposeReason": "explicit" },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-event.v1.schema.json", "contract": "cordisx.connector-event/v1", "schemaVersion": 1, "eventId": "event-1", "registration": { "registrationId": "reg-1", "connectorId": "agent.connector", "generation": 1 }, "sequence": 1, "occurredAt": "2026-08-28T00:00:01.000Z", "type": "conversation.opened", "conversation": "conversation-1" }
+  ]
+}

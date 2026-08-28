@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-common.v1.schema.json",
+  "title": "CordisX Connector Common Types v1",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+    },
+    "opaqueHandle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registrationId", "connectorId", "generation"],
+      "properties": {
+        "registrationId": { "$ref": "#/$defs/opaqueHandle" },
+        "connectorId": { "$ref": "#/$defs/identifier" },
+        "generation": { "$ref": "#/$defs/generation" }
+      }
+    },
+    "capability": {
+      "enum": [
+        "conversation.open",
+        "conversation.continue",
+        "message.send",
+        "events.receive",
+        "run.stop",
+        "conversation.close",
+        "lifecycle.dispose"
+      ]
+    },
+    "messagePart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "text"],
+      "properties": {
+        "kind": { "const": "text" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 65536 }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["messageId", "direction", "parts"],
+      "properties": {
+        "messageId": { "$ref": "#/$defs/opaqueHandle" },
+        "direction": { "enum": ["inbound", "outbound"] },
+        "parts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/messagePart" }
+        }
+      }
+    }
+  }
+}

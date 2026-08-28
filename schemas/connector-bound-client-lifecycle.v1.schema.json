@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-lifecycle.v1.schema.json",
+  "title": "CordisX Bound Connector Client Lifecycle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "clientState", "subscriptions"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-lifecycle.v1.schema.json" },
+    "contract": { "const": "cordisx.bound-connector-client-lifecycle/v1" },
+    "schemaVersion": { "const": 1 },
+    "clientState": { "enum": ["active", "disposed"] },
+    "subscriptions": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/subscription" } }
+  },
+  "$defs": {
+    "subscription": {
+      "type": "object", "additionalProperties": false,
+      "required": ["subscriptionId", "state"],
+      "properties": {
+        "subscriptionId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+        "state": { "enum": ["active", "unsubscribed", "owner-disposed"] }
+      }
+    }
+  }
+}

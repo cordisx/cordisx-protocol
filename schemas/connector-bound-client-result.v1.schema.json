@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json",
+  "title": "CordisX Bound Connector Client Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "callId", "type", "status", "authorization"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client-result.v1.schema.json" },
+    "contract": { "const": "cordisx.bound-connector-client-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "callId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "type": { "enum": ["discover", "execute", "subscribe"] },
+    "status": { "enum": ["accepted", "denied", "unavailable"] },
+    "authorization": { "$ref": "connector-client-common.v1.schema.json#/$defs/authorizationOutcome" },
+    "snapshot": { "$ref": "connector-client-snapshot.v1.schema.json" },
+    "execution": { "$ref": "connector-client-result.v1.schema.json#/$defs/execution" },
+    "subscription": { "$ref": "connector-event-subscription.v1.schema.json" }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "allowed" } } } } } },
+    { "if": { "properties": { "status": { "const": "denied" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "denied" } } }, "snapshot": false, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "unavailable" } } }, "snapshot": false, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "type": { "const": "discover" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["snapshot"], "properties": { "snapshot": true, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "type": { "const": "execute" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["execution"], "properties": { "snapshot": false, "execution": true, "subscription": false } } },
+    { "if": { "properties": { "type": { "const": "subscribe" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["subscription"], "properties": { "snapshot": false, "execution": false, "subscription": true } } }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-binding.v1.schema.json",
+  "title": "CordisX Host-only Connector Client Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "bindingId", "issuedAt", "principal", "userHandle", "authorizations"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-binding.v1.schema.json" },
+    "contract": { "const": "cordisx.connector-client-binding/v1" },
+    "schemaVersion": { "const": 1 },
+    "bindingId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "issuedAt": { "type": "string", "format": "date-time" },
+    "principal": { "$ref": "connector-client-common.v1.schema.json#/$defs/principal" },
+    "userHandle": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "authorizations": { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "$ref": "#/$defs/authorization" } }
+  },
+  "$defs": {
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizationId", "capability", "target"],
+      "properties": {
+        "authorizationId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+        "capability": { "$ref": "connector-client-common.v1.schema.json#/$defs/clientCapability" },
+        "target": { "$ref": "connector-client-common.v1.schema.json#/$defs/authorizationTarget" }
+      }
+    }
+  }
+}

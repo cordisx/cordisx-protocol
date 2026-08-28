@@ -1,0 +1,12 @@
+{
+  "case": "surface",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client.v1.schema.json",
+    "contract": "cordisx.bound-connector-client/v1",
+    "schemaVersion": 1,
+    "injection": "host-bound",
+    "operations": ["discover", "execute", "subscribe", "dispose"],
+    "lifetime": "fiber-owned",
+    "subscription": { "pages": "ordered", "unsubscribe": "explicit", "ownerDispose": "terminates" }
+  }
+}

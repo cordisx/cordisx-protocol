@@ -1,0 +1,6 @@
+{
+  "case": "exchange",
+  "context": {},
+  "request": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json", "contract": "cordisx.connector-client-request/v1", "schemaVersion": 1, "requestId": "request-5", "caller": { "principal": { "principalHandle": "principal-1", "pluginId": "consumer.plugin", "generation": 1 }, "userHandle": "user-1", "authorization": { "capability": "connector.discovery", "target": { "kind": "catalog" } } }, "type": "connector.discover", "rawBridge": "forbidden", "connection": "forbidden" },
+  "result": {}
+}

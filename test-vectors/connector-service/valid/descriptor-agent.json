@@ -1,0 +1,11 @@
+{
+  "case": "descriptor",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json",
+    "contract": "cordisx.connector-service-descriptor/v1",
+    "schemaVersion": 1,
+    "connectorId": "agent.connector",
+    "protocolVersion": 1,
+    "capabilities": ["conversation.open", "conversation.continue", "message.send", "events.receive", "run.stop", "conversation.close", "lifecycle.dispose"]
+  }
+}

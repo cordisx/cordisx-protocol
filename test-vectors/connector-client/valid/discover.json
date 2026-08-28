@@ -1,0 +1,20 @@
+{
+  "case": "exchange",
+  "context": {
+    "callers": [{ "principal": { "principalHandle": "principal-1", "pluginId": "consumer.plugin", "generation": 1 }, "userHandle": "user-1" }],
+    "authorizations": [{ "principal": { "principalHandle": "principal-1", "pluginId": "consumer.plugin", "generation": 1 }, "userHandle": "user-1", "capability": "connector.discovery", "targetKind": "catalog", "state": "allowed" }]
+  },
+  "request": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json", "contract": "cordisx.connector-client-request/v1", "schemaVersion": 1, "requestId": "request-1",
+    "caller": { "principal": { "principalHandle": "principal-1", "pluginId": "consumer.plugin", "generation": 1 }, "userHandle": "user-1", "authorization": { "capability": "connector.discovery", "target": { "kind": "catalog" } } },
+    "type": "connector.discover"
+  },
+  "result": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json", "contract": "cordisx.connector-client-result/v1", "schemaVersion": 1, "requestId": "request-1", "type": "connector.discover", "status": "accepted",
+    "authorization": { "capability": "connector.discovery", "state": "allowed", "code": "allowed" },
+    "snapshot": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-snapshot.v1.schema.json", "contract": "cordisx.connector-client-snapshot/v1", "schemaVersion": 1, "observedAt": "2026-08-28T00:00:00.000Z",
+      "registrations": [{ "registration": { "registrationId": "registration-1", "connectorId": "agent.connector", "generation": 1 }, "capabilities": ["conversation.open", "events.receive"], "availability": "available" }]
+    }
+  }
+}

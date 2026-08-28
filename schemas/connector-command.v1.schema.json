@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-command.v1.schema.json",
+  "title": "CordisX Connector Command v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "commandId", "registration", "type"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-command.v1.schema.json" },
+    "contract": { "const": "cordisx.connector-command/v1" },
+    "schemaVersion": { "const": 1 },
+    "commandId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "registration": { "$ref": "connector-common.v1.schema.json#/$defs/registration" },
+    "type": { "enum": ["conversation.open", "message.send", "run.stop", "conversation.close"] },
+    "open": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "enum": ["create", "continue"] },
+        "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "create" } }, "required": ["mode"] },
+          "then": { "properties": { "conversation": false } }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "continue" } }, "required": ["mode"] },
+          "then": { "required": ["conversation"], "properties": { "conversation": true } }
+        }
+      ]
+    },
+    "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "run": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "message": { "$ref": "connector-common.v1.schema.json#/$defs/message" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "conversation.open" } }, "required": ["type"] },
+      "then": { "required": ["open"], "properties": { "open": true, "conversation": false, "run": false, "message": false } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "message.send" } }, "required": ["type"] },
+      "then": {
+        "required": ["conversation", "message"],
+        "properties": { "open": false, "run": false, "conversation": true, "message": { "allOf": [{ "$ref": "connector-common.v1.schema.json#/$defs/message" }, { "type": "object", "properties": { "direction": { "const": "outbound" } } }] } }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "run.stop" } }, "required": ["type"] },
+      "then": { "required": ["conversation", "run"], "properties": { "open": false, "message": false, "conversation": true, "run": true } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "conversation.close" } }, "required": ["type"] },
+      "then": { "required": ["conversation"], "properties": { "open": false, "run": false, "message": false, "conversation": true } }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client.v1.schema.json",
+  "title": "CordisX Host-injected Bound Connector Client v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "injection", "operations", "lifetime", "subscription"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-bound-client.v1.schema.json" },
+    "contract": { "const": "cordisx.bound-connector-client/v1" },
+    "schemaVersion": { "const": 1 },
+    "injection": { "const": "host-bound" },
+    "operations": { "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": { "enum": ["discover", "execute", "subscribe", "dispose"] } },
+    "lifetime": { "const": "fiber-owned" },
+    "subscription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pages", "unsubscribe", "ownerDispose"],
+      "properties": {
+        "pages": { "const": "ordered" },
+        "unsubscribe": { "const": "explicit" },
+        "ownerDispose": { "const": "terminates" }
+      }
+    }
+  }
+}
