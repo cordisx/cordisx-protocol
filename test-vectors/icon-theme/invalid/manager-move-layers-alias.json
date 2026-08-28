@@ -1,0 +1,7 @@
+{
+  "case": "reject content layers as an alias for move action",
+  "schema": "icon-theme-resolution-request.v1.schema.json",
+  "semantic": "expected-semantic-key",
+  "context": { "expectedKey": "action.move" },
+  "value": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json", "schemaVersion": 1, "requestId": "alias_move_layers_01", "hostGeneration": "host-12", "providerHandle": "iph_reicon0000000001", "providerGeneration": "reicon-1", "key": "content.layers", "variant": "regular", "state": "default" }
+}

@@ -29,8 +29,9 @@ allowing future principal-bound theme providers to register partial semantic
 coverage. Providers return only bounded normalized vector data; the Host keeps
 DOM, styling, state, accessibility, fallback, and lifecycle ownership. See
 `.agents/docs/icon-theme/README.md`.
-Its closed 51-key catalog distinguishes certified third-party provenance from
-official first-party provenance without carrying publisher identity or UI text.
+Its closed 64-key catalog distinguishes certified third-party provenance from
+official first-party provenance and preserves distinct Manager action, content,
+and agent-turn-control meanings without carrying publisher identity or UI text.
 
 Dynamic local packages and plugin generations are defined by the frozen
 package/operation/result v1 schemas, the explicit-local source v1, separate

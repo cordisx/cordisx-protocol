@@ -40,8 +40,9 @@ escalation into a new control mode. Host-priority vectors also freeze the
 non-empty top-winner rule and the empty native/none fallback, while principal
 vectors permit separate explicit and legacy handles for the same owner but
 reject handle reuse across either origin.
-Icon theme conformance freezes the closed 51-key version-1 semantic catalog,
-including distinct `trust.certified` and `trust.official` provenance semantics,
+Icon theme conformance freezes the closed 64-key version-1 semantic catalog,
+including distinct trust provenance plus Manager action, content, and agent-turn
+control semantics,
 `builtin:reicon` default/fallback exact profile/version/generation pins,
 principal-derived provider ids, no-geometry complete-coverage proofs, partial
 tuple misses, exact request and generation correlation, normalized-command
@@ -49,8 +50,10 @@ versus raw-path/SVG boundaries, operation-specific lifecycle outcomes, and
 generation-fenced registration, selection, disposal, and rollback. It rejects
 stale/late transitions, renderer/framework authority, executable or markup
 fields, local/network asset references, and provider identity assertions in
-results. Trust keys carry no user text or raw publisher/source identity, and
-complete coverage proves all 1,224 key/variant/state tuples. This is
+results. Semantic keys carry no user text or raw publisher/source identity, and
+complete coverage proves all 1,536 key/variant/state tuples. Alias vectors
+reject visually convenient substitution across the normative semantic table.
+This is
 protocol-only evidence, not Host interoperability evidence.
 Manager settings conformance separately covers surface version 4 and catalog
 version 3 so the closed version-2/version-3 vocabularies remain unchanged. It

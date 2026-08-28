@@ -30,11 +30,12 @@ colors, or cleanup.
 `icon-theme-common.v1.schema.json#/$defs/semanticIconKey` is the complete version
 1 key catalog. It is closed by category:
 
-- `action.*`: add, back, close, copy, delete, edit, external-link, more, open,
-  refresh, reset, save, search, settings, and share;
-- `agent.*`: reasoning;
-- `content.*`: calendar, clock, files, folder, key, layers, palette, panel, and
-  tags;
+- `action.*`: add, back, close, copy, delete, disable, edit, enable, export,
+  external-link, favorite, follow, import, more, move, open, pause, refresh,
+  reset, resume, save, search, settings, share, and submit;
+- `agent.*`: reasoning and turn-control;
+- `content.*`: acknowledgements, calendar, clock, contributions, files, folder,
+  key, layers, palette, panel, and tags;
 - `control.*`: check, four chevrons, minus, and plus;
 - `navigation.*`: about, channels, dashboard, extensions, history, launcher,
   marketplace, overview, plugins, routes, runtime, and store; and
@@ -48,6 +49,29 @@ collapsed to `control.check`, `status.success`, or `status.info`: those keys
 describe a control or general status, not source provenance. The Host derives
 the trust semantic from its authoritative product model; provider or publisher
 raw identity is not part of the semantic key or resolution payload.
+
+The Manager-specific additive semantics are normative and must not be
+compressed into visually convenient existing keys:
+
+| Key | Normative meaning | Not a semantic alias for |
+| --- | --- | --- |
+| `action.move` | Reposition or relocate a movable item. | `content.layers`, which denotes layered content structure. |
+| `action.export` | Emit data or an artifact out of the current product context. | `action.open`, which enters or reveals an existing target. |
+| `action.follow` | Begin or maintain following/subscribing to updates from a target. | `action.open`, which does not express an ongoing follow relationship. |
+| `action.pause` | Temporarily suspend an operation that can later continue. | `status.pending`, which reports state rather than requesting suspension. |
+| `action.resume` | Continue an operation that was paused. | `navigation.runtime`, which navigates to runtime content. |
+| `action.favorite` | Mark or represent a user favorite. Its active form uses the existing `selected` state. | `status.info`; there is no `action.favorite-active` key. |
+| `action.import` | Bring external data or an artifact into the current product context. | `content.folder`, which denotes folder content. |
+| `action.enable` | Turn on a capability, integration, policy, or item. | `navigation.runtime`, which is navigation rather than an enable action. |
+| `action.disable` | Turn off a capability, integration, policy, or item. | `status.pending`, which is not an action. |
+| `action.submit` | Commit completed input to its workflow or destination. | `navigation.runtime`, which does not commit input. |
+| `content.contributions` | Content representing plugin, extension, or other contributed product material. | `content.panel`, which denotes a generic panel container. |
+| `content.acknowledgements` | Acknowledgements, credits, contributors, or third-party notices. | `content.contributions`; credits and contributed product material are distinct. |
+| `agent.turn-control` | The control surface or entry point for controlling the current agent turn. | `status.pending`, `navigation.runtime`, or `action.settings`. |
+
+These meanings select a semantic glyph only. They do not carry a plugin,
+publisher, contributor, or provider identity, and they do not transfer command
+or lifecycle authority to an icon provider.
 
 An implementation must not synthesize new keys, accept provider-private keys,
 or reinterpret `host:*` token spelling as an extensible theme namespace. A new
@@ -85,8 +109,8 @@ one state or variant of an otherwise-covered key.
 
 `complete` is not a provider assertion. It requires a Host-authored
 `host-conformance` proof inside the exact registration generation. The Host
-privately resolves and schema-validates the Cartesian product of 51 keys, three
-variants, and eight states: 1,224 tuples. The exported proof carries only the
+privately resolves and schema-validates the Cartesian product of 64 keys, three
+variants, and eight states: 1,536 tuples. The exported proof carries only the
 closed-catalog digest, counts, protocol/descriptor versions, exact provider
 identity, namespace, version and generation, a passed outcome, and
 `rawDataExported: false`. It contains no icon geometry. Those provider pins
@@ -95,8 +119,8 @@ generation is invalid.
 
 The version-1 catalog digest is lowercase SHA-256 over the UTF-8 bytes of the
 compact JSON array of `semanticIconKey.enum` values in schema order, with no
-whitespace. For this 51-key catalog it is
-`sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77`.
+whitespace. For this 64-key catalog it is
+`sha256:fabbf2ac3d7177bc353432e4175240cc3fe10d040321e2b785c1da0f77634771`.
 The conformance suite recomputes this digest and tuple count so a catalog edit
 cannot retain a stale proof constant.
 

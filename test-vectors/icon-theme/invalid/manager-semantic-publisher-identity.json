@@ -1,0 +1,16 @@
+{
+  "case": "reject raw publisher identity in a Manager semantic icon request",
+  "schema": "icon-theme-resolution-request.v1.schema.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "manager_publisher_0001",
+    "hostGeneration": "host-12",
+    "providerHandle": "iph_reicon0000000001",
+    "providerGeneration": "reicon-1",
+    "key": "content.contributions",
+    "variant": "regular",
+    "state": "default",
+    "publisherId": "example-plugin"
+  }
+}

@@ -1,9 +1,13 @@
 export type SemanticIconKey =
   | 'action.add' | 'action.back' | 'action.close' | 'action.copy'
-  | 'action.delete' | 'action.edit' | 'action.external-link' | 'action.more'
-  | 'action.open' | 'action.refresh' | 'action.reset' | 'action.save'
-  | 'action.search' | 'action.settings' | 'action.share' | 'agent.reasoning'
-  | 'content.calendar' | 'content.clock' | 'content.files' | 'content.folder'
+  | 'action.delete' | 'action.disable' | 'action.edit' | 'action.enable'
+  | 'action.export' | 'action.external-link' | 'action.favorite' | 'action.follow'
+  | 'action.import' | 'action.more' | 'action.move' | 'action.open'
+  | 'action.pause' | 'action.refresh' | 'action.reset' | 'action.resume'
+  | 'action.save' | 'action.search' | 'action.settings' | 'action.share'
+  | 'action.submit' | 'agent.reasoning' | 'agent.turn-control'
+  | 'content.acknowledgements' | 'content.calendar' | 'content.clock'
+  | 'content.contributions' | 'content.files' | 'content.folder'
   | 'content.key' | 'content.layers' | 'content.palette' | 'content.panel'
   | 'content.tags' | 'control.check' | 'control.chevron-down'
   | 'control.chevron-left' | 'control.chevron-right' | 'control.chevron-up'
@@ -41,17 +45,17 @@ export type IconThemeCoverage =
         kind: 'host-conformance'
         proofId: string
         catalogVersion: 1
-        catalogDigest: 'sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77'
+        catalogDigest: 'sha256:fabbf2ac3d7177bc353432e4175240cc3fe10d040321e2b785c1da0f77634771'
         providerId: `builtin:${string}` | `plugin:${string}:${string}`
         namespace: string
         providerVersion: string
         providerGeneration: string
         protocolVersion: 1
         descriptorFormatVersion: 1
-        keyCount: 51
+        keyCount: 64
         variantCount: 3
         stateCount: 8
-        tupleCount: 1224
+        tupleCount: 1536
         outcome: 'passed'
         rawDataExported: false
       }

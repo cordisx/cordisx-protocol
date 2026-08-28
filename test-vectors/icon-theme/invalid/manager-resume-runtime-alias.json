@@ -1,0 +1,7 @@
+{
+  "case": "reject runtime navigation as an alias for resume action",
+  "schema": "icon-theme-resolution-request.v1.schema.json",
+  "semantic": "expected-semantic-key",
+  "context": { "expectedKey": "action.resume" },
+  "value": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json", "schemaVersion": 1, "requestId": "alias_resume_runtime01", "hostGeneration": "host-12", "providerHandle": "iph_reicon0000000001", "providerGeneration": "reicon-1", "key": "navigation.runtime", "variant": "regular", "state": "default" }
+}

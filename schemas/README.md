@@ -9,8 +9,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   commerce descriptors (no price or payment state);
 - `ui-common.v1.schema.json`: shared identifiers, command/route references,
   host icon tokens, conditions, and disabled state;
-- `icon-theme-common.v1.schema.json`: 51 closed version-1 semantic icon keys,
-  including distinct certified-third-party and official-first-party trust keys,
+- `icon-theme-common.v1.schema.json`: 64 closed version-1 semantic icon keys,
+  including distinct trust, Manager action/content, and agent-turn-control keys,
   variants/states, provider identities, exact tuple coverage, no-raw-data
   complete-coverage proofs, profile-pinned references, and the
   field-whitelisted normalized vector descriptor;
