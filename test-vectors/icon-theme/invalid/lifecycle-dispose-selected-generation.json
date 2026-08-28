@@ -1,0 +1,23 @@
+{
+  "case": "reject disposal of the selected exact generation",
+  "schema": "icon-theme-lifecycle-result.v1.schema.json",
+  "semantic": "lifecycle-transition",
+  "context": {
+    "baseOperationRequestId": "lifecycle_dispose_001",
+    "operationOverride": { "operation": { "providerHandle": "iph_aurora0000000001", "providerGeneration": "aurora-3" } }
+  },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json",
+    "schemaVersion": 1,
+    "authority": "host",
+    "requestId": "lifecycle_dispose_001",
+    "profileId": "work",
+    "operation": "dispose",
+    "outcome": "applied",
+    "profileRevision": 7,
+    "hostGeneration": "host-12",
+    "activeProvider": { "providerHandle": "iph_aurora0000000001", "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0", "providerGeneration": "aurora-3" },
+    "affectedProviderHandle": "iph_aurora0000000001",
+    "disposedGeneration": "aurora-3"
+  }
+}

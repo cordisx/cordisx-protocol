@@ -1,0 +1,17 @@
+{
+  "case": "reject rolled-back outcome for register operation",
+  "schema": "icon-theme-lifecycle-result.v1.schema.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-result.v1.schema.json",
+    "schemaVersion": 1,
+    "authority": "host",
+    "requestId": "lifecycle_register_01",
+    "profileId": "work",
+    "operation": "register",
+    "outcome": "rolled-back",
+    "profileRevision": 5,
+    "hostGeneration": "host-12",
+    "activeProvider": { "providerHandle": "iph_reicon0000000001", "providerId": "builtin:reicon", "namespace": "reicon", "protocolVersion": 1, "providerVersion": "1.0.0", "providerGeneration": "reicon-1" },
+    "affectedProviderHandle": "iph_aurora0000000001"
+  }
+}

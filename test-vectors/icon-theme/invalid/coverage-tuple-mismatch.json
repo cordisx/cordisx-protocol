@@ -1,0 +1,17 @@
+{
+  "case": "reject resolved result for an uncovered key variant state tuple",
+  "schema": "icon-theme-resolution-result.v1.schema.json",
+  "semantic": "resolution-exchange",
+  "context": {
+    "baseResolutionRequestId": "resolve_request_0001",
+    "requestOverride": { "variant": "filled", "state": "default" }
+  },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "resolve_request_0001",
+    "providerGeneration": "aurora-3",
+    "outcome": "resolved",
+    "descriptor": { "format": "cordisx.normalized-vector", "formatVersion": 1, "viewBox": { "minX": 0, "minY": 0, "width": 24, "height": 24 }, "paths": [{ "paint": "fill", "commands": [{ "op": "move", "x": 2, "y": 2 }, { "op": "line", "x": 22, "y": 22 }] }] }
+  }
+}

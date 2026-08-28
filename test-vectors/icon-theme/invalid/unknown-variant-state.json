@@ -1,0 +1,15 @@
+{
+  "case": "reject unknown variant and state",
+  "schema": "icon-theme-resolution-request.v1.schema.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "negative_request_0008",
+    "hostGeneration": "host-12",
+    "providerHandle": "iph_aurora0000000001",
+    "providerGeneration": "aurora-3",
+    "key": "action.save",
+    "variant": "custom",
+    "state": "loading"
+  }
+}

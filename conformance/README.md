@@ -40,6 +40,15 @@ escalation into a new control mode. Host-priority vectors also freeze the
 non-empty top-winner rule and the empty native/none fallback, while principal
 vectors permit separate explicit and legacy handles for the same owner but
 reject handle reuse across either origin.
+Icon theme conformance freezes the closed version-1 semantic catalog,
+`builtin:reicon` default/fallback exact profile/version/generation pins,
+principal-derived provider ids, no-geometry complete-coverage proofs, partial
+tuple misses, exact request and generation correlation, normalized-command
+versus raw-path/SVG boundaries, operation-specific lifecycle outcomes, and
+generation-fenced registration, selection, disposal, and rollback. It rejects
+stale/late transitions, renderer/framework authority, executable or markup
+fields, local/network asset references, and provider identity assertions in
+results. This is protocol-only evidence, not Host interoperability evidence.
 Manager settings conformance separately covers surface version 4 and catalog
 version 3 so the closed version-2/version-3 vocabularies remain unchanged. It
 validates structured host headers, ordering/collisions, same-owner route/page

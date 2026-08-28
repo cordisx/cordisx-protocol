@@ -1,0 +1,23 @@
+{
+  "case": "reject overlapping partial coverage entries",
+  "schema": "icon-theme-provider-registration.v1.schema.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json",
+    "schemaVersion": 1,
+    "authority": "host",
+    "hostGeneration": "host-12",
+    "revision": 5,
+    "providerHandle": "iph_aurora0000000001",
+    "principal": { "kind": "plugin", "principalHandle": "ipp_aurora0000000001", "pluginId": "aurora" },
+    "identity": { "providerId": "plugin:aurora:icons", "namespace": "icons", "protocolVersion": 1, "providerVersion": "2.1.0" },
+    "providerGeneration": "aurora-3",
+    "status": "ready",
+    "coverage": {
+      "kind": "partial",
+      "entries": [
+        { "key": "action.save", "variant": "regular", "state": "default" },
+        { "key": "action.save", "variant": "regular", "state": "default" }
+      ]
+    }
+  }
+}

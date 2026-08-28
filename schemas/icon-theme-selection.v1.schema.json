@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-selection.v1.schema.json",
+  "title": "CordisX Host-authored Icon Theme Selection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "authority", "profileId", "profileRevision", "hostGeneration", "defaultProvider", "selectedProvider", "fallbackProvider", "outcome"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-selection.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "authority": { "const": "host" },
+    "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "hostGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+    "profileRevision": { "type": "integer", "minimum": 0 },
+    "requestedProviderHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
+    "defaultProvider": {
+      "allOf": [
+        { "$ref": "icon-theme-common.v1.schema.json#/$defs/pinnedProviderReference" },
+        { "type": "object", "properties": { "providerId": { "const": "builtin:reicon" }, "namespace": { "const": "reicon" } } }
+      ]
+    },
+    "selectedProvider": { "$ref": "icon-theme-common.v1.schema.json#/$defs/pinnedProviderReference" },
+    "fallbackProvider": {
+      "allOf": [
+        { "$ref": "icon-theme-common.v1.schema.json#/$defs/pinnedProviderReference" },
+        { "type": "object", "properties": { "providerId": { "const": "builtin:reicon" }, "namespace": { "const": "reicon" } } }
+      ]
+    },
+    "outcome": { "enum": ["default", "selected", "rolled-back"] },
+    "reason": { "enum": ["user-selection", "host-default", "provider-unavailable", "prepare-failed", "resolution-failed", "invalid-descriptor"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "selected" } }, "required": ["outcome"] },
+      "then": { "required": ["requestedProviderHandle", "reason"], "properties": { "requestedProviderHandle": true, "reason": { "const": "user-selection" } } }
+    },
+    {
+      "if": { "properties": { "outcome": { "const": "default" } }, "required": ["outcome"] },
+      "then": {
+        "required": ["reason"],
+        "properties": {
+          "reason": { "const": "host-default" },
+          "requestedProviderHandle": false,
+          "selectedProvider": {
+            "type": "object",
+            "properties": {
+              "providerId": { "const": "builtin:reicon" },
+              "namespace": { "const": "reicon" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "outcome": { "const": "rolled-back" } }, "required": ["outcome"] },
+      "then": { "required": ["requestedProviderHandle", "reason"], "properties": { "requestedProviderHandle": true, "reason": { "enum": ["provider-unavailable", "prepare-failed", "resolution-failed", "invalid-descriptor"] } } }
+    }
+  ]
+}
