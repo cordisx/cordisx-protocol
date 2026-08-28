@@ -31,7 +31,9 @@ stacking, point/mode-specific authorization, Host-stamped candidate inventory,
 nested ownership suppression and recovery without losing an underlying denial,
 and rejection of free DOM,
 selectors, callbacks, sensitive projections, forged selections/events, implicit
-coexistence, arbitrary command results, and legacy authority escalation.
+coexistence, incomplete candidate/point inventories, group-level cardinality or
+decision drift, cross-owner principal stamps, unstable legacy order, arbitrary
+command results, and legacy authority escalation.
 
 Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,

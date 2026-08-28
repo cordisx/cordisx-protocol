@@ -145,7 +145,7 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   including surface-origin checks for route navigation.
 - `extension-point-control-declaration.v1.schema.json`: one normalized explicit
   or legacy-structured plugin claim for a semantic point and mode, with bounded
-  renderer-safe binding requests;
+  renderer-safe binding requests and a Host-issued principal handle;
 - `extension-point-control-authorization.v1.schema.json`: one partial grant or
   denial keyed by exact source/plugin/point/claim/mode, never a whole-plugin
   policy;

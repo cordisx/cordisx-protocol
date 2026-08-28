@@ -4,16 +4,18 @@
   "title": "CordisX Extension Point Control Claim v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "schemaVersion", "origin", "identity", "claimId", "contributionId", "mode", "priority", "requestedBindings"],
+  "required": ["$schema", "schemaVersion", "principalHandle", "origin", "identity", "claimId", "contributionId", "mode", "priority", "requestedBindings"],
   "properties": {
     "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json" },
     "schemaVersion": { "const": 1 },
+    "principalHandle": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/principalHandle" },
     "origin": { "enum": ["explicit", "legacy-structured"] },
     "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
     "claimId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
     "contributionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
     "mode": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/mode" },
     "priority": { "type": "integer", "minimum": -100000, "maximum": 100000 },
+    "legacyOrder": { "type": "integer", "minimum": -100000, "maximum": 100000 },
     "requestedBindings": {
       "type": "object",
       "additionalProperties": false,
@@ -39,5 +41,29 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "origin": { "const": "legacy-structured" } }, "required": ["origin"] },
+      "then": {
+        "required": ["legacyOrder"],
+        "properties": {
+          "legacyOrder": true,
+          "mode": { "const": "compose" },
+          "requestedBindings": {
+            "type": "object",
+            "properties": {
+              "properties": { "type": "array", "maxItems": 0 },
+              "commands": { "type": "array", "maxItems": 0 },
+              "events": { "type": "array", "maxItems": 0 }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "origin": { "const": "explicit" } }, "required": ["origin"] },
+      "then": { "properties": { "legacyOrder": false } }
+    }
+  ]
 }

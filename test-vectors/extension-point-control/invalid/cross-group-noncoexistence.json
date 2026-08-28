@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "cross-group-noncoexistence",
+  "expectedError": "cross-group exclusive modes must explicitly coexist"
+}

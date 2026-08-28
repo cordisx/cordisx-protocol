@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "native-decision-with-selected",
+  "expectedError": "native or none group decision must select zero claims"
+}

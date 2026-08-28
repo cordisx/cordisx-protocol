@@ -6,11 +6,16 @@
     "mode": {
       "enum": ["compose", "replace", "overlay", "proxy", "hide-native"]
     },
+    "principalHandle": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
     "claimReference": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["identity", "claimId", "mode"],
+      "required": ["principalHandle", "identity", "claimId", "mode"],
       "properties": {
+        "principalHandle": { "$ref": "#/$defs/principalHandle" },
         "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
         "claimId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
         "mode": { "$ref": "#/$defs/mode" }

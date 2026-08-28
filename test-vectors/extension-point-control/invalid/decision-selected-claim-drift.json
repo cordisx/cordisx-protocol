@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "decision-selected-claim-drift",
+  "expectedError": "exclusive group decision does not exactly match its sole selected claim"
+}

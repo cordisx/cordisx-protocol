@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "snapshot-missing-point",
+  "expectedError": "snapshot omits catalog point"
+}

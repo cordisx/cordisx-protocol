@@ -36,12 +36,13 @@ treated as evidence for another.
 1. **Claim declaration.**
    `extension-point-control-declaration.v1` records the canonical source,
    plugin, point, claim, contribution, requested mode, priority, and requested
-   bindings. This means only that the plugin wants to modify a point.
+   bindings after the Host normalizes them against an out-of-band launcher
+   principal. This means only that the plugin wants to modify a point.
 2. **Authorization.**
    `extension-point-control-authorization.v1` records an exact user/Host policy
-   for `(source, pluginId, pointId, claimId, mode)`. Denying one tuple disables
-   only that claim. It is not a whole-plugin block and must not silently deny a
-   different point or mode.
+   for `(principalHandle, source, pluginId, pointId, claimId, mode)`. Denying
+   one tuple disables only that claim. It is not a whole-plugin block and must
+   not silently deny a different point or mode.
 3. **Point policy.**
    `host-extension-point-control-catalog.v1` declares the modes, compatibility,
    exclusive groups, selection authority, native fallback, safe bindings, and
@@ -51,6 +52,15 @@ treated as evidence for another.
    result. It lists every normalized candidate and its authorization and
    selected, eligible, denied, conflicted, suppressed, or pending state. A
    declaration or grant is not proof that a candidate is selected.
+
+`principalHandle` is an opaque Host/launcher-issued reference into a
+Host-private principal registry. The registry binds the handle to canonical
+source, plugin id, and explicit or legacy origin. It is out-of-band context,
+not a plugin claim. The Host stamps it onto normalized declarations,
+authorizations, snapshot candidates, command accesses, and events, then rejects
+unknown handles or any source/plugin/origin mismatch. The Host control catalog,
+snapshot authority, command result, and event authority are likewise
+Host-derived; a plugin-provided field cannot override them.
 
 Install and enable planning may persist multiple exact authorization records so
 the user can allow a plugin while disabling selected points or modes. The Host
@@ -64,11 +74,14 @@ When a Host projects them into this control plane, it creates a normalized
 
 - `claimId` equal to the contribution id;
 - mode `compose`;
-- priority equal to the bounded negation of the existing order, preserving the
+- `legacyOrder` equal to the existing structured contribution order;
+- priority equal to `-legacyOrder`, preserving the
   legacy ascending-order result under the v1 descending-priority resolver;
 - empty requested properties and commands.
 
-Every v1 point policy must retain `compose` with default authorization `allow`.
+Every v1 point policy must retain `compose` as `ordered`, outside every
+exclusive group, with default authorization `allow`, even before a legacy claim
+is loaded.
 Every other mode defaults to `deny`. A legacy contribution therefore keeps its
 old structured behavior but cannot acquire replacement, overlay, proxy,
 hide-native, or binding authority. `free-dom`, selectors, raw HTML, arbitrary
@@ -94,6 +107,16 @@ fallback. Replace, hide-native, overlay, and proxy are not globally forced into
 one fixed relationship: their actual exclusion and stacking are declared by
 the point catalog.
 
+Cardinality belongs to an exclusive group, not to an individual mode. Across
+all modes named by one group, exactly zero or one claim may be selected. One
+Host group decision exists for every group on a non-suppressed point: a
+`selected` decision names exactly its sole selected owner-qualified claim,
+while `native` and `none` name no claim and require zero selected claims.
+Every selected exclusive claim refers back to that exact decision. A point with
+multiple exclusive groups is valid only when every pair of modes from different
+groups declares reciprocal coexistence, because one winner from each group can
+be active simultaneously in v1.
+
 For a `user` group, only a Host-persisted user choice selects a claim. For a
 `host-priority` group, the Host sorts by descending priority and then canonical
 source, plugin id, point id, claim id, and mode as stable ascending tie
@@ -115,6 +138,15 @@ The runtime resolution order is:
    mark it conflicted;
 6. project only requested, catalog-declared bindings to selected candidates;
 7. publish one revision atomically.
+
+The Host snapshot is complete, not an activity sample. Its point-id set exactly
+equals the control catalog point-id set. Every normalized declaration appears
+as exactly one candidate, including denied, pending, conflicted, and suppressed
+claims, and every candidate has exactly one declaration. Missing points or
+claims fail closed. Selected ordered claims carry `authority: host-policy`, no
+exclusive group, and a contiguous zero-based `rank` matching the deterministic
+priority/owner ordering. Selected exclusive claims carry no rank and use the
+authority and group from their exact decision.
 
 Authorization and presentation state are separate axes. A denied descendant
 under an owning ancestor keeps `authorization: denied` while its effective
@@ -177,13 +209,22 @@ When the ancestor no longer owns the subtree, descendants are not blindly
 restored from an old render. The Host reevaluates them from the same current
 generation, catalog, declarations, authorization records, and user choices,
 then publishes a later revision. A missing mount or dependency may remain
-`pending` or `not-mounted`; restoration is not evidence of selection.
+  `pending` or `not-mounted`; restoration is not evidence of selection.
+Suppressed points skip the otherwise mandatory group-decision set and must
+publish zero decisions. After restoration, the Host recomputes and publishes
+the exact decision set for every catalog group before selecting an exclusive
+claim.
 
 ## Security and downgrade behavior
 
 All control-plane documents are closed schemas. Unknown authority values,
 DOM fields, selectors, callback-shaped arguments, unknown bindings, unlisted
 modes, and non-scalar property projections fail closed.
+
+Canonical identity and `origin` are never self-asserted authorization evidence.
+The Host validates them against the private principal handle before any claim,
+grant, candidate, access, or event participates in resolution. Registration
+order is never a tie breaker.
 
 A consumer that does not implement this control plane ignores these new
 documents and continues to process the separately versioned structured UI

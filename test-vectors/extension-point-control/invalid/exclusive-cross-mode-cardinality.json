@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "exclusive-cross-mode-cardinality",
+  "expectedError": "exclusive group cardinality exceeded"
+}

@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "catalog-plugin-field",
+  "expectedError": "catalog schema"
+}

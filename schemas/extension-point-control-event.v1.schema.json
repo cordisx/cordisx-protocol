@@ -4,11 +4,12 @@
   "title": "CordisX Host-projected Extension Point Event v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "schemaVersion", "authority", "hostGeneration", "sequence", "identity", "claimId", "contributionId", "mode", "eventId", "payload"],
+  "required": ["$schema", "schemaVersion", "authority", "principalHandle", "hostGeneration", "sequence", "identity", "claimId", "contributionId", "mode", "eventId", "payload"],
   "properties": {
     "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-event.v1.schema.json" },
     "schemaVersion": { "const": 1 },
     "authority": { "const": "host" },
+    "principalHandle": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/principalHandle" },
     "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
     "sequence": { "type": "integer", "minimum": 1 },
     "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },

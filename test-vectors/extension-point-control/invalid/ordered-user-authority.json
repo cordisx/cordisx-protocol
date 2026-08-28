@@ -1,0 +1,5 @@
+{
+  "base": "controlled-reasoning.json",
+  "mutation": "ordered-user-authority",
+  "expectedError": "ordered selected candidate has an invalid Host selection stamp"
+}

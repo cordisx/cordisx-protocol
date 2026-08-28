@@ -58,6 +58,10 @@ function identityKey(identity) {
 }
 
 function claimKey(value) {
+  return `${value?.principalHandle}\u0000${identityKey(value?.identity)}\u0000${value?.claimId}\u0000${value?.mode}`
+}
+
+function claimSortKey(value) {
   return `${identityKey(value?.identity)}\u0000${value?.claimId}\u0000${value?.mode}`
 }
 
@@ -94,6 +98,40 @@ function validateCanonicalIdentity(errors, label, identity) {
   }
 }
 
+function validatePrincipals(suite, errors) {
+  const principals = Array.isArray(suite?.principals) ? suite.principals : []
+  if (!Array.isArray(suite?.principals)) errors.push('principals must be an out-of-band array')
+  const byHandle = new Map()
+  const owners = new Set()
+  for (const [index, principal] of principals.entries()) {
+    if (principal === null || typeof principal !== 'object' || Array.isArray(principal)) {
+      errors.push(`principals[${index}] must be an object`)
+      continue
+    }
+    const keys = Object.keys(principal).sort().join(',')
+    if (keys !== 'handle,origin,pluginId,source') errors.push(`principals[${index}] has an invalid Host-private shape`)
+    if (typeof principal.handle !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(principal.handle)) errors.push(`principals[${index}] has an invalid handle`)
+    if (!['explicit', 'legacy-structured'].includes(principal.origin)) errors.push(`principals[${index}] has an invalid origin`)
+    validateCanonicalIdentity(errors, `principals[${index}]`, principal)
+    if (byHandle.has(principal.handle)) errors.push(`duplicate Host principal handle: ${principal.handle}`)
+    const ownerKey = `${principal.source}\u0000${principal.pluginId}`
+    if (owners.has(ownerKey)) errors.push(`duplicate Host principal owner: ${ownerKey}`)
+    owners.add(ownerKey)
+    byHandle.set(principal.handle, principal)
+  }
+  return byHandle
+}
+
+function validatePrincipalStamp(errors, label, value, principalsByHandle, checkOrigin = false) {
+  const principal = principalsByHandle.get(value?.principalHandle)
+  if (principal === undefined) {
+    errors.push(`${label} references an unknown Host principal handle`)
+    return
+  }
+  if (value?.identity?.source !== principal.source || value?.identity?.pluginId !== principal.pluginId) errors.push(`${label} cross-owner principal stamp mismatch`)
+  if (checkOrigin && value?.origin !== principal.origin) errors.push(`${label} origin is not Host-derived`)
+}
+
 function validateCatalog(catalog, errors) {
   errors.push(...schemaErrors(validators.catalog, catalog).map(error => `catalog schema: ${error}`))
   const points = Array.isArray(catalog?.points) ? catalog.points : []
@@ -106,8 +144,8 @@ function validateCatalog(catalog, errors) {
     const modesById = new Map(modes.map(mode => [mode.id, mode]))
     for (const duplicate of duplicates(modes.map(mode => mode?.id).filter(Boolean))) errors.push(`duplicate mode policy: ${point.id}/${duplicate}`)
     const compose = modesById.get('compose')
-    if (compose === undefined || compose.defaultAuthorization !== 'allow') {
-      errors.push(`point ${point.id} must retain compatible compose default allow`)
+    if (compose === undefined || compose.defaultAuthorization !== 'allow' || compose.stacking !== 'ordered' || compose.exclusiveGroup !== undefined) {
+      errors.push(`point ${point.id} must retain compatible ordered compose default allow`)
     }
     for (const mode of modes) {
       if (mode.id !== 'compose' && mode.defaultAuthorization !== 'deny') {
@@ -137,6 +175,19 @@ function validateCatalog(catalog, errors) {
         const group = groupsById.get(mode.exclusiveGroup)
         if (group === undefined || !(group.modes ?? []).includes(mode.id)) {
           errors.push(`exclusive mode ${point.id}/${mode.id} lacks its declared group`)
+        }
+      }
+    }
+    for (let leftIndex = 0; leftIndex < groups.length; leftIndex += 1) {
+      for (let rightIndex = leftIndex + 1; rightIndex < groups.length; rightIndex += 1) {
+        for (const leftModeId of groups[leftIndex].modes ?? []) {
+          for (const rightModeId of groups[rightIndex].modes ?? []) {
+            const leftMode = modesById.get(leftModeId)
+            const rightMode = modesById.get(rightModeId)
+            if (!(leftMode?.coexistsWith ?? []).includes(rightModeId) || !(rightMode?.coexistsWith ?? []).includes(leftModeId)) {
+              errors.push(`cross-group exclusive modes must explicitly coexist: ${point.id}/${leftModeId}/${rightModeId}`)
+            }
+          }
         }
       }
     }
@@ -207,14 +258,19 @@ function effectiveAuthorization(declaration, authorizations, pointsById) {
   return mode?.defaultAuthorization === 'allow' ? 'allowed' : 'denied'
 }
 
-function validateDeclarations(suite, pointsById, errors) {
+function validateDeclarations(suite, pointsById, principalsByHandle, errors) {
   const declarations = Array.isArray(suite?.declarations) ? suite.declarations : []
   if (!Array.isArray(suite?.declarations)) errors.push('declarations must be an array')
   const declarationsByKey = new Map()
+  const declarationTuples = new Set()
   for (const [index, declaration] of declarations.entries()) {
     errors.push(...schemaErrors(validators.declaration, declaration).map(error => `declarations[${index}] schema: ${error}`))
     validateCanonicalIdentity(errors, `declarations[${index}]`, declaration?.identity)
+    validatePrincipalStamp(errors, `declarations[${index}]`, declaration, principalsByHandle, true)
     const key = claimKey(declaration)
+    const tuple = claimSortKey(declaration)
+    if (declarationTuples.has(tuple)) errors.push(`duplicate owner-qualified control claim: ${tuple}`)
+    declarationTuples.add(tuple)
     if (declarationsByKey.has(key)) errors.push(`duplicate control claim: ${key}`)
     declarationsByKey.set(key, declaration)
     const point = pointsById.get(declaration?.identity?.pointId)
@@ -226,6 +282,11 @@ function validateDeclarations(suite, pointsById, errors) {
     if (declaration.origin === 'legacy-structured' && (declaration.mode !== 'compose' || declaration.requestedBindings?.properties?.length > 0 || declaration.requestedBindings?.commands?.length > 0 || declaration.requestedBindings?.events?.length > 0)) {
       errors.push(`legacy structured contribution cannot gain control authority: ${key}`)
     }
+    if (declaration.origin === 'legacy-structured') {
+      const compose = point.modes?.find(mode => mode.id === 'compose')
+      if (compose?.stacking !== 'ordered' || compose?.exclusiveGroup !== undefined || compose?.defaultAuthorization !== 'allow') errors.push(`legacy compose policy must remain ordered and default allow: ${point.id}`)
+      if (declaration.claimId !== declaration.contributionId || declaration.priority !== -declaration.legacyOrder) errors.push(`legacy structured normalization drift: ${key}`)
+    }
     const propertyIds = new Set((point.safeProperties ?? []).map(binding => binding.id))
     const commandIds = new Set((point.safeCommands ?? []).map(binding => binding.id))
     const eventIds = new Set((point.safeEvents ?? []).map(binding => binding.id))
@@ -236,13 +297,14 @@ function validateDeclarations(suite, pointsById, errors) {
   return { declarations, declarationsByKey }
 }
 
-function validateAuthorizations(suite, declarationsByKey, errors) {
+function validateAuthorizations(suite, declarationsByKey, principalsByHandle, errors) {
   const authorizations = Array.isArray(suite?.authorizations) ? suite.authorizations : []
   if (!Array.isArray(suite?.authorizations)) errors.push('authorizations must be an array')
   const seen = new Set()
   for (const [index, authorization] of authorizations.entries()) {
     errors.push(...schemaErrors(validators.authorization, authorization).map(error => `authorizations[${index}] schema: ${error}`))
     validateCanonicalIdentity(errors, `authorizations[${index}]`, authorization?.identity)
+    validatePrincipalStamp(errors, `authorizations[${index}]`, authorization, principalsByHandle)
     const key = claimKey(authorization)
     if (seen.has(key)) errors.push(`duplicate claim authorization: ${key}`)
     seen.add(key)
@@ -262,11 +324,18 @@ function pathToAncestor(pointsById, pointId, ancestorId) {
   return undefined
 }
 
-function validateSnapshot(snapshot, index, pointsById, declarationsByKey, authorizations, errors) {
+function validateSnapshot(snapshot, index, pointsById, declarationsByKey, authorizations, principalsByHandle, errors) {
   errors.push(...schemaErrors(validators.snapshot, snapshot).map(error => `snapshots[${index}] schema: ${error}`))
   const pointStates = Array.isArray(snapshot?.points) ? snapshot.points : []
   const stateById = new Map(pointStates.map(point => [point.id, point]))
   for (const duplicate of duplicates(pointStates.map(point => point?.id).filter(Boolean))) errors.push(`duplicate runtime point: ${duplicate}`)
+  for (const pointId of pointsById.keys()) if (!stateById.has(pointId)) errors.push(`snapshot omits catalog point: ${pointId}`)
+  for (const pointId of stateById.keys()) if (!pointsById.has(pointId)) errors.push(`snapshot includes non-catalog point: ${pointId}`)
+  const snapshotCandidateCounts = new Map()
+  for (const pointState of pointStates) {
+    for (const candidate of pointState.candidates ?? []) snapshotCandidateCounts.set(claimKey(candidate), (snapshotCandidateCounts.get(claimKey(candidate)) ?? 0) + 1)
+  }
+  for (const key of declarationsByKey.keys()) if (snapshotCandidateCounts.get(key) !== 1) errors.push(`snapshot must contain exactly one candidate for declaration: ${key}`)
   for (const pointState of pointStates) {
     const point = pointsById.get(pointState.id)
     if (point === undefined) {
@@ -277,6 +346,7 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
     const candidateByKey = new Map()
     for (const candidate of candidates) {
       const key = claimKey(candidate)
+      validatePrincipalStamp(errors, `runtime candidate ${key}`, candidate, principalsByHandle, true)
       if (candidateByKey.has(key)) errors.push(`duplicate runtime candidate: ${key}`)
       candidateByKey.set(key, candidate)
       const declaration = declarationsByKey.get(key)
@@ -317,6 +387,7 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
     }
 
     const selected = candidates.filter(candidate => candidate.state === 'selected')
+    if (pointState.state !== 'active' && selected.length > 0) errors.push(`non-active point cannot publish selected candidates: ${point.id}`)
     for (let leftIndex = 0; leftIndex < selected.length; leftIndex += 1) {
       for (let rightIndex = leftIndex + 1; rightIndex < selected.length; rightIndex += 1) {
         const left = selected[leftIndex]
@@ -333,7 +404,7 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
     const decisions = pointState.groupDecisions ?? []
     const decisionByGroup = new Map(decisions.map(decision => [decision.groupId, decision]))
     for (const duplicate of duplicates(decisions.map(decision => decision.groupId))) errors.push(`duplicate group decision: ${point.id}/${duplicate}`)
-    for (const group of point.exclusiveGroups ?? []) {
+    if (pointState.state !== 'suppressed') for (const group of point.exclusiveGroups ?? []) {
       const decision = decisionByGroup.get(group.id)
       if (decision === undefined) {
         errors.push(`missing Host group decision: ${point.id}/${group.id}`)
@@ -350,18 +421,34 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
         if (candidate !== undefined && group.selection === 'host-priority') {
           const eligible = candidates
             .filter(item => group.modes.includes(item.mode) && item.authorization === 'allowed' && !['denied', 'suppressed', 'pending'].includes(item.state))
-            .sort((left, right) => right.priority - left.priority || claimKey(left).localeCompare(claimKey(right)))
+            .sort((left, right) => right.priority - left.priority || claimSortKey(left).localeCompare(claimSortKey(right)))
           if (eligible[0] !== candidate) errors.push(`host-priority group did not select its deterministic winner: ${point.id}/${group.id}`)
         }
       }
+      const groupSelected = selected.filter(candidate => group.modes.includes(candidate.mode))
+      if (groupSelected.length > 1) errors.push(`exclusive group cardinality exceeded: ${point.id}/${group.id}`)
+      if (decision.outcome === 'selected' && (groupSelected.length !== 1 || !sameClaim(groupSelected[0], decision.selectedClaim))) errors.push(`exclusive group decision does not exactly match its sole selected claim: ${point.id}/${group.id}`)
+      if (['native', 'none'].includes(decision.outcome) && groupSelected.length !== 0) errors.push(`native or none group decision must select zero claims: ${point.id}/${group.id}`)
     }
     for (const decision of decisions) if (!(point.exclusiveGroups ?? []).some(group => group.id === decision.groupId)) errors.push(`decision references unknown group: ${point.id}/${decision.groupId}`)
+
+    for (const candidate of selected) {
+      const mode = point.modes.find(item => item.id === candidate.mode)
+      if (mode?.stacking === 'ordered') {
+        if (candidate.selection?.authority !== 'host-policy' || candidate.selection?.exclusiveGroup !== undefined || !Number.isInteger(candidate.selection?.rank)) errors.push(`ordered selected candidate has an invalid Host selection stamp: ${claimKey(candidate)}`)
+      } else if (mode?.stacking === 'exclusive') {
+        const decision = decisionByGroup.get(mode.exclusiveGroup)
+        const expectedAuthority = point.exclusiveGroups.find(group => group.id === mode.exclusiveGroup)?.selection === 'host-priority' ? 'host-policy' : 'user'
+        if (candidate.selection?.exclusiveGroup !== mode.exclusiveGroup || candidate.selection?.authority !== expectedAuthority || candidate.selection?.rank !== undefined || decision?.outcome !== 'selected' || !sameClaim(candidate, decision.selectedClaim)) errors.push(`exclusive selected candidate lacks its exact group decision: ${claimKey(candidate)}`)
+      }
+    }
 
     if (pointState.state === 'active') {
       const compatibleSelected = selected.filter(candidate => point.modes.find(mode => mode.id === candidate.mode)?.stacking === 'exclusive')
       const ordered = candidates
         .filter(candidate => point.modes.find(mode => mode.id === candidate.mode)?.stacking === 'ordered' && candidate.authorization === 'allowed' && candidate.state !== 'pending')
-        .sort((left, right) => right.priority - left.priority || claimKey(left).localeCompare(claimKey(right)))
+        .sort((left, right) => right.priority - left.priority || claimSortKey(left).localeCompare(claimSortKey(right)))
+      let orderedRank = 0
       for (const candidate of ordered) {
         const candidateMode = point.modes.find(mode => mode.id === candidate.mode)
         const compatible = compatibleSelected.every(selectedCandidate => {
@@ -371,7 +458,11 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
         })
         const expectedState = compatible ? 'selected' : 'conflicted'
         if (candidate.state !== expectedState) errors.push(`ordered candidate resolution drift: ${claimKey(candidate)} expected ${expectedState}`)
-        if (compatible) compatibleSelected.push(candidate)
+        if (compatible) {
+          if (candidate.selection?.rank !== orderedRank) errors.push(`ordered candidate rank drift: ${claimKey(candidate)} expected ${orderedRank}`)
+          orderedRank += 1
+          compatibleSelected.push(candidate)
+        }
       }
     }
 
@@ -404,7 +495,7 @@ function validateSnapshot(snapshot, index, pointsById, declarationsByKey, author
   }
 }
 
-function validateAccesses(suite, snapshots, pointsById, declarationsByKey, errors) {
+function validateAccesses(suite, snapshots, pointsById, declarationsByKey, principalsByHandle, errors) {
   const accesses = Array.isArray(suite?.accesses) ? suite.accesses : []
   if (!Array.isArray(suite?.accesses)) errors.push('accesses must be an array')
   const latest = snapshots.at(-1)
@@ -414,6 +505,7 @@ function validateAccesses(suite, snapshots, pointsById, declarationsByKey, error
     errors.push(...schemaErrors(validators.access, request).map(error => `accesses[${index}] schema: ${error}`))
     errors.push(...schemaErrors(validators.result, result).map(error => `accesses[${index}] result schema: ${error}`))
     validateCanonicalIdentity(errors, `accesses[${index}]`, request?.identity)
+    validatePrincipalStamp(errors, `accesses[${index}]`, request, principalsByHandle)
     const declaration = declarationsByKey.get(claimKey(request))
     const point = pointsById.get(request?.identity?.pointId)
     const candidate = latest?.points?.find(state => state.id === request?.identity?.pointId)?.candidates?.find(item => sameClaim(item, request))
@@ -441,7 +533,7 @@ function validateAccesses(suite, snapshots, pointsById, declarationsByKey, error
   }
 }
 
-function validateEvents(suite, snapshots, pointsById, declarationsByKey, errors) {
+function validateEvents(suite, snapshots, pointsById, declarationsByKey, principalsByHandle, errors) {
   const vectors = Array.isArray(suite?.events) ? suite.events : []
   if (!Array.isArray(suite?.events)) errors.push('events must be an array')
   const latest = snapshots.at(-1)
@@ -450,6 +542,7 @@ function validateEvents(suite, snapshots, pointsById, declarationsByKey, errors)
     const event = vector?.event
     errors.push(...schemaErrors(validators.event, event).map(error => `events[${index}] schema: ${error}`))
     validateCanonicalIdentity(errors, `events[${index}]`, event?.identity)
+    validatePrincipalStamp(errors, `events[${index}]`, event, principalsByHandle)
     const declaration = declarationsByKey.get(claimKey(event))
     const point = pointsById.get(event?.identity?.pointId)
     const candidate = latest?.points?.find(state => state.id === event?.identity?.pointId)?.candidates?.find(item => sameClaim(item, event))
@@ -479,18 +572,19 @@ function validateEvents(suite, snapshots, pointsById, declarationsByKey, errors)
 export function validateExtensionPointControlSuite(suite) {
   const errors = []
   if (suite === null || typeof suite !== 'object' || Array.isArray(suite)) return ['suite must be an object']
+  const principalsByHandle = validatePrincipals(suite, errors)
   const pointsById = validateCatalog(suite.catalog, errors)
-  const { declarationsByKey } = validateDeclarations(suite, pointsById, errors)
-  const authorizations = validateAuthorizations(suite, declarationsByKey, errors)
+  const { declarationsByKey } = validateDeclarations(suite, pointsById, principalsByHandle, errors)
+  const authorizations = validateAuthorizations(suite, declarationsByKey, principalsByHandle, errors)
   const snapshots = Array.isArray(suite?.snapshots) ? suite.snapshots : []
   if (!Array.isArray(suite?.snapshots) || snapshots.length === 0) errors.push('snapshots must be a non-empty array')
-  for (const [index, snapshot] of snapshots.entries()) validateSnapshot(snapshot, index, pointsById, declarationsByKey, authorizations, errors)
+  for (const [index, snapshot] of snapshots.entries()) validateSnapshot(snapshot, index, pointsById, declarationsByKey, authorizations, principalsByHandle, errors)
   for (let index = 1; index < snapshots.length; index += 1) {
     if (snapshots[index].hostGeneration !== snapshots[index - 1].hostGeneration) errors.push('snapshot transition changed Host generation')
     if (snapshots[index].revision <= snapshots[index - 1].revision) errors.push('snapshot revision must increase')
   }
-  validateAccesses(suite, snapshots, pointsById, declarationsByKey, errors)
-  validateEvents(suite, snapshots, pointsById, declarationsByKey, errors)
+  validateAccesses(suite, snapshots, pointsById, declarationsByKey, principalsByHandle, errors)
+  validateEvents(suite, snapshots, pointsById, declarationsByKey, principalsByHandle, errors)
   return errors
 }
 
@@ -520,6 +614,7 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
   else if (vector.mutation === 'plugin-forged-event') suite.events[0].event.authority = 'plugin'
   else if (vector.mutation === 'denied-event-delivery') {
     const event = suite.events[0].event
+    event.principalHandle = 'principal:sync'
     event.identity = { source: 'https://plugins.example/sync', pluginId: 'sync', pointId: 'composer.reasoning-intensity' }
     event.claimId = 'sync'
     event.contributionId = 'reasoning.sync'
@@ -533,16 +628,20 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
   } else if (vector.mutation === 'exclusive-double-selection') {
     const originalDeclaration = suite.declarations.find(item => item.identity.pluginId === 'compact')
     const declaration = structuredClone(originalDeclaration)
+    declaration.principalHandle = 'principal:compact-two'
     declaration.identity = { ...declaration.identity, source: 'https://plugins.example/compact-two', pluginId: 'compact-two' }
     declaration.claimId = 'renderer-two'
     declaration.contributionId = 'reasoning.compact-two'
+    suite.principals.push({ handle: declaration.principalHandle, source: declaration.identity.source, pluginId: declaration.identity.pluginId, origin: 'explicit' })
     suite.declarations.push(declaration)
     const authorization = structuredClone(suite.authorizations.find(item => item.identity.pluginId === 'compact'))
+    authorization.principalHandle = declaration.principalHandle
     authorization.identity = structuredClone(declaration.identity)
     authorization.claimId = declaration.claimId
     suite.authorizations.push(authorization)
     const point = suite.snapshots[0].points.find(candidate => candidate.id === 'composer.reasoning-intensity')
     const candidate = structuredClone(point.candidates.find(item => item.identity.pluginId === 'compact'))
+    candidate.principalHandle = declaration.principalHandle
     candidate.identity = structuredClone(declaration.identity)
     candidate.claimId = declaration.claimId
     candidate.contributionId = declaration.contributionId
@@ -552,12 +651,15 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
     pointPolicy.exclusiveGroups.find(group => group.id === 'renderer').selection = 'host-priority'
     const originalDeclaration = suite.declarations.find(item => item.identity.pluginId === 'compact')
     const declaration = structuredClone(originalDeclaration)
+    declaration.principalHandle = 'principal:priority'
     declaration.identity = { ...declaration.identity, source: 'https://plugins.example/priority', pluginId: 'priority' }
     declaration.claimId = 'priority-renderer'
     declaration.contributionId = 'reasoning.priority'
     declaration.priority = 99
+    suite.principals.push({ handle: declaration.principalHandle, source: declaration.identity.source, pluginId: declaration.identity.pluginId, origin: 'explicit' })
     suite.declarations.push(declaration)
     const authorization = structuredClone(suite.authorizations.find(item => item.identity.pluginId === 'compact'))
+    authorization.principalHandle = declaration.principalHandle
     authorization.identity = structuredClone(declaration.identity)
     authorization.claimId = declaration.claimId
     suite.authorizations.push(authorization)
@@ -566,6 +668,7 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
     selected.selection.authority = 'host-policy'
     point.groupDecisions[0].authority = 'host-policy'
     const candidate = structuredClone(selected)
+    candidate.principalHandle = declaration.principalHandle
     candidate.identity = structuredClone(declaration.identity)
     candidate.claimId = declaration.claimId
     candidate.contributionId = declaration.contributionId
@@ -579,6 +682,79 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/extension-point
     const source = suite.snapshots[0].points.find(point => point.id === 'composer.reasoning-intensity')
     const target = suite.snapshots[0].points.find(point => point.id === 'composer.model-control')
     target.candidates.push(source.candidates.shift())
+  } else if (vector.mutation === 'exclusive-cross-mode-cardinality') {
+    const original = suite.declarations.find(item => item.identity.pluginId === 'compact')
+    const declaration = structuredClone(original)
+    declaration.principalHandle = 'principal:hidden'
+    declaration.identity = { ...declaration.identity, source: 'https://plugins.example/hidden', pluginId: 'hidden' }
+    declaration.claimId = 'hidden'
+    declaration.contributionId = 'reasoning.hidden'
+    declaration.mode = 'hide-native'
+    suite.principals.push({ handle: declaration.principalHandle, source: declaration.identity.source, pluginId: declaration.identity.pluginId, origin: 'explicit' })
+    suite.declarations.push(declaration)
+    const authorization = structuredClone(suite.authorizations.find(item => item.identity.pluginId === 'compact'))
+    authorization.principalHandle = declaration.principalHandle
+    authorization.identity = structuredClone(declaration.identity)
+    authorization.claimId = declaration.claimId
+    authorization.mode = declaration.mode
+    suite.authorizations.push(authorization)
+    const point = suite.snapshots[0].points.find(item => item.id === 'composer.reasoning-intensity')
+    const candidate = structuredClone(point.candidates.find(item => item.identity.pluginId === 'compact'))
+    candidate.principalHandle = declaration.principalHandle
+    candidate.identity = structuredClone(declaration.identity)
+    candidate.claimId = declaration.claimId
+    candidate.contributionId = declaration.contributionId
+    candidate.mode = declaration.mode
+    point.candidates.push(candidate)
+  } else if (vector.mutation === 'native-decision-with-selected') {
+    const decision = suite.snapshots[0].points.find(point => point.id === 'composer.reasoning-intensity').groupDecisions[0]
+    decision.outcome = 'native'
+    delete decision.selectedClaim
+  } else if (vector.mutation === 'decision-selected-claim-drift') {
+    const point = suite.snapshots[0].points.find(item => item.id === 'composer.reasoning-intensity')
+    const overlay = point.candidates.find(candidate => candidate.mode === 'overlay')
+    point.groupDecisions[0].selectedClaim = { principalHandle: overlay.principalHandle, identity: structuredClone(overlay.identity), claimId: overlay.claimId, mode: overlay.mode }
+  } else if (vector.mutation === 'ordered-user-authority') {
+    suite.snapshots[0].points.find(point => point.id === 'composer.reasoning-intensity').candidates.find(candidate => candidate.mode === 'overlay').selection.authority = 'user'
+  } else if (vector.mutation === 'ordered-exclusive-group') {
+    suite.snapshots[0].points.find(point => point.id === 'composer.reasoning-intensity').candidates.find(candidate => candidate.mode === 'overlay').selection.exclusiveGroup = 'renderer'
+  } else if (vector.mutation === 'snapshot-missing-point') {
+    suite.snapshots[0].points.shift()
+  } else if (vector.mutation === 'snapshot-missing-candidate') {
+    const point = suite.snapshots[0].points.find(item => item.id === 'composer.reasoning-intensity')
+    point.candidates = point.candidates.filter(candidate => candidate.identity.pluginId !== 'sync')
+  } else if (vector.mutation === 'suppressed-decision-leak') {
+    suite.snapshots[0].points.find(point => point.id === 'model.reasoning-intensity').groupDecisions.push({ groupId: 'renderer', outcome: 'native', authority: 'user', hostGeneration: 'host-21', reason: 'user.native' })
+  } else if (vector.mutation === 'restore-missing-decision') {
+    suite.snapshots[1].points.find(point => point.id === 'model.reasoning-intensity').groupDecisions = []
+  } else if (vector.mutation === 'legacy-compose-exclusive') {
+    const point = suite.catalog.points.find(item => item.id === 'model.reasoning-intensity')
+    const compose = point.modes.find(mode => mode.id === 'compose')
+    compose.stacking = 'exclusive'
+    compose.exclusiveGroup = 'legacy'
+    point.exclusiveGroups.push({ id: 'legacy', modes: ['compose'], cardinality: 'one', selection: 'host-priority', nativeFallback: true })
+  } else if (vector.mutation === 'legacy-order-rank-drift') {
+    const selected = suite.snapshots[1].points.find(point => point.id === 'model.reasoning-intensity').candidates.filter(candidate => candidate.origin === 'legacy-structured')
+    selected[0].selection.rank = 1
+    selected[1].selection.rank = 0
+  } else if (vector.mutation === 'cross-owner-declaration') {
+    suite.declarations[0].identity.pluginId = 'sync'
+  } else if (vector.mutation === 'cross-owner-authorization') {
+    suite.authorizations[0].principalHandle = 'principal:sync'
+  } else if (vector.mutation === 'cross-owner-candidate') {
+    suite.snapshots[0].points.find(point => point.id === 'composer.reasoning-intensity').candidates.find(candidate => candidate.identity.pluginId === 'ascension').principalHandle = 'principal:sync'
+  } else if (vector.mutation === 'cross-owner-access') {
+    suite.accesses[0].request.principalHandle = 'principal:sync'
+  } else if (vector.mutation === 'catalog-plugin-field') {
+    suite.catalog.points[0].pluginId = 'spoof'
+  } else if (vector.mutation === 'legacy-origin-spoof') {
+    suite.declarations.find(declaration => declaration.origin === 'legacy-structured').origin = 'explicit'
+  } else if (vector.mutation === 'cross-group-noncoexistence') {
+    const point = suite.catalog.points.find(item => item.id === 'composer.reasoning-intensity')
+    const proxy = point.modes.find(mode => mode.id === 'proxy')
+    proxy.stacking = 'exclusive'
+    proxy.exclusiveGroup = 'proxy-group'
+    point.exclusiveGroups.push({ id: 'proxy-group', modes: ['proxy'], cardinality: 'one', selection: 'host-priority', nativeFallback: true })
   } else if (vector.mutation === 'descendant-not-suppressed') {
     const child = suite.snapshots[0].points.find(point => point.id === 'model.reasoning-intensity')
     child.state = 'active'

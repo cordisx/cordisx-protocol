@@ -77,14 +77,16 @@
         "authority": { "enum": ["host-policy", "user"] },
         "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 512 },
         "exclusiveGroup": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "rank": { "type": "integer", "minimum": 0 },
         "reason": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/reasonCode" }
       }
     },
     "candidate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["origin", "identity", "claimId", "contributionId", "mode", "priority", "authorization", "state", "reason"],
+      "required": ["principalHandle", "origin", "identity", "claimId", "contributionId", "mode", "priority", "authorization", "state", "reason"],
       "properties": {
+        "principalHandle": { "$ref": "extension-point-control-common.v1.schema.json#/$defs/principalHandle" },
         "origin": { "enum": ["explicit", "legacy-structured"] },
         "identity": { "$ref": "extension-point-common.v1.schema.json#/$defs/canonicalIdentity" },
         "claimId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
