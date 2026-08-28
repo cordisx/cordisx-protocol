@@ -38,7 +38,16 @@ colors, or cleanup.
 - `control.*`: check, four chevrons, minus, and plus;
 - `navigation.*`: about, channels, dashboard, extensions, history, launcher,
   marketplace, overview, plugins, routes, runtime, and store; and
-- `status.*`: error, info, pending, success, and warning.
+- `status.*`: error, info, pending, success, and warning; and
+- `trust.*`: `certified` for a third-party plugin or source that has been
+  certified, reviewed, or verified, and `official` for a first-party or
+  organization-owned source published or maintained by that organization.
+
+`trust.certified` and `trust.official` are not interchangeable. Neither may be
+collapsed to `control.check`, `status.success`, or `status.info`: those keys
+describe a control or general status, not source provenance. The Host derives
+the trust semantic from its authoritative product model; provider or publisher
+raw identity is not part of the semantic key or resolution payload.
 
 An implementation must not synthesize new keys, accept provider-private keys,
 or reinterpret `host:*` token spelling as an extensible theme namespace. A new
@@ -76,8 +85,8 @@ one state or variant of an otherwise-covered key.
 
 `complete` is not a provider assertion. It requires a Host-authored
 `host-conformance` proof inside the exact registration generation. The Host
-privately resolves and schema-validates the Cartesian product of 49 keys, three
-variants, and eight states: 1,176 tuples. The exported proof carries only the
+privately resolves and schema-validates the Cartesian product of 51 keys, three
+variants, and eight states: 1,224 tuples. The exported proof carries only the
 closed-catalog digest, counts, protocol/descriptor versions, exact provider
 identity, namespace, version and generation, a passed outcome, and
 `rawDataExported: false`. It contains no icon geometry. Those provider pins
@@ -86,8 +95,10 @@ generation is invalid.
 
 The version-1 catalog digest is lowercase SHA-256 over the UTF-8 bytes of the
 compact JSON array of `semanticIconKey.enum` values in schema order, with no
-whitespace. The conformance suite recomputes this digest and tuple count so a
-catalog edit cannot retain a stale proof constant.
+whitespace. For this 51-key catalog it is
+`sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77`.
+The conformance suite recomputes this digest and tuple count so a catalog edit
+cannot retain a stale proof constant.
 
 ## Selection and fallback
 
@@ -127,7 +138,9 @@ The only successful public provider payload is
 
 The first command of every path is `move`; `close`, when present, is final. The
 Host supplies semantic color, sizing, state projection, mirroring policy, DOM,
-and accessibility. Unknown fields invalidate the entire descriptor.
+and accessibility. Accessible names, labels, tooltip text, and all other
+user-facing text come from the Host UI context; a semantic icon key carries no
+user text. Unknown fields invalidate the entire descriptor.
 
 The schemas explicitly reject React or framework components, DOM nodes, raw
 SVG, raw HTML, SVG path `d` strings, CSS/style values, colors, URLs, selectors, callbacks, event

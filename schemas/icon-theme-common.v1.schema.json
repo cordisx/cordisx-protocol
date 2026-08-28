@@ -53,7 +53,9 @@
         "status.info",
         "status.pending",
         "status.success",
-        "status.warning"
+        "status.warning",
+        "trust.certified",
+        "trust.official"
       ]
     },
     "variant": {
@@ -138,17 +140,17 @@
         "kind": { "const": "host-conformance" },
         "proofId": { "$ref": "#/$defs/opaqueId" },
         "catalogVersion": { "const": 1 },
-        "catalogDigest": { "const": "sha256:719bf30def3e84b716cba18b9497bc58f496c2185d5be53a3ad1ea7c44e7d565" },
+        "catalogDigest": { "const": "sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77" },
         "providerId": { "$ref": "#/$defs/providerId" },
         "namespace": { "$ref": "#/$defs/namespace" },
         "providerVersion": { "$ref": "#/$defs/semanticVersion" },
         "providerGeneration": { "$ref": "#/$defs/generation" },
         "protocolVersion": { "const": 1 },
         "descriptorFormatVersion": { "const": 1 },
-        "keyCount": { "const": 49 },
+        "keyCount": { "const": 51 },
         "variantCount": { "const": 3 },
         "stateCount": { "const": 8 },
-        "tupleCount": { "const": 1176 },
+        "tupleCount": { "const": 1224 },
         "outcome": { "const": "passed" },
         "rawDataExported": { "const": false }
       }
@@ -173,7 +175,7 @@
             "entries": {
               "type": "array",
               "minItems": 1,
-              "maxItems": 1175,
+              "maxItems": 1223,
               "items": {
                 "type": "object",
                 "additionalProperties": false,

@@ -1,5 +1,5 @@
 {
-  "case": "reject complete coverage proof that exported raw geometry",
+  "case": "reject a complete proof that omits the two trust keys",
   "schema": "icon-theme-provider-registration.v1.schema.json",
   "value": {
     "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json",
@@ -14,7 +14,7 @@
     "status": "ready",
     "coverage": {
       "kind": "complete",
-      "proof": { "kind": "host-conformance", "proofId": "proof_reicon_000003", "catalogVersion": 1, "catalogDigest": "sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77", "providerId": "builtin:reicon", "namespace": "reicon", "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "protocolVersion": 1, "descriptorFormatVersion": 1, "keyCount": 51, "variantCount": 3, "stateCount": 8, "tupleCount": 1224, "outcome": "passed", "rawDataExported": true }
+      "proof": { "kind": "host-conformance", "proofId": "proof_reicon_missing_trust", "catalogVersion": 1, "catalogDigest": "sha256:9ff8e2b85073e7254a83af012258b22da5b1d74429023887f948c1ba4852ba77", "providerId": "builtin:reicon", "namespace": "reicon", "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "protocolVersion": 1, "descriptorFormatVersion": 1, "keyCount": 49, "variantCount": 3, "stateCount": 8, "tupleCount": 1176, "outcome": "passed", "rawDataExported": false }
     }
   }
 }

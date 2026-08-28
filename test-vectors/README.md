@@ -45,6 +45,10 @@ normalized fill/stroke geometry, lifecycle outcome combinations, stale/late
 generation rejection, exact disposal and rollback, and rejection of components,
 DOM, raw SVG/HTML, style, URLs, selectors, callbacks, `foreignObject`, local
 paths, open semantic keys, coverage drift, and provider identity impersonation.
+The trust fixtures keep certified third-party provenance distinct from official
+first-party provenance, reject control/status aliases and user text or raw
+source identity in resolution requests, and reject stale 49-key coverage
+proofs while retaining selection, fallback, and rollback fences.
 
 Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,

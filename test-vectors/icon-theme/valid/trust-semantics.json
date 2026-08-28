@@ -1,0 +1,25 @@
+{
+  "case": "certified third-party and official first-party provenance are distinct semantic keys",
+  "certified": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "trust_certified_0001",
+    "hostGeneration": "host-12",
+    "providerHandle": "iph_reicon0000000001",
+    "providerGeneration": "reicon-1",
+    "key": "trust.certified",
+    "variant": "duotone",
+    "state": "hover"
+  },
+  "official": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "trust_official_00001",
+    "hostGeneration": "host-12",
+    "providerHandle": "iph_reicon0000000001",
+    "providerGeneration": "reicon-1",
+    "key": "trust.official",
+    "variant": "filled",
+    "state": "selected"
+  }
+}
