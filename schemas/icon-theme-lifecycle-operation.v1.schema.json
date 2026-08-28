@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-operation.v1.schema.json",
+  "title": "CordisX Host Icon Theme Lifecycle Operation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "authority", "requestId", "profileId", "expectedRevision", "hostGeneration", "operation"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-operation.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "authority": { "const": "host" },
+    "requestId": { "$ref": "icon-theme-common.v1.schema.json#/$defs/opaqueId" },
+    "profileId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "expectedRevision": { "type": "integer", "minimum": 0 },
+    "hostGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+    "operation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "providerHandle", "principal", "identity", "providerGeneration", "coverage"],
+          "properties": {
+            "kind": { "const": "register" },
+            "providerHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
+            "principal": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["principalHandle", "pluginId"],
+              "properties": {
+                "principalHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/principalHandle" },
+                "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+              }
+            },
+            "identity": {
+              "allOf": [
+                { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerIdentity" },
+                { "type": "object", "properties": { "providerId": { "type": "string", "pattern": "^plugin:" } } }
+              ]
+            },
+            "providerGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+            "coverage": { "$ref": "icon-theme-common.v1.schema.json#/$defs/coverage" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "providerHandle", "providerGeneration"],
+          "properties": {
+            "kind": { "const": "select" },
+            "providerHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
+            "providerGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "providerHandle", "providerGeneration"],
+          "properties": {
+            "kind": { "const": "dispose" },
+            "providerHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
+            "providerGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "failedProviderHandle", "failedGeneration", "restoreProviderHandle", "restoreGeneration"],
+          "properties": {
+            "kind": { "const": "rollback" },
+            "failedProviderHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
+            "failedGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+            "restoreProviderHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
+            "restoreGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+            "reason": { "enum": ["prepare-failed", "resolution-failed", "invalid-descriptor", "provider-unavailable"] }
+          }
+        }
+      ]
+    }
+  }
+}

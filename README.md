@@ -24,6 +24,12 @@ back, and history projection. It supports dynamic opaque record titles without
 granting DOM, raw bridge, router, or secret access. See
 `.agents/docs/manager-content-navigation/README.md`.
 
+Icon theme provider v1 makes Reicon the Host default and fallback while
+allowing future principal-bound theme providers to register partial semantic
+coverage. Providers return only bounded normalized vector data; the Host keeps
+DOM, styling, state, accessibility, fallback, and lifecycle ownership. See
+`.agents/docs/icon-theme/README.md`.
+
 Dynamic local packages and plugin generations are defined by the frozen
 package/operation/result v1 schemas, the explicit-local source v1, separate
 package/operation/result v2 schemas, permission-aware package v3,

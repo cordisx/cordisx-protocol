@@ -22,6 +22,9 @@ Specified areas:
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution versions 2 through 7, availability, contextual
   invocation, DSH intent mapping, and explicit replacement refusals.
+- `icon-theme/`: closed semantic icon keys, Reicon default/fallback, versioned
+  provider registration and selection, normalized vector resolution, exact
+  generation disposal/rollback, and strict Host rendering ownership.
 - `reasoning-intensity-presentation/`: Host-owned projection of the native
   reasoning range with bounded semantic material stages and strict cleanup.
 - `session-backdrop-presentation/`: Host-owned session ambience and transparent

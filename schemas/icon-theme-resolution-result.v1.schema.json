@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json",
+  "title": "CordisX Icon Theme Resolution Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "requestId", "providerGeneration", "outcome"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "$ref": "icon-theme-common.v1.schema.json#/$defs/opaqueId" },
+    "providerGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+    "outcome": { "enum": ["resolved", "missing", "rejected", "stale-generation"] },
+    "descriptor": { "$ref": "icon-theme-common.v1.schema.json#/$defs/normalizedVectorDescriptor" },
+    "reason": { "enum": ["not-covered", "unsupported-variant", "unsupported-state", "invalid-request", "provider-unavailable", "generation-mismatch"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "resolved" } }, "required": ["outcome"] },
+      "then": { "required": ["descriptor"], "properties": { "descriptor": true, "reason": false } }
+    },
+    {
+      "if": { "properties": { "outcome": { "enum": ["missing", "rejected", "stale-generation"] } }, "required": ["outcome"] },
+      "then": { "required": ["reason"], "properties": { "descriptor": false, "reason": true } }
+    }
+  ]
+}

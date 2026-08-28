@@ -9,6 +9,19 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   commerce descriptors (no price or payment state);
 - `ui-common.v1.schema.json`: shared identifiers, command/route references,
   host icon tokens, conditions, and disabled state;
+- `icon-theme-common.v1.schema.json`: closed version-1 semantic icon keys,
+  variants/states, provider identities, coverage, and the field-whitelisted
+  normalized vector descriptor;
+- `icon-theme-provider-registration.v1.schema.json`: Host-authored,
+  principal-bound provider registration and exact generation status;
+- `icon-theme-selection.v1.schema.json`: profile/revision/generation-fenced
+  selection with `builtin:reicon` as the mandatory default and fallback;
+- `icon-theme-resolution-request.v1.schema.json` and
+  `icon-theme-resolution-result.v1.schema.json`: exact-tuple resolution with
+  explicit partial-coverage misses and descriptor-only success payloads;
+- `icon-theme-lifecycle-operation.v1.schema.json` and
+  `icon-theme-lifecycle-result.v1.schema.json`: Host-authored register, select,
+  exact-generation dispose, and last-good rollback records;
 - `locale-catalog.v1.schema.json`: one namespace-by-locale ICU message dictionary;
 - `command.v1.schema.json`: serializable command metadata (never a handler);
 - `surface-contribution.v1.schema.json`: one host-rendered shell contribution,

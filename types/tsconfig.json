@@ -7,5 +7,10 @@
     "target": "ES2023",
     "skipLibCheck": true
   },
-  "files": ["manager-content-navigation.v1.d.ts", "manager-content-navigation.v1.test.ts"]
+  "files": [
+    "manager-content-navigation.v1.d.ts",
+    "manager-content-navigation.v1.test.ts",
+    "icon-theme.v1.d.ts",
+    "icon-theme.v1.test.ts"
+  ]
 }

@@ -1,0 +1,13 @@
+{
+  "case": "reject provider result identity assertion",
+  "schema": "icon-theme-resolution-result.v1.schema.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "negative_request_0009",
+    "providerGeneration": "aurora-3",
+    "providerId": "builtin:reicon",
+    "outcome": "missing",
+    "reason": "not-covered"
+  }
+}

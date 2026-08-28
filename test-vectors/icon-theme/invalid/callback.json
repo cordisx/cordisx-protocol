@@ -1,0 +1,12 @@
+{
+  "case": "reject callback",
+  "schema": "icon-theme-resolution-result.v1.schema.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json",
+    "schemaVersion": 1,
+    "requestId": "negative_request_0005",
+    "providerGeneration": "aurora-3",
+    "outcome": "resolved",
+    "descriptor": { "format": "cordisx.normalized-vector", "formatVersion": 1, "viewBox": { "minX": 0, "minY": 0, "width": 24, "height": 24 }, "paths": [{ "paint": "fill", "commands": [{ "op": "move", "x": 0, "y": 0 }, { "op": "close" }] }], "onClick": "callback-handle" }
+  }
+}

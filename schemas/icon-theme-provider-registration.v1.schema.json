@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json",
+  "title": "CordisX Host-authored Icon Theme Provider Registration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "authority", "hostGeneration", "revision", "providerHandle", "principal", "identity", "providerGeneration", "status", "coverage"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "authority": { "const": "host" },
+    "hostGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "providerHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerHandle" },
+    "principal": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "host" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "principalHandle", "pluginId"],
+          "properties": {
+            "kind": { "const": "plugin" },
+            "principalHandle": { "$ref": "icon-theme-common.v1.schema.json#/$defs/principalHandle" },
+            "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+          }
+        }
+      ]
+    },
+    "identity": { "$ref": "icon-theme-common.v1.schema.json#/$defs/providerIdentity" },
+    "providerGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+    "status": { "enum": ["staged", "ready", "active", "retiring", "failed", "disposed"] },
+    "coverage": { "$ref": "icon-theme-common.v1.schema.json#/$defs/coverage" },
+    "lastGoodGeneration": { "$ref": "icon-theme-common.v1.schema.json#/$defs/generation" },
+    "failureCode": { "enum": ["prepare-failed", "resolution-failed", "invalid-descriptor", "disposed", "generation-replaced"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "principal": { "type": "object", "properties": { "kind": { "const": "host" } }, "required": ["kind"] } }, "required": ["principal"] },
+      "then": { "properties": { "identity": { "type": "object", "properties": { "providerId": { "type": "string", "pattern": "^builtin:" } } } } }
+    },
+    {
+      "if": { "properties": { "principal": { "type": "object", "properties": { "kind": { "const": "plugin" } }, "required": ["kind"] } }, "required": ["principal"] },
+      "then": { "properties": { "identity": { "type": "object", "properties": { "providerId": { "type": "string", "pattern": "^plugin:" } } } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "failed" } }, "required": ["status"] },
+      "then": { "required": ["failureCode"], "properties": { "failureCode": true } }
+    },
+    {
+      "if": { "properties": { "status": { "not": { "const": "failed" } } }, "required": ["status"] },
+      "then": { "properties": { "failureCode": false } }
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-common.v1.schema.json",
+  "title": "CordisX Icon Theme Common Definitions v1",
+  "$defs": {
+    "semanticIconKey": {
+      "enum": [
+        "action.add",
+        "action.back",
+        "action.close",
+        "action.copy",
+        "action.delete",
+        "action.edit",
+        "action.external-link",
+        "action.more",
+        "action.open",
+        "action.refresh",
+        "action.reset",
+        "action.save",
+        "action.search",
+        "action.settings",
+        "action.share",
+        "agent.reasoning",
+        "content.calendar",
+        "content.clock",
+        "content.files",
+        "content.folder",
+        "content.key",
+        "content.layers",
+        "content.palette",
+        "content.panel",
+        "content.tags",
+        "control.check",
+        "control.chevron-down",
+        "control.chevron-left",
+        "control.chevron-right",
+        "control.chevron-up",
+        "control.minus",
+        "control.plus",
+        "navigation.about",
+        "navigation.channels",
+        "navigation.dashboard",
+        "navigation.extensions",
+        "navigation.history",
+        "navigation.launcher",
+        "navigation.marketplace",
+        "navigation.overview",
+        "navigation.plugins",
+        "navigation.routes",
+        "navigation.runtime",
+        "navigation.store",
+        "status.error",
+        "status.info",
+        "status.pending",
+        "status.success",
+        "status.warning"
+      ]
+    },
+    "variant": {
+      "enum": ["regular", "filled", "duotone"]
+    },
+    "state": {
+      "enum": ["default", "hover", "active", "selected", "disabled", "danger", "success", "warning"]
+    },
+    "semanticVersion": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 64,
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "generation": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "opaqueId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{15,127}$"
+    },
+    "providerHandle": {
+      "type": "string",
+      "pattern": "^iph_[A-Za-z0-9_-]{16,124}$"
+    },
+    "principalHandle": {
+      "type": "string",
+      "pattern": "^ipp_[A-Za-z0-9_-]{16,124}$"
+    },
+    "providerId": {
+      "type": "string",
+      "pattern": "^(?:builtin:[a-z0-9][a-z0-9._-]{0,63}|plugin:[a-z0-9][a-z0-9._-]{0,63}:[a-z0-9][a-z0-9._-]{0,63})$"
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+    },
+    "providerIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "namespace", "protocolVersion", "providerVersion"],
+      "properties": {
+        "providerId": { "$ref": "#/$defs/providerId" },
+        "namespace": { "$ref": "#/$defs/namespace" },
+        "protocolVersion": { "const": 1 },
+        "providerVersion": { "$ref": "#/$defs/semanticVersion" }
+      }
+    },
+    "providerReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerHandle", "providerId", "namespace", "protocolVersion", "providerVersion", "providerGeneration"],
+      "properties": {
+        "providerHandle": { "$ref": "#/$defs/providerHandle" },
+        "providerId": { "$ref": "#/$defs/providerId" },
+        "namespace": { "$ref": "#/$defs/namespace" },
+        "protocolVersion": { "const": 1 },
+        "providerVersion": { "$ref": "#/$defs/semanticVersion" },
+        "providerGeneration": { "$ref": "#/$defs/generation" }
+      }
+    },
+    "coverage": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "complete" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "entries"],
+          "properties": {
+            "kind": { "const": "partial" },
+            "entries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 384,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["key", "variants", "states"],
+                "properties": {
+                  "key": { "$ref": "#/$defs/semanticIconKey" },
+                  "variants": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/variant" }
+                  },
+                  "states": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 8,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/state" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "coordinate": {
+      "type": "number",
+      "minimum": -64,
+      "maximum": 64
+    },
+    "opacity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "pathCommand": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "x", "y"],
+          "properties": {
+            "op": { "const": "move" },
+            "x": { "$ref": "#/$defs/coordinate" },
+            "y": { "$ref": "#/$defs/coordinate" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "x", "y"],
+          "properties": {
+            "op": { "const": "line" },
+            "x": { "$ref": "#/$defs/coordinate" },
+            "y": { "$ref": "#/$defs/coordinate" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "x1", "y1", "x2", "y2", "x", "y"],
+          "properties": {
+            "op": { "const": "cubic" },
+            "x1": { "$ref": "#/$defs/coordinate" },
+            "y1": { "$ref": "#/$defs/coordinate" },
+            "x2": { "$ref": "#/$defs/coordinate" },
+            "y2": { "$ref": "#/$defs/coordinate" },
+            "x": { "$ref": "#/$defs/coordinate" },
+            "y": { "$ref": "#/$defs/coordinate" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "x1", "y1", "x", "y"],
+          "properties": {
+            "op": { "const": "quadratic" },
+            "x1": { "$ref": "#/$defs/coordinate" },
+            "y1": { "$ref": "#/$defs/coordinate" },
+            "x": { "$ref": "#/$defs/coordinate" },
+            "y": { "$ref": "#/$defs/coordinate" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op"],
+          "properties": { "op": { "const": "close" } }
+        }
+      ]
+    },
+    "fillPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paint", "commands"],
+      "properties": {
+        "paint": { "const": "fill" },
+        "fillRule": { "enum": ["nonzero", "evenodd"] },
+        "opacity": { "$ref": "#/$defs/opacity" },
+        "commands": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 512,
+          "items": { "$ref": "#/$defs/pathCommand" }
+        }
+      }
+    },
+    "strokePath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paint", "strokeWidth", "lineCap", "lineJoin", "commands"],
+      "properties": {
+        "paint": { "const": "stroke" },
+        "strokeWidth": { "type": "number", "minimum": 0.25, "maximum": 4 },
+        "lineCap": { "enum": ["butt", "round", "square"] },
+        "lineJoin": { "enum": ["miter", "round", "bevel"] },
+        "opacity": { "$ref": "#/$defs/opacity" },
+        "commands": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 512,
+          "items": { "$ref": "#/$defs/pathCommand" }
+        }
+      }
+    },
+    "normalizedVectorDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "formatVersion", "viewBox", "paths"],
+      "properties": {
+        "format": { "const": "cordisx.normalized-vector" },
+        "formatVersion": { "const": 1 },
+        "viewBox": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minX", "minY", "width", "height"],
+          "properties": {
+            "minX": { "const": 0 },
+            "minY": { "const": 0 },
+            "width": { "const": 24 },
+            "height": { "const": 24 }
+          }
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/fillPath" },
+              { "$ref": "#/$defs/strokePath" }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
