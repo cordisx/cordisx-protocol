@@ -22,3 +22,6 @@ are opaque; the declarations expose no transport, DOM, callback, bridge,
 credential, platform, or task type.
 
 Run `npm run typecheck` to compile the strict positive and negative fixtures.
+
+`agent-conversation-shell.v1.d.ts` exposes only the data source, ordered runtime
+subscription handle, and disposal lifetime for the Host-owned conversation shell.
