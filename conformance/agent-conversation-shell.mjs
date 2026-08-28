@@ -21,5 +21,29 @@ const context = { $schema: schemas.get('agent-conversation-shell-command-context
 for (const [n, value] of [['agent-conversation-shell-binding.v1.schema.json', binding], ['agent-conversation-shell-snapshot.v1.schema.json', snapshot], ['agent-conversation-shell-subscription.v1.schema.json', subscription], ['agent-conversation-shell-page.v1.schema.json', page], ['agent-conversation-shell-result.v1.schema.json', result], ['agent-conversation-shell-command-context.v1.schema.json', context]]) assert.ok(v[n](value), ajv.errorsText(v[n].errors))
 for (const mutate of [x => { x.selection.multiParticipant = false }, x => { x.selection.avatar = 'https://bad.test/a.png' }, x => { x.items[0].body[0].html = '<b>x</b>' }, x => { x.conversation = 'opaque-handle' }]) { const bad = structuredClone(snapshot); mutate(bad); assert.equal(v['agent-conversation-shell-snapshot.v1.schema.json'](bad), false) }
 for (const mutate of [x => { x.callback = 'nope' }, x => { x.itemId = 'item-0' }]) { const bad = structuredClone(context); mutate(bad); assert.equal(v['agent-conversation-shell-command-context.v1.schema.json'](bad), false) }
+function sameBinding(left, right) { return left?.bindingId === right?.bindingId && left?.ownerGeneration === right?.ownerGeneration }
+function traceErrors(trace) {
+  const errors = []
+  if (trace.result.status === 'accepted' && trace.result.type === 'subscribe' && !sameBinding(trace.result.subscription.binding, trace.binding)) errors.push('result binding drift')
+  let after = trace.subscription.afterSequence; let disposed = false
+  if (after > trace.subscription.snapshotSequence) errors.push('after exceeds snapshot watermark')
+  for (const current of trace.pages) {
+    if (!sameBinding(current.subscription.binding, trace.binding) || current.subscription.generation !== trace.generation) errors.push('page binding/generation drift')
+    if (current.afterSequence !== after) errors.push('page cursor is not serialized')
+    if (after < current.subscription.snapshotSequence && current.phase !== 'replay') errors.push('live precedes replay watermark')
+    if (disposed || current.updates.some(update => update.kind === 'disposed') && current.hasMore) errors.push('terminal stream has later page')
+    let sequence = after + 1
+    for (const update of current.updates) { if (update.sequence !== sequence) errors.push('update sequence is not monotonic'); sequence += 1; if (update.kind === 'disposed') disposed = true }
+    if (current.nextAfterSequence !== (current.updates.length ? current.updates.at(-1).sequence : after)) errors.push('next cursor drift')
+    if (current.phase === 'replay' && !current.hasMore && current.nextAfterSequence !== current.subscription.snapshotSequence) errors.push('replay did not reach watermark')
+    after = current.nextAfterSequence
+  }
+  if (!sameBinding(trace.context.binding, trace.binding) || trace.context.generation !== trace.generation) errors.push('command context drift')
+  return errors
+}
+const trace = { binding: snapshot.binding, generation: 'generation-1', result, subscription, pages: [page], context }
+assert.deepEqual(traceErrors(trace), [])
+for (const mutate of [x => { x.pages[0].subscription.generation = 'other' }, x => { x.pages[0].updates[0].sequence = 2 }, x => { x.pages[0].phase = 'live' }, x => { x.context.generation = 'stale' }, x => { x.pages[0].updates.push({ kind: 'disposed', sequence: 1, reason: 'explicit' }); x.pages[0].hasMore = true }]) { const bad = structuredClone(trace); mutate(bad); assert.notDeepEqual(traceErrors(bad), [], 'identity/order/terminal no-op mutant must leak') }
+for (const wire of [{ ...result, status: 'denied', code: 'policy-denied', subscription: undefined }, { ...result, status: 'unavailable', code: 'disposed', subscription: undefined }, { ...result, status: 'denied', code: 'allowed', subscription: undefined }]) assert.equal(v['agent-conversation-shell-result.v1.schema.json'](wire), wire.code !== 'allowed')
 for (const token of ['draft-changed', 'avatar', 'image', 'html', 'css', 'component', 'callback', 'selector', 'projection', 'fixture']) assert.ok(!JSON.stringify([...schemas.values()]).toLowerCase().includes(token), `forbidden ${token}`)
 console.log('Agent conversation shell conformance: all vectors passed')
