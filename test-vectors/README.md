@@ -115,6 +115,12 @@ registration/generation identity, create versus continue handles, capability
 matching, structured message direction, disposal terminality, and rejection of
 Room, raw bridge, and cross-registration data.
 
+Connector client suites live in `connector-client/valid` and
+`connector-client/invalid`. They cover Host-issued caller principal/user
+authorization, typed accepted/denied/unavailable results, run-to-conversation
+binding, stale/replaced/disposed registration rejection, redacted discovery,
+and serialized snapshot replay before live events.
+
 Channel Manager v2 vectors additionally cover strict snapshot/request/result
 identity, profile and Host-generation fencing, operation-to-exact-target
 matching, stale-operation suppression, account-scoped safe-log pages, opaque

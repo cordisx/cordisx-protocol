@@ -1,4 +1,4 @@
-import type { ConnectorCommand, ConnectorEvent, ConnectorRegistration, ConnectorServiceDescriptor } from './connector-service.v1.js'
+import type { ConnectorClientRequest, ConnectorClientResult, ConnectorCommand, ConnectorEvent, ConnectorRegistration, ConnectorServiceDescriptor } from './connector-service.v1.js'
 
 const descriptor = {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json',
@@ -43,3 +43,32 @@ const event = {
 void descriptor
 void command
 void event
+
+const clientRequest = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json',
+  contract: 'cordisx.connector-client-request/v1',
+  schemaVersion: 1,
+  requestId: 'request-1',
+  caller: {
+    principal: { principalHandle: 'principal-1', pluginId: 'consumer.plugin', generation: 1 },
+    userHandle: 'user-1',
+    authorization: { capability: 'connector.command.execute', target: { kind: 'registration', registration: registration.registration } },
+  },
+  type: 'connector.command.execute',
+  registration: registration.registration,
+  command,
+} satisfies ConnectorClientRequest
+
+const clientResult = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json',
+  contract: 'cordisx.connector-client-result/v1',
+  schemaVersion: 1,
+  requestId: 'request-1',
+  type: 'connector.command.execute',
+  status: 'accepted',
+  authorization: { capability: 'connector.command.execute', state: 'allowed', code: 'allowed' },
+  execution: { kind: 'message.sent', conversation: 'conversation-1', messageId: 'message-1' },
+} satisfies ConnectorClientResult
+
+void clientRequest
+void clientResult

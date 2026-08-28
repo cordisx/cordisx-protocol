@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-common.v1.schema.json",
+  "title": "CordisX Connector Client Common Types v1",
+  "$defs": {
+    "principal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principalHandle", "pluginId", "generation"],
+      "properties": {
+        "principalHandle": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+        "pluginId": { "$ref": "connector-common.v1.schema.json#/$defs/identifier" },
+        "generation": { "$ref": "connector-common.v1.schema.json#/$defs/generation" }
+      }
+    },
+    "clientCapability": {
+      "enum": ["connector.discovery", "connector.command.execute", "connector.events.subscribe"]
+    },
+    "authorizationTarget": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "catalog" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "registration"], "properties": { "kind": { "const": "registration" }, "registration": { "$ref": "connector-common.v1.schema.json#/$defs/registration" } } }
+      ]
+    },
+    "caller": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principal", "userHandle", "authorization"],
+      "properties": {
+        "principal": { "$ref": "#/$defs/principal" },
+        "userHandle": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+        "authorization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["capability", "target"],
+          "properties": {
+            "capability": { "$ref": "#/$defs/clientCapability" },
+            "target": { "$ref": "#/$defs/authorizationTarget" }
+          }
+        }
+      }
+    },
+    "authorizationOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capability", "state", "code"],
+      "properties": {
+        "capability": { "$ref": "#/$defs/clientCapability" },
+        "state": { "enum": ["allowed", "denied", "unavailable"] },
+        "code": { "enum": ["allowed", "user-denied", "policy-denied", "principal-unavailable", "registration-unavailable", "unsupported"] }
+      },
+      "allOf": [
+        { "if": { "properties": { "state": { "const": "allowed" } }, "required": ["state"] }, "then": { "properties": { "code": { "const": "allowed" } } } },
+        { "if": { "properties": { "state": { "const": "denied" } }, "required": ["state"] }, "then": { "properties": { "code": { "enum": ["user-denied", "policy-denied"] } } } },
+        { "if": { "properties": { "state": { "const": "unavailable" } }, "required": ["state"] }, "then": { "properties": { "code": { "enum": ["principal-unavailable", "registration-unavailable", "unsupported"] } } } }
+      ]
+    },
+    "runBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversation", "run"],
+      "properties": {
+        "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+        "run": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" }
+      }
+    }
+  }
+}

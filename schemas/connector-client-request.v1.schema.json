@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json",
+  "title": "CordisX Connector Client Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "requestId", "caller", "type"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-request.v1.schema.json" },
+    "contract": { "const": "cordisx.connector-client-request/v1" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "caller": { "$ref": "connector-client-common.v1.schema.json#/$defs/caller" },
+    "type": { "enum": ["connector.discover", "connector.command.execute", "connector.events.subscribe"] },
+    "registration": { "$ref": "connector-common.v1.schema.json#/$defs/registration" },
+    "command": { "$ref": "connector-command.v1.schema.json" },
+    "afterSequence": { "type": "integer", "minimum": -1 }
+  },
+  "allOf": [
+    { "if": { "properties": { "type": { "const": "connector.discover" } }, "required": ["type"] }, "then": { "properties": { "registration": false, "command": false, "afterSequence": false } } },
+    { "if": { "properties": { "type": { "const": "connector.command.execute" } }, "required": ["type"] }, "then": { "required": ["registration", "command"], "properties": { "registration": true, "command": true, "afterSequence": false } } },
+    { "if": { "properties": { "type": { "const": "connector.events.subscribe" } }, "required": ["type"] }, "then": { "required": ["registration", "afterSequence"], "properties": { "registration": true, "afterSequence": true, "command": false } } }
+  ]
+}

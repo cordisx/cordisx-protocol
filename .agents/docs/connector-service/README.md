@@ -18,6 +18,14 @@ adapter; it does not define a product, consumer, task, or UI.
   `message.send`, `run.stop`, or `conversation.close` request.
 - `connector-event.v1.schema.json` is one ordered conversation, message, run,
   close, or disposal observation.
+- `connector-client-request.v1.schema.json` and
+  `connector-client-result.v1.schema.json` are the public plugin-consumer
+  discovery, execution, and subscription exchange, including typed denied or
+  unavailable outcomes.
+- `connector-client-snapshot.v1.schema.json`,
+  `connector-event-subscription.v1.schema.json`, and
+  `connector-event-page.v1.schema.json` are the redacted discovery and
+  serialized replay/live consumption contracts.
 
 `conversation` and `run` are opaque handles. A consumer can retain and return a
 handle only to the registration that issued it; it cannot derive identity,
@@ -43,6 +51,27 @@ The disposal event is terminal for that registration. A replacement registers a
 new generation rather than reviving the disposed one. The protocol makes no
 claim about task execution, message delivery guarantees, retries, persistence,
 or external-service semantics.
+
+## Public consumer boundary
+
+A consumer sends one data-only client request. Its `caller` repeats a
+Host-issued opaque principal handle, plugin generation, opaque user handle, and
+the exact capability/target being requested. The Host, not the caller, decides
+the request and returns `accepted`, `denied`, or `unavailable` with a bounded
+authorization outcome. A result never contains a callable service object,
+transport, second connection, generic bridge, or arbitrary command payload.
+
+An accepted command result is typed. In particular, `run.stopped` repeats one
+`(conversation, run)` binding; a run cannot be stopped through another
+conversation. Discovery returns only a redacted registration/capability/
+availability snapshot, never client principals, user identity, message text,
+or service internals.
+
+Subscription first fixes `snapshotSequence`. Replay pages advance exactly from
+`afterSequence` through that snapshot; only after the final replay cursor may a
+live page begin. A page contains one contiguous sequence for the exact
+registration. Disposal is terminal, including during replay, so a late event
+for that registration is rejected.
 
 The documents contain no Room, Agent product UI, model, provider, workspace,
 secret, external-platform identity, DOM, callback, raw bridge, absolute-path,

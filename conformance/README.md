@@ -76,6 +76,11 @@ registration/generation identity, per-command capability matching, opaque
 conversation/run handles, structured inbound/outbound messages, contiguous
 events, and terminal disposal. It rejects Room, task, UI, model, provider,
 workspace, secret, callback, DOM, raw-bridge, and path fields.
+Connector client conformance covers public discovery/execute/subscribe
+exchanges, Host-issued principal/user authorization, bounded denied and
+unavailable outcomes, run-to-conversation binding, registration replacement
+and disposal fencing, redacted snapshots, and serialized snapshot replay before
+live consumption. It rejects raw bridges and a second connection surface.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

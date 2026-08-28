@@ -11,7 +11,8 @@ resolution, disposal, and rollback documents. The declarations intentionally exp
 markup, style, URL, callback, accessibility, or local-path type.
 
 `connector-service.v1.d.ts` exposes the versioned Connector descriptor,
-registration identity, command union, and event union. Handles stay `string`
+registration identity, command/event unions, and the public client caller,
+request, authorization, and typed execute-result unions. Handles stay `string`
 because their values are opaque; the declarations expose no transport, DOM,
 callback, bridge, credential, platform, or task type.
 

@@ -123,6 +123,16 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   Connector command envelope; and
 - `connector-event.v1.schema.json`: one ordered data-only Connector event or
   terminal disposal envelope;
+- `connector-client-common.v1.schema.json`: opaque caller principal/user,
+  bounded authorization outcome, and run/conversation binding types;
+- `connector-client-request.v1.schema.json` and
+  `connector-client-result.v1.schema.json`: public discovery, command, and
+  subscription exchange with typed denied/unavailable outcomes;
+- `connector-client-snapshot.v1.schema.json`: redacted public registration and
+  capability availability snapshot; and
+- `connector-event-subscription.v1.schema.json` and
+  `connector-event-page.v1.schema.json`: snapshot-fenced serialized replay
+  and live event consumption;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

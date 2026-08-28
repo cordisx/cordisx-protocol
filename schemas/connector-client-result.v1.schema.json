@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json",
+  "title": "CordisX Connector Client Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "status", "authorization"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-client-result.v1.schema.json" },
+    "contract": { "const": "cordisx.connector-client-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" },
+    "type": { "enum": ["connector.discover", "connector.command.execute", "connector.events.subscribe"] },
+    "status": { "enum": ["accepted", "denied", "unavailable"] },
+    "authorization": { "$ref": "connector-client-common.v1.schema.json#/$defs/authorizationOutcome" },
+    "snapshot": { "$ref": "connector-client-snapshot.v1.schema.json" },
+    "execution": { "$ref": "#/$defs/execution" },
+    "subscription": { "$ref": "connector-event-subscription.v1.schema.json" }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "allowed" } } } } } },
+    { "if": { "properties": { "status": { "const": "denied" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "denied" } } }, "snapshot": false, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "unavailable" } } }, "snapshot": false, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "type": { "const": "connector.discover" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["snapshot"], "properties": { "snapshot": true, "execution": false, "subscription": false } } },
+    { "if": { "properties": { "type": { "const": "connector.command.execute" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["execution"], "properties": { "snapshot": false, "execution": true, "subscription": false } } },
+    { "if": { "properties": { "type": { "const": "connector.events.subscribe" }, "status": { "const": "accepted" } }, "required": ["type", "status"] }, "then": { "required": ["subscription"], "properties": { "snapshot": false, "execution": false, "subscription": true } } }
+  ],
+  "$defs": {
+    "execution": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["kind", "conversation"], "properties": { "kind": { "const": "conversation.opened" }, "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "conversation", "messageId"], "properties": { "kind": { "const": "message.sent" }, "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" }, "messageId": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "binding"], "properties": { "kind": { "const": "run.stopped" }, "binding": { "$ref": "connector-client-common.v1.schema.json#/$defs/runBinding" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "conversation"], "properties": { "kind": { "const": "conversation.closed" }, "conversation": { "$ref": "connector-common.v1.schema.json#/$defs/opaqueHandle" } } }
+      ]
+    }
+  }
+}
