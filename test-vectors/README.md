@@ -109,6 +109,12 @@ retention on initial-turn failure, replayable lifecycle ordering, one terminal
 event per turn, and rejection of relative cwd, stale authority, session drift,
 sequence gaps, and raw app-server payloads.
 
+Connector service suites live in `connector-service/valid` and
+`connector-service/invalid`. They cover versioned descriptors, exact
+registration/generation identity, create versus continue handles, capability
+matching, structured message direction, disposal terminality, and rejection of
+Room, raw bridge, and cross-registration data.
+
 Channel Manager v2 vectors additionally cover strict snapshot/request/result
 identity, profile and Host-generation fencing, operation-to-exact-target
 matching, stale-operation suppression, account-scoped safe-log pages, opaque

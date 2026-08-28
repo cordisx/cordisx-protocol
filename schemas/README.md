@@ -113,6 +113,16 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   Schemastery descriptor for the connection configuration;
 - `channel-task-routing-config.v1.schema.json`: optional consumer-owned task
   subscription/routing configuration, separate from Channel core;
+- `connector-common.v1.schema.json`: shared connector ids, opaque handles,
+  registration identity, capabilities, and structured text messages;
+- `connector-service-descriptor.v1.schema.json`: one versioned Connector
+  capability descriptor;
+- `connector-registration.v1.schema.json`: one Connector registration identity
+  and generation;
+- `connector-command.v1.schema.json`: one data-only open/send/stop/close
+  Connector command envelope; and
+- `connector-event.v1.schema.json`: one ordered data-only Connector event or
+  terminal disposal envelope;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

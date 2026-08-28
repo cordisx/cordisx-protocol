@@ -44,6 +44,8 @@ Specified areas:
 - `channel-task-gateway/`: launcher-private Channel workspace
   resolution/authorization, Platform create/follow-up dispatch, durable task
   lifecycle events, and Channel outbox correlation contract version 1.
+- `connector-service/`: room-neutral connector descriptor, registration,
+  command, message/event, generation, and disposal contracts version 1.
 - `plugin-configuration/`: Standard Schema validation, Schemastery form
   metadata, profile/plugin/generation scope, revision-fenced mutations,
   live/restart application, last-good rollback, secret handling, and

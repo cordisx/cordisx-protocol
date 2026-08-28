@@ -71,6 +71,11 @@ Host-issued single-use grants, partial create preservation, complete-session
 dispatch correlation, contiguous lifecycle replay, unique terminal turns, and
 raw provider payload rejection. It is launcher-private prerequisite evidence,
 not renderer availability or a real provider smoke.
+Connector service conformance covers versioned descriptors, exact
+registration/generation identity, per-command capability matching, opaque
+conversation/run handles, structured inbound/outbound messages, contiguous
+events, and terminal disposal. It rejects Room, task, UI, model, provider,
+workspace, secret, callback, DOM, raw-bridge, and path fields.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-registration.v1.schema.json",
+  "title": "CordisX Connector Registration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "registration"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-registration.v1.schema.json" },
+    "contract": { "const": "cordisx.connector-registration/v1" },
+    "schemaVersion": { "const": 1 },
+    "registration": { "$ref": "connector-common.v1.schema.json#/$defs/registration" }
+  }
+}

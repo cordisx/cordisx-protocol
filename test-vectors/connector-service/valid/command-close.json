@@ -1,0 +1,25 @@
+{
+  "case": "command",
+  "descriptor": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json",
+    "contract": "cordisx.connector-service-descriptor/v1",
+    "schemaVersion": 1,
+    "connectorId": "agent.connector",
+    "protocolVersion": 1,
+    "capabilities": ["conversation.close"]
+  },
+  "registration": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-registration.v1.schema.json",
+    "contract": "cordisx.connector-registration/v1",
+    "schemaVersion": 1,
+    "registration": { "registrationId": "reg-1", "connectorId": "agent.connector", "generation": 1 }
+  },
+  "context": { "state": "active" },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-command.v1.schema.json",
+    "contract": "cordisx.connector-command/v1",
+    "schemaVersion": 1,
+    "commandId": "cmd-close", "registration": { "registrationId": "reg-1", "connectorId": "agent.connector", "generation": 1 },
+    "type": "conversation.close", "conversation": "conversation-1"
+  }
+}
