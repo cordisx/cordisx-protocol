@@ -69,6 +69,13 @@ The Host returns `accepted`, `denied`, or `unavailable` with a bounded outcome.
 It never returns a callable service object, transport, generic bridge, or
 arbitrary command payload.
 
+The accepted `subscribe` **wire result** contains only the serializable
+`ConnectorEventSubscription` descriptor. Separately, the TypeScript-only
+runtime return contains that wire result under `result` and, only when it is
+accepted, a non-JSON `ConnectorSubscription` handle with `pages` and
+`unsubscribe`. The descriptor is never an `AsyncIterable` and the runtime
+handle is never claimed to satisfy a JSON schema.
+
 An accepted command result is typed. In particular, `run.stopped` repeats one
 `(registration, conversation, run)` binding; a run cannot be stopped through a
 different registration or conversation. Discovery returns only a redacted

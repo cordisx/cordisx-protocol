@@ -141,6 +141,7 @@ function validateSubscription(vector) {
   if (vector.result?.status === 'accepted' && vector.result?.type === 'subscribe' && vector.result.subscription !== undefined) validatePages(vector, errors)
   return errors
 }
+export { validateSubscription }
 
 function validateLifecycle(vector) {
   const errors = validators.lifecycle(vector.value) ? [] : errorsOf(validators.lifecycle)

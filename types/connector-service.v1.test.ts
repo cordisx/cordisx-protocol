@@ -56,9 +56,11 @@ async function consumeBoundClient() {
   }
 
   const subscribed = await boundClient.subscribe(registration.registration, -1)
-  if (subscribed.status === 'accepted') {
-    for await (const page of subscribed.subscription.pages) void page.nextAfterSequence
-    subscribed.subscription.unsubscribe()
+  if ('handle' in subscribed) {
+    void subscribed.result.authorization.code
+    void subscribed.result.subscription.snapshotSequence
+    for await (const page of subscribed.handle.pages) void page.nextAfterSequence
+    subscribed.handle.unsubscribe()
   }
   boundClient.dispose()
 }
