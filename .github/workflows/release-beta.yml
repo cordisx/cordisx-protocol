@@ -29,7 +29,8 @@ jobs:
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
       - run: npm install --global npm@12.0.2 --registry=https://registry.npmjs.org
-      - run: test "${{ inputs.version }}" = "$(node --input-type=module -e \"import manifest from './package.json' with { type: 'json' }; console.log(manifest.version)\")"
+      - run: |
+          test "${{ inputs.version }}" = "$(node --input-type=module -e \"import manifest from './package.json' with { type: 'json' }; console.log(manifest.version)\")"
       - run: npm ci --ignore-scripts --registry=https://registry.npmjs.org
       - run: npm run check
       - run: npm run check:distribution
