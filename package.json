@@ -5,6 +5,7 @@
   "type": "module",
   "license": "AGPL-3.0-or-later",
   "exports": {
+    "./connector-service/v1": "./types/connector-service.v1.d.ts",
     "./agent-conversation-shell/v1": "./types/agent-conversation-shell.v1.d.ts"
   },
   "scripts": {
