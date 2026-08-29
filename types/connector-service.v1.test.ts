@@ -1,4 +1,4 @@
-import type { BoundConnectorClient, ConnectorCommand, ConnectorEvent, ConnectorRegistration, ConnectorServiceDescriptor } from './connector-service.v1.js'
+import type { BoundConnectorClient, ConnectorCommand, ConnectorEvent, ConnectorRegistration, ConnectorServiceDescriptor } from '@cordisx/protocol/connector-service/v1'
 
 const descriptor = {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json',
