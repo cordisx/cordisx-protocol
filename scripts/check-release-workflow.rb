@@ -1,4 +1,6 @@
 require 'yaml'
+require 'json'
+require 'open3'
 
 root = File.expand_path('..', __dir__)
 source = File.read(File.join(root, '.github/workflows/release-beta.yml'))
@@ -14,6 +16,20 @@ runs = publish['steps'].map { |step| step['run'] }.compact
 ['npm run check', 'npm run check:distribution', 'npm publish --provenance --access public --tag beta', 'npm run verify:registry-beta'].each do |required|
   abort "release workflow omitted #{required}" unless runs.any? { |run| run.include?(required) }
 end
+
+version_assertion = runs.find { |run| run.include?('${{ inputs.version }}') }
+abort 'release workflow omitted the exact version assertion' unless version_assertion&.include?("node -p \"require('./package.json').version\"")
+expected_version = JSON.parse(File.read(File.join(root, 'package.json')))['version']
+
+def assert_shell_exit(command, root, expected_success)
+  _stdout, _stderr, status = Open3.capture3('bash', '-n', '-c', command, chdir: root)
+  abort 'release workflow version assertion is not valid Bash' unless status.success?
+  _stdout, _stderr, status = Open3.capture3('bash', '-c', command, chdir: root)
+  abort "release workflow version assertion #{expected_success ? 'failed' : 'accepted a mismatch'}" unless status.success? == expected_success
+end
+
+assert_shell_exit(version_assertion.gsub('${{ inputs.version }}', expected_version), root, true)
+assert_shell_exit(version_assertion.gsub('${{ inputs.version }}', "#{expected_version}-mismatch"), root, false)
 
 broken_plain_scalar = <<~YAML
   name: Release npm beta
