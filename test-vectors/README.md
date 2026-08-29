@@ -47,8 +47,14 @@ DOM, raw SVG/HTML, style, URLs, selectors, callbacks, `foreignObject`, local
 paths, open semantic keys, coverage drift, and provider identity impersonation.
 The trust fixtures keep certified third-party provenance distinct from official
 first-party provenance, reject control/status aliases and user text or raw
-source identity in resolution requests, and reject stale 49-key coverage
+source identity in resolution requests, and reject stale catalog coverage
 proofs while retaining selection, fallback, and rollback fences.
+Manager semantic fixtures cover all thirteen additive keys, the existing
+variant/state model, and `action.favorite` plus `selected`. Negative cases
+reject every normative alias boundary, both acknowledgements/contributions swap
+directions, `action.favorite-active`, omitted 13-key coverage, the prior digest,
+accessibility text, and raw publisher identity. Existing trust, selection,
+fallback, rollback, and Connector suites remain part of `npm run check`.
 
 Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
 The complete valid page is the stacked-consumer fixture for event identity,

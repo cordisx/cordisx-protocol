@@ -1,5 +1,5 @@
 {
-  "case": "reject a complete proof that omits the two trust keys",
+  "case": "reject a complete proof that omits the thirteen Manager semantics",
   "schema": "icon-theme-provider-registration.v1.schema.json",
   "value": {
     "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json",
@@ -14,7 +14,7 @@
     "status": "ready",
     "coverage": {
       "kind": "complete",
-      "proof": { "kind": "host-conformance", "proofId": "proof_reicon_missing_trust", "catalogVersion": 1, "catalogDigest": "sha256:fabbf2ac3d7177bc353432e4175240cc3fe10d040321e2b785c1da0f77634771", "providerId": "builtin:reicon", "namespace": "reicon", "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "protocolVersion": 1, "descriptorFormatVersion": 1, "keyCount": 62, "variantCount": 3, "stateCount": 8, "tupleCount": 1488, "outcome": "passed", "rawDataExported": false }
+      "proof": { "kind": "host-conformance", "proofId": "proof_reicon_missing_manager", "catalogVersion": 1, "catalogDigest": "sha256:fabbf2ac3d7177bc353432e4175240cc3fe10d040321e2b785c1da0f77634771", "providerId": "builtin:reicon", "namespace": "reicon", "providerVersion": "1.0.0", "providerGeneration": "reicon-1", "protocolVersion": 1, "descriptorFormatVersion": 1, "keyCount": 51, "variantCount": 3, "stateCount": 8, "tupleCount": 1224, "outcome": "passed", "rawDataExported": false }
     }
   }
 }

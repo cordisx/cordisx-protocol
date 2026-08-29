@@ -1,0 +1,7 @@
+{
+  "case": "reject pending status as an alias for agent turn control",
+  "schema": "icon-theme-resolution-request.v1.schema.json",
+  "semantic": "expected-semantic-key",
+  "context": { "expectedKey": "agent.turn-control" },
+  "value": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json", "schemaVersion": 1, "requestId": "alias_turn_pending_001", "hostGeneration": "host-12", "providerHandle": "iph_reicon0000000001", "providerGeneration": "reicon-1", "key": "status.pending", "variant": "regular", "state": "default" }
+}

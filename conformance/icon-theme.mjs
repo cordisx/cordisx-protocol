@@ -40,12 +40,31 @@ const common = schemas.get('icon-theme-common.v1.schema.json').$defs
 const catalogDigest = `sha256:${createHash('sha256').update(JSON.stringify(common.semanticIconKey.enum)).digest('hex')}`
 expect('closed catalog proof digest matches canonical key serialization', common.completeCoverageProof.properties.catalogDigest.const === catalogDigest)
 expect('complete proof tuple count matches catalog Cartesian product', common.completeCoverageProof.properties.tupleCount.const === common.semanticIconKey.enum.length * common.variant.enum.length * common.state.enum.length)
-expect('closed catalog has 51 keys', common.semanticIconKey.enum.length === 51)
-expect('complete proof has 51 keys', common.completeCoverageProof.properties.keyCount.const === 51)
-expect('complete proof has 1,224 tuples', common.completeCoverageProof.properties.tupleCount.const === 1224)
+expect('closed catalog has 64 keys', common.semanticIconKey.enum.length === 64)
+expect('complete proof has 64 keys', common.completeCoverageProof.properties.keyCount.const === 64)
+expect('complete proof has 1,536 tuples', common.completeCoverageProof.properties.tupleCount.const === 1536)
 expect('certified trust semantic is closed and present', common.semanticIconKey.enum.includes('trust.certified'))
 expect('official trust semantic is closed and present', common.semanticIconKey.enum.includes('trust.official'))
 expect('trust semantics remain distinct', common.semanticIconKey.enum.indexOf('trust.certified') !== common.semanticIconKey.enum.indexOf('trust.official'))
+
+const managerSemanticKeys = [
+  'action.move',
+  'action.export',
+  'action.follow',
+  'action.pause',
+  'action.resume',
+  'action.favorite',
+  'action.import',
+  'action.enable',
+  'action.disable',
+  'action.submit',
+  'content.contributions',
+  'content.acknowledgements',
+  'agent.turn-control',
+]
+expect('all Manager semantics are closed and present', managerSemanticKeys.every(key => common.semanticIconKey.enum.includes(key)))
+expect('Manager semantics remain distinct', new Set(managerSemanticKeys).size === 13)
+expect('favorite active is a state rather than another key', !common.semanticIconKey.enum.includes('action.favorite-active') && common.state.enum.includes('selected'))
 
 function schemaNameFor(value) {
   const name = value.$schema?.split('/').at(-1)
@@ -62,7 +81,7 @@ function providerBindingIsValid(value) {
 }
 
 function completeCoverageIsValid(coverage, providerGeneration, identity) {
-  return coverage.kind === 'complete' && coverage.proof.providerId === identity.providerId && coverage.proof.namespace === identity.namespace && coverage.proof.providerVersion === identity.providerVersion && coverage.proof.providerGeneration === providerGeneration && coverage.proof.rawDataExported === false && coverage.proof.keyCount === 51 && coverage.proof.tupleCount === 1224
+  return coverage.kind === 'complete' && coverage.proof.providerId === identity.providerId && coverage.proof.namespace === identity.namespace && coverage.proof.providerVersion === identity.providerVersion && coverage.proof.providerGeneration === providerGeneration && coverage.proof.rawDataExported === false && coverage.proof.keyCount === 64 && coverage.proof.tupleCount === 1536
 }
 
 function coverageIsValid(coverage, providerGeneration, identity) {
@@ -228,6 +247,15 @@ expect('certified trust request is valid', requestValidator(trustSemantics.certi
 expect('official trust request is valid', requestValidator(trustSemantics.official), requestValidator.errors)
 expect('certified and official use distinct semantic keys', trustSemantics.certified.key === 'trust.certified' && trustSemantics.official.key === 'trust.official' && trustSemantics.certified.key !== trustSemantics.official.key)
 expect('trust keys carry no user-facing text or raw source identity', ['label', 'accessibleName', 'publisherId', 'providerId', 'sourceId'].every(field => !(field in trustSemantics.certified) && !(field in trustSemantics.official)))
+
+const managerSemantics = JSON.parse(await readFile(path.join(root, 'test-vectors/icon-theme/valid/manager-semantics.json'), 'utf8'))
+for (const [index, request] of managerSemantics.requests.entries()) {
+  expect(`Manager semantic request ${index + 1} is valid`, requestValidator(request), requestValidator.errors)
+}
+expect('Manager valid fixture covers each new key exactly once', JSON.stringify(managerSemantics.requests.map(request => request.key)) === JSON.stringify(managerSemanticKeys))
+expect('Manager semantics use the existing variant and state model', managerSemantics.requests.every(request => common.variant.enum.includes(request.variant) && common.state.enum.includes(request.state)))
+expect('favorite active uses selected state', managerSemantics.requests.find(request => request.key === 'action.favorite')?.state === 'selected')
+expect('Manager keys carry no user-facing text or raw source identity', managerSemantics.requests.every(request => ['label', 'accessibleName', 'publisherId', 'providerId', 'sourceId'].every(field => !(field in request))))
 
 function vectorContext(reference) {
   if (reference?.baseOperationRequestId !== undefined) {
