@@ -47,7 +47,7 @@ Run `npm ci && npm run check` to validate the schemas and conformance vectors.
 
 This repository is licensed under the GNU Affero General Public License,
 version 3 or any later version (`AGPL-3.0-or-later`), with the
-[CordisX Independent Plugin Exception](CORDISX-INDEPENDENT-PLUGIN-EXCEPTION.md)
+[CordisX Independent Plugin Exception](https://github.com/cordisx/cordisx-protocol/blob/main/CORDISX-INDEPENDENT-PLUGIN-EXCEPTION.md)
 as an additional permission under AGPLv3 section 7.
 
 The versioned plugin-facing schemas and declarations in this repository are
