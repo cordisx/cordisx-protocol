@@ -1,4 +1,4 @@
-import type { AgentConversationShellCommandContext, AgentConversationShellHost, AgentConversationShellSource } from './agent-conversation-shell.v1.js'
+import type { AgentConversationShellCommandContext, AgentConversationShellHost, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v1'
 declare const source: AgentConversationShellSource
 declare const host: AgentConversationShellHost
 const bound = await host.bind({ requestId: 'request-1', ownerGeneration: 'generation-1', routeSelection: { scope: 'room-or-new' } })
