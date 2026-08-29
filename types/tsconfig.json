@@ -13,6 +13,8 @@
     "icon-theme.v1.d.ts",
     "icon-theme.v1.test.ts",
     "connector-service.v1.d.ts",
-    "connector-service.v1.test.ts"
+    "connector-service.v1.test.ts",
+    "agent-conversation-shell.v1.d.ts",
+    "agent-conversation-shell.v1.test.ts"
   ]
 }
