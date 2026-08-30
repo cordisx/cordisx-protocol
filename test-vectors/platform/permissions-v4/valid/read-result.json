@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-result.v1.schema.json",
+  "contract": "cordisx.bound-host-dom/v1",
+  "schemaVersion": 1,
+  "requestId": "read-1",
+  "hostGeneration": "host-12",
+  "type": "read",
+  "status": "accepted",
+  "code": "allowed",
+  "handle": "hdh_0123456789abcdef",
+  "capability": "ui.host-dom.read",
+  "rootId": "workspace.composer",
+  "operation": "inspect-structure",
+  "projection": {
+    "kind": "structure",
+    "nodes": [
+      { "node": "hdn_0123456789abcdef", "kind": "root", "depth": 0, "childCount": 2, "owned": false }
+    ],
+    "truncated": false,
+    "redacted": true
+  }
+}

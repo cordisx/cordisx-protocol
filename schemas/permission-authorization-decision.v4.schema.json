@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v4.schema.json",
+  "title": "CordisX Explicit Permission Authorization Decision v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "origin", "planId", "operation", "profileId", "identity", "binding", "decisions"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v4.schema.json" },
+    "schemaVersion": { "const": 4 },
+    "origin": { "const": "explicit-user" },
+    "planId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "operation": { "enum": ["install", "update", "enable", "runtime"] },
+    "profileId": { "$ref": "permission-common.v4.schema.json#/$defs/profileId" },
+    "identity": { "$ref": "permission-common.v4.schema.json#/$defs/identity" },
+    "binding": { "$ref": "permission-common.v4.schema.json#/$defs/binding" },
+    "decisions": {
+      "type": "array",
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["capability", "scope", "securityFingerprint", "decision"],
+        "properties": {
+          "capability": { "$ref": "permission-common.v4.schema.json#/$defs/capability" },
+          "scope": { "$ref": "permission-common.v4.schema.json#/$defs/scope" },
+          "securityFingerprint": { "$ref": "permission-common.v4.schema.json#/$defs/securityFingerprint" },
+          "decision": { "$ref": "permission-common.v4.schema.json#/$defs/decision" }
+        },
+        "allOf": [
+          { "$ref": "permission-common.v4.schema.json#/$defs/capabilityScopeFence" },
+          {
+            "if": { "properties": { "capability": { "const": "ui.host-dom.modify" } }, "required": ["capability"] },
+            "then": { "properties": { "decision": { "enum": ["allow-once", "deny-once", "deny-persistent"] } } }
+          }
+        ]
+      }
+    }
+  }
+}

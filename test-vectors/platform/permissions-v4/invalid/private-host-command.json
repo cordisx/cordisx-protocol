@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-request.v1.schema.json",
+  "contract": "cordisx.bound-host-dom/v1",
+  "schemaVersion": 1,
+  "requestId": "private-host-command",
+  "type": "modify",
+  "handle": "hdh_0123456789abcdef",
+  "node": "hdn_0123456789abcdef",
+  "operation": "insert-owned-structured-child",
+  "child": {
+    "id": "retry",
+    "kind": "action",
+    "label": { "key": "retry.label", "fallback": "Retry" },
+    "command": { "id": "host:internal" }
+  }
+}

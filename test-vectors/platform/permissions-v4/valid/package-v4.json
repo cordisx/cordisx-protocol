@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v4.schema.json",
+  "schemaVersion": 4,
+  "id": "host-dom-helper",
+  "version": "1.0.0",
+  "entry": "./index.js",
+  "distribution": { "mode": "explicit-local-v1", "signature": "unsupported" },
+  "compatibility": {
+    "runtimeAbi": 1,
+    "protocolSchemas": [
+      "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v5.schema.json",
+      "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-request.v1.schema.json",
+      "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-result.v1.schema.json"
+    ]
+  },
+  "dependencies": [],
+  "runtimeManifest": {
+    "path": "./runtime-manifest.json",
+    "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v5.schema.json",
+    "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

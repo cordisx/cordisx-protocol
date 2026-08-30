@@ -27,3 +27,9 @@ Run `npm run typecheck` to compile the strict positive and negative fixtures.
 
 `agent-conversation-shell.v1.d.ts` exposes only the data source, ordered runtime
 subscription handle, and disposal lifetime for the Host-owned conversation shell.
+
+`host-dom.v1.d.ts` exposes the versioned Host root catalog and one principal-bound
+client. Plugins can request only canonical root ids, closed read/modify operations,
+opaque handles, bounded serialized projections, and Host-rendered structured
+children. It exports no selector, DOM node, document/window, HTML, CSS, script,
+event, callback, owner/profile binding, or private renderer bridge.

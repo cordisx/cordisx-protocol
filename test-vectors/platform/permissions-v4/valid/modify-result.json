@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-result.v1.schema.json",
+  "contract": "cordisx.bound-host-dom/v1",
+  "schemaVersion": 1,
+  "requestId": "modify-1",
+  "hostGeneration": "host-12",
+  "type": "modify",
+  "status": "accepted",
+  "code": "allowed",
+  "handle": "hdh_0123456789abcdef",
+  "capability": "ui.host-dom.modify",
+  "rootId": "workspace.composer",
+  "operation": "insert-owned-structured-child",
+  "changed": true,
+  "ownedChild": "retry"
+}

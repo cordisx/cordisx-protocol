@@ -1,0 +1,18 @@
+{
+  "catalogRoot": "workspace.composer",
+  "declaredRoots": ["workspace.composer"],
+  "declaredOperations": ["read-text", "set-text"],
+  "cases": [
+    { "label": "unknown-root", "rootId": "workspace.private-renderer", "operation": "read-text", "expected": "unknown-root" },
+    { "label": "cross-root", "rootId": "manager.content", "operation": "read-text", "expected": "scope-denied" },
+    { "label": "scope-widening-root", "rootId": "workspace.toolbar", "operation": "set-text", "expected": "scope-denied" },
+    { "label": "scope-widening-operation", "rootId": "workspace.composer", "operation": "set-attribute", "expected": "operation-denied" }
+  ],
+  "leaseInvalidations": [
+    "artifact-version-change", "artifact-digest-change", "certification-missing", "certification-revoked",
+    "certification-expired", "source-revoked", "certification-fingerprint-change", "certification-revision-change",
+    "scope-expansion", "runtime-generation-change", "module-generation-change", "host-generation-change",
+    "plugin-disabled", "plugin-uninstalled", "stale-handle"
+  ],
+  "persistentDenyWins": true
+}

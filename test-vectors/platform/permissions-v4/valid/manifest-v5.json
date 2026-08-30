@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v5.schema.json",
+  "schemaVersion": 5,
+  "id": "host-dom-helper",
+  "name": "Host DOM Helper",
+  "capabilities": [
+    {
+      "name": "ui.host-dom.read",
+      "required": false,
+      "rationale": {
+        "title": { "key": "permission.dom.read.title", "fallback": "Read the composer interface" },
+        "description": { "key": "permission.dom.read.description", "fallback": "Reads bounded text and state from the Host composer root." },
+        "feature": { "key": "permission.dom.read.feature", "fallback": "Keeps the helper synchronized with visible composer state." },
+        "deniedBehavior": { "key": "permission.dom.read.denied", "fallback": "The helper remains available without synchronized composer context." }
+      },
+      "security": { "dataUse": "ephemeral", "retention": "none", "externalTransfer": false },
+      "scope": { "rootIds": ["workspace.composer"], "operations": ["inspect-structure", "read-text", "read-state"] }
+    },
+    {
+      "name": "ui.host-dom.modify",
+      "required": false,
+      "rationale": {
+        "title": { "key": "permission.dom.modify.title", "fallback": "Modify the composer interface" },
+        "description": { "key": "permission.dom.modify.description", "fallback": "Updates bounded Host-controlled composer content and focus." },
+        "feature": { "key": "permission.dom.modify.feature", "fallback": "Adds a reviewed action and updates its visible text." },
+        "deniedBehavior": { "key": "permission.dom.modify.denied", "fallback": "The helper does not modify the composer interface." }
+      },
+      "security": { "dataUse": "ephemeral", "retention": "none", "externalTransfer": false },
+      "scope": { "rootIds": ["workspace.composer"], "operations": ["set-text", "insert-owned-structured-child", "remove-owned-child", "focus"] }
+    }
+  ],
+  "services": []
+}
