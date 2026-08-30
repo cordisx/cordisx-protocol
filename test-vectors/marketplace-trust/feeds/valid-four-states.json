@@ -1,0 +1,248 @@
+{
+  "case": "trusted-four-independent-states",
+  "sourceUrl": "https://raw.githubusercontent.com/cordisx/marketplace/main/marketplace.json",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v3.schema.json",
+    "schemaVersion": 3,
+    "generatedAt": "2026-08-24T08:00:00Z",
+    "trust": {
+      "authority": "cordisx.marketplace.codeowners/v1",
+      "root": "https://raw.githubusercontent.com/cordisx/marketplace/main/marketplace.json",
+      "grantModel": "protected-merge-chain-v1",
+      "cryptographicAttestation": "unsupported"
+    },
+    "fallbackLocale": "en",
+    "name": "CordisX Marketplace",
+    "homepage": "https://cordisx.github.io/marketplace/",
+    "plugins": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v3.schema.json",
+        "schemaVersion": 3,
+        "id": "both",
+        "fallbackLocale": "en",
+        "name": "both",
+        "description": "both state fixture.",
+        "version": "1.0.0",
+        "source": "https://github.com/cordisx/both",
+        "artifact": {
+          "publisherIdentity": "npm:@cordisx",
+          "packageNamespace": "@cordisx",
+          "packageName": "@cordisx/both",
+          "downloadUrl": "https://registry.npmjs.org/@cordisx/both/-/both-1.0.0.tgz",
+          "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "license": "MIT",
+        "compatibility": {
+          "cordisx": "^0.1.0"
+        },
+        "authors": [
+          {
+            "name": "CordisX"
+          }
+        ]
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v3.schema.json",
+        "schemaVersion": 3,
+        "id": "official-only",
+        "fallbackLocale": "en",
+        "name": "official-only",
+        "description": "official-only state fixture.",
+        "version": "1.0.0",
+        "source": "https://github.com/cordisx/official-only",
+        "artifact": {
+          "publisherIdentity": "npm:@cordisx",
+          "packageNamespace": "@cordisx",
+          "packageName": "@cordisx/official-only",
+          "downloadUrl": "https://registry.npmjs.org/@cordisx/official-only/-/official-only-1.0.0.tgz",
+          "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "license": "MIT",
+        "compatibility": {
+          "cordisx": "^0.1.0"
+        },
+        "authors": [
+          {
+            "name": "CordisX"
+          }
+        ]
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v3.schema.json",
+        "schemaVersion": 3,
+        "id": "certified-only",
+        "fallbackLocale": "en",
+        "name": "certified-only",
+        "description": "certified-only state fixture.",
+        "version": "1.0.0",
+        "source": "https://github.com/example/certified-only",
+        "artifact": {
+          "publisherIdentity": "npm:@example",
+          "packageNamespace": "@example",
+          "packageName": "@example/certified-only",
+          "downloadUrl": "https://registry.npmjs.org/@example/certified-only/-/certified-only-1.0.0.tgz",
+          "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "license": "MIT",
+        "compatibility": {
+          "cordisx": "^0.1.0"
+        },
+        "authors": [
+          {
+            "name": "Community"
+          }
+        ]
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v3.schema.json",
+        "schemaVersion": 3,
+        "id": "ordinary",
+        "fallbackLocale": "en",
+        "name": "ordinary",
+        "description": "ordinary state fixture.",
+        "version": "1.0.0",
+        "source": "https://github.com/example/ordinary",
+        "artifact": {
+          "publisherIdentity": "npm:@example",
+          "packageNamespace": "@example",
+          "packageName": "@example/ordinary",
+          "downloadUrl": "https://registry.npmjs.org/@example/ordinary/-/ordinary-1.0.0.tgz",
+          "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "license": "MIT",
+        "compatibility": {
+          "cordisx": "^0.1.0"
+        },
+        "authors": [
+          {
+            "name": "Community"
+          }
+        ]
+      }
+    ],
+    "official": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v1.schema.json",
+        "schemaVersion": 1,
+        "designation": "cordisx-official",
+        "identity": {
+          "pluginId": "both",
+          "canonicalSource": "https://github.com/cordisx/both",
+          "publisherIdentity": "npm:@cordisx",
+          "packageNamespace": "@cordisx",
+          "packageName": "@cordisx/both"
+        },
+        "verificationPolicy": {
+          "id": "cordisx-official-publisher",
+          "version": "1.0.0"
+        },
+        "verifiedAt": "2026-08-20T08:00:00Z",
+        "reviewer": {
+          "authority": "cordisx.marketplace.codeowners/v1",
+          "evidenceRef": "https://github.com/cordisx/marketplace/pull/41"
+        },
+        "status": "active",
+        "label": {
+          "key": "official.label",
+          "fallback": "Official"
+        },
+        "description": {
+          "key": "official.description",
+          "fallback": "Created and maintained by CordisX."
+        }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v1.schema.json",
+        "schemaVersion": 1,
+        "designation": "cordisx-official",
+        "identity": {
+          "pluginId": "official-only",
+          "canonicalSource": "https://github.com/cordisx/official-only",
+          "publisherIdentity": "npm:@cordisx",
+          "packageNamespace": "@cordisx",
+          "packageName": "@cordisx/official-only"
+        },
+        "verificationPolicy": {
+          "id": "cordisx-official-publisher",
+          "version": "1.0.0"
+        },
+        "verifiedAt": "2026-08-20T08:00:00Z",
+        "reviewer": {
+          "authority": "cordisx.marketplace.codeowners/v1",
+          "evidenceRef": "https://github.com/cordisx/marketplace/pull/41"
+        },
+        "status": "active",
+        "label": {
+          "key": "official.label",
+          "fallback": "Official"
+        },
+        "description": {
+          "key": "official.description",
+          "fallback": "Created and maintained by CordisX."
+        }
+      }
+    ],
+    "certifications": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certification.v1.schema.json",
+        "schemaVersion": 1,
+        "level": "cordisx-certified",
+        "identity": {
+          "pluginId": "both",
+          "version": "1.0.0",
+          "canonicalSource": "https://github.com/cordisx/both",
+          "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "reviewPolicy": {
+          "id": "cordisx-marketplace-review",
+          "version": "1.0.0"
+        },
+        "reviewedAt": "2026-08-20T08:00:00Z",
+        "expiresAt": "2026-11-20T08:00:00Z",
+        "reviewer": {
+          "authority": "cordisx.marketplace.codeowners/v1",
+          "evidenceRef": "https://github.com/cordisx/marketplace/pull/42"
+        },
+        "status": "active",
+        "label": {
+          "key": "certification.label",
+          "fallback": "CordisX Certified"
+        },
+        "description": {
+          "key": "certification.description",
+          "fallback": "This exact version conforms to CordisX policy 1.0.0."
+        }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certification.v1.schema.json",
+        "schemaVersion": 1,
+        "level": "cordisx-certified",
+        "identity": {
+          "pluginId": "certified-only",
+          "version": "1.0.0",
+          "canonicalSource": "https://github.com/example/certified-only",
+          "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "reviewPolicy": {
+          "id": "cordisx-marketplace-review",
+          "version": "1.0.0"
+        },
+        "reviewedAt": "2026-08-20T08:00:00Z",
+        "expiresAt": "2026-11-20T08:00:00Z",
+        "reviewer": {
+          "authority": "cordisx.marketplace.codeowners/v1",
+          "evidenceRef": "https://github.com/cordisx/marketplace/pull/42"
+        },
+        "status": "active",
+        "label": {
+          "key": "certification.label",
+          "fallback": "CordisX Certified"
+        },
+        "description": {
+          "key": "certification.description",
+          "fallback": "This exact version conforms to CordisX policy 1.0.0."
+        }
+      }
+    ]
+  }
+}
