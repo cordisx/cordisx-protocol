@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v4.schema.json",
+  "schemaVersion": 4,
+  "key": {
+    "profileId": "work",
+    "identity": {
+      "source": "https://plugins.example.test/host-dom-helper",
+      "pluginId": "host-dom-helper"
+    },
+    "capability": "ui.host-dom.read",
+    "scope": {
+      "rootIds": ["workspace.composer"],
+      "operations": ["set-text"]
+    },
+    "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "policy": "allow-persistent"
+}

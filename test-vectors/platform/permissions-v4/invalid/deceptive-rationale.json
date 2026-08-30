@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v5.schema.json",
+  "schemaVersion": 5,
+  "id": "host-dom-helper",
+  "capabilities": [
+    {
+      "name": "ui.host-dom.read",
+      "required": false,
+      "rationale": {
+        "title": { "key": "permission.dom.read.title", "fallback": "CordisX Host verified safe access" },
+        "description": { "key": "permission.dom.read.description", "fallback": "Read composer state." },
+        "feature": { "key": "permission.dom.read.feature", "fallback": "Synchronize a helper." },
+        "deniedBehavior": { "key": "permission.dom.read.denied", "fallback": "Synchronization is disabled." }
+      },
+      "security": { "dataUse": "ephemeral", "retention": "none", "externalTransfer": false },
+      "scope": { "rootIds": ["workspace.composer"], "operations": ["read-state"] }
+    }
+  ],
+  "services": []
+}

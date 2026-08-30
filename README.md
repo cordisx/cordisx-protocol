@@ -35,11 +35,18 @@ and agent-turn-control meanings without carrying publisher identity or UI text.
 
 Dynamic local packages and plugin generations are defined by the frozen
 package/operation/result v1 schemas, the explicit-local source v1, separate
-package/operation/result v2 schemas, permission-aware package v3,
+package/operation/result v2 schemas, permission-aware package v3, Host DOM
+permission-aware package v4/manifest v5,
 activation/manager snapshot v1, the
 `manifests`, `lifecycle`, and `distribution` specifications, and the
 `plugin-lifecycle` conformance suite. This local integrity contract does not
 claim remote marketplace installation, publisher signing, or sandboxing.
+
+Permission v4 defines separately authorized `ui.host-dom.read` and
+`ui.host-dom.modify` capabilities through a Host root catalog and opaque,
+bounded bridge. It does not reinterpret structured extension-point rendering
+as DOM access and requires an isolated plugin execution boundary before a Host
+may report the DOM bridge as available.
 
 Run `npm ci && npm run check` to validate the schemas and conformance vectors.
 

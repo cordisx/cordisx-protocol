@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-result.v1.schema.json",
+  "title": "CordisX Bound Host DOM Bridge Result v1",
+  "oneOf": [
+    { "$ref": "#/$defs/acquired" },
+    { "$ref": "#/$defs/read" },
+    { "$ref": "#/$defs/modified" },
+    { "$ref": "#/$defs/released" },
+    { "$ref": "#/$defs/denied" },
+    { "$ref": "#/$defs/unavailable" }
+  ],
+  "$defs": {
+    "baseProperties": {
+      "type": "object",
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-result.v1.schema.json" },
+        "contract": { "const": "cordisx.bound-host-dom/v1" },
+        "schemaVersion": { "const": 1 },
+        "requestId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+        "hostGeneration": { "type": "string", "minLength": 1, "maxLength": 200 }
+      }
+    },
+    "acquired": {
+      "type": "object", "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "hostGeneration", "type", "status", "code", "handle", "capability", "rootId", "operations"],
+      "properties": {
+        "$schema": { "$ref": "#/$defs/baseProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/baseProperties/properties/contract" },
+        "schemaVersion": { "$ref": "#/$defs/baseProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/baseProperties/properties/requestId" },
+        "hostGeneration": { "$ref": "#/$defs/baseProperties/properties/hostGeneration" }, "type": { "const": "acquire" },
+        "status": { "const": "accepted" }, "code": { "const": "allowed" },
+        "handle": { "$ref": "host-dom-common.v1.schema.json#/$defs/handle" },
+        "capability": { "enum": ["ui.host-dom.read", "ui.host-dom.modify"] },
+        "rootId": { "$ref": "host-dom-common.v1.schema.json#/$defs/rootId" },
+        "operations": { "type": "array", "minItems": 1, "maxItems": 9, "uniqueItems": true, "items": { "$ref": "host-dom-common.v1.schema.json#/$defs/operation" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "capability": { "const": "ui.host-dom.read" } }, "required": ["capability"] },
+          "then": { "properties": { "operations": { "type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true, "items": { "$ref": "host-dom-common.v1.schema.json#/$defs/readOperation" } } } },
+          "else": { "properties": { "operations": { "type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true, "items": { "$ref": "host-dom-common.v1.schema.json#/$defs/modifyOperation" } } } }
+        }
+      ]
+    },
+    "structureProjection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "nodes", "truncated", "redacted"],
+      "properties": {
+        "kind": { "const": "structure" },
+        "nodes": {
+          "type": "array", "maxItems": 200,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["node", "kind", "depth", "childCount", "owned"],
+            "properties": {
+              "node": { "$ref": "host-dom-common.v1.schema.json#/$defs/nodeRef" },
+              "kind": { "enum": ["root", "region", "group", "text", "control", "list", "list-item", "status"] },
+              "depth": { "type": "integer", "minimum": 0, "maximum": 16 },
+              "childCount": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "owned": { "type": "boolean" }
+            }
+          }
+        },
+        "truncated": { "type": "boolean" },
+        "redacted": { "type": "boolean" }
+      }
+    },
+    "textProjection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "text", "truncated", "redacted"],
+      "properties": {
+        "kind": { "const": "text" }, "text": { "type": "string", "maxLength": 16384 },
+        "truncated": { "type": "boolean" }, "redacted": { "type": "boolean" }
+      }
+    },
+    "attributesProjection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "attributes", "redacted"],
+      "properties": {
+        "kind": { "const": "attributes" },
+        "attributes": {
+          "type": "array", "maxItems": 16,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["name", "value"],
+            "properties": {
+              "name": { "$ref": "host-dom-common.v1.schema.json#/$defs/readableAttribute" },
+              "value": { "$ref": "host-dom-common.v1.schema.json#/$defs/attributeValue" }
+            }
+          }
+        },
+        "redacted": { "type": "boolean" }
+      }
+    },
+    "stateProjection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "visible", "enabled", "focused", "expanded", "selected", "pressed", "redacted"],
+      "properties": {
+        "kind": { "const": "state" }, "visible": { "type": "boolean" }, "enabled": { "type": "boolean" },
+        "focused": { "type": "boolean" }, "expanded": { "type": ["boolean", "null"] },
+        "selected": { "type": ["boolean", "null"] }, "pressed": { "type": ["boolean", "null"] },
+        "redacted": { "type": "boolean" }
+      }
+    },
+    "read": {
+      "type": "object", "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "hostGeneration", "type", "status", "code", "handle", "capability", "rootId", "operation", "projection"],
+      "properties": {
+        "$schema": { "$ref": "#/$defs/baseProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/baseProperties/properties/contract" },
+        "schemaVersion": { "$ref": "#/$defs/baseProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/baseProperties/properties/requestId" },
+        "hostGeneration": { "$ref": "#/$defs/baseProperties/properties/hostGeneration" }, "type": { "const": "read" },
+        "status": { "const": "accepted" }, "code": { "const": "allowed" },
+        "handle": { "$ref": "host-dom-common.v1.schema.json#/$defs/handle" }, "capability": { "const": "ui.host-dom.read" }, "rootId": { "$ref": "host-dom-common.v1.schema.json#/$defs/rootId" },
+        "operation": { "$ref": "host-dom-common.v1.schema.json#/$defs/readOperation" },
+        "projection": { "oneOf": [
+          { "$ref": "#/$defs/structureProjection" }, { "$ref": "#/$defs/textProjection" },
+          { "$ref": "#/$defs/attributesProjection" }, { "$ref": "#/$defs/stateProjection" }
+        ] }
+      },
+      "allOf": [
+        { "if": { "properties": { "operation": { "const": "inspect-structure" } }, "required": ["operation"] }, "then": { "properties": { "projection": { "$ref": "#/$defs/structureProjection" } } } },
+        { "if": { "properties": { "operation": { "const": "read-text" } }, "required": ["operation"] }, "then": { "properties": { "projection": { "$ref": "#/$defs/textProjection" } } } },
+        { "if": { "properties": { "operation": { "const": "read-attributes" } }, "required": ["operation"] }, "then": { "properties": { "projection": { "$ref": "#/$defs/attributesProjection" } } } },
+        { "if": { "properties": { "operation": { "const": "read-state" } }, "required": ["operation"] }, "then": { "properties": { "projection": { "$ref": "#/$defs/stateProjection" } } } }
+      ]
+    },
+    "modified": {
+      "type": "object", "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "hostGeneration", "type", "status", "code", "handle", "capability", "rootId", "operation", "changed"],
+      "properties": {
+        "$schema": { "$ref": "#/$defs/baseProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/baseProperties/properties/contract" },
+        "schemaVersion": { "$ref": "#/$defs/baseProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/baseProperties/properties/requestId" },
+        "hostGeneration": { "$ref": "#/$defs/baseProperties/properties/hostGeneration" }, "type": { "const": "modify" },
+        "status": { "const": "accepted" }, "code": { "const": "allowed" },
+        "handle": { "$ref": "host-dom-common.v1.schema.json#/$defs/handle" }, "capability": { "const": "ui.host-dom.modify" }, "rootId": { "$ref": "host-dom-common.v1.schema.json#/$defs/rootId" },
+        "operation": { "$ref": "host-dom-common.v1.schema.json#/$defs/modifyOperation" }, "changed": { "type": "boolean" },
+        "ownedChild": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "operation": { "const": "insert-owned-structured-child" } }, "required": ["operation"] },
+          "then": { "required": ["ownedChild"], "properties": { "ownedChild": true } },
+          "else": { "properties": { "ownedChild": false } }
+        }
+      ]
+    },
+    "released": {
+      "type": "object", "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "hostGeneration", "type", "status", "code"],
+      "properties": {
+        "$schema": { "$ref": "#/$defs/baseProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/baseProperties/properties/contract" },
+        "schemaVersion": { "$ref": "#/$defs/baseProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/baseProperties/properties/requestId" },
+        "hostGeneration": { "$ref": "#/$defs/baseProperties/properties/hostGeneration" }, "type": { "const": "release" },
+        "status": { "const": "accepted" }, "code": { "const": "released" }
+      }
+    },
+    "denied": {
+      "type": "object", "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "hostGeneration", "type", "status", "code"],
+      "properties": {
+        "$schema": { "$ref": "#/$defs/baseProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/baseProperties/properties/contract" },
+        "schemaVersion": { "$ref": "#/$defs/baseProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/baseProperties/properties/requestId" },
+        "hostGeneration": { "$ref": "#/$defs/baseProperties/properties/hostGeneration" }, "type": { "enum": ["acquire", "read", "modify", "release"] },
+        "status": { "const": "denied" }, "code": { "enum": ["permission-undeclared", "permission-denied", "scope-denied", "operation-denied", "persistent-deny", "owner-mismatch"] }
+      }
+    },
+    "unavailable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "hostGeneration", "type", "status", "code"],
+      "properties": {
+        "$schema": { "$ref": "#/$defs/baseProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/baseProperties/properties/contract" },
+        "schemaVersion": { "$ref": "#/$defs/baseProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/baseProperties/properties/requestId" },
+        "hostGeneration": { "$ref": "#/$defs/baseProperties/properties/hostGeneration" }, "type": { "enum": ["acquire", "read", "modify", "release"] },
+        "status": { "const": "unavailable" },
+        "code": { "enum": ["unsupported", "unknown-root", "root-unavailable", "not-mounted", "stale-handle", "generation-replaced", "plugin-disabled", "plugin-uninstalled", "disposed"] }
+      }
+    }
+  }
+}

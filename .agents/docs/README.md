@@ -10,7 +10,9 @@ Specified areas:
 - `platform-capabilities/`: adapter-neutral provider, model, session, turn,
   permission, composite identity, current-connection, and external
   provider-fleet contracts version 1, plus Host-owned risk, rationale,
-  decision-lifetime, install-review, and migration contracts version 2.
+  decision-lifetime, install-review, and migration contracts version 2;
+  Certified structured rendering version 3; and bounded Host DOM read/modify,
+  opaque handles, root catalogs, isolation, and revocation version 4.
 - `extension-points/`: host descriptor catalogs, canonical point policy, and
   surface/outlet authorization origin version 1.
 - `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery

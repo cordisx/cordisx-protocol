@@ -84,3 +84,12 @@ The package version is not a permission key. The Host computes the v2 security
 fingerprint from the normalized runtime declaration and capability catalog;
 source/id, scope expansion, or a security-relevant declaration change returns
 authorization to `ask` even when package bytes passed integrity checks.
+
+## Package manifest v4
+
+Package v4 preserves every package-v3 integrity, distribution, dependency,
+runtime-ABI, and path boundary. It adds only `plugin-manifest.v5` as an allowed
+separately digested runtime manifest. Manifest v5 adds the explicit
+`ui.host-dom.read` and `ui.host-dom.modify` declarations with Host-catalog root
+ids and closed operation sets. Frozen package v1-v3 and manifest v1-v4 remain
+unchanged and never gain Host DOM authority by reinterpretation.

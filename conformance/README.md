@@ -116,3 +116,13 @@ lines, issuance-bound principal/effective-owner attribution, capture coverage,
 variadic Console argument snapshots, zero-touch Host call phases, permission
 projection, terminal uniqueness, and the rule that success cannot precede real
 Host dispatch.
+
+Permission v4 conformance freezes the complete 25-entry catalog, preserves the
+original 22 capabilities as non-DOM, and separates structured rendering from
+`ui.host-dom.read` and `ui.host-dom.modify`. It validates canonical root and
+closed-operation scope families, structured rationale/security declarations,
+four independent Official/Certified states, exact Certified projection
+matching, persistent-deny precedence, explicit decisions, exact leases, and
+artifact/certification/scope/Host-runtime-module generation/disable/uninstall
+invalidation. Bridge vectors reject unknown or cross-root access, widening,
+selectors, raw nodes/HTML, script, style/event handlers, and private bridges.

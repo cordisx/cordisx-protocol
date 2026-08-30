@@ -178,3 +178,14 @@ Plugin Console v1 suites live in `plugin-console/valid` and
 permission correlation, dispatch-before-success, one terminal per correlation,
 owner/generation fencing, owner-scoped plugin console messages, variadic native
 Console arguments, format placeholders, and safely inspectable value snapshots.
+
+Permission v4 vectors live in `platform/permissions-v4/valid` and
+`platform/permissions-v4/invalid`. They cover manifest v5, the Host root
+catalog, bound opaque-handle requests/results, closed read and modify
+operations, single-capability-family leases, bounded/redacted projections,
+owner-local commands, and structured Host-owned children.
+Negative vectors cover unknown operations/roots, cross-root and scope widening,
+selectors, raw nodes/HTML, style/event handlers, scripts, private bridges,
+Official/Certified self-claims, persistent denial, exact artifact/certification
+expiry/revision/digest changes, stale generations/handles, disable, and
+uninstall.

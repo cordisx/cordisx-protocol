@@ -68,6 +68,25 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   and launcher-resolved `channel-adapter` services;
 - `plugin-manifest.v3.schema.json`: Channel service declarations with mandatory
   explicit Host schema or no-configuration mode;
+- `plugin-manifest.v5.schema.json`: additive `ui.host-dom.read` and
+  `ui.host-dom.modify` declarations with exact Host root and closed operation
+  scopes; frozen manifest v1-v4 remain unchanged;
+- `permission-common.v4.schema.json`, `permission-policy.v4.schema.json`,
+  `permission-authorization-plan.v4.schema.json`, and
+  `permission-authorization-decision.v4.schema.json`: Host DOM root/operation
+  dimensions in the existing profile ledger, plan, and explicit decision path;
+- `permission-capability-catalog.v3.schema.json`: complete 25-entry catalog
+  with the original 22 non-DOM entries, structured rendering, and separately
+  classified Host DOM read/modify eligibility;
+- `host-dom-common.v1.schema.json`: canonical root ids, closed read/modify
+  operations, opaque handles/node refs, safe attributes, and Host-rendered
+  structured child definitions;
+- `host-dom-root-catalog.v1.schema.json`: versioned Host-authoritative mount/root
+  catalog with per-root availability and supported operations;
+- `host-dom-bridge-request.v1.schema.json` and
+  `host-dom-bridge-result.v1.schema.json`: bound-client acquire/read/modify/
+  release documents with bounded serialized projections and no selector,
+  native node, HTML, style, script, callback, or private bridge;
 - `channel-common.v1.schema.json`: complete Channel account, tenant,
   conversation, thread, user, and event identities;
 - `channel-user-input.v1.schema.json`: attributed, user-role-only ingress with
@@ -244,6 +263,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `plugin-package.v2.schema.json`: package metadata with a separately digested
   runtime-manifest v1/v2/v3 reference, explicit unsupported-signature state,
   exact protocol requirements, and dependencies;
+- `plugin-package.v4.schema.json`: package-v3 boundaries plus a separately
+  digested runtime-manifest v5 reference; frozen package v1-v3 are unchanged;
 - `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or
   last-good activation record without filesystem paths;
 - `plugin-lifecycle-operation.v1.schema.json`: revision- and

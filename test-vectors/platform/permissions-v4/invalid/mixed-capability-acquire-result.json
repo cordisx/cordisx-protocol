@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-result.v1.schema.json",
+  "contract": "cordisx.bound-host-dom/v1",
+  "schemaVersion": 1,
+  "requestId": "mixed-acquire",
+  "hostGeneration": "host-12",
+  "type": "acquire",
+  "status": "accepted",
+  "code": "allowed",
+  "handle": "hdh_0123456789abcdef",
+  "capability": "ui.host-dom.read",
+  "rootId": "workspace.composer",
+  "operations": ["read-text", "set-text"]
+}

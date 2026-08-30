@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v4.schema.json",
+  "title": "CordisX Persistent Permission Policy v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "key", "policy"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v4.schema.json" },
+    "schemaVersion": { "const": 4 },
+    "key": { "$ref": "permission-common.v4.schema.json#/$defs/authorizationKey" },
+    "policy": { "$ref": "permission-common.v4.schema.json#/$defs/policy" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "key": {
+            "type": "object",
+            "properties": { "capability": { "const": "ui.host-dom.modify" } },
+            "required": ["capability"]
+          }
+        },
+        "required": ["key"]
+      },
+      "then": { "properties": { "policy": { "enum": ["ask", "deny-persistent"] } } }
+    }
+  ]
+}

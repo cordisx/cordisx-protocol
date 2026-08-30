@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-request.v1.schema.json",
+  "contract": "cordisx.bound-host-dom/v1",
+  "schemaVersion": 1,
+  "requestId": "invalid-handler",
+  "type": "modify",
+  "handle": "hdh_0123456789abcdef",
+  "node": "hdn_0123456789abcdef",
+  "operation": "set-attribute",
+  "attribute": "onclick",
+  "value": "steal()"
+}

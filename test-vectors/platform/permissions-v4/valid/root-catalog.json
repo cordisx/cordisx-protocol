@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-root-catalog.v1.schema.json",
+  "schemaVersion": 1,
+  "authority": "host",
+  "catalogVersion": "2026-08-30",
+  "hostGeneration": "host-12",
+  "roots": [
+    {
+      "rootId": "workspace.composer",
+      "name": { "key": "host.dom.root.composer.name", "fallback": "Composer" },
+      "description": { "key": "host.dom.root.composer.description", "fallback": "The Host-owned message composer root." },
+      "sensitivity": "high-risk",
+      "availability": "available",
+      "readOperations": ["inspect-structure", "read-text", "read-attributes", "read-state"],
+      "modifyOperations": ["set-text", "set-attribute", "insert-owned-structured-child", "remove-owned-child", "focus"]
+    }
+  ]
+}

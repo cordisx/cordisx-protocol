@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v4.schema.json",
+  "schemaVersion": 4,
+  "origin": "explicit-user",
+  "planId": "host-dom-request-1",
+  "operation": "runtime",
+  "profileId": "work",
+  "identity": {
+    "source": "https://plugins.example.test/host-dom-helper",
+    "pluginId": "host-dom-helper"
+  },
+  "binding": {
+    "operationId": "host-dom-request-1",
+    "runtimeGeneration": "runtime-9",
+    "moduleGeneration": "module-4",
+    "requestId": "host-dom-request-1"
+  },
+  "decisions": [
+    {
+      "capability": "ui.host-dom.read",
+      "scope": { "rootIds": ["workspace.composer"], "operations": ["read-text"] },
+      "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "decision": "allow-once"
+    },
+    {
+      "capability": "ui.host-dom.read",
+      "scope": { "rootIds": ["workspace.composer"], "operations": ["read-text"] },
+      "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "decision": "deny-once"
+    }
+  ]
+}

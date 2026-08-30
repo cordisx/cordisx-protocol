@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-common.v1.schema.json",
+  "title": "CordisX Host DOM Common Definitions v1",
+  "$defs": {
+    "rootId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "readOperation": {
+      "enum": ["inspect-structure", "read-text", "read-attributes", "read-state"]
+    },
+    "modifyOperation": {
+      "enum": ["set-text", "set-attribute", "insert-owned-structured-child", "remove-owned-child", "focus"]
+    },
+    "operation": {
+      "enum": [
+        "inspect-structure", "read-text", "read-attributes", "read-state",
+        "set-text", "set-attribute", "insert-owned-structured-child", "remove-owned-child", "focus"
+      ]
+    },
+    "handle": {
+      "type": "string",
+      "pattern": "^hdh_[A-Za-z0-9_-]{16,128}$"
+    },
+    "nodeRef": {
+      "type": "string",
+      "pattern": "^hdn_[A-Za-z0-9_-]{16,128}$"
+    },
+    "readableAttribute": {
+      "enum": [
+        "aria-label", "aria-description", "aria-expanded", "aria-selected", "aria-pressed",
+        "aria-current", "aria-disabled", "role", "title", "value", "checked", "disabled", "hidden", "tabindex"
+      ]
+    },
+    "mutableAttribute": {
+      "enum": [
+        "aria-label", "aria-description", "aria-expanded", "aria-selected", "aria-pressed",
+        "aria-current", "aria-disabled", "title", "value", "checked", "disabled", "hidden", "tabindex"
+      ]
+    },
+    "attributeValue": {
+      "oneOf": [
+        { "type": "string", "maxLength": 4096 },
+        { "type": "number", "minimum": -1000000000000, "maximum": 1000000000000 },
+        { "type": "boolean" },
+        { "type": "null" }
+      ]
+    },
+    "boundedLocalizedText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key"],
+      "properties": {
+        "namespace": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "key": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "params": {
+          "type": "object",
+          "maxProperties": 16,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9]*$" },
+          "additionalProperties": { "$ref": "#/$defs/attributeValue" }
+        },
+        "fallback": { "type": "string", "minLength": 1, "maxLength": 4000 }
+      }
+    },
+    "commandReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "arguments": {
+          "type": "object",
+          "maxProperties": 16,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9]*$" },
+          "additionalProperties": { "$ref": "#/$defs/attributeValue" }
+        }
+      }
+    },
+    "disabled": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "boolean" },
+        "reason": { "$ref": "#/$defs/boundedLocalizedText" }
+      }
+    },
+    "structuredChild": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "text"],
+          "properties": {
+            "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+            "kind": { "const": "text" },
+            "text": { "$ref": "#/$defs/boundedLocalizedText" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "label", "command"],
+          "properties": {
+            "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+            "kind": { "const": "action" },
+            "label": { "$ref": "#/$defs/boundedLocalizedText" },
+            "command": { "$ref": "#/$defs/commandReference" },
+            "disabled": { "$ref": "#/$defs/disabled" }
+          }
+        }
+      ]
+    }
+  }
+}
