@@ -10,6 +10,7 @@
   "files": [
     "README.md",
     "LICENSE",
+    "schemas/*.json",
     "types/agent-conversation-shell.v1.d.ts",
     "types/connector-service.v1.d.ts"
   ],
