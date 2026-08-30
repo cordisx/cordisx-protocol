@@ -1,9 +1,11 @@
-# Agent Loop v1
+# Agent Loop v1 and v2
 
-Status: local additive Protocol candidate for a Host-bound, room-neutral Agent
-Loop. It defines data contracts only. It does not define Chatroom, UI, DOM,
-workspace resolution, external channels, provider transport, credentials, or a
-new permission system.
+Status: local additive Protocol candidate. Version 1 remains the formal legacy
+Host-bound, room-neutral contract. Version 2 adds durable delivery, canonical
+task-details URLs, and operation causation without changing v1. Both versions
+define data contracts only; neither defines Chatroom, UI, DOM, workspace
+resolution, external channels, provider transport, credentials, or a new
+permission system.
 
 ## Definition and inheritance
 
@@ -51,7 +53,7 @@ the ordered fields. Object fields accept only `merge`, `replace`, or `none`.
 
 ## Binding and operations
 
-`agent-loop-task-binding/v1` binds one exact definition identity to one opaque
+Both task-binding versions bind one exact definition identity to one opaque
 Host task handle under a generation-fenced binding id. `create-or-bind` either
 creates a new task or binds the definition to an explicitly supplied opaque
 task handle. `send` requires the exact active binding. A closed or replaced
@@ -62,34 +64,73 @@ registry and rejects unknown, replaced, closed, or cross-task tuples.
 The Host injects one fiber-owned `BoundAgentLoopClient` with only
 `createOrBind`, `send`, `subscribe`, and `dispose`. Calls and results reuse the
 existing `tasks.create`, `tasks.content.read`, and `turns.submit` permission
-outcomes. The contract defines no grant, token, policy, approval authority, or
-security escalation. A denied or unavailable existing permission remains a
-typed denied or unavailable result.
+outcomes. The contract defines no grant, policy, approval authority, or security
+escalation, and it carries no authorization token. A denied or unavailable
+existing permission remains a typed denied or unavailable result.
 
 The Host resolves `cwd` and any workspace/config root privately before task
 creation. No workspace alias, path, cwd, or configuration root is an Agent Loop
 field.
 
-### Multiplexing and command idempotency
+### Multiplexing and version compatibility
 
 One `BoundAgentLoopClient` may own multiple active bindings for different
 definitions or tasks. A consumer fans one input out by issuing one `send` per
 exact binding, with a distinct `commandId` for each binding. Operations on one
 binding do not serialize or advance another binding.
 
-Within one bound-client lifetime, `commandId` is an idempotency key as well as
-a correlation key. The Host records the first complete command and its result
-before exposing the result. Concurrent or later structurally identical submissions
-with the same `commandId` coalesce to that one execution and return the same
-result, including the same accepted binding or `messageId`. This applies to
-accepted, denied, and unavailable results. A consumer that intentionally retries
-after a denied or unavailable result uses a new `commandId`.
+Version 1 scopes `commandId` idempotency to one bound-client lifetime and
+retains the ledger only until `dispose`. It has no task-details URL, delivery
+disposition, event causation, or durable cross-client replay fields. Existing
+v1 consumers and providers continue to use those exact schemas and types.
 
-Reusing a `commandId` for any non-identical command is invalid. The Host rejects
-it before task creation, binding, or message submission; it does not reinterpret
-the existing authorization result as authority for the different command. The
-idempotency ledger is scoped to the exact injected client and is retained until
-`dispose`; identifiers from different bound clients do not share a ledger.
+### Version 2 durable command delivery
+
+In v2, `commandId` is the consumer-persisted `AgentLoopOperationId`, not a
+bound-client-lifetime correlation token. The owning provider records the
+complete command and result before exposing the result.
+Concurrent or later structurally identical submissions with the same operation
+id coalesce to one logical operation across client disposal and recreation.
+The consumer persists the planned `commandId` and complete exact payload before
+its first call. If delivery becomes unknown, it resubmits that same payload
+under the same id. A typed failure is surfaced for attention; the consumer must
+not silently allocate a new id and risk duplicate execution.
+
+The bound-client descriptor freezes the ledger contract as
+`operationId: commandId`, `scope: owner-provider`, generation-fenced provider
+affinity, structural-exact payload matching, survival across client disposal,
+and retention for the active logical-task lifetime plus a 30-day recovery
+window. The Host privately maintains the
+`(owner, operationId) -> original provider identity/generation` affinity fence;
+no provider identity is added to the public command. Provider replacement must
+never cause the new provider to execute an operation owned by the old provider.
+
+For an operation that accepted a binding, active retention lasts for the whole
+logical-task lifetime and the 30-day recovery window begins at the
+provider-private `closedAt`. If no accepted binding outcome exists, the window
+begins at the provider-private `firstObservedAt`. Neither timestamp is supplied
+or controlled by the consumer. After the guarantee window, the provider may
+discard the full payload and result and may retain a compact expiry marker for
+at most 32 days from first observation or closure. While that bounded marker
+remains, an exact retry returns `operation-expired`
+and is not executed. The contract does not require an unbounded tombstone;
+consumers never reuse a `commandId` and stop automatic retry after the recovery
+window.
+
+An accepted create-or-bind or send result carries a `delivery.disposition` of
+`executed`, `replayed`, or `reconciled`. A replay returns the recorded accepted
+identity. A reconciled create-or-bind may return the current binding generation
+and canonical details URL for the same logical task. A replayed or reconciled
+send preserves the original `messageId` and `turn`; it never submits a second
+turn.
+
+Reusing an operation id for a non-identical complete payload returns typed
+`operation-conflict` before task creation, binding, or message submission.
+Other allowed-authorization resource outcomes are
+`reconciliation-required`, `operation-expired`, and `provider-replaced`;
+create-or-bind additionally permits `details-unavailable`. These are not
+authorization outcomes and do not extend the permission system. A consumer
+that intentionally starts a new operation chooses a new `commandId`.
 
 One client may hold multiple subscriptions concurrently. Each subscription is
 scoped to its exact `(bindingId, generation)`, and its `afterSequence`,
@@ -97,6 +138,30 @@ scoped to its exact `(bindingId, generation)`, and its `afterSequence`,
 The same `bindingId` at a different generation is a different event stream.
 Unsubscribing one handle does not affect sibling handles; client `dispose`
 terminates all of them.
+
+### Accepted task details URL
+
+Every accepted `create-or-bind`, including an explicit bind, returns the exact
+binding and a direct `detailsUrl`. The consumer persists that pair together.
+When a new binding generation is accepted, its pair atomically replaces the
+old generation and URL; `send` continues to carry only the binding.
+
+The Host must obtain the URL before returning accepted. If the provider cannot
+supply one, `create-or-bind` returns unavailable with `details-unavailable` and
+the allowed authorization outcome for create or bind. This resource failure is
+not a new permission outcome, and no partially accepted binding is exposed.
+
+The v2 details URL has a maximum length of 2048 characters and pairs its target
+with a closed scheme set: `host` requires `app:`, while `external` permits only
+`https:`, `codex:`, or `claude:`. Version 2 rejects `file:`, `data:`,
+`javascript:`, `blob:`, and `http:`.
+
+Producers emit one absolute canonical URL: lower-case scheme and host,
+normalized default port and dot segments, uppercase hexadecimal percent
+escapes, and no percent encoding for unreserved characters. User information,
+query, fragment, whitespace, C0/DEL controls, and backslashes are forbidden.
+The URL is location metadata and does not grant authority. Agent Loop defines no
+navigation operation.
 
 ## Content and proactive events
 
@@ -111,21 +176,27 @@ that cannot be rendered must produce an explicit unsupported result or a clear
 attachment placeholder. It must not be discarded, converted to a local path or
 base64 payload, or reported as rendered.
 
-`agent-loop-event/v1` proactively reports ordered message, approval, and
-lifecycle facts for one exact binding generation. Approval events are
-observations of the existing Host/runtime approval state; they do not grant authority. Pages replay
+Both event versions proactively report ordered message, approval, and lifecycle
+facts for one exact binding generation. A v2 event may carry
+`causation.operationId`, whose value is the originating command's `commandId`;
+it is correlation data, not authority. Approval events are observations of the
+existing Host/runtime approval state; they do not grant authority. Pages replay
 through a fixed snapshot sequence before live events. `binding.closed` is
 terminal, subscription unsubscribe is explicit, and owner disposal terminates
 the stream.
 
 ## Consumer entry points
 
-- TypeScript: `@cordisx/protocol/agent-loop/v1`
-- Schemas: `agent-definition.v1`, `agent-loop-task-binding.v1`,
-  `agent-loop-command.v1`, `agent-loop-result.v1`, `agent-loop-event.v1`,
-  `agent-loop-event-subscription.v1`, `agent-loop-event-page.v1`, and
-  `agent-loop-bound-client.v1`
-- Conformance: `node conformance/agent-loop.mjs`
+- TypeScript: legacy `@cordisx/protocol/agent-loop/v1`; additive
+  `@cordisx/protocol/agent-loop/v2`
+- V1 schemas: `agent-definition.v1` plus the unchanged `agent-loop-*.v1`
+  family
+- V2 schemas: `agent-definition.v1`, `agent-loop-task-binding.v2`,
+  `agent-loop-command.v2`, `agent-loop-result.v2`, `agent-loop-event.v2`,
+  `agent-loop-event-subscription.v2`, `agent-loop-event-page.v2`,
+  `agent-loop-task-details-common.v2`, and `agent-loop-bound-client.v2`
+- Conformance: `node conformance/agent-loop.mjs` and
+  `node conformance/agent-loop-v2.mjs`
 
 Schemas, vectors, and local conformance do not prove Host wiring, Chatroom
 consumption, production renderer behavior, publication, or API readiness.

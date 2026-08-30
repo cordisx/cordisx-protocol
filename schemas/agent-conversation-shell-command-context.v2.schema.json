@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-command-context.v2.schema.json",
+  "title": "CordisX Host-generated Agent Conversation Shell Command Context v2",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "generation", "scope", "command"],
+  "properties": {
+    "$schema": {"const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-command-context.v2.schema.json"},
+    "contract": {"const": "cordisx.agent-conversation-shell-command-context/v2"}, "schemaVersion": {"const": 2},
+    "binding": {"$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/bindingRef"}, "generation": {"$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/generation"},
+    "scope": {"enum": ["header", "message", "composer-submit"]}, "itemId": {"$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId"},
+    "command": {"$ref": "ui-common.v1.schema.json#/$defs/commandReference"}, "submitPayload": {"type": "string", "minLength": 1, "maxLength": 65536}
+  },
+  "allOf": [
+    {"if": {"properties": {"scope": {"const": "message"}}, "required": ["scope"]}, "then": {"required": ["itemId"], "properties": {"itemId": true, "submitPayload": false}}},
+    {"if": {"properties": {"scope": {"const": "header"}}, "required": ["scope"]}, "then": {"properties": {"itemId": false, "submitPayload": false}}},
+    {"if": {"properties": {"scope": {"const": "composer-submit"}}, "required": ["scope"]}, "then": {"required": ["submitPayload"], "properties": {"submitPayload": true, "itemId": false}}}
+  ]
+}

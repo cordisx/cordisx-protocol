@@ -30,8 +30,16 @@ union, canonical seed inputs and helpers, Agent Definition fallback input, and
 typed resolution result. Qualified refs expose no URL, path, bytes, DOM, CSS,
 callback, or Host rendering handle.
 
-`agent-conversation-shell.v1.d.ts` exposes only the data source, ordered runtime
-subscription handle, and disposal lifetime for the Host-owned conversation shell.
+`agent-conversation-shell.v1.d.ts` remains the frozen original data source,
+ordered runtime subscription handle, disposal lifetime, participant list,
+text-message/status timeline, and Host command-context contract.
+
+`agent-conversation-shell.v2.d.ts` is its explicit successor. It adds exact
+Agent participant identity, bounded room-snapshot active-run descriptors with
+AgentLoop-v2-canonical structured details URLs, closed message provenance,
+structured reaction lifecycles, and ordered member-presence items. Active runs
+carry no private binding, task body, trace, route, arbitrary URL, or renderer
+handle; presence retries remain bounded Host command references.
 
 `host-dom.v1.d.ts` exposes the versioned Host root catalog and one principal-bound
 client. Plugins can request only canonical root ids, closed read/modify operations,
@@ -39,10 +47,18 @@ opaque handles, bounded serialized projections, and Host-rendered structured
 children. It exports no selector, DOM node, document/window, HTML, CSS, script,
 event, callback, owner/profile binding, or private renderer bridge.
 
-`agent-loop.v1.d.ts` exposes the room-neutral Agent definition and inheritance
-catalog, opaque task binding, typed create-or-bind/send exchanges, proactive
-message/approval/lifecycle events, ordered subscription pages, and the
-fiber-owned `BoundAgentLoopClient`. Explicit `AgentLoopCreateOrBindResult` and
+`agent-loop.v1.d.ts` preserves the formal room-neutral, per-client-idempotency
+contract without task-details or durable cross-client fields.
+`agent-loop.v2.d.ts` additively exposes the same Agent definition catalog,
+opaque task binding, typed create-or-bind/send exchanges, proactive events,
+ordered subscription pages, and fiber-owned `BoundAgentLoopClient`. Durable
+consumer operation ids survive
+client disposal through an owner-provider, generation-fenced ledger; accepted
+results report executed, replayed, or reconciled delivery. Every accepted
+create-or-bind result carries a canonical Host or external details URL next to
+the exact binding; accepted sends carry stable message and turn identities and
+do not repeat the URL. Explicit `AgentLoopCreateOrBindResult` and
 `AgentLoopSendResult` aliases retain accepted, denied, and unavailable branches
-under TypeScript discrimination. It exposes no Room, UI, path, credential,
-callback, raw bridge, or external-channel type.
+under TypeScript discrimination. It exposes no Room, UI implementation,
+credential, callback, raw bridge, public provider identity, or external-channel
+type.
