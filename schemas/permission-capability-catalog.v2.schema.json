@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v2.schema.json",
+  "title": "CordisX Host Capability Risk Catalog v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "catalogVersion", "entries"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v2.schema.json" },
+    "schemaVersion": { "const": 2 },
+    "catalogVersion": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 23,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capability", "providerFamily", "resourceClass", "certifiedImplicitApproval", "sensitivity",
+          "recommendedPolicy", "persistentAllow", "persistentDeny", "maximumScope", "scopeUpgrade",
+          "installPrompt", "runtimePrompt", "presentation"
+        ],
+        "properties": {
+          "capability": { "$ref": "permission-common.v3.schema.json#/$defs/capability" },
+          "providerFamily": { "enum": ["platform", "agent", "channel", "ui"] },
+          "resourceClass": { "enum": ["non-dom", "dom-rendering"] },
+          "certifiedImplicitApproval": { "type": "boolean" },
+          "sensitivity": { "enum": ["low", "general", "sensitive", "high-risk"] },
+          "recommendedPolicy": { "$ref": "permission-common.v3.schema.json#/$defs/policy" },
+          "persistentAllow": { "type": "boolean" },
+          "persistentDeny": { "type": "boolean" },
+          "maximumScope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["allowedDimensions", "unscopedAllowed"],
+            "properties": {
+              "allowedDimensions": {
+                "type": "array",
+                "maxItems": 9,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "providers", "cwdRoots", "sessions", "sessionIds", "channelAccounts", "channelTenants",
+                    "channelConversations", "channelUsers", "extensionPoints"
+                  ]
+                }
+              },
+              "unscopedAllowed": { "type": "boolean" }
+            }
+          },
+          "scopeUpgrade": { "enum": ["any-change", "strict-expansion"] },
+          "installPrompt": { "enum": ["batch-eligible", "explicit"] },
+          "runtimePrompt": { "enum": ["first-use", "dynamic-scope", "always"] },
+          "presentation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "description", "risk", "limitation"],
+            "properties": {
+              "name": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "description": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "risk": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "limitation": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "certifiedImplicitApproval": { "const": true } }, "required": ["certifiedImplicitApproval"] },
+            "then": {
+              "properties": {
+                "capability": { "const": "ui.extension-points.render" },
+                "providerFamily": { "const": "ui" },
+                "resourceClass": { "const": "dom-rendering" }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "resourceClass": { "const": "non-dom" } }, "required": ["resourceClass"] },
+            "then": { "properties": { "certifiedImplicitApproval": { "const": false } } }
+          }
+        ]
+      }
+    }
+  }
+}

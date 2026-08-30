@@ -141,3 +141,9 @@ revocation signal and withdraw certification-derived grants or leases.
 Trusting a Marketplace or plugin source never grants all plugins or all
 permissions from that source. Package, sandbox, sensitivity, and generation
 lifecycle gates remain unchanged.
+
+Certification is not a general permission grant. Every non-DOM capability
+follows the normal Permission Broker path for ordinary, Certified, Official,
+and combined Official plus Certified plugins. Permission protocol v3 defines
+the catalog opt-in and exact lease semantics for the narrower controlled
+DOM/rendering case. It never enables raw or untracked DOM access.
