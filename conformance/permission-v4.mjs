@@ -273,8 +273,17 @@ const handleRecord = Object.freeze({
   certificationFingerprint: certification.fingerprint, certificationRevision: certification.revision,
   active: true,
 })
+const modifyHandleRecord = Object.freeze({
+  ...handleRecord,
+  handle: 'hdh_modifyroot0001',
+  capability: 'ui.host-dom.modify',
+  operations: new Set(['set-text']),
+  scopeDigest: digest({ rootIds: ['workspace.composer'], operations: ['set-text'] }),
+  securityFingerprint: modifyDeclaration.securityFingerprint,
+})
 const nodeRecords = new Map([
   ['hdn_0123456789abcdef', { handle: handleRecord.handle, rootId: handleRecord.rootId }],
+  ['hdn_modifychild0001', { handle: modifyHandleRecord.handle, rootId: modifyHandleRecord.rootId }],
   ['hdn_crosshandle0001', { handle: 'hdh_otherhandle0001', rootId: handleRecord.rootId }],
   ['hdn_crossroot0000001', { handle: handleRecord.handle, rootId: 'manager.content' }],
 ])
@@ -287,6 +296,12 @@ const current = Object.freeze({
   enabled: true, installed: true, rootAvailable: true, permissionActive: true,
 })
 const readCall = Object.freeze({ handle: handleRecord.handle, node: 'hdn_0123456789abcdef', operation: 'read-text' })
+const modifyRootCall = Object.freeze({ handle: modifyHandleRecord.handle, operation: 'set-text' })
+const modifyCurrent = Object.freeze({
+  ...current,
+  scopeDigest: modifyHandleRecord.scopeDigest,
+  securityFingerprint: modifyHandleRecord.securityFingerprint,
+})
 let adapterDispatches = 0
 let handlesMinted = 0
 function acquireWithPolicy(policy, projection) {
@@ -312,16 +327,24 @@ function executeBridge(record, call, state, nodes = nodeRecords) {
   if (!exactCertification(state.certification, { ...record.identity, version: record.artifactVersion, integrity: record.artifactIntegrity }, state.now)
     || state.certification.fingerprint !== record.certificationFingerprint
     || state.certification.revision !== record.certificationRevision) return 'stale-handle'
-  const readOperation = readOperations.includes(call.operation)
-  if ((record.capability === 'ui.host-dom.read') !== readOperation || !record.operations.has(call.operation)) return 'operation-denied'
-  const node = nodes.get(call.node)
-  if (node === undefined) return 'stale-handle'
-  if (node.handle !== record.handle) return 'owner-mismatch'
-  if (node.rootId !== record.rootId) return 'scope-denied'
+  const capability = readOperations.includes(call.operation) ? 'ui.host-dom.read' : 'ui.host-dom.modify'
+  if (record.capability !== capability || !record.operations.has(call.operation)) return 'operation-denied'
+  if (call.node !== undefined) {
+    const node = nodes.get(call.node)
+    if (node === undefined) return 'stale-handle'
+    if (node.handle !== record.handle) return 'owner-mismatch'
+    if (node.rootId !== record.rootId) return 'scope-denied'
+  }
   adapterDispatches += 1
   return 'allowed'
 }
 expect(executeBridge(handleRecord, readCall, current) === 'allowed' && adapterDispatches === 1, 'exact owner/profile/client/root/lease/generation handle must dispatch once')
+expect(executeBridge(modifyHandleRecord, modifyRootCall, modifyCurrent) === 'allowed' && adapterDispatches === 2,
+  'modify-only handle must target its exact acquired root without acquiring read or minting a node reference')
+expect(executeBridge(modifyHandleRecord, { ...modifyRootCall, operation: 'read-text' }, modifyCurrent) === 'operation-denied',
+  'modify-only handle must not gain read authority')
+expect(executeBridge(modifyHandleRecord, { ...modifyRootCall, node: 'hdn_modifychild0001' }, modifyCurrent) === 'allowed',
+  'modify handle must retain same-owner/root/generation opaque descendant targeting')
 for (const [label, record, call, state, expected] of [
   ['stale handle', { ...handleRecord, active: false }, readCall, current, 'stale-handle'],
   ['unknown node', handleRecord, { ...readCall, node: 'hdn_unknown00000001' }, current, 'stale-handle'],

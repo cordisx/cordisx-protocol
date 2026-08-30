@@ -85,7 +85,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   catalog with per-root availability and supported operations;
 - `host-dom-bridge-request.v1.schema.json` and
   `host-dom-bridge-result.v1.schema.json`: bound-client acquire/read/modify/
-  release documents with bounded serialized projections and no selector,
+  release documents; omitted read/modify `node` means only the exact root bound
+  to the opaque handle, allowing modify-only root access without a read lease;
+  bounded serialized projections and no selector,
   native node, HTML, style, script, callback, or private bridge;
 - `channel-common.v1.schema.json`: complete Channel account, tenant,
   conversation, thread, user, and event identities;

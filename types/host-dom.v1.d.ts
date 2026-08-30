@@ -53,11 +53,11 @@ export type HostDomBridgeRequest =
   | (HostDomRequestBase & { type: 'acquire'; capability: 'ui.host-dom.modify'; rootId: HostDomRootId; operations: readonly HostDomModifyOperation[] })
   | (HostDomRequestBase & { type: 'read'; handle: HostDomHandle; operation: Exclude<HostDomReadOperation, 'read-attributes'>; node?: HostDomNodeRef })
   | (HostDomRequestBase & { type: 'read'; handle: HostDomHandle; operation: 'read-attributes'; node?: HostDomNodeRef; attributes: readonly HostDomReadableAttribute[] })
-  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node: HostDomNodeRef; operation: 'set-text'; text: string })
-  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node: HostDomNodeRef; operation: 'set-attribute'; attribute: HostDomMutableAttribute; value: HostDomAttributeValue })
-  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node: HostDomNodeRef; operation: 'insert-owned-structured-child'; child: HostDomStructuredChild })
-  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node: HostDomNodeRef; operation: 'remove-owned-child'; childId: string })
-  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node: HostDomNodeRef; operation: 'focus' })
+  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node?: HostDomNodeRef; operation: 'set-text'; text: string })
+  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node?: HostDomNodeRef; operation: 'set-attribute'; attribute: HostDomMutableAttribute; value: HostDomAttributeValue })
+  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node?: HostDomNodeRef; operation: 'insert-owned-structured-child'; child: HostDomStructuredChild })
+  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node?: HostDomNodeRef; operation: 'remove-owned-child'; childId: string })
+  | (HostDomRequestBase & { type: 'modify'; handle: HostDomHandle; node?: HostDomNodeRef; operation: 'focus' })
   | (HostDomRequestBase & { type: 'release'; handle: HostDomHandle })
 
 export type HostDomReadProjection =

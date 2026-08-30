@@ -92,7 +92,7 @@
     },
     "setText": {
       "type": "object", "additionalProperties": false,
-      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "node", "operation", "text"],
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "operation", "text"],
       "properties": {
         "$schema": { "$ref": "#/$defs/modifyProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/modifyProperties/properties/contract" },
         "schemaVersion": { "$ref": "#/$defs/modifyProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/modifyProperties/properties/requestId" },
@@ -103,7 +103,7 @@
     },
     "setAttribute": {
       "type": "object", "additionalProperties": false,
-      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "node", "operation", "attribute", "value"],
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "operation", "attribute", "value"],
       "properties": {
         "$schema": { "$ref": "#/$defs/modifyProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/modifyProperties/properties/contract" },
         "schemaVersion": { "$ref": "#/$defs/modifyProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/modifyProperties/properties/requestId" },
@@ -115,7 +115,7 @@
     },
     "insertOwnedChild": {
       "type": "object", "additionalProperties": false,
-      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "node", "operation", "child"],
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "operation", "child"],
       "properties": {
         "$schema": { "$ref": "#/$defs/modifyProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/modifyProperties/properties/contract" },
         "schemaVersion": { "$ref": "#/$defs/modifyProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/modifyProperties/properties/requestId" },
@@ -126,7 +126,7 @@
     },
     "removeOwnedChild": {
       "type": "object", "additionalProperties": false,
-      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "node", "operation", "childId"],
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "operation", "childId"],
       "properties": {
         "$schema": { "$ref": "#/$defs/modifyProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/modifyProperties/properties/contract" },
         "schemaVersion": { "$ref": "#/$defs/modifyProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/modifyProperties/properties/requestId" },
@@ -137,7 +137,7 @@
     },
     "focus": {
       "type": "object", "additionalProperties": false,
-      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "node", "operation"],
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "handle", "operation"],
       "properties": {
         "$schema": { "$ref": "#/$defs/modifyProperties/properties/$schema" }, "contract": { "$ref": "#/$defs/modifyProperties/properties/contract" },
         "schemaVersion": { "$ref": "#/$defs/modifyProperties/properties/schemaVersion" }, "requestId": { "$ref": "#/$defs/modifyProperties/properties/requestId" },
