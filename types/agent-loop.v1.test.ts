@@ -7,12 +7,14 @@ import type {
   AgentLoopTaskBinding,
   BoundAgentLoopClient,
 } from '@cordisx/protocol/agent-loop/v1'
+import { cloneAgentAvatarRef } from '@cordisx/protocol/agent-avatar/v1'
 
 const definition = {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json',
   contract: 'cordisx.agent-definition/v1',
   schemaVersion: 1,
   identity: { agentId: 'reviewer', revision: 'sha256:definition-1' },
+  avatar: cloneAgentAvatarRef({ kind: 'asset', ref: 'avatar:reviewer', revision: 'revision:v1' }),
   extends: [{ agentId: 'base', revision: 'sha256:base-1' }],
   inherit: {
     promptSections: 'append',
@@ -21,6 +23,7 @@ const definition = {
     tools: 'replace',
     mcpServers: 'replace',
     runtimeDefaults: 'merge',
+    avatar: 'inherit',
   },
   promptSections: [
     { sectionId: 'introduction', kind: 'introduction', text: 'You are a reviewer.' },

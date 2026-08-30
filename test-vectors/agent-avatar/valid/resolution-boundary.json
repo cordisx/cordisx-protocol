@@ -1,0 +1,22 @@
+{
+  "case": "resolution",
+  "supportedKinds": ["generated", "asset", "definition"],
+  "references": [
+    {
+      "value": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:8:reviewer" },
+      "expected": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json", "contract": "cordisx.agent-avatar-resolution-result/v1", "schemaVersion": 1, "status": "resolved", "avatar": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:8:reviewer" } }
+    },
+    {
+      "value": { "kind": "asset", "ref": "avatar-assets:reviewer" },
+      "expected": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json", "contract": "cordisx.agent-avatar-resolution-result/v1", "schemaVersion": 1, "status": "resolved", "avatar": { "kind": "asset", "ref": "avatar-assets:reviewer" } }
+    },
+    {
+      "value": { "kind": "definition", "ref": "avatar-definitions:reviewer", "schema": "oneworks.avatar", "definitionVersion": 1 },
+      "expected": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json", "contract": "cordisx.agent-avatar-resolution-result/v1", "schemaVersion": 1, "status": "resolved", "avatar": { "kind": "definition", "ref": "avatar-definitions:reviewer", "schema": "oneworks.avatar", "definitionVersion": 1 } }
+    },
+    {
+      "value": { "kind": "platform", "provider": "codex", "identityRef": "platform-identities:reviewer" },
+      "expected": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json", "contract": "cordisx.agent-avatar-resolution-result/v1", "schemaVersion": 1, "status": "unsupported", "avatar": { "kind": "platform", "provider": "codex", "identityRef": "platform-identities:reviewer" }, "code": "unsupported-provider" }
+    }
+  ]
+}

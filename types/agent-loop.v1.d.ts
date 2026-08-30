@@ -1,3 +1,5 @@
+import type { AgentAvatarInheritanceMode, AgentAvatarRef } from './agent-avatar.v1.js'
+
 export interface AgentDefinitionIdentity {
   agentId: string
   revision: string
@@ -13,6 +15,7 @@ export interface AgentDefinition {
   identity: AgentDefinitionIdentity
   name?: string
   description?: string
+  avatar?: AgentAvatarRef
   extends?: readonly AgentDefinitionIdentity[]
   inherit: {
     promptSections: AgentInheritanceMode
@@ -21,6 +24,7 @@ export interface AgentDefinition {
     tools: AgentObjectInheritanceMode
     mcpServers: AgentObjectInheritanceMode
     runtimeDefaults: AgentObjectInheritanceMode
+    avatar?: AgentAvatarInheritanceMode
   }
   promptSections?: readonly {
     sectionId: string

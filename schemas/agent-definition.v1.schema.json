@@ -12,6 +12,7 @@
     "identity": { "$ref": "agent-loop-common.v1.schema.json#/$defs/definitionIdentity" },
     "name": { "type": "string", "minLength": 1, "maxLength": 256 },
     "description": { "type": "string", "maxLength": 2000 },
+    "avatar": { "$ref": "agent-avatar.v1.schema.json#/$defs/agentAvatarRef" },
     "extends": {
       "type": "array",
       "maxItems": 32,
@@ -28,7 +29,8 @@
         "skills": { "$ref": "agent-loop-common.v1.schema.json#/$defs/inheritanceMode" },
         "tools": { "$ref": "agent-loop-common.v1.schema.json#/$defs/objectInheritanceMode" },
         "mcpServers": { "$ref": "agent-loop-common.v1.schema.json#/$defs/objectInheritanceMode" },
-        "runtimeDefaults": { "$ref": "agent-loop-common.v1.schema.json#/$defs/objectInheritanceMode" }
+        "runtimeDefaults": { "$ref": "agent-loop-common.v1.schema.json#/$defs/objectInheritanceMode" },
+        "avatar": { "enum": ["inherit", "none"] }
       }
     },
     "promptSections": {

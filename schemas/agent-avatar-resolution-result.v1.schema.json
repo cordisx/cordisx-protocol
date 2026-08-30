@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json",
+  "title": "CordisX Agent Avatar Resolution Result v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "status", "avatar"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json" },
+        "contract": { "const": "cordisx.agent-avatar-resolution-result/v1" },
+        "schemaVersion": { "const": 1 },
+        "status": { "const": "resolved" },
+        "avatar": { "$ref": "agent-avatar.v1.schema.json#/$defs/agentAvatarRef" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "status", "avatar", "code"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json" },
+        "contract": { "const": "cordisx.agent-avatar-resolution-result/v1" },
+        "schemaVersion": { "const": 1 },
+        "status": { "const": "unsupported" },
+        "avatar": { "$ref": "agent-avatar.v1.schema.json#/$defs/agentAvatarRef" },
+        "code": { "enum": ["unsupported-kind", "unsupported-provider", "reference-unavailable"] }
+      }
+    }
+  ]
+}

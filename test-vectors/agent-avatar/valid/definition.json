@@ -1,0 +1,10 @@
+{
+  "case": "ref",
+  "value": {
+    "kind": "definition",
+    "ref": "avatar-definitions:reviewer-primary",
+    "schema": "oneworks.avatar",
+    "definitionVersion": 1,
+    "revision": "avatar-definitions:revision-3"
+  }
+}

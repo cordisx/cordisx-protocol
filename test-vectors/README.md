@@ -145,6 +145,17 @@ registration-qualified run bindings, non-empty replay, serialized replay/live
 ordering, disposal terminality, and the absence of caller, bridge, or second
 connection fields.
 
+Agent Avatar v1 suites live in `agent-avatar/valid` and
+`agent-avatar/invalid`. Golden vectors cover ASCII and Unicode canonical seeds,
+the fixed unknown identity, stability across container/execution contexts and
+renames/revisions, explicit and inherited definition precedence, child-identity
+fallback, immutable detached refs, and typed platform unsupported results.
+The RC compatibility vector also freezes the observed normalization and hash
+outputs for exact `@oneworks/avatar@1.0.0-rc.8` while proving that neither
+OneWorks implementation package is a Protocol production or peer dependency.
+Negative vectors reject raw URLs and paths, data/base64 payloads, unqualified
+or oversized refs, byte-length/NFC drift, and unsupported schema versions.
+
 Agent Loop v1 suites live in `agent-loop/valid` and `agent-loop/invalid`.
 They cover self-contained Agent-definition ancestry, exact field inheritance,
 opaque active task bindings, create-or-bind/send authorization reuse, ordered

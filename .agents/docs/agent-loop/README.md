@@ -10,9 +10,16 @@ new permission system.
 `agent-definition/v1` identifies an immutable definition by
 `(agentId, revision)`. A definition may extend ordered parent identities and
 provides explicit inheritance modes for prompt sections, rules, skills, tool
-filters, MCP-server filters, and runtime defaults. Prompt sections directly
-include `introduction`, `personality`, and `memory` for OneWorks-style
-consumption, together with bounded general-purpose section kinds.
+filters, MCP-server filters, runtime defaults, and an optional avatar ref.
+Prompt sections directly include `introduction`, `personality`, and `memory`
+for OneWorks-style consumption, together with bounded general-purpose section
+kinds.
+
+A definition may carry an explicit `AgentAvatarRef` and an optional
+`inherit.avatar` mode. Avatar resolution follows `agent-avatar/v1`: a child
+explicit ref wins; only an explicit non-generated parent ref may cross the
+inheritance boundary; otherwise the avatar is generated from the child
+`agentId`. A parent's generated seed is never inherited.
 
 `create-or-bind` is self-contained. It carries the leaf `definition` identity
 and a bounded `definitions` catalog containing exactly the leaf and every

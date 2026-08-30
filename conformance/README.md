@@ -92,6 +92,12 @@ surface separately from the Host-only principal/user/authorization binding. It
 requires exact registration-qualified run bindings, an ordered subscription
 page stream with unsubscribe/dispose lifetime, replay through the fixed
 snapshot before live pages, and no caller identity construction by plugins.
+Agent Avatar conformance freezes trim plus Unicode NFC normalization, UTF-8
+byte-length namespace encoding, the fixed unknown seed, closed reference
+variants, immutable clone/freeze behavior, explicit and inherited definition
+precedence, generated child-identity fallback, and typed unsupported resolution.
+It rejects raw URLs, filesystem paths, data/base64 payloads, oversized refs,
+non-canonical seeds, and unknown algorithms, schemas, or versions.
 Agent Loop conformance covers the bounded self-contained definition catalog,
 field inheritance vocabulary, exact task binding and authorization
 correlation, per-client command idempotency, independent multi-binding fan-out,

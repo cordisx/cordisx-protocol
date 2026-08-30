@@ -1,8 +1,10 @@
+import type { AgentAvatarRef } from './agent-avatar.v1.js'
+
 export interface LocalizedText { key: string; fallback: string; namespace?: string }
 export interface CommandReference { id: string; arguments?: unknown }
 export interface Disabled { value: boolean; reason?: LocalizedText }
 export interface AgentConversationShellBinding { bindingId: string; shell: 'agent-desktop'; ownerGeneration: string; routeSelection: { scope: 'room-or-new'; selectedRoomParam?: string } }
-export interface AgentConversationParticipant { participantId: string; role: 'human' | 'agent' | 'system'; displayName: LocalizedText }
+export interface AgentConversationParticipant { participantId: string; role: 'human' | 'agent' | 'system'; displayName: LocalizedText; avatar?: AgentAvatarRef }
 export interface AgentConversationAction { id: string; label: LocalizedText; icon?: `host:${string}`; command: CommandReference; disabled: Disabled }
 export type AgentConversationItem = { kind: 'message'; itemId: string; messageId: string; sequence: number; author: AgentConversationParticipant; body: readonly [{ kind: 'text'; text: LocalizedText }, ...{ kind: 'text'; text: LocalizedText }[]]; timestamp: string; deliveryState: 'pending' | 'sent' | 'delivered' | 'failed'; runState: 'idle' | 'running' | 'stopped' | 'failed'; ariaLive: 'off' | 'polite'; actions: readonly AgentConversationAction[] } | { kind: 'status'; itemId: string; sequence: number; label: LocalizedText; state: 'info' | 'working' | 'warning' | 'error'; ariaLive: 'off' | 'polite' }
 export type AgentConversationSelection = { kind: 'no-room' } | { kind: 'room'; roomId: string; title: LocalizedText; secondary?: LocalizedText; multiParticipant: false; participantPresentation: 'none'; participants: readonly AgentConversationParticipant[] } | { kind: 'room'; roomId: string; title: LocalizedText; secondary?: LocalizedText; multiParticipant: true; participantPresentation: 'none' | 'host-initials'; participants: readonly AgentConversationParticipant[] }

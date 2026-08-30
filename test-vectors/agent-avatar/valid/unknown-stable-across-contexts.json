@@ -1,0 +1,13 @@
+{
+  "case": "stability",
+  "observations": [
+    { "agentId": null, "container": "first", "execution": "run-1", "time": "2026-08-30T01:00:00Z", "random": 0.25 },
+    { "agentId": null, "container": "second", "execution": "run-9", "time": "2026-08-30T09:00:00Z", "random": 0.75 }
+  ],
+  "expected": {
+    "kind": "generated",
+    "algorithm": "oneworks-avatar-seed",
+    "algorithmVersion": 1,
+    "seed": "cordisx.agent-avatar.seed/v1:unknown:0:"
+  }
+}
