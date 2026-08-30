@@ -101,7 +101,13 @@
     "skills": ["base-skill", "review-skill"],
     "tools": { "include": ["search"] },
     "mcpServers": { "exclude": ["sensitive"] },
-    "runtimeDefaults": { "adapterId": "codex", "effort": "high" }
+    "runtimeDefaults": { "adapterId": "codex", "effort": "high" },
+    "avatar": {
+      "kind": "generated",
+      "algorithm": "oneworks-avatar-seed",
+      "algorithmVersion": 1,
+      "seed": "cordisx.agent-avatar.seed/v1:agent-definition:8:reviewer"
+    }
   },
   "binding": {
     "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json",

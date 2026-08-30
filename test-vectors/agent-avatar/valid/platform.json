@@ -1,0 +1,9 @@
+{
+  "case": "ref",
+  "value": {
+    "kind": "platform",
+    "provider": "codex",
+    "identityRef": "platform-identities:agent-42",
+    "revision": "platform-identities:revision-9"
+  }
+}

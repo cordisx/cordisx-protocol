@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar.v1.schema.json",
+  "title": "CordisX Agent Avatar Reference v1",
+  "$ref": "#/$defs/agentAvatarRef",
+  "$defs": {
+    "opaqueRef": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^(?!(?:https?|data|blob|file|base64):)[a-z][a-z0-9-]{0,31}:[A-Za-z0-9][A-Za-z0-9._~-]{0,478}$"
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._~-]{0,127}$"
+    },
+    "canonicalSeed": {
+      "type": "string",
+      "minLength": 39,
+      "maxLength": 562,
+      "pattern": "^cordisx\\.agent-avatar\\.seed/v1:(?:agent-definition:(?:[1-9]|[1-9][0-9]|[1-4][0-9]{2}|50[0-9]|51[0-2]):.+|unknown:0:)$",
+      "description": "Syntactic envelope only. Consumers MUST also verify NFC and the declared UTF-8 byte length with the v1 semantic validator."
+    },
+    "generatedAvatarRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "algorithm", "algorithmVersion", "seed"],
+      "properties": {
+        "kind": { "const": "generated" },
+        "algorithm": { "const": "oneworks-avatar-seed" },
+        "algorithmVersion": { "const": 1 },
+        "seed": { "$ref": "#/$defs/canonicalSeed" }
+      }
+    },
+    "assetAvatarRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref"],
+      "properties": {
+        "kind": { "const": "asset" },
+        "ref": { "$ref": "#/$defs/opaqueRef" },
+        "revision": { "$ref": "#/$defs/opaqueRef" }
+      }
+    },
+    "definitionAvatarRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref", "schema", "definitionVersion"],
+      "properties": {
+        "kind": { "const": "definition" },
+        "ref": { "$ref": "#/$defs/opaqueRef" },
+        "schema": { "const": "oneworks.avatar" },
+        "definitionVersion": { "const": 1 },
+        "revision": { "$ref": "#/$defs/opaqueRef" }
+      }
+    },
+    "platformAvatarRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "provider", "identityRef"],
+      "properties": {
+        "kind": { "const": "platform" },
+        "provider": { "$ref": "#/$defs/provider" },
+        "identityRef": { "$ref": "#/$defs/opaqueRef" },
+        "revision": { "$ref": "#/$defs/opaqueRef" }
+      }
+    },
+    "agentAvatarRef": {
+      "oneOf": [
+        { "$ref": "#/$defs/generatedAvatarRef" },
+        { "$ref": "#/$defs/assetAvatarRef" },
+        { "$ref": "#/$defs/definitionAvatarRef" },
+        { "$ref": "#/$defs/platformAvatarRef" }
+      ]
+    }
+  }
+}

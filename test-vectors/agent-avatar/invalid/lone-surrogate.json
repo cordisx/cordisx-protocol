@@ -1,0 +1,5 @@
+{
+  "case": "canonical-seed",
+  "agentId": "\ud800",
+  "expectedSeed": "invalid"
+}

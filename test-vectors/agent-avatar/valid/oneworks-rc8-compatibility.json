@@ -1,0 +1,36 @@
+{
+  "case": "oneworks-rc8",
+  "core": {
+    "spec": "@oneworks/avatar@1.0.0-rc.8",
+    "integrity": "sha512-9vKWfiPUlEfVzcO+6Q2QsCmqlINZb2CpXjN4M/JO2+v0IwqsGIcWGaxW44lf3moSQj70lEmnF6F7bZofw7mcXQ==",
+    "shasum": "d392232f850014c323f19a3a952c45d2d432b381"
+  },
+  "react": {
+    "spec": "@oneworks/avatar-react@1.0.0-rc.8",
+    "integrity": "sha512-fJ+p2LLG5tb3YV5QAAm/3gnkEFuCfMSR/WttpvMv8xNp64Ou6TB4Tz5QE6LqOwgT7q67qrBluZMwDfQUjX++aw==",
+    "shasum": "6a62a452fe4a3f1ffa40c057f09b186d29ba84ca"
+  },
+  "golden": [
+    {
+      "identity": "reviewer",
+      "canonicalSeed": "cordisx.agent-avatar.seed/v1:agent-definition:8:reviewer",
+      "normalizedSeed": "v1-cordisx.agent-avatar.seed/v1:agent-definition:8:reviewer",
+      "rawHash": 2226809573,
+      "normalizedHash": 2049171455
+    },
+    {
+      "identity": "Ångent",
+      "canonicalSeed": "cordisx.agent-avatar.seed/v1:agent-definition:7:Ångent",
+      "normalizedSeed": "v1-cordisx.agent-avatar.seed/v1:agent-definition:7:Ångent",
+      "rawHash": 3917328728,
+      "normalizedHash": 3943447442
+    },
+    {
+      "identity": null,
+      "canonicalSeed": "cordisx.agent-avatar.seed/v1:unknown:0:",
+      "normalizedSeed": "v1-cordisx.agent-avatar.seed/v1:unknown:0:",
+      "rawHash": 640120557,
+      "normalizedHash": 1522107091
+    }
+  ]
+}

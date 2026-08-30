@@ -1,0 +1,8 @@
+{
+  "case": "ref",
+  "value": {
+    "kind": "asset",
+    "ref": "avatar-assets:reviewer-primary",
+    "revision": "avatar-assets:revision-2"
+  }
+}

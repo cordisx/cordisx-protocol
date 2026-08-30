@@ -1,0 +1,60 @@
+{
+  "case": "definition-avatar",
+  "definitions": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+      "contract": "cordisx.agent-definition/v1",
+      "schemaVersion": 1,
+      "identity": { "agentId": "parent-asset", "revision": "definition-1" },
+      "avatar": { "kind": "asset", "ref": "avatar-assets:parent" },
+      "inherit": { "promptSections": "none", "rules": "none", "skills": "none", "tools": "none", "mcpServers": "none", "runtimeDefaults": "none" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+      "contract": "cordisx.agent-definition/v1",
+      "schemaVersion": 1,
+      "identity": { "agentId": "parent-generated", "revision": "definition-1" },
+      "avatar": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:16:parent-generated" },
+      "inherit": { "promptSections": "none", "rules": "none", "skills": "none", "tools": "none", "mcpServers": "none", "runtimeDefaults": "none" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+      "contract": "cordisx.agent-definition/v1",
+      "schemaVersion": 1,
+      "identity": { "agentId": "child-explicit", "revision": "definition-2" },
+      "extends": [{ "agentId": "parent-asset", "revision": "definition-1" }],
+      "avatar": { "kind": "definition", "ref": "avatar-definitions:child", "schema": "oneworks.avatar", "definitionVersion": 1 },
+      "inherit": { "avatar": "inherit", "promptSections": "none", "rules": "none", "skills": "none", "tools": "none", "mcpServers": "none", "runtimeDefaults": "none" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+      "contract": "cordisx.agent-definition/v1",
+      "schemaVersion": 1,
+      "identity": { "agentId": "child-inherit", "revision": "definition-2" },
+      "extends": [{ "agentId": "parent-asset", "revision": "definition-1" }, { "agentId": "parent-generated", "revision": "definition-1" }],
+      "inherit": { "avatar": "inherit", "promptSections": "none", "rules": "none", "skills": "none", "tools": "none", "mcpServers": "none", "runtimeDefaults": "none" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+      "contract": "cordisx.agent-definition/v1",
+      "schemaVersion": 1,
+      "identity": { "agentId": "child-fallback", "revision": "definition-2" },
+      "extends": [{ "agentId": "parent-generated", "revision": "definition-1" }],
+      "inherit": { "avatar": "inherit", "promptSections": "none", "rules": "none", "skills": "none", "tools": "none", "mcpServers": "none", "runtimeDefaults": "none" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+      "contract": "cordisx.agent-definition/v1",
+      "schemaVersion": 1,
+      "identity": { "agentId": "child-none", "revision": "definition-2" },
+      "extends": [{ "agentId": "parent-asset", "revision": "definition-1" }],
+      "inherit": { "avatar": "none", "promptSections": "none", "rules": "none", "skills": "none", "tools": "none", "mcpServers": "none", "runtimeDefaults": "none" }
+    }
+  ],
+  "assertions": [
+    { "agentId": "child-explicit", "revision": "definition-2", "expected": { "kind": "definition", "ref": "avatar-definitions:child", "schema": "oneworks.avatar", "definitionVersion": 1 } },
+    { "agentId": "child-inherit", "revision": "definition-2", "expected": { "kind": "asset", "ref": "avatar-assets:parent" } },
+    { "agentId": "child-fallback", "revision": "definition-2", "expected": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:14:child-fallback" } },
+    { "agentId": "child-none", "revision": "definition-2", "expected": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:10:child-none" } }
+  ]
+}

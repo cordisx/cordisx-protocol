@@ -1,0 +1,13 @@
+{
+  "case": "stability",
+  "observations": [
+    { "agentId": "reviewer", "roomId": "room-a", "memberId": "member-a", "runId": "run-1", "taskId": "task-1", "sessionId": "session-1", "restart": 0, "time": "2026-08-30T01:00:00Z", "random": 0.125, "displayName": "Reviewer", "revision": "definition-1" },
+    { "agentId": "reviewer", "roomId": "room-b", "memberId": "member-z", "runId": "run-7", "taskId": "task-9", "sessionId": "session-9", "restart": 3, "time": "2026-08-30T09:00:00Z", "random": 0.875, "displayName": "Renamed Reviewer", "revision": "definition-8" }
+  ],
+  "expected": {
+    "kind": "generated",
+    "algorithm": "oneworks-avatar-seed",
+    "algorithmVersion": 1,
+    "seed": "cordisx.agent-avatar.seed/v1:agent-definition:8:reviewer"
+  }
+}

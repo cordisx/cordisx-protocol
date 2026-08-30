@@ -52,6 +52,8 @@ Specified areas:
 - `agent-loop/`: Host-bound room-neutral Agent definitions, self-contained
   inheritance catalogs, task bindings, create-or-bind/send operations, and
   proactive message/approval/lifecycle events version 1.
+- `agent-avatar/`: stable generated, asset, definition, and reserved platform
+  Agent identity references with canonical seed and inheritance semantics.
 - `plugin-configuration/`: Standard Schema validation, Schemastery form
   metadata, profile/plugin/generation scope, revision-fenced mutations,
   live/restart application, last-good rollback, secret handling, and

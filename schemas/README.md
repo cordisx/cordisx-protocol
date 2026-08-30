@@ -174,6 +174,10 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   message/approval/lifecycle events with replay/live paging; and
 - `agent-loop-bound-client.v1.schema.json`: the fiber-owned injected Agent
   Loop client surface;
+- `agent-avatar.v1.schema.json` and
+  `agent-avatar-resolution-result.v1.schema.json`: stable generated, asset,
+  definition, and reserved platform Agent avatar references plus a typed
+  resolver boundary with qualified opaque refs only;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

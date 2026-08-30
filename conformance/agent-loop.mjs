@@ -4,11 +4,13 @@ import { fileURLToPath } from 'node:url'
 import { isDeepStrictEqual } from 'node:util'
 import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
+import { resolveAgentDefinitionAvatar } from '../runtime/agent-avatar.v1.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const schemaNames = [
   'ui-common.v1.schema.json',
   'platform-model.v1.schema.json',
+  'agent-avatar.v1.schema.json',
   'agent-conversation-shell-common.v1.schema.json',
   'agent-loop-common.v1.schema.json',
   'agent-definition.v1.schema.json',
@@ -171,11 +173,21 @@ function resolveCatalog(command) {
     if (cache.has(key)) return cache.get(key)
     const definition = byIdentity.get(key)
     let inherited
+    const parentAvatars = []
     for (const parentIdentity of definition.extends ?? []) {
       const parent = resolve(parentIdentity)
+      parentAvatars.push(parent.avatar)
       inherited = inherited === undefined ? parent : mergeEffective(inherited, parent, parentMergeModes)
     }
-    const effective = mergeEffective(inherited, definition, definition.inherit)
+    const effective = {
+      ...mergeEffective(inherited, definition, definition.inherit),
+      avatar: resolveAgentDefinitionAvatar({
+        agentId: definition.identity.agentId,
+        inherit: definition.inherit.avatar ?? 'none',
+        ...(definition.avatar === undefined ? {} : { avatar: definition.avatar }),
+        ...(parentAvatars.length === 0 ? {} : { parentAvatars }),
+      }),
+    }
     cache.set(key, effective)
     return effective
   }

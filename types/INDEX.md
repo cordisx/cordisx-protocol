@@ -25,6 +25,11 @@ credential, platform, or task type.
 
 Run `npm run typecheck` to compile the strict positive and negative fixtures.
 
+`agent-avatar.v1.d.ts` exposes the closed immutable Agent avatar reference
+union, canonical seed inputs and helpers, Agent Definition fallback input, and
+typed resolution result. Qualified refs expose no URL, path, bytes, DOM, CSS,
+callback, or Host rendering handle.
+
 `agent-conversation-shell.v1.d.ts` exposes only the data source, ordered runtime
 subscription handle, and disposal lifetime for the Host-owned conversation shell.
 
