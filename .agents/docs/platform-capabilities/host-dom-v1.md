@@ -36,15 +36,21 @@ handle even if the other Host DOM capability remains granted.
 | read | `read-text` | bounded user-visible text; Host redacts secrets/private regions and reports truncation/redaction | no mutation | sensitive |
 | read | `read-attributes` | requested values from the closed safe attribute allowlist only | no mutation | sensitive |
 | read | `read-state` | bounded visibility, enabled, focus, expanded, selected, and pressed state | no mutation | sensitive |
-| modify | `set-text` | replaces bounded visible text at an allowed opaque node | Host snapshots/restores or removes the plugin-owned mutation on lease cleanup | high-risk |
-| modify | `set-attribute` | sets one closed safe semantic/value/accessibility attribute | Host restores the prior value on cleanup; `class`, `style`, `role`, and event attributes are forbidden | high-risk |
-| modify | `insert-owned-structured-child` | inserts only Host-rendered structured text/action data owned by the same plugin | child is removed automatically on lease loss | high-risk |
-| modify | `remove-owned-child` | removes one child created by the same plugin and handle | idempotent; cannot remove native or another owner's child | high-risk |
-| modify | `focus` | requests transient focus for an allowed opaque node | transient; no synthetic event or callback is returned | high-risk |
+| modify | `set-text` | replaces bounded visible text at the acquired root or an allowed opaque node | Host snapshots/restores or removes the plugin-owned mutation on lease cleanup | high-risk |
+| modify | `set-attribute` | sets one closed safe semantic/value/accessibility attribute at the acquired root or an allowed opaque node | Host restores the prior value on cleanup; `class`, `style`, `role`, and event attributes are forbidden | high-risk |
+| modify | `insert-owned-structured-child` | inserts only Host-rendered structured text/action data at the acquired root or an allowed opaque node, owned by the same plugin | child is removed automatically on lease loss | high-risk |
+| modify | `remove-owned-child` | removes one child created by the same plugin and handle from the acquired root or an allowed opaque node | idempotent; cannot remove native or another owner's child | high-risk |
+| modify | `focus` | requests transient focus for the acquired root or an allowed opaque node | transient; no synthetic event or callback is returned | high-risk |
 
 All arrays, strings, depths, attribute sets, projections, and child documents
 are schema bounded. Read results state whether content was truncated or
-redacted. Node references never encode a selector or renderer identity.
+redacted. Omitting `node` from a read or modify request targets only the exact
+canonical root already bound to that handle; it never means the document,
+current focus, a selector, or an inferred descendant. A modify-only handle can
+therefore mutate its acquired root without acquiring `ui.host-dom.read` or
+receiving a node reference. Supplying `node` retains the same owner, root,
+handle, lease, and generation fences. Node references never encode a selector
+or renderer identity.
 Structured actions use an owner-local command id. The bound Host resolves it
 under the current plugin principal and its public command registry; qualified
 cross-owner ids and private Host commands are invalid. Arguments are bounded
@@ -79,7 +85,8 @@ owned children are rolled back.
 
 Conformance validates valid acquisition/read/modify documents, the four trust
 states, exact Certified binding, catalog completeness, scope families, and
-lease invalidation. Negative vectors cover selectors, raw nodes/HTML, scripts,
+lease invalidation. It includes modify-only exact-root access without a read
+lease. Negative vectors cover selectors, null/raw nodes/HTML, scripts,
 styles/event handlers, private bridges, Official/Certified self-claims,
 unknown/cross roots, scope widening, stale handles, generations, persistent
 denial, disable, and uninstall.

@@ -140,3 +140,5 @@ matching, persistent-deny precedence, explicit decisions, exact leases, and
 artifact/certification/scope/Host-runtime-module generation/disable/uninstall
 invalidation. Bridge vectors reject unknown or cross-root access, widening,
 selectors, raw nodes/HTML, script, style/event handlers, and private bridges.
+Modify-only conformance additionally proves that an omitted node targets only
+the acquired canonical root without granting read access.

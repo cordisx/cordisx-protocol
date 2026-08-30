@@ -204,7 +204,8 @@ Permission v4 vectors live in `platform/permissions-v4/valid` and
 `platform/permissions-v4/invalid`. They cover manifest v5, the Host root
 catalog, bound opaque-handle requests/results, closed read and modify
 operations, single-capability-family leases, bounded/redacted projections,
-owner-local commands, and structured Host-owned children.
+owner-local commands, structured Host-owned children, and modify-only exact-root
+requests that neither acquire read authority nor mint a node reference.
 Negative vectors cover unknown operations/roots, cross-root and scope widening,
 selectors, raw nodes/HTML, style/event handlers, scripts, private bridges,
 Official/Certified self-claims, persistent denial, exact artifact/certification
