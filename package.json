@@ -11,6 +11,7 @@
     "README.md",
     "LICENSE",
     "runtime/agent-avatar.v1.js",
+    "schemas/README.md",
     "schemas/*.json",
     "types/agent-avatar.v1.d.ts",
     "types/agent-conversation-shell.v1.d.ts",
