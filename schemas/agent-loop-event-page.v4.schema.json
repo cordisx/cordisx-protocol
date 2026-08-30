@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-page.v4.schema.json",
+  "title": "CordisX Agent Loop Event Page v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscription", "afterSequence", "phase", "events", "nextAfterSequence", "hasMore"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-page.v4.schema.json" },
+    "contract": { "const": "cordisx.agent-loop-event-page/v4" },
+    "schemaVersion": { "const": 4 },
+    "subscription": { "$ref": "agent-loop-event-subscription.v4.schema.json" },
+    "afterSequence": { "type": "integer", "minimum": -1 },
+    "phase": { "enum": ["replay", "live"] },
+    "events": { "type": "array", "maxItems": 256, "items": { "$ref": "agent-loop-event.v4.schema.json" } },
+    "nextAfterSequence": { "type": "integer", "minimum": -1 },
+    "hasMore": { "type": "boolean" }
+  }
+}

@@ -204,6 +204,17 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   adds durable request/cancel member-self-introduction intents, stable accepted
   turn/message identities, and causation-fenced introduction/cancellation
   events without a prompt, body, model, response, or consumer-time field;
+- `agent-loop-{common,task-binding,command,result,event,event-subscription,event-page,bound-client}.v4.schema.json`:
+  the immutable additive Agent Loop v4 successor. It preserves every v3 byte
+  while the v4 wire surface applies the intentional approval corrections and
+  required accepted-result causation. Approval commands/results use terminal-state
+  `approved`, `denied`, and `cancelled` tokens, and allowed-authorization
+  unavailability adds `binding-closed` for approval and self-introduction.
+  Accepted approval and request/cancel member-self-introduction results carry
+  structured causation whose
+  `operationId` exactly equals that result's own `commandId`; a cancellation
+  still uses `requestOperationId` to identify the original request. All
+  non-accepted results and accepted create/bind/send results forbid causation;
 - `agent-loop-task-details-common.v2.schema.json`: canonical Host or external
   details URL used by accepted create-or-bind results;
 - `agent-avatar.v1.schema.json` and

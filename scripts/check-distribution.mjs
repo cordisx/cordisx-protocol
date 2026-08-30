@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -14,6 +15,7 @@ const expectedExports = [
   './agent-loop/v1',
   './agent-loop/v2',
   './agent-loop/v3',
+  './agent-loop/v4',
   './connector-service/v1',
   './host-dom/v1',
 ].sort()
@@ -33,9 +35,19 @@ const expectedFiles = [
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
+  'types/agent-loop.v4.d.ts',
   'types/connector-service.v1.d.ts',
   'types/host-dom.v1.d.ts',
 ].sort()
+const frozenAgentLoopFiles = [
+  ...readdirSync(join(root, 'schemas'))
+    .filter((name) => /^agent-loop-.*\.v[123]\.schema\.json$/.test(name))
+    .map((name) => `schemas/${name}`),
+  'types/agent-loop.v1.d.ts',
+  'types/agent-loop.v2.d.ts',
+  'types/agent-loop.v3.d.ts',
+].sort()
+const frozenAgentLoopDigest = '8eff903c47166aa358d31cce8d9d8a1cfe693f3fe6558ac332006fe71cb6f852'
 
 function run(command, arguments_, cwd = root) {
   const result = spawnSync(command, arguments_, { cwd, encoding: 'utf8' })
@@ -51,6 +63,19 @@ function packEntries(output) {
   }
   return entries
 }
+
+function fileDigest(directory, files) {
+  const digest = createHash('sha256')
+  for (const file of files) {
+    digest.update(file)
+    digest.update('\0')
+    digest.update(readFileSync(join(directory, file)))
+    digest.update('\0')
+  }
+  return digest.digest('hex')
+}
+
+if (fileDigest(root, frozenAgentLoopFiles) !== frozenAgentLoopDigest) throw new Error('frozen AgentLoop v1/v2/v3 package bytes drifted')
 
 if (JSON.stringify(Object.keys(manifest.exports).sort()) !== JSON.stringify(expectedExports)) {
   throw new Error(`unexpected public exports: ${JSON.stringify(Object.keys(manifest.exports).sort())}`)
@@ -78,6 +103,7 @@ import type { AgentConversationApprovalAction, AgentConversationApprovalItem, Ag
 import type { AgentLoopCommand as AgentLoopCommandV1, BoundAgentLoopClient as BoundAgentLoopClientV1 } from '@cordisx/protocol/agent-loop/v1'
 import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDelivery, AgentLoopDeliveryDisposition, AgentLoopEvent as AgentLoopEventV2, AgentLoopOperationId, AgentLoopOperationUnavailableCode, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v2'
 import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand as AgentLoopCommandV3, AgentLoopEvent as AgentLoopEventV3, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionIntent, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding as AgentLoopTaskBindingV3, BoundAgentLoopClient as BoundAgentLoopClientV3 } from '@cordisx/protocol/agent-loop/v3'
+import type { AgentLoopApprovalDecisionResult as AgentLoopApprovalDecisionResultV4, AgentLoopApprovalDecisionUnavailableCode as AgentLoopApprovalDecisionUnavailableCodeV4, AgentLoopCancelMemberSelfIntroductionResult as AgentLoopCancelMemberSelfIntroductionResultV4, AgentLoopCommand as AgentLoopCommandV4, AgentLoopCreateOrBindResult as AgentLoopCreateOrBindResultV4, AgentLoopEvent as AgentLoopEventV4, AgentLoopMemberSelfIntroductionUnavailableCode as AgentLoopMemberSelfIntroductionUnavailableCodeV4, AgentLoopRequestMemberSelfIntroductionResult as AgentLoopRequestMemberSelfIntroductionResultV4, AgentLoopSendResult as AgentLoopSendResultV4, AgentLoopTaskBinding as AgentLoopTaskBindingV4, BoundAgentLoopClient as BoundAgentLoopClientV4 } from '@cordisx/protocol/agent-loop/v4'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
 const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
 const canonical = canonicalizeAgentAvatarSeed({ namespace: 'agent-definition', agentId: ' reviewer ' })
@@ -99,6 +125,8 @@ declare const agentLoop: BoundAgentLoopClient
 declare const legacyAgentLoop: BoundAgentLoopClientV1
 declare const agentLoopV3: BoundAgentLoopClientV3
 declare const approvalBindingV3: AgentLoopTaskBindingV3
+declare const agentLoopV4: BoundAgentLoopClientV4
+declare const bindingV4: AgentLoopTaskBindingV4
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient
@@ -397,6 +425,8 @@ for (const introductionResult of [declaredIntroductionRequestResult, declaredInt
     introductionResult.turn satisfies string
     introductionResult.messageId satisfies string
     introductionResult.delivery.disposition satisfies AgentLoopDeliveryDisposition
+    // @ts-expect-error frozen AgentLoop v3 accepted results predate result causation
+    introductionResult.causation
   } else if (introductionResult.status === 'conflict') {
     introductionResult.code satisfies AgentLoopMemberSelfIntroductionConflictCode
     introductionResult.authorization.state satisfies 'allowed'
@@ -410,6 +440,163 @@ for (const introductionResult of [declaredIntroductionRequestResult, declaredInt
   }
 }
 if (cancelledIntroduction.status === 'accepted') cancelledIntroduction.requestOperationId satisfies AgentLoopOperationId
+const selfIntroductionRequestCommandV4 = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v4.schema.json',
+  contract: 'cordisx.agent-loop-command/v4',
+  schemaVersion: 4,
+  commandId: 'introduction-request-v4-installed-consumer',
+  type: 'request-member-self-introduction',
+  binding: bindingV4,
+  participantId: 'participant-v4-installed-1',
+  memberId: 'member-v4-installed-1',
+  runId: 'run-v4-installed-1',
+  intent: { kind: 'member-self-introduction', audience: 'room', output: 'assistant-message' },
+} satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction requires the full generation-fenced task binding
+const identityOnlySelfIntroductionV4 = { ...selfIntroductionRequestCommandV4, binding: bindingV4.binding } satisfies AgentLoopCommandV4
+const selfIntroductionCancelCommandV4 = {
+  $schema: selfIntroductionRequestCommandV4.$schema,
+  contract: selfIntroductionRequestCommandV4.contract,
+  schemaVersion: selfIntroductionRequestCommandV4.schemaVersion,
+  commandId: 'introduction-cancel-v4-installed-consumer',
+  type: 'cancel-member-self-introduction',
+  binding: bindingV4,
+  participantId: selfIntroductionRequestCommandV4.participantId,
+  memberId: selfIntroductionRequestCommandV4.memberId,
+  runId: selfIntroductionRequestCommandV4.runId,
+  requestOperationId: selfIntroductionRequestCommandV4.commandId,
+} satisfies AgentLoopCommandV4
+// @ts-expect-error v4 commands never accept consumer time
+const selfIntroductionV4WithIssuedAt = { ...selfIntroductionRequestCommandV4, issuedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommandV4
+// @ts-expect-error provider observation time remains private
+const selfIntroductionV4WithFirstObservedAt = { ...selfIntroductionRequestCommandV4, firstObservedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommandV4
+// @ts-expect-error provider closure time remains private
+const selfIntroductionV4WithClosedAt = { ...selfIntroductionRequestCommandV4, closedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction commands never accept a prompt
+const selfIntroductionV4WithPrompt = { ...selfIntroductionRequestCommandV4, prompt: 'Introduce yourself' } satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction commands never accept a hidden prompt
+const selfIntroductionV4WithHiddenPrompt = { ...selfIntroductionRequestCommandV4, hiddenPrompt: 'Introduce yourself' } satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction commands never accept a body
+const selfIntroductionV4WithBody = { ...selfIntroductionRequestCommandV4, body: 'Introduce yourself' } satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction commands never accept deterministic text
+const selfIntroductionV4WithText = { ...selfIntroductionRequestCommandV4, text: 'Introduce yourself' } satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction commands never accept canned content
+const selfIntroductionV4WithContent = { ...selfIntroductionRequestCommandV4, content: [{ kind: 'text', text: 'Introduce yourself' }] } satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction commands never select a model
+const selfIntroductionV4WithModel = { ...selfIntroductionRequestCommandV4, model: 'provider/model' } satisfies AgentLoopCommandV4
+// @ts-expect-error v4 self-introduction commands never carry a canned response
+const selfIntroductionV4WithResponse = { ...selfIntroductionRequestCommandV4, response: 'Hello from the member.' } satisfies AgentLoopCommandV4
+const acceptedSelfIntroductionV4 = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v4.schema.json',
+  contract: 'cordisx.agent-loop-result/v4',
+  schemaVersion: 4,
+  commandId: selfIntroductionRequestCommandV4.commandId,
+  type: 'request-member-self-introduction',
+  status: 'accepted',
+  authorization: { capability: 'turns.introduce', state: 'allowed', code: 'allowed' },
+  binding: bindingV4,
+  participantId: selfIntroductionRequestCommandV4.participantId,
+  memberId: selfIntroductionRequestCommandV4.memberId,
+  runId: selfIntroductionRequestCommandV4.runId,
+  turn: 'turn-v4-installed-consumer',
+  messageId: 'message-v4-installed-consumer',
+  causation: { operationId: selfIntroductionRequestCommandV4.commandId },
+  delivery: { disposition: 'executed' },
+} satisfies AgentLoopRequestMemberSelfIntroductionResultV4
+const acceptedSelfIntroductionCancelV4 = {
+  ...acceptedSelfIntroductionV4,
+  commandId: selfIntroductionCancelCommandV4.commandId,
+  type: 'cancel-member-self-introduction',
+  requestOperationId: selfIntroductionCancelCommandV4.requestOperationId,
+  causation: { operationId: selfIntroductionCancelCommandV4.commandId },
+  delivery: { disposition: 'reconciled' },
+} satisfies AgentLoopCancelMemberSelfIntroductionResultV4
+for (const result of [acceptedSelfIntroductionV4, acceptedSelfIntroductionCancelV4]) {
+  result.binding.task satisfies string
+  result.turn satisfies string
+  result.messageId satisfies string
+  result.delivery.disposition satisfies AgentLoopDeliveryDisposition
+  result.causation.operationId satisfies AgentLoopOperationId
+  if (result.causation.operationId !== result.commandId) throw new Error('accepted v4 self-introduction result causation must equal its own commandId')
+}
+const requestedIntroductionV4 = await agentLoopV4.requestMemberSelfIntroduction(selfIntroductionRequestCommandV4)
+const cancelledIntroductionV4 = await agentLoopV4.cancelMemberSelfIntroduction(selfIntroductionCancelCommandV4)
+for (const result of [requestedIntroductionV4, cancelledIntroductionV4]) {
+  if (result.status === 'accepted') {
+    result.turn satisfies string
+    result.messageId satisfies string
+    result.delivery.disposition satisfies AgentLoopDeliveryDisposition
+    result.causation.operationId satisfies AgentLoopOperationId
+  } else {
+    // @ts-expect-error non-accepted v4 self-introduction results expose no causation
+    result.causation
+    if (result.status === 'unavailable' && 'code' in result) result.code satisfies AgentLoopMemberSelfIntroductionUnavailableCodeV4
+  }
+}
+const selfIntroductionBindingClosedV4 = 'binding-closed' satisfies AgentLoopMemberSelfIntroductionUnavailableCodeV4
+declare const createResultV4: AgentLoopCreateOrBindResultV4
+declare const sendResultV4: AgentLoopSendResultV4
+if (createResultV4.status === 'accepted') {
+  // @ts-expect-error existing accepted operations remain v3-shaped in v4
+  createResultV4.causation
+}
+if (sendResultV4.status === 'accepted') {
+  // @ts-expect-error existing accepted operations remain v3-shaped in v4
+  sendResultV4.causation
+}
+const approvalCommandV4 = {
+  $schema: selfIntroductionRequestCommandV4.$schema,
+  contract: selfIntroductionRequestCommandV4.contract,
+  schemaVersion: selfIntroductionRequestCommandV4.schemaVersion,
+  commandId: 'approval-v4-installed-consumer',
+  type: 'approval-decision',
+  binding: bindingV4,
+  turn: 'turn-approval-v4-installed-consumer',
+  approvalId: 'approval-v4-installed-consumer',
+  decision: 'approved',
+} satisfies AgentLoopCommandV4
+const acceptedApprovalResultV4 = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v4.schema.json',
+  contract: 'cordisx.agent-loop-result/v4',
+  schemaVersion: 4,
+  commandId: approvalCommandV4.commandId,
+  type: 'approval-decision',
+  status: 'accepted',
+  authorization: { capability: 'approvals.decide', state: 'allowed', code: 'allowed' },
+  binding: bindingV4,
+  turn: approvalCommandV4.turn,
+  approvalId: approvalCommandV4.approvalId,
+  decision: approvalCommandV4.decision,
+  causation: { operationId: approvalCommandV4.commandId },
+  delivery: { disposition: 'executed' },
+} satisfies AgentLoopApprovalDecisionResultV4
+if (acceptedApprovalResultV4.causation.operationId !== acceptedApprovalResultV4.commandId) throw new Error('accepted v4 approval result causation must equal its own commandId')
+const resolvedApprovalEventV4 = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json',
+  contract: 'cordisx.agent-loop-event/v4',
+  schemaVersion: 4,
+  eventId: 'approval-event-v4-installed-consumer',
+  binding: bindingV4.binding,
+  sequence: 15,
+  occurredAt: '2026-08-31T00:00:00.000Z',
+  causation: { operationId: approvalCommandV4.commandId },
+  type: 'approval',
+  turn: approvalCommandV4.turn,
+  approval: { approvalId: approvalCommandV4.approvalId, kind: 'command', state: 'resolved', outcome: approvalCommandV4.decision },
+} satisfies AgentLoopEventV4
+resolvedApprovalEventV4.causation.operationId satisfies AgentLoopOperationId
+const approvalResultV4 = await agentLoopV4.decideApproval(approvalCommandV4)
+if (approvalResultV4.status === 'accepted') {
+  approvalResultV4.decision satisfies 'approved' | 'denied' | 'cancelled'
+  approvalResultV4.causation.operationId satisfies AgentLoopOperationId
+  approvalResultV4.delivery.disposition satisfies AgentLoopDeliveryDisposition
+} else {
+  // @ts-expect-error non-accepted v4 approval results expose no causation
+  approvalResultV4.causation
+  if (approvalResultV4.status === 'unavailable' && 'code' in approvalResultV4) approvalResultV4.code satisfies AgentLoopApprovalDecisionUnavailableCodeV4
+}
+const bindingClosedV4 = 'binding-closed' satisfies AgentLoopApprovalDecisionUnavailableCodeV4
+agentLoopV4.schemaVersion satisfies 4
 const selfIntroductionMessageEvent = {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v3.schema.json',
   contract: 'cordisx.agent-loop-event/v3',
@@ -466,6 +653,7 @@ void legacyShell
 void shellV3
 void legacyParticipant
 void agentLoopV3
+void agentLoopV4
 void selfIntroductionMessageEvent
 void selfIntroductionWithIssuedAt
 void selfIntroductionWithFirstObservedAt
@@ -477,6 +665,19 @@ void selfIntroductionWithText
 void selfIntroductionWithContent
 void selfIntroductionWithModel
 void selfIntroductionWithResponse
+void selfIntroductionV4WithIssuedAt
+void selfIntroductionV4WithFirstObservedAt
+void selfIntroductionV4WithClosedAt
+void selfIntroductionV4WithPrompt
+void selfIntroductionV4WithHiddenPrompt
+void selfIntroductionV4WithBody
+void selfIntroductionV4WithText
+void selfIntroductionV4WithContent
+void selfIntroductionV4WithModel
+void selfIntroductionV4WithResponse
+void identityOnlySelfIntroductionV4
+void selfIntroductionBindingClosedV4
+void bindingClosedV4
 void presentRoomDescription
 void roomSelectionWithDescriptionV3
 void newRoomLeadingVisual
@@ -495,6 +696,7 @@ void forgedChatroomMessageV3
   if (installed.version !== manifest.version) throw new Error('consumer resolved the wrong package version')
   if (JSON.stringify(installed.exports) !== JSON.stringify(manifest.exports)) throw new Error('consumer resolved different public exports')
   const installedRoot = join(consumer, 'node_modules/@cordisx/protocol')
+  if (fileDigest(installedRoot, frozenAgentLoopFiles) !== frozenAgentLoopDigest) throw new Error('installed frozen AgentLoop v1/v2/v3 package bytes drifted')
   for (const file of expectedFiles) readFileSync(join(installedRoot, file))
   for (const file of expectedFiles.filter(file => file.startsWith('schemas/') && file.endsWith('.json'))) {
     JSON.parse(readFileSync(join(installedRoot, file), 'utf8'))
