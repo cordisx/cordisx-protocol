@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -10,9 +10,13 @@ const expectedFiles = [
   'LICENSE',
   'README.md',
   'package.json',
+  'schemas/README.md',
+  ...readdirSync(join(root, 'schemas'), { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+    .map((entry) => `schemas/${entry.name}`),
   'types/agent-conversation-shell.v1.d.ts',
   'types/connector-service.v1.d.ts',
-]
+].sort()
 
 function run(command, arguments_, cwd = root) {
   const result = spawnSync(command, arguments_, { cwd, encoding: 'utf8' })
@@ -42,6 +46,13 @@ try {
   const installed = JSON.parse(readFileSync(join(consumer, 'node_modules/@cordisx/protocol/package.json'), 'utf8'))
   if (installed.version !== manifest.version) throw new Error('consumer resolved the wrong package version')
   if (JSON.stringify(installed.exports) !== JSON.stringify(manifest.exports)) throw new Error('consumer resolved different public exports')
+  for (const schema of [
+    'icon-theme-common.v1.schema.json',
+    'icon-theme-provider-registration.v1.schema.json',
+    'marketplace-certified-permission-projection.v1.schema.json',
+    'permission-capability-catalog.v2.schema.json',
+    'ui-common.v1.schema.json',
+  ]) JSON.parse(readFileSync(join(consumer, 'node_modules/@cordisx/protocol/schemas', schema), 'utf8'))
   console.log(JSON.stringify({ npmVersion: run(process.execPath, [process.env.npm_execpath ?? 'node_modules/npm/bin/npm-cli.js', '--version']).trim(), files: actualFiles, package: `${manifest.name}@${manifest.version}`, integrity: packedArchive[0].integrity, shasum: packedArchive[0].shasum, consumerImports: Object.keys(manifest.exports) }))
 } finally {
   rmSync(temp, { recursive: true, force: true })
