@@ -94,8 +94,9 @@ page stream with unsubscribe/dispose lifetime, replay through the fixed
 snapshot before live pages, and no caller identity construction by plugins.
 Agent Loop conformance covers the bounded self-contained definition catalog,
 field inheritance vocabulary, exact task binding and authorization
-correlation, text/image-reference content, proactive message/approval/lifecycle
-events, replay/live ordering, and terminal closure. It rejects missing,
+correlation, per-client command idempotency, independent multi-binding fan-out,
+text/image-reference content, proactive message/approval/lifecycle events,
+per-binding-generation replay/live ordering, and terminal closure. It rejects missing,
 cyclic, duplicate, or unused definitions and Room, path, URL, callback, raw
 bridge, secret, and credential fields. It is Protocol-only evidence and does
 not prove Host/Chatroom wiring or image rendering.

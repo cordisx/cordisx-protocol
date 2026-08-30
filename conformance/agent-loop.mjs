@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isDeepStrictEqual } from 'node:util'
 import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
@@ -45,6 +46,7 @@ const validators = {
 const errorsOf = validator => (validator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
 const identityKey = identity => `${identity?.agentId}\u0000${identity?.revision}`
 const sameBinding = (left, right) => left?.bindingId === right?.bindingId && left?.generation === right?.generation
+const bindingKey = binding => `${binding?.bindingId}\u0000${binding?.generation}`
 
 function validateDefinition(definition) {
   const errors = []
@@ -291,8 +293,62 @@ function validateComplete(vector) {
   return errors
 }
 
+function validateIdempotency(vector) {
+  const errors = []
+  const firstByCommandId = new Map()
+  let replays = 0
+  for (let index = 0; index < (vector.exchanges?.length ?? 0); index += 1) {
+    const exchange = vector.exchanges[index]
+    errors.push(...validateExchange(exchange.command, exchange.result).map(error => `exchange[${index}] ${error}`))
+    const first = firstByCommandId.get(exchange.command?.commandId)
+    if (first === undefined) {
+      firstByCommandId.set(exchange.command?.commandId, exchange)
+      continue
+    }
+    replays += 1
+    if (!isDeepStrictEqual(exchange.command, first.command)) errors.push(`exchange[${index}] reuses commandId for a different command`)
+    if (!isDeepStrictEqual(exchange.result, first.result)) errors.push(`exchange[${index}] idempotent replay changes result`)
+  }
+  if (replays === 0) errors.push('idempotency case requires at least one replay')
+  return errors
+}
+
+function validateFanOut(vector) {
+  const errors = []
+  const commandIds = new Set()
+  const bindingKeys = new Set()
+  const streamBindings = new Set()
+  const subscriptionIds = new Set()
+  for (let index = 0; index < (vector.exchanges?.length ?? 0); index += 1) {
+    const exchange = vector.exchanges[index]
+    errors.push(...validateExchange(exchange.command, exchange.result).map(error => `exchange[${index}] ${error}`))
+    if (exchange.command?.type !== 'send') errors.push(`exchange[${index}] fan-out operation must be send`)
+    if (commandIds.has(exchange.command?.commandId)) errors.push(`exchange[${index}] fan-out commandId is not distinct`)
+    commandIds.add(exchange.command?.commandId)
+    const key = bindingKey(exchange.command?.binding?.binding)
+    if (bindingKeys.has(key)) errors.push(`exchange[${index}] fan-out binding is not distinct`)
+    bindingKeys.add(key)
+  }
+  for (let index = 0; index < (vector.streams?.length ?? 0); index += 1) {
+    const pages = vector.streams[index]?.pages
+    errors.push(...validatePages(pages).map(error => `stream[${index}] ${error}`))
+    const subscription = pages?.[0]?.subscription
+    const key = bindingKey(subscription?.binding)
+    if (!bindingKeys.has(key)) errors.push(`stream[${index}] does not match a fan-out binding`)
+    if (streamBindings.has(key)) errors.push(`stream[${index}] duplicates a binding stream`)
+    streamBindings.add(key)
+    if (subscriptionIds.has(subscription?.subscriptionId)) errors.push(`stream[${index}] subscriptionId is not distinct`)
+    subscriptionIds.add(subscription?.subscriptionId)
+  }
+  if (bindingKeys.size < 2) errors.push('fan-out case requires at least two bindings')
+  if (streamBindings.size !== bindingKeys.size) errors.push('fan-out bindings and subscription streams are not one-to-one')
+  return errors
+}
+
 const caseValidators = {
   complete: validateComplete,
+  idempotency: validateIdempotency,
+  'fan-out': validateFanOut,
   definition: vector => validateDefinition(vector.value),
   binding: vector => validators.binding(vector.value) ? [] : errorsOf(validators.binding),
   command: vector => validateCommand(vector.value),

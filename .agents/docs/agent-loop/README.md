@@ -63,6 +63,34 @@ The Host resolves `cwd` and any workspace/config root privately before task
 creation. No workspace alias, path, cwd, or configuration root is an Agent Loop
 field.
 
+### Multiplexing and command idempotency
+
+One `BoundAgentLoopClient` may own multiple active bindings for different
+definitions or tasks. A consumer fans one input out by issuing one `send` per
+exact binding, with a distinct `commandId` for each binding. Operations on one
+binding do not serialize or advance another binding.
+
+Within one bound-client lifetime, `commandId` is an idempotency key as well as
+a correlation key. The Host records the first complete command and its result
+before exposing the result. Concurrent or later structurally identical submissions
+with the same `commandId` coalesce to that one execution and return the same
+result, including the same accepted binding or `messageId`. This applies to
+accepted, denied, and unavailable results. A consumer that intentionally retries
+after a denied or unavailable result uses a new `commandId`.
+
+Reusing a `commandId` for any non-identical command is invalid. The Host rejects
+it before task creation, binding, or message submission; it does not reinterpret
+the existing authorization result as authority for the different command. The
+idempotency ledger is scoped to the exact injected client and is retained until
+`dispose`; identifiers from different bound clients do not share a ledger.
+
+One client may hold multiple subscriptions concurrently. Each subscription is
+scoped to its exact `(bindingId, generation)`, and its `afterSequence`,
+`snapshotSequence`, replay/live phase, and unsubscribe lifetime are independent.
+The same `bindingId` at a different generation is a different event stream.
+Unsubscribing one handle does not affect sibling handles; client `dispose`
+terminates all of them.
+
 ## Content and proactive events
 
 Commands and message events carry ordered `text` or opaque `image-ref` content
@@ -77,8 +105,8 @@ attachment placeholder. It must not be discarded, converted to a local path or
 base64 payload, or reported as rendered.
 
 `agent-loop-event/v1` proactively reports ordered message, approval, and
-lifecycle facts for one exact binding. Approval events are observations of the
-existing Host/runtime approval state; they do not grant authority. Pages replay
+lifecycle facts for one exact binding generation. Approval events are
+observations of the existing Host/runtime approval state; they do not grant authority. Pages replay
 through a fixed snapshot sequence before live events. `binding.closed` is
 terminal, subscription unsubscribe is explicit, and owner disposal terminates
 the stream.

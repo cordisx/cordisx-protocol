@@ -66,6 +66,7 @@ interface AgentLoopCommandBase {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v1.schema.json'
   contract: 'cordisx.agent-loop-command/v1'
   schemaVersion: 1
+  /** Per-bound-client idempotency key, retained until client disposal. */
   commandId: string
 }
 
@@ -176,8 +177,11 @@ export interface BoundAgentLoopClient {
   readonly $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-bound-client.v1.schema.json'
   readonly contract: 'cordisx.bound-agent-loop-client/v1'
   readonly schemaVersion: 1
+  /** Supports multiple definitions and active task bindings in one client lifetime. */
   createOrBind(command: Extract<AgentLoopCommand, { type: 'create-or-bind' }>): Promise<AgentLoopCreateOrBindResult>
+  /** Send independently to one exact active binding. */
   send(command: Extract<AgentLoopCommand, { type: 'send' }>): Promise<AgentLoopSendResult>
+  /** Each accepted handle owns an independent binding-generation cursor. */
   subscribe(binding: AgentLoopTaskBinding, afterSequence: number): Promise<AgentLoopSubscribeRuntimeResult>
   dispose(): void
 }

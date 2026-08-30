@@ -10,7 +10,10 @@
     "contract": { "const": "cordisx.agent-loop-event-subscription/v1" },
     "schemaVersion": { "const": 1 },
     "subscriptionId": { "$ref": "agent-loop-common.v1.schema.json#/$defs/opaqueHandle" },
-    "binding": { "$ref": "agent-loop-common.v1.schema.json#/$defs/bindingIdentity" },
+    "binding": {
+      "$ref": "agent-loop-common.v1.schema.json#/$defs/bindingIdentity",
+      "description": "Exact binding generation that independently scopes this subscription and its cursor."
+    },
     "afterSequence": { "type": "integer", "minimum": -1 },
     "snapshotSequence": { "type": "integer", "minimum": 0 }
   }
