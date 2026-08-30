@@ -1,15 +1,20 @@
-# Agent Loop v1, v2, and v3
+# Agent Loop v1, v2, v3, and v4
 
-Status: local additive Protocol candidate. Version 1 remains the formal legacy
-Host-bound, room-neutral contract. Version 2 adds durable delivery, canonical
-task-details URLs, and operation causation without changing v1. Both versions
-define data contracts only; neither defines Chatroom, UI, DOM, workspace
-resolution, external channels, provider transport, credentials, or a new
-permission system.
+Status: v4 local additive Protocol candidate. Versions 1, 2, and 3 remain
+immutable. Version 1 is the formal legacy Host-bound, room-neutral contract.
+Version 2 adds durable delivery, canonical task-details URLs, and operation
+causation without changing v1. All versions define data contracts only; none
+defines Chatroom, UI, DOM, workspace resolution, external channels, provider
+transport, credentials, or a new permission system.
 
 Version 3 preserves the complete v2 create/bind/send/event surface and adds one
 durable approval-decision operation. It does not change the frozen v1 or v2
 schemas and declarations.
+
+Version 4 preserves the complete v3 surface except for corrected approval
+decision tokens, one approval binding-closure outcome, and required structured
+causation on accepted approval and request/cancel member-self-introduction
+results. It does not change the frozen v1, v2, or v3 schemas and declarations.
 
 ## Definition and inheritance
 
@@ -57,7 +62,7 @@ the ordered fields. Object fields accept only `merge`, `replace`, or `none`.
 
 ## Binding and operations
 
-All three task-binding versions bind one exact definition identity to one opaque
+All four task-binding versions bind one exact definition identity to one opaque
 Host task handle under a generation-fenced binding id. `create-or-bind` either
 creates a new task or binds the definition to an explicitly supplied opaque
 task handle. `send` requires the exact active binding. A closed or replaced
@@ -66,12 +71,13 @@ authority: the Host validates every call against its private current binding
 registry and rejects unknown, replaced, closed, or cross-task tuples.
 
 The Host injects one fiber-owned `BoundAgentLoopClient`. V1 and v2 expose only
-`createOrBind`, `send`, `subscribe`, and `dispose`; v3 adds
-`decideApproval`. Calls and results reuse the existing authorization-outcome
-shape. V1/v2 use `tasks.create`, `tasks.content.read`, and `turns.submit`; v3
-adds the closed `approvals.decide` capability for its decision operation. The
-contract defines no grant or policy system, carries no authorization token,
-and cannot escalate a denied or unavailable result.
+`createOrBind`, `send`, `subscribe`, and `dispose`; v3 and v4 add
+`decideApproval`, `requestMemberSelfIntroduction`, and
+`cancelMemberSelfIntroduction`. Calls and results reuse the existing
+authorization-outcome shape. V1/v2 use `tasks.create`, `tasks.content.read`,
+and `turns.submit`; v3 adds the closed `approvals.decide` capability for its
+decision operation. The contract defines no grant or policy system, carries no
+authorization token, and cannot escalate a denied or unavailable result.
 
 The Host resolves `cwd` and any workspace/config root privately before task
 creation. No workspace alias, path, cwd, or configuration root is an Agent Loop
@@ -233,6 +239,14 @@ provider option, deterministic/canned response, fake reply, or consumer time.
 In particular, v3 never accepts `issuedAt`; ledger retention is based only on
 provider-private observation and task lifecycle.
 
+On first accepted execution, the owning Host/provider resolves the binding's
+exact immutable Agent definition and effective identity, introduction,
+personality, role, and capabilities, then generates one real free-form
+assistant turn. It must not substitute configured/canned text, a preview, or a
+consumer-authored fake reply. Triggering the intent creates no visible user
+message item; the first visible content for this operation is the generated
+assistant message event.
+
 The matching `cancel-member-self-introduction` is a separate durable operation
 with its own `commandId`, the same exact binding/member/run association, and the
 original `requestOperationId`. It contains no callback, `AbortSignal`, or
@@ -257,11 +271,47 @@ and carries the exact accepted `turn`, `messageId`, and
 turn and cancel-operation causation. Content remains provider-authored normal
 AgentLoop content; the Protocol does not manufacture or prescribe its wording.
 
+## V4 approval correction and accepted causation
+
+V4 approval decision values are terminal-state facts: `approved`, `denied`, or
+`cancelled`. The imperative v3 spellings are invalid in v4. The command still
+carries only the full exact binding, turn, approval identity, and decision; it
+does not carry an approval kind. The provider resolves that tuple to one exact
+currently pending approval and its stored kind cannot drift between decision,
+accepted result, and resolved event. If the exact binding has already closed,
+an allowed authorization returns unavailable with `binding-closed` before any
+decision is applied.
+
+Approval and member-self-introduction operations compare the full supplied
+task binding with the authoritative binding before any side effect. If that
+authoritative exact binding is closed, the allowed-authorization outcome is
+unavailable with `binding-closed`. Otherwise any drift in task, definition,
+state, binding id, or generation is `binding-conflict`; no approval decision,
+introduction turn, retry, or cancellation is applied.
+
+An accepted `approval-decision` result requires
+`causation: { operationId }`, where `operationId` exactly equals that result's
+top-level `commandId`. An accepted
+`request-member-self-introduction` result additionally requires
+`causation: { operationId }`, where `operationId` exactly equals that result's
+top-level `commandId`. The same rule applies to an accepted
+`cancel-member-self-introduction` result: its causation identifies the cancel
+command itself, while `requestOperationId` continues to identify the original
+request being cancelled. This keeps request acceptance, cancel acceptance,
+assistant-message events, and cancellation lifecycle events explicitly
+correlatable without adding consumer time, prompt, body, model, or response.
+
+Result causation is forbidden on every non-accepted outcome and on accepted
+create/bind and send results. Exact replay or reconciliation returns the
+original stable causation and associated identities and cannot apply a second
+approval decision or create a second introduction.
+
 ## Consumer entry points
 
 - TypeScript: legacy `@cordisx/protocol/agent-loop/v1`; additive
   `@cordisx/protocol/agent-loop/v2`; approval-capable
-  `@cordisx/protocol/agent-loop/v3`
+  `@cordisx/protocol/agent-loop/v3`; corrected accepted-causation successor
+  `@cordisx/protocol/agent-loop/v4`
 - V1 schemas: `agent-definition.v1` plus the unchanged `agent-loop-*.v1`
   family
 - V2 schemas: `agent-definition.v1`, `agent-loop-task-binding.v2`,
@@ -270,9 +320,12 @@ AgentLoop content; the Protocol does not manufacture or prescribe its wording.
   `agent-loop-task-details-common.v2`, and `agent-loop-bound-client.v2`
 - V3 schemas: `agent-definition.v1`, the complete `agent-loop-*.v3` family,
   and the unchanged `agent-loop-task-details-common.v2` URL definition
+- V4 schemas: `agent-definition.v1`, the complete `agent-loop-*.v4` family,
+  and the unchanged `agent-loop-task-details-common.v2` URL definition
 - Conformance: `node conformance/agent-loop.mjs` and
   `node conformance/agent-loop-v2.mjs`; v3 adds
-  `node conformance/agent-loop-v3.mjs`
+  `node conformance/agent-loop-v3.mjs`; v4 adds
+  `node conformance/agent-loop-v4.mjs`
 
 Schemas, vectors, and local conformance do not prove Host wiring, Chatroom
 consumption, production renderer behavior, publication, or API readiness.

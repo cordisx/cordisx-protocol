@@ -1,0 +1,294 @@
+{
+  "case": "member-self-introduction-accepted-result-causation",
+  "bindings": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v4",
+      "schemaVersion": 4,
+      "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+      "definition": { "agentId": "reviewer", "revision": "definition-4" },
+      "task": "task-intro-a",
+      "state": "active"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v4",
+      "schemaVersion": 4,
+      "binding": { "bindingId": "binding-intro-b", "generation": 2 },
+      "definition": { "agentId": "writer", "revision": "definition-2" },
+      "task": "task-intro-b",
+      "state": "active"
+    }
+  ],
+  "providerPrivateInputs": [
+    {
+      "participantId": "participant-reviewer",
+      "definition": {
+        "identity": { "agentId": "reviewer", "revision": "definition-4" },
+        "introduction": "I review changes before they ship.",
+        "personality": "Direct and constructive.",
+        "role": "Code reviewer",
+        "capabilities": ["inspect changes", "explain risks"]
+      },
+      "providerAuthoredMessage": "I review changes and explain risks before they ship."
+    },
+    {
+      "participantId": "participant-writer",
+      "definition": {
+        "identity": { "agentId": "writer", "revision": "definition-2" },
+        "introduction": "I turn decisions into clear release notes.",
+        "personality": "Concise and calm.",
+        "role": "Technical writer",
+        "capabilities": ["summarize decisions", "draft documentation"]
+      },
+      "providerAuthoredMessage": "I turn decisions into clear release notes and documentation."
+    }
+  ],
+  "requestCommands": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v4.schema.json",
+      "contract": "cordisx.agent-loop-command/v4",
+      "schemaVersion": 4,
+      "commandId": "operation-intro-reviewer",
+      "type": "request-member-self-introduction",
+      "binding": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+        "contract": "cordisx.agent-loop-task-binding/v4",
+        "schemaVersion": 4,
+        "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+        "definition": { "agentId": "reviewer", "revision": "definition-4" },
+        "task": "task-intro-a",
+        "state": "active"
+      },
+      "participantId": "participant-reviewer",
+      "memberId": "member-reviewer",
+      "runId": "run-reviewer",
+      "intent": { "kind": "member-self-introduction", "audience": "room", "output": "assistant-message" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v4.schema.json",
+      "contract": "cordisx.agent-loop-command/v4",
+      "schemaVersion": 4,
+      "commandId": "operation-intro-writer",
+      "type": "request-member-self-introduction",
+      "binding": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+        "contract": "cordisx.agent-loop-task-binding/v4",
+        "schemaVersion": 4,
+        "binding": { "bindingId": "binding-intro-b", "generation": 2 },
+        "definition": { "agentId": "writer", "revision": "definition-2" },
+        "task": "task-intro-b",
+        "state": "active"
+      },
+      "participantId": "participant-writer",
+      "memberId": "member-writer",
+      "runId": "run-writer",
+      "intent": { "kind": "member-self-introduction", "audience": "room", "output": "assistant-message" }
+    }
+  ],
+  "acceptedRequestResults": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v4.schema.json",
+      "contract": "cordisx.agent-loop-result/v4",
+      "schemaVersion": 4,
+      "commandId": "operation-intro-reviewer",
+      "type": "request-member-self-introduction",
+      "status": "accepted",
+      "authorization": { "capability": "turns.introduce", "state": "allowed", "code": "allowed" },
+      "binding": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+        "contract": "cordisx.agent-loop-task-binding/v4",
+        "schemaVersion": 4,
+        "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+        "definition": { "agentId": "reviewer", "revision": "definition-4" },
+        "task": "task-intro-a",
+        "state": "active"
+      },
+      "participantId": "participant-reviewer",
+      "memberId": "member-reviewer",
+      "runId": "run-reviewer",
+      "turn": "turn-operation-intro-reviewer",
+      "messageId": "message-operation-intro-reviewer",
+      "causation": { "operationId": "operation-intro-reviewer" },
+      "delivery": { "disposition": "executed" }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v4.schema.json",
+      "contract": "cordisx.agent-loop-result/v4",
+      "schemaVersion": 4,
+      "commandId": "operation-intro-writer",
+      "type": "request-member-self-introduction",
+      "status": "accepted",
+      "authorization": { "capability": "turns.introduce", "state": "allowed", "code": "allowed" },
+      "binding": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+        "contract": "cordisx.agent-loop-task-binding/v4",
+        "schemaVersion": 4,
+        "binding": { "bindingId": "binding-intro-b", "generation": 2 },
+        "definition": { "agentId": "writer", "revision": "definition-2" },
+        "task": "task-intro-b",
+        "state": "active"
+      },
+      "participantId": "participant-writer",
+      "memberId": "member-writer",
+      "runId": "run-writer",
+      "turn": "turn-operation-intro-writer",
+      "messageId": "message-operation-intro-writer",
+      "causation": { "operationId": "operation-intro-writer" },
+      "delivery": { "disposition": "executed" }
+    }
+  ],
+  "requestEvents": [
+    [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+        "contract": "cordisx.agent-loop-event/v4",
+        "schemaVersion": 4,
+        "eventId": "event-operation-intro-reviewer-started",
+        "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+        "sequence": 1,
+        "occurredAt": "2026-08-31T10:00:01.000Z",
+        "causation": { "operationId": "operation-intro-reviewer" },
+        "type": "lifecycle",
+        "turn": "turn-operation-intro-reviewer",
+        "lifecycle": { "phase": "turn.started" }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+        "contract": "cordisx.agent-loop-event/v4",
+        "schemaVersion": 4,
+        "eventId": "event-operation-intro-reviewer-message",
+        "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+        "sequence": 2,
+        "occurredAt": "2026-08-31T10:00:02.000Z",
+        "causation": { "operationId": "operation-intro-reviewer" },
+        "type": "message",
+        "turn": "turn-operation-intro-reviewer",
+        "message": {
+          "messageId": "message-operation-intro-reviewer",
+          "role": "assistant",
+          "purpose": "member-self-introduction",
+          "content": [{ "kind": "text", "text": "I review changes and explain risks before they ship." }]
+        }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+        "contract": "cordisx.agent-loop-event/v4",
+        "schemaVersion": 4,
+        "eventId": "event-operation-intro-reviewer-completed",
+        "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+        "sequence": 3,
+        "occurredAt": "2026-08-31T10:00:03.000Z",
+        "causation": { "operationId": "operation-intro-reviewer" },
+        "type": "lifecycle",
+        "turn": "turn-operation-intro-reviewer",
+        "lifecycle": { "phase": "turn.completed" }
+      }
+    ],
+    [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+        "contract": "cordisx.agent-loop-event/v4",
+        "schemaVersion": 4,
+        "eventId": "event-operation-intro-writer-started",
+        "binding": { "bindingId": "binding-intro-b", "generation": 2 },
+        "sequence": 1,
+        "occurredAt": "2026-08-31T10:01:01.000Z",
+        "causation": { "operationId": "operation-intro-writer" },
+        "type": "lifecycle",
+        "turn": "turn-operation-intro-writer",
+        "lifecycle": { "phase": "turn.started" }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+        "contract": "cordisx.agent-loop-event/v4",
+        "schemaVersion": 4,
+        "eventId": "event-operation-intro-writer-message",
+        "binding": { "bindingId": "binding-intro-b", "generation": 2 },
+        "sequence": 2,
+        "occurredAt": "2026-08-31T10:01:02.000Z",
+        "causation": { "operationId": "operation-intro-writer" },
+        "type": "message",
+        "turn": "turn-operation-intro-writer",
+        "message": {
+          "messageId": "message-operation-intro-writer",
+          "role": "assistant",
+          "purpose": "member-self-introduction",
+          "content": [{ "kind": "text", "text": "I turn decisions into clear release notes and documentation." }]
+        }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+        "contract": "cordisx.agent-loop-event/v4",
+        "schemaVersion": 4,
+        "eventId": "event-operation-intro-writer-completed",
+        "binding": { "bindingId": "binding-intro-b", "generation": 2 },
+        "sequence": 3,
+        "occurredAt": "2026-08-31T10:01:03.000Z",
+        "causation": { "operationId": "operation-intro-writer" },
+        "type": "lifecycle",
+        "turn": "turn-operation-intro-writer",
+        "lifecycle": { "phase": "turn.completed" }
+      }
+    ]
+  ],
+  "cancelCommand": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v4.schema.json",
+    "contract": "cordisx.agent-loop-command/v4",
+    "schemaVersion": 4,
+    "commandId": "operation-cancel-reviewer",
+    "type": "cancel-member-self-introduction",
+    "binding": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v4",
+      "schemaVersion": 4,
+      "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+      "definition": { "agentId": "reviewer", "revision": "definition-4" },
+      "task": "task-intro-a",
+      "state": "active"
+    },
+    "participantId": "participant-reviewer",
+    "memberId": "member-reviewer",
+    "runId": "run-reviewer",
+    "requestOperationId": "operation-intro-reviewer"
+  },
+  "acceptedCancelResult": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v4.schema.json",
+    "contract": "cordisx.agent-loop-result/v4",
+    "schemaVersion": 4,
+    "commandId": "operation-cancel-reviewer",
+    "type": "cancel-member-self-introduction",
+    "status": "accepted",
+    "authorization": { "capability": "turns.introduce", "state": "allowed", "code": "allowed" },
+    "binding": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v4",
+      "schemaVersion": 4,
+      "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+      "definition": { "agentId": "reviewer", "revision": "definition-4" },
+      "task": "task-intro-a",
+      "state": "active"
+    },
+    "participantId": "participant-reviewer",
+    "memberId": "member-reviewer",
+    "runId": "run-reviewer",
+    "requestOperationId": "operation-intro-reviewer",
+    "turn": "turn-operation-intro-reviewer",
+    "messageId": "message-operation-intro-reviewer",
+    "causation": { "operationId": "operation-cancel-reviewer" },
+    "delivery": { "disposition": "executed" }
+  },
+  "cancelEvent": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+    "contract": "cordisx.agent-loop-event/v4",
+    "schemaVersion": 4,
+    "eventId": "event-operation-cancel-reviewer-cancelled",
+    "binding": { "bindingId": "binding-intro-a", "generation": 4 },
+    "sequence": 2,
+    "occurredAt": "2026-08-31T10:02:02.000Z",
+    "causation": { "operationId": "operation-cancel-reviewer" },
+    "type": "lifecycle",
+    "turn": "turn-operation-intro-reviewer",
+    "lifecycle": { "phase": "turn.cancelled" }
+  }
+}

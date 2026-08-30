@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json",
+  "title": "CordisX Agent Loop Event v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "eventId", "binding", "sequence", "occurredAt", "type"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json" },
+    "contract": { "const": "cordisx.agent-loop-event/v4" },
+    "schemaVersion": { "const": 4 },
+    "eventId": { "$ref": "agent-loop-common.v4.schema.json#/$defs/opaqueHandle" },
+    "binding": { "$ref": "agent-loop-common.v4.schema.json#/$defs/bindingIdentity" },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "causation": { "$ref": "#/$defs/causation" },
+    "type": { "enum": ["message", "approval", "lifecycle"] },
+    "turn": { "$ref": "agent-loop-common.v4.schema.json#/$defs/opaqueHandle" },
+    "message": { "$ref": "#/$defs/message" },
+    "approval": { "$ref": "#/$defs/approval" },
+    "lifecycle": { "$ref": "#/$defs/lifecycle" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "message" } } },
+      "then": { "required": ["message"], "properties": { "message": true, "approval": false, "lifecycle": false } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "approval" } } },
+      "then": { "required": ["turn", "approval"], "properties": { "turn": true, "approval": true, "message": false, "lifecycle": false } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "lifecycle" } } },
+      "then": { "required": ["lifecycle"], "properties": { "lifecycle": true, "message": false, "approval": false } }
+    },
+    {
+      "if": {
+        "required": ["type", "approval"],
+        "properties": {
+          "type": { "const": "approval" },
+          "approval": {
+            "type": "object",
+            "required": ["state", "outcome"],
+            "properties": { "state": { "const": "resolved" }, "outcome": { "enum": ["approved", "denied", "cancelled"] } }
+          }
+        }
+      },
+      "then": { "required": ["causation"], "properties": { "causation": true } }
+    },
+    {
+      "if": {
+        "required": ["type", "message"],
+        "properties": {
+          "type": { "const": "message" },
+          "message": {
+            "type": "object",
+            "required": ["purpose"],
+            "properties": { "purpose": { "const": "member-self-introduction" } }
+          }
+        }
+      },
+      "then": {
+        "required": ["turn", "causation"],
+        "properties": {
+          "turn": true,
+          "causation": true,
+          "message": { "type": "object", "properties": { "role": { "const": "assistant" } } }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["type", "lifecycle"],
+        "properties": {
+          "type": { "const": "lifecycle" },
+          "lifecycle": { "type": "object", "required": ["phase"], "properties": { "phase": { "const": "turn.cancelled" } } }
+        }
+      },
+      "then": { "required": ["turn", "causation"], "properties": { "turn": true, "causation": true } }
+    }
+  ],
+  "$defs": {
+    "causation": {
+      "type": "object", "additionalProperties": false, "required": ["operationId"],
+      "properties": { "operationId": { "$ref": "agent-loop-common.v4.schema.json#/$defs/opaqueHandle" } }
+    },
+    "message": {
+      "type": "object", "additionalProperties": false, "required": ["messageId", "role", "purpose", "content"],
+      "properties": {
+        "messageId": { "$ref": "agent-loop-common.v4.schema.json#/$defs/opaqueHandle" },
+        "role": { "enum": ["user", "assistant"] },
+        "purpose": { "enum": ["conversation", "member-self-introduction"] },
+        "content": { "$ref": "agent-loop-common.v4.schema.json#/$defs/content" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approvalId", "kind", "state"],
+      "properties": {
+        "approvalId": { "$ref": "agent-loop-common.v4.schema.json#/$defs/opaqueHandle" },
+        "kind": { "enum": ["command", "file-change", "external-action", "other"] },
+        "state": { "enum": ["pending", "resolved"] },
+        "outcome": { "enum": ["approved", "denied", "expired", "cancelled"] }
+      },
+      "allOf": [
+        { "if": { "required": ["state"], "properties": { "state": { "const": "pending" } } }, "then": { "properties": { "outcome": false } } },
+        { "if": { "required": ["state"], "properties": { "state": { "const": "resolved" } } }, "then": { "required": ["outcome"], "properties": { "outcome": true } } }
+      ]
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase"],
+      "properties": {
+        "phase": { "enum": ["binding.created", "binding.bound", "turn.started", "turn.completed", "turn.failed", "turn.cancelled", "binding.closed"] },
+        "failure": {
+          "type": "object", "additionalProperties": false, "required": ["code", "retryable"],
+          "properties": { "code": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Z][A-Z0-9._-]{0,127}$" }, "retryable": { "type": "boolean" } }
+        }
+      },
+      "allOf": [
+        { "if": { "required": ["phase"], "properties": { "phase": { "const": "turn.failed" } } }, "then": { "required": ["failure"], "properties": { "failure": true } } },
+        { "if": { "required": ["phase"], "properties": { "phase": { "enum": ["binding.created", "binding.bound", "turn.started", "turn.completed", "turn.cancelled", "binding.closed"] } } }, "then": { "properties": { "failure": false } } }
+      ]
+    }
+  }
+}

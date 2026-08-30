@@ -93,3 +93,17 @@ V3 also exposes durable request/cancel member-self-introduction intents under
 closed intent or original request operation id; accepted results and events
 share stable turn/message identity and operation causation. No consumer time,
 prompt, body, model, canned response, callback, or abort signal is exposed.
+
+`agent-loop.v4.d.ts` is the minimal immutable successor to v3. Accepted
+approval and request/cancel member-self-introduction results require
+`AgentLoopOperationCausation`; its `operationId` is the accepted operation's
+own `commandId`. For cancellation it is the cancel command id, while
+`requestOperationId` continues to identify the original request. V4 approval
+commands/results use terminal-state `approved`, `denied`, and `cancelled`
+tokens, and allowed-authorization unavailability adds `binding-closed` for an
+approval or member-self-introduction operation whose authoritative exact
+binding is closed. Any other task, definition, state, binding-id, or generation
+drift is `binding-conflict` and fails before a side effect. Non-accepted results
+and accepted create/bind/send results expose no result causation. Every other
+v3 command, event, binding, lifecycle, authorization, retry, cancellation, and
+ledger field is preserved.
