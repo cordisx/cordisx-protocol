@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v1.schema.json",
+  "title": "CordisX Agent Loop Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "commandId", "type", "status", "authorization"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-loop-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "commandId": { "$ref": "agent-loop-common.v1.schema.json#/$defs/opaqueHandle" },
+    "type": { "enum": ["create-or-bind", "send"] },
+    "status": { "enum": ["accepted", "denied", "unavailable"] },
+    "authorization": { "$ref": "agent-loop-common.v1.schema.json#/$defs/authorizationOutcome" },
+    "binding": { "$ref": "agent-loop-task-binding.v1.schema.json" },
+    "messageId": { "$ref": "agent-loop-common.v1.schema.json#/$defs/opaqueHandle" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "accepted" } } },
+      "then": { "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "allowed" } } } } }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "denied" } } },
+      "then": {
+        "properties": {
+          "authorization": { "type": "object", "properties": { "state": { "const": "denied" } } },
+          "binding": false,
+          "messageId": false
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "unavailable" } } },
+      "then": {
+        "properties": {
+          "authorization": { "type": "object", "properties": { "state": { "const": "unavailable" } } },
+          "binding": false,
+          "messageId": false
+        }
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "create-or-bind" }, "status": { "const": "accepted" } } },
+      "then": { "required": ["binding"], "properties": { "binding": true, "messageId": false } }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "send" }, "status": { "const": "accepted" } } },
+      "then": { "required": ["binding", "messageId"], "properties": { "binding": true, "messageId": true } }
+    }
+  ]
+}

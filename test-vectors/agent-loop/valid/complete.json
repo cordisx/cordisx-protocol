@@ -1,0 +1,222 @@
+{
+  "case": "complete",
+  "client": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-bound-client.v1.schema.json",
+    "contract": "cordisx.bound-agent-loop-client/v1",
+    "schemaVersion": 1,
+    "injection": "host-bound",
+    "operations": ["createOrBind", "send", "subscribe", "dispose"],
+    "lifetime": "fiber-owned",
+    "subscription": { "pages": "ordered", "unsubscribe": "explicit", "ownerDispose": "terminates" }
+  },
+  "definition": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+    "contract": "cordisx.agent-definition/v1",
+    "schemaVersion": 1,
+    "identity": { "agentId": "reviewer", "revision": "definition-2" },
+    "name": "Reviewer",
+    "extends": [{ "agentId": "base", "revision": "definition-1" }],
+    "inherit": {
+      "promptSections": "append",
+      "rules": "merge",
+      "skills": "merge",
+      "tools": "replace",
+      "mcpServers": "replace",
+      "runtimeDefaults": "merge"
+    },
+    "promptSections": [
+      { "sectionId": "introduction", "kind": "introduction", "text": "You are a code reviewer." },
+      { "sectionId": "personality", "kind": "personality", "text": "Be direct and precise." },
+      { "sectionId": "operations", "kind": "operations", "text": "Report concrete findings." }
+    ],
+    "rules": ["safe-review"],
+    "skills": ["code-review"],
+    "tools": { "include": ["read", "search"] },
+    "mcpServers": { "exclude": ["production"] },
+    "runtimeDefaults": {
+      "adapterId": "codex",
+      "model": { "providerId": "openai", "modelId": "gpt-5" },
+      "effort": "high"
+    }
+  },
+  "createCommand": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v1.schema.json",
+    "contract": "cordisx.agent-loop-command/v1",
+    "schemaVersion": 1,
+    "commandId": "command-create",
+    "type": "create-or-bind",
+    "definition": { "agentId": "reviewer", "revision": "definition-2" },
+    "definitions": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+        "contract": "cordisx.agent-definition/v1",
+        "schemaVersion": 1,
+        "identity": { "agentId": "base", "revision": "definition-1" },
+        "inherit": {
+          "promptSections": "append",
+          "rules": "merge",
+          "skills": "merge",
+          "tools": "replace",
+          "mcpServers": "replace",
+          "runtimeDefaults": "merge"
+        },
+        "promptSections": [{ "sectionId": "introduction", "kind": "introduction", "text": "You are an agent." }],
+        "rules": ["base-rule"],
+        "skills": ["base-skill"],
+        "tools": { "include": ["read"] },
+        "mcpServers": { "exclude": ["production"] },
+        "runtimeDefaults": { "adapterId": "codex", "effort": "medium" }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+        "contract": "cordisx.agent-definition/v1",
+        "schemaVersion": 1,
+        "identity": { "agentId": "reviewer", "revision": "definition-2" },
+        "extends": [{ "agentId": "base", "revision": "definition-1" }],
+        "inherit": {
+          "promptSections": "append",
+          "rules": "merge",
+          "skills": "merge",
+          "tools": "replace",
+          "mcpServers": "replace",
+          "runtimeDefaults": "merge"
+        },
+        "promptSections": [{ "sectionId": "role", "kind": "role", "text": "Review changes." }],
+        "rules": ["review-rule"],
+        "skills": ["review-skill"],
+        "tools": { "include": ["search"] },
+        "mcpServers": { "exclude": ["sensitive"] },
+        "runtimeDefaults": { "effort": "high" }
+      }
+    ],
+    "target": { "mode": "create" }
+  },
+  "resolvedDefinition": {
+    "identity": { "agentId": "reviewer", "revision": "definition-2" },
+    "promptSections": [
+      { "sectionId": "introduction", "kind": "introduction", "text": "You are an agent." },
+      { "sectionId": "role", "kind": "role", "text": "Review changes." }
+    ],
+    "rules": ["base-rule", "review-rule"],
+    "skills": ["base-skill", "review-skill"],
+    "tools": { "include": ["search"] },
+    "mcpServers": { "exclude": ["sensitive"] },
+    "runtimeDefaults": { "adapterId": "codex", "effort": "high" }
+  },
+  "binding": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json",
+    "contract": "cordisx.agent-loop-task-binding/v1",
+    "schemaVersion": 1,
+    "binding": { "bindingId": "binding-1", "generation": 1 },
+    "definition": { "agentId": "reviewer", "revision": "definition-2" },
+    "task": "task-1",
+    "state": "active"
+  },
+  "createResult": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v1.schema.json",
+    "contract": "cordisx.agent-loop-result/v1",
+    "schemaVersion": 1,
+    "commandId": "command-create",
+    "type": "create-or-bind",
+    "status": "accepted",
+    "authorization": { "capability": "tasks.create", "state": "allowed", "code": "allowed" },
+    "binding": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v1",
+      "schemaVersion": 1,
+      "binding": { "bindingId": "binding-1", "generation": 1 },
+      "definition": { "agentId": "reviewer", "revision": "definition-2" },
+      "task": "task-1",
+      "state": "active"
+    }
+  },
+  "sendCommand": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v1.schema.json",
+    "contract": "cordisx.agent-loop-command/v1",
+    "schemaVersion": 1,
+    "commandId": "command-send",
+    "type": "send",
+    "binding": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v1",
+      "schemaVersion": 1,
+      "binding": { "bindingId": "binding-1", "generation": 1 },
+      "definition": { "agentId": "reviewer", "revision": "definition-2" },
+      "task": "task-1",
+      "state": "active"
+    },
+    "content": [
+      { "kind": "text", "text": "Review this image." },
+      { "kind": "image-ref", "ref": "image-1", "mediaType": "image/png", "alt": "Diff screenshot" }
+    ]
+  },
+  "sendResult": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v1.schema.json",
+    "contract": "cordisx.agent-loop-result/v1",
+    "schemaVersion": 1,
+    "commandId": "command-send",
+    "type": "send",
+    "status": "accepted",
+    "authorization": { "capability": "turns.submit", "state": "allowed", "code": "allowed" },
+    "binding": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v1",
+      "schemaVersion": 1,
+      "binding": { "bindingId": "binding-1", "generation": 1 },
+      "definition": { "agentId": "reviewer", "revision": "definition-2" },
+      "task": "task-1",
+      "state": "active"
+    },
+    "messageId": "message-user-1"
+  },
+  "pages": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-page.v1.schema.json",
+      "contract": "cordisx.agent-loop-event-page/v1",
+      "schemaVersion": 1,
+      "subscription": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-subscription.v1.schema.json",
+        "contract": "cordisx.agent-loop-event-subscription/v1",
+        "schemaVersion": 1,
+        "subscriptionId": "subscription-1",
+        "binding": { "bindingId": "binding-1", "generation": 1 },
+        "afterSequence": -1,
+        "snapshotSequence": 5
+      },
+      "afterSequence": -1,
+      "phase": "replay",
+      "events": [
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-0", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 0, "occurredAt": "2026-08-30T00:00:00.000Z", "type": "lifecycle", "lifecycle": { "phase": "binding.created" } },
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-1", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 1, "occurredAt": "2026-08-30T00:00:01.000Z", "type": "message", "turn": "turn-1", "message": { "messageId": "message-user-1", "role": "user", "content": [{ "kind": "text", "text": "Review this image." }, { "kind": "image-ref", "ref": "image-1", "mediaType": "image/png" }] } },
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-2", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 2, "occurredAt": "2026-08-30T00:00:02.000Z", "type": "lifecycle", "turn": "turn-1", "lifecycle": { "phase": "turn.started" } },
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-3", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 3, "occurredAt": "2026-08-30T00:00:03.000Z", "type": "approval", "turn": "turn-1", "approval": { "approvalId": "approval-1", "kind": "file-change", "state": "pending" } },
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-4", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 4, "occurredAt": "2026-08-30T00:00:04.000Z", "type": "approval", "turn": "turn-1", "approval": { "approvalId": "approval-1", "kind": "file-change", "state": "resolved", "outcome": "approved" } },
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-5", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 5, "occurredAt": "2026-08-30T00:00:05.000Z", "type": "message", "turn": "turn-1", "message": { "messageId": "message-assistant-1", "role": "assistant", "content": [{ "kind": "text", "text": "Review complete." }] } }
+      ],
+      "nextAfterSequence": 5,
+      "hasMore": false
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-page.v1.schema.json",
+      "contract": "cordisx.agent-loop-event-page/v1",
+      "schemaVersion": 1,
+      "subscription": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-subscription.v1.schema.json",
+        "contract": "cordisx.agent-loop-event-subscription/v1",
+        "schemaVersion": 1,
+        "subscriptionId": "subscription-1",
+        "binding": { "bindingId": "binding-1", "generation": 1 },
+        "afterSequence": -1,
+        "snapshotSequence": 5
+      },
+      "afterSequence": 5,
+      "phase": "live",
+      "events": [
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-6", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 6, "occurredAt": "2026-08-30T00:00:06.000Z", "type": "lifecycle", "turn": "turn-1", "lifecycle": { "phase": "turn.completed" } },
+        { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-7", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 7, "occurredAt": "2026-08-30T00:00:07.000Z", "type": "lifecycle", "lifecycle": { "phase": "binding.closed" } }
+      ],
+      "nextAfterSequence": 7,
+      "hasMore": false
+    }
+  ]
+}

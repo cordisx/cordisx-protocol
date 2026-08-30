@@ -49,6 +49,9 @@ Specified areas:
 - `connector-service/`: room-neutral connector descriptor, registration,
   command, message/event, generation, disposal, public consumer,
   Host-bound authorization, and serialized subscription contracts version 1.
+- `agent-loop/`: Host-bound room-neutral Agent definitions, self-contained
+  inheritance catalogs, task bindings, create-or-bind/send operations, and
+  proactive message/approval/lifecycle events version 1.
 - `plugin-configuration/`: Standard Schema validation, Schemastery form
   metadata, profile/plugin/generation scope, revision-fenced mutations,
   live/restart application, last-good rollback, secret handling, and
