@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v3.schema.json",
+  "title": "CordisX Agent Conversation Shell Snapshot v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "generation", "snapshotSequence", "selection", "items", "composer", "headerActions"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v3.schema.json" },
+    "contract": { "const": "cordisx.agent-conversation-shell-snapshot/v3" },
+    "schemaVersion": { "const": 3 },
+    "binding": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/bindingRef" },
+    "generation": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/generation" },
+    "snapshotSequence": { "type": "integer", "minimum": 0 },
+    "selection": { "$ref": "#/$defs/selection" },
+    "items": { "type": "array", "maxItems": 500, "items": { "$ref": "#/$defs/item" } },
+    "composer": { "$ref": "#/$defs/composer" },
+    "headerActions": { "type": "array", "maxItems": 12, "items": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/action" } }
+  },
+  "$defs": {
+    "roomDescription": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state"],
+          "properties": { "state": { "const": "empty" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "text"],
+          "properties": {
+            "state": { "const": "present" },
+            "text": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/displayText" }
+          }
+        }
+      ]
+    },
+    "selection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "no-room" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "roomId", "title", "multiParticipant", "participantPresentation", "participants"],
+          "properties": {
+            "kind": { "const": "room" },
+            "roomId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+            "title": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/displayText" },
+            "description": { "$ref": "#/$defs/roomDescription" },
+            "secondary": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/displayText" },
+            "multiParticipant": { "type": "boolean" },
+            "participantPresentation": { "enum": ["none", "host-initials"] },
+            "participants": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/participant" } },
+            "activeRuns": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/activeRun" } }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "multiParticipant": { "const": false } }, "required": ["multiParticipant"] },
+              "then": { "properties": { "participantPresentation": { "const": "none" } } }
+            }
+          ]
+        }
+      ]
+    },
+    "participant": { "$ref": "agent-conversation-shell-snapshot.v2.schema.json#/$defs/participant" },
+    "activeRun": { "$ref": "agent-conversation-shell-snapshot.v2.schema.json#/$defs/activeRun" },
+    "approvalAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "command"],
+      "properties": {
+        "decision": { "enum": ["approve", "deny", "cancel"] },
+        "command": { "$ref": "ui-common.v1.schema.json#/$defs/commandReference" }
+      }
+    },
+    "approvalItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "itemId", "sequence", "participantId", "memberId", "runId", "binding", "turn", "approvalId", "approvalKind", "state", "actions"],
+      "properties": {
+        "kind": { "const": "approval" },
+        "itemId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+        "sequence": { "type": "integer", "minimum": 0 },
+        "participantId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+        "memberId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+        "runId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+        "binding": { "$ref": "agent-loop-common.v3.schema.json#/$defs/bindingIdentity" },
+        "turn": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+        "approvalId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+        "approvalKind": { "enum": ["command", "file-change", "external-action", "other"] },
+        "state": { "enum": ["pending", "approved", "denied", "cancelled", "failed"] },
+        "rationale": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/displayText" },
+        "diagnostic": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/displayText" },
+        "actions": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/approvalAction" } }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["state"], "properties": { "state": { "const": "pending" } } },
+          "then": { "properties": { "actions": { "type": "array", "minItems": 1, "maxItems": 3 }, "diagnostic": false } }
+        },
+        {
+          "if": { "required": ["state"], "properties": { "state": { "enum": ["approved", "denied", "cancelled"] } } },
+          "then": { "properties": { "actions": { "type": "array", "maxItems": 0 }, "diagnostic": false } }
+        },
+        {
+          "if": { "required": ["state"], "properties": { "state": { "const": "failed" } } },
+          "then": { "required": ["diagnostic"], "properties": { "actions": { "type": "array", "maxItems": 0 }, "diagnostic": true } }
+        }
+      ]
+    },
+    "messageSemantic": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["purpose"],
+          "properties": {
+            "purpose": { "const": "conversation" },
+            "causation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["operationId"],
+              "properties": { "operationId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" } }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["purpose", "causation", "participantId", "memberId", "runId", "binding", "turn"],
+          "properties": {
+            "purpose": { "const": "member-self-introduction" },
+            "causation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["operationId"],
+              "properties": { "operationId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" } }
+            },
+            "participantId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+            "memberId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+            "runId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+            "binding": { "$ref": "agent-loop-common.v3.schema.json#/$defs/bindingIdentity" },
+            "turn": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["purpose"],
+          "properties": { "purpose": { "const": "chatroom-acknowledgement" } }
+        }
+      ]
+    },
+    "messageItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "itemId", "messageId", "sequence", "source", "semantic", "author", "body", "reactions", "timestamp", "deliveryState", "runState", "ariaLive", "actions"],
+      "properties": {
+        "kind": { "const": "message" },
+        "itemId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+        "messageId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+        "sequence": { "type": "integer", "minimum": 0 },
+        "source": { "enum": ["agent-loop", "chatroom-acknowledgement"] },
+        "semantic": { "$ref": "#/$defs/messageSemantic" },
+        "author": { "$ref": "#/$defs/participant" },
+        "body": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "agent-conversation-shell-snapshot.v2.schema.json#/$defs/textBlock" } },
+        "reactions": { "type": "array", "maxItems": 64, "items": { "$ref": "agent-conversation-shell-snapshot.v2.schema.json#/$defs/reaction" } },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "deliveryState": { "enum": ["pending", "sent", "delivered", "failed"] },
+        "runState": { "enum": ["idle", "running", "stopped", "failed"] },
+        "ariaLive": { "enum": ["off", "polite"] },
+        "actions": { "type": "array", "maxItems": 8, "items": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/action" } }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["source"], "properties": { "source": { "const": "agent-loop" } } },
+          "then": { "properties": { "semantic": { "type": "object", "properties": { "purpose": { "enum": ["conversation", "member-self-introduction"] } } } } }
+        },
+        {
+          "if": { "required": ["source"], "properties": { "source": { "const": "chatroom-acknowledgement" } } },
+          "then": { "properties": { "semantic": { "type": "object", "properties": { "purpose": { "const": "chatroom-acknowledgement" } } } } }
+        },
+        {
+          "if": { "required": ["semantic"], "properties": { "semantic": { "type": "object", "required": ["purpose"], "properties": { "purpose": { "const": "member-self-introduction" } } } } },
+          "then": {
+            "properties": {
+              "source": { "const": "agent-loop" },
+              "author": { "type": "object", "required": ["role", "agentIdentity"], "properties": { "role": { "const": "agent" }, "agentIdentity": true } }
+            }
+          }
+        }
+      ]
+    },
+    "statusItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "itemId", "sequence", "label", "state", "ariaLive"],
+      "properties": {
+        "kind": { "const": "status" },
+        "itemId": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/opaqueId" },
+        "sequence": { "type": "integer", "minimum": 0 },
+        "label": { "$ref": "agent-conversation-shell-common.v3.schema.json#/$defs/displayText" },
+        "state": { "enum": ["info", "working", "warning", "error"] },
+        "ariaLive": { "enum": ["off", "polite"] }
+      }
+    },
+    "item": {
+      "oneOf": [
+        { "$ref": "#/$defs/messageItem" },
+        { "$ref": "#/$defs/statusItem" },
+        { "$ref": "agent-conversation-shell-snapshot.v2.schema.json#/$defs/memberPresence" },
+        { "$ref": "#/$defs/approvalItem" }
+      ]
+    },
+    "composer": { "$ref": "agent-conversation-shell-snapshot.v2.schema.json#/$defs/composer" }
+  }
+}

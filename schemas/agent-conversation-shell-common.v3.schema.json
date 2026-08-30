@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-common.v3.schema.json",
+  "title": "CordisX Agent Conversation Shell Common v3",
+  "$defs": {
+    "opaqueId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+    "generation": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/generation" },
+    "displayText": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+    "bindingRef": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/bindingRef" },
+    "action": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/action" },
+    "roomName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001F\\u007F]+$"
+    },
+    "roomDescriptionPatch": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state"],
+          "properties": { "state": { "const": "empty" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "text"],
+          "properties": {
+            "state": { "const": "present" },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000,
+              "pattern": "^[^\\u0000-\\u0009\\u000B-\\u001F\\u007F]+$"
+            }
+          }
+        }
+      ]
+    },
+    "roomCollectionParticipantRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["participantId", "avatar"],
+      "properties": {
+        "participantId": { "$ref": "#/$defs/opaqueId" },
+        "avatar": { "$ref": "agent-avatar.v1.schema.json" }
+      }
+    },
+    "roomCollectionLeadingVisual": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "icon"],
+          "properties": {
+            "kind": { "const": "semantic-icon" },
+            "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "roomId", "participants"],
+          "properties": {
+            "kind": { "const": "room-composite-avatar" },
+            "roomId": { "$ref": "#/$defs/opaqueId" },
+            "participants": {
+              "type": "array",
+              "maxItems": 64,
+              "items": { "$ref": "#/$defs/roomCollectionParticipantRef" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

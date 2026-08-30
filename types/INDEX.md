@@ -41,6 +41,23 @@ structured reaction lifecycles, and ordered member-presence items. Active runs
 carry no private binding, task body, trace, route, arbitrary URL, or renderer
 handle; presence retries remain bounded Host command references.
 
+`agent-conversation-shell.v3.d.ts` preserves the complete v2 surface and adds
+an optional Room description presentation plus a structured Room-settings CAS
+mutation. Description omission means the source offers no description
+capability, while explicit `empty` lets the Host render an add-introduction
+entry. The mutation carries exact binding, owner-generation, shell-generation,
+Room, and snapshot-sequence fences and returns closed applied, conflict, or
+unavailable results. It exposes only bounded plain user text; persistence,
+participant ordering, the settings form, and all visual behavior remain with
+their existing Chatroom and Host owners. V3 also exports the bounded
+`AgentConversationRoomCollectionLeadingVisual` embedded value for Host-owned
+generic collection rows: either a semantic Host icon or an exact Room-associated
+ordered composite of formal participant avatar references. It does not own the
+row, collection snapshot, route, current selection, or renderer. V3 approval
+items carry exact participant/run/binding/turn/approval association and bounded
+pending Host command actions; the dedicated approval command context preserves
+the shell binding, owner generation, shell generation, and item fence.
+
 `host-dom.v1.d.ts` exposes the versioned Host root catalog and one principal-bound
 client. Plugins can request only canonical root ids, closed read/modify operations,
 opaque handles, bounded serialized projections, and Host-rendered structured
@@ -62,3 +79,17 @@ do not repeat the URL. Explicit `AgentLoopCreateOrBindResult` and
 under TypeScript discrimination. It exposes no Room, UI implementation,
 credential, callback, raw bridge, public provider identity, or external-channel
 type.
+
+`agent-loop.v3.d.ts` preserves the complete v2 surface and adds one durable
+`approval-decision` command plus `BoundAgentLoopClient.decideApproval`. The
+command is fenced by the full v3 task binding generation, turn, and approval
+identity and uses the existing owner-provider durable operation ledger.
+Accepted results echo that identity and decision; conflicts distinguish
+operation-id reuse, stale binding, and approval state, while typed unavailable
+results distinguish reconciliation, expiry, provider replacement, and approval
+availability. Decision-resolved approval events require operation causation.
+V3 also exposes durable request/cancel member-self-introduction intents under
+`turns.introduce`. They carry only exact binding/member/run identity and a
+closed intent or original request operation id; accepted results and events
+share stable turn/message identity and operation causation. No consumer time,
+prompt, body, model, canned response, callback, or abort signal is exposed.

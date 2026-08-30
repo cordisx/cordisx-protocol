@@ -1,4 +1,4 @@
-# Agent Loop v1 and v2
+# Agent Loop v1, v2, and v3
 
 Status: local additive Protocol candidate. Version 1 remains the formal legacy
 Host-bound, room-neutral contract. Version 2 adds durable delivery, canonical
@@ -6,6 +6,10 @@ task-details URLs, and operation causation without changing v1. Both versions
 define data contracts only; neither defines Chatroom, UI, DOM, workspace
 resolution, external channels, provider transport, credentials, or a new
 permission system.
+
+Version 3 preserves the complete v2 create/bind/send/event surface and adds one
+durable approval-decision operation. It does not change the frozen v1 or v2
+schemas and declarations.
 
 ## Definition and inheritance
 
@@ -53,7 +57,7 @@ the ordered fields. Object fields accept only `merge`, `replace`, or `none`.
 
 ## Binding and operations
 
-Both task-binding versions bind one exact definition identity to one opaque
+All three task-binding versions bind one exact definition identity to one opaque
 Host task handle under a generation-fenced binding id. `create-or-bind` either
 creates a new task or binds the definition to an explicitly supplied opaque
 task handle. `send` requires the exact active binding. A closed or replaced
@@ -61,12 +65,13 @@ binding is not reusable. Serialized binding contents are correlation data, not
 authority: the Host validates every call against its private current binding
 registry and rejects unknown, replaced, closed, or cross-task tuples.
 
-The Host injects one fiber-owned `BoundAgentLoopClient` with only
-`createOrBind`, `send`, `subscribe`, and `dispose`. Calls and results reuse the
-existing `tasks.create`, `tasks.content.read`, and `turns.submit` permission
-outcomes. The contract defines no grant, policy, approval authority, or security
-escalation, and it carries no authorization token. A denied or unavailable
-existing permission remains a typed denied or unavailable result.
+The Host injects one fiber-owned `BoundAgentLoopClient`. V1 and v2 expose only
+`createOrBind`, `send`, `subscribe`, and `dispose`; v3 adds
+`decideApproval`. Calls and results reuse the existing authorization-outcome
+shape. V1/v2 use `tasks.create`, `tasks.content.read`, and `turns.submit`; v3
+adds the closed `approvals.decide` capability for its decision operation. The
+contract defines no grant or policy system, carries no authorization token,
+and cannot escalate a denied or unavailable result.
 
 The Host resolves `cwd` and any workspace/config root privately before task
 creation. No workspace alias, path, cwd, or configuration root is an Agent Loop
@@ -185,18 +190,89 @@ through a fixed snapshot sequence before live events. `binding.closed` is
 terminal, subscription unsubscribe is explicit, and owner disposal terminates
 the stream.
 
+## V3 approval decisions
+
+An `approval-decision` command carries a durable `commandId`, the full v3 task
+binding including its exact binding generation, the exact `turn` and
+`approvalId`, and one closed `approve`, `deny`, or `cancel` decision. It uses
+the existing authorization outcome with capability `approvals.decide`; it does
+not create a new permission system. `BoundAgentLoopClient.decideApproval` has
+no renderer or navigation side effect.
+
+An accepted result echoes the exact binding, turn, approval identity, and
+decision with `executed`, `replayed`, or `reconciled` delivery. The durable
+owner-provider ledger uses structural-exact payload matching, survives client
+disposal, remains provider-generation-fenced, and retains active logical-task
+operations plus the same 30-day recovery period as v2. Replaying the exact
+operation returns the original logical result and does not decide twice.
+
+Conflict status is distinct from unavailability. `operation-conflict` means the
+same command id was reused with a different payload; `binding-conflict` means
+the binding id or generation is stale/wrong; `approval-conflict` means the
+turn/approval identity does not match or the approval has already resolved to a
+different decision. All fail before a new provider decision. Allowed-
+authorization unavailability is one of `reconciliation-required`,
+`operation-expired`, `provider-replaced`, `approval-expired`, or
+`approval-unavailable`. Authorization-state unavailability remains the
+existing Host/task/unsupported result branch, and denial remains user/policy.
+
+For exact correlation, v3 approval events resolved as `approved`, `denied`, or
+`cancelled` require `causation.operationId` matching the accepted durable
+command. Provider-autonomous `expired` events may omit causation. The provider
+owns approval semantics and terminal resolution; consumers must not infer an
+outcome from UI state or command text.
+
+## V3 member self-introduction
+
+`request-member-self-introduction` is a durable intent, not a message template.
+It carries `commandId`, the full exact v3 task binding, `participantId`,
+`memberId`, `runId`, and exactly
+`{ kind: 'member-self-introduction', audience: 'room', output:
+'assistant-message' }`. It contains no text, content, prompt, body, model,
+provider option, deterministic/canned response, fake reply, or consumer time.
+In particular, v3 never accepts `issuedAt`; ledger retention is based only on
+provider-private observation and task lifecycle.
+
+The matching `cancel-member-self-introduction` is a separate durable operation
+with its own `commandId`, the same exact binding/member/run association, and the
+original `requestOperationId`. It contains no callback, `AbortSignal`, or
+client-lifetime cancellation object. Both operations use the existing
+authorization shape with closed capability `turns.introduce`.
+
+An accepted request returns the full binding and association plus stable
+`turn`, `messageId`, and delivery. An accepted cancel additionally echoes the
+original `requestOperationId` and returns that same turn/message identity.
+Exact replay/reconciliation returns the original logical result and never
+starts or cancels a second introduction. Conflicts distinguish operation-id,
+binding, member, run, and introduction state, including already completed or
+cancelled work. Allowed-authorization unavailability distinguishes
+reconciliation/operation expiry/provider replacement from introduction expiry,
+unavailability, or not-found; denial and authorization-state unavailability
+remain the existing outcomes.
+
+Every v3 message event declares `message.purpose`. Normal messages use
+`conversation`. A `member-self-introduction` message must be assistant-authored
+and carries the exact accepted `turn`, `messageId`, and
+`causation.operationId`. A `turn.cancelled` lifecycle event requires the same
+turn and cancel-operation causation. Content remains provider-authored normal
+AgentLoop content; the Protocol does not manufacture or prescribe its wording.
+
 ## Consumer entry points
 
 - TypeScript: legacy `@cordisx/protocol/agent-loop/v1`; additive
-  `@cordisx/protocol/agent-loop/v2`
+  `@cordisx/protocol/agent-loop/v2`; approval-capable
+  `@cordisx/protocol/agent-loop/v3`
 - V1 schemas: `agent-definition.v1` plus the unchanged `agent-loop-*.v1`
   family
 - V2 schemas: `agent-definition.v1`, `agent-loop-task-binding.v2`,
   `agent-loop-command.v2`, `agent-loop-result.v2`, `agent-loop-event.v2`,
   `agent-loop-event-subscription.v2`, `agent-loop-event-page.v2`,
   `agent-loop-task-details-common.v2`, and `agent-loop-bound-client.v2`
+- V3 schemas: `agent-definition.v1`, the complete `agent-loop-*.v3` family,
+  and the unchanged `agent-loop-task-details-common.v2` URL definition
 - Conformance: `node conformance/agent-loop.mjs` and
-  `node conformance/agent-loop-v2.mjs`
+  `node conformance/agent-loop-v2.mjs`; v3 adds
+  `node conformance/agent-loop-v3.mjs`
 
 Schemas, vectors, and local conformance do not prove Host wiring, Chatroom
 consumption, production renderer behavior, publication, or API readiness.
