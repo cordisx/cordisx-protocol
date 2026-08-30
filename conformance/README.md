@@ -98,14 +98,32 @@ variants, immutable clone/freeze behavior, explicit and inherited definition
 precedence, generated child-identity fallback, and typed unsupported resolution.
 It rejects raw URLs, filesystem paths, data/base64 payloads, oversized refs,
 non-canonical seeds, and unknown algorithms, schemas, or versions.
-Agent Loop conformance covers the bounded self-contained definition catalog,
+Agent Conversation Shell conformance preserves the frozen v1 wire contract and
+exercises the explicit v2 successor. V2 checks exact Agent participant identity,
+fixed `memberId` to `participantId` mapping, exact active-run/presence triples,
+message provenance, reaction and presence state transitions, replacement versus
+incremental convergence, and shared AgentLoop v2 details-URL canonicalization.
+It rejects percent-encoded unreserved characters, default ports, dot segments,
+cross-participant associations, stale updates, callbacks, DOM, and renderer data.
+Agent Loop v1 conformance preserves the formal catalog, task binding,
+per-client command idempotency, and ordered event behavior. Agent Loop v2
+conformance covers the bounded self-contained definition catalog,
 field inheritance vocabulary, exact task binding and authorization
-correlation, per-client command idempotency, independent multi-binding fan-out,
+correlation, owner-provider durable command replay across client recreation,
+provider-private bounded retention, independent multi-binding fan-out,
 text/image-reference content, proactive message/approval/lifecycle events,
-per-binding-generation replay/live ordering, and terminal closure. It rejects missing,
-cyclic, duplicate, or unused definitions and Room, path, URL, callback, raw
-bridge, secret, and credential fields. It is Protocol-only evidence and does
-not prove Host/Chatroom wiring or image rendering.
+per-binding-generation replay/live ordering, terminal closure, and the direct
+persisted task-details URL returned by every accepted create or explicit bind.
+Task-details fixtures freeze the target/scheme allowlist, 2048-character and
+canonical-form boundary, two-client/two-binding isolation, atomic generation
+replacement, and fail-closed active-provider-association cleanup after provider
+replacement, disable, uninstall, binding closure, or client disposal. This
+active authority model does not constrain Chatroom's durable history: a closed
+run may retain its persisted URL. The fixtures reject unsafe URL syntax,
+stale/cross-client/cross-binding access, forged capabilities, missing details
+resources, and task body, prompt, CLI, provider trace, route, path, or token
+fields. Agent Loop exposes no navigation operation. It is Protocol-only
+evidence and does not prove Host/Chatroom wiring or image rendering.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

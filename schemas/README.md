@@ -163,19 +163,32 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   surface plus typed discover/execute/subscribe outcomes;
 - `connector-bound-client-lifecycle.v1.schema.json`: executable client and
   subscription terminal-state projection for unsubscribe and owner disposal;
-- `agent-loop-common.v1.schema.json` and `agent-definition.v1.schema.json`:
+- `agent-conversation-shell-snapshot.v1.schema.json`: frozen Host-owned
+  participant list plus text-message/status timeline contract;
+- `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v2.schema.json`:
+  explicit Shell v2 successor with Agent identity, fixed member-to-participant
+  mapping, exact active-run/presence triples, AgentLoop-v2-canonical details
+  URLs, closed-source messages, reactions, member-presence progress, and
+  generation-fenced ordered updates;
+- `agent-loop-common.v1.schema.json`, the unchanged `agent-loop-*.v1` family,
+  and `agent-definition.v1.schema.json`:
   room-neutral Agent identity, field-specific inheritance, structured prompt
-  sections, filters, runtime defaults, and text/image-reference content;
-- `agent-loop-task-binding.v1.schema.json`, `agent-loop-command.v1.schema.json`,
-  and `agent-loop-result.v1.schema.json`: opaque generation-fenced task
-  binding plus Host-bound create-or-bind/send exchanges that reuse existing
-  task/turn authorization outcomes;
-- `agent-loop-event.v1.schema.json`,
-  `agent-loop-event-subscription.v1.schema.json`, and
-  `agent-loop-event-page.v1.schema.json`: proactive ordered
+  sections, filters, runtime defaults, text/image-reference content, and the
+  original per-client command-id contract;
+- `agent-loop-task-binding.v2.schema.json`, `agent-loop-command.v2.schema.json`,
+  and `agent-loop-result.v2.schema.json`: opaque generation-fenced task
+  binding plus durable operation-id create-or-bind/send exchanges, accepted
+  delivery dispositions, stable send turn identity, and typed resource failures
+  that remain separate from existing task/turn authorization outcomes;
+- `agent-loop-event.v2.schema.json`,
+  `agent-loop-event-subscription.v2.schema.json`, and
+  `agent-loop-event-page.v2.schema.json`: proactive ordered
   message/approval/lifecycle events with replay/live paging; and
-- `agent-loop-bound-client.v1.schema.json`: the fiber-owned injected Agent
-  Loop client surface;
+- `agent-loop-bound-client.v2.schema.json`: the fiber-owned injected Agent
+  Loop client surface with a provider-owned, generation-fenced durable operation
+  ledger that survives client disposal;
+- `agent-loop-task-details-common.v2.schema.json`: canonical Host or external
+  details URL used by accepted create-or-bind results;
 - `agent-avatar.v1.schema.json` and
   `agent-avatar-resolution-result.v1.schema.json`: stable generated, asset,
   definition, and reserved platform Agent avatar references plus a typed

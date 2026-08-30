@@ -9,7 +9,9 @@ const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedExports = [
   './agent-avatar/v1',
   './agent-conversation-shell/v1',
+  './agent-conversation-shell/v2',
   './agent-loop/v1',
+  './agent-loop/v2',
   './connector-service/v1',
   './host-dom/v1',
 ].sort()
@@ -24,7 +26,9 @@ const expectedFiles = [
     .map((entry) => `schemas/${entry.name}`),
   'types/agent-avatar.v1.d.ts',
   'types/agent-conversation-shell.v1.d.ts',
+  'types/agent-conversation-shell.v2.d.ts',
   'types/agent-loop.v1.d.ts',
+  'types/agent-loop.v2.d.ts',
   'types/connector-service.v1.d.ts',
   'types/host-dom.v1.d.ts',
 ].sort()
@@ -62,7 +66,130 @@ try {
   const consumer = join(temp, 'consumer')
   run(process.execPath, [npmCli, 'install', '--ignore-scripts', '--no-package-lock', '--prefix', consumer, archive])
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
-  writeFileSync(join(consumer, 'consumer.ts'), `import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'\nimport type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'\nimport type { AgentConversationParticipant, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v1'\nimport type { AgentDefinition, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v1'\nimport type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'\nconst avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })\nconst canonical = canonicalizeAgentAvatarSeed({ namespace: 'agent-definition', agentId: ' reviewer ' })\nconst cloned = cloneAgentAvatarRef(avatar)\nconst effective = resolveAgentDefinitionAvatar({ agentId: 'reviewer', inherit: 'none' })\navatar satisfies AgentAvatarRef\ndeclare const resolution: AgentAvatarResolutionResult\ndeclare const definition: AgentDefinition\ndeclare const participant: AgentConversationParticipant\ndeclare const connector: BoundConnectorClient\ndeclare const shell: AgentConversationShellSource\ndeclare const agentLoop: BoundAgentLoopClient\ndeclare const hostDom: BoundHostDomClient\nconst discovered = await connector.discover()\nif (discovered.status === 'accepted') discovered.snapshot.registrations satisfies readonly unknown[]\nif (resolution.status === 'unsupported') resolution.code satisfies 'unsupported-kind' | 'unsupported-provider' | 'reference-unavailable'\ndefinition.avatar satisfies AgentAvatarRef | undefined\nparticipant.avatar satisfies AgentAvatarRef | undefined\nconst roots = await hostDom.catalog()\nroots.authority satisfies 'host'\nvoid canonical\nvoid cloned\nvoid effective\nvoid shell\nvoid agentLoop\n`)
+  writeFileSync(join(consumer, 'consumer.ts'), `import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'
+import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'
+import type { AgentConversationParticipant as AgentConversationParticipantV1, AgentConversationShellSource as AgentConversationShellSourceV1 } from '@cordisx/protocol/agent-conversation-shell/v1'
+import type { AgentConversationActiveRunDescriptor, AgentConversationItem, AgentConversationMemberPresenceItem, AgentConversationParticipant, AgentConversationReaction, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v2'
+import type { AgentLoopCommand as AgentLoopCommandV1, BoundAgentLoopClient as BoundAgentLoopClientV1 } from '@cordisx/protocol/agent-loop/v1'
+import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDelivery, AgentLoopDeliveryDisposition, AgentLoopEvent, AgentLoopOperationId, AgentLoopOperationUnavailableCode, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v2'
+import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
+const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
+const canonical = canonicalizeAgentAvatarSeed({ namespace: 'agent-definition', agentId: ' reviewer ' })
+const cloned = cloneAgentAvatarRef(avatar)
+const effective = resolveAgentDefinitionAvatar({ agentId: 'reviewer', inherit: 'none' })
+avatar satisfies AgentAvatarRef
+declare const resolution: AgentAvatarResolutionResult
+declare const definition: AgentDefinition
+declare const participant: AgentConversationParticipant
+declare const activeRun: AgentConversationActiveRunDescriptor
+declare const item: AgentConversationItem
+declare const presence: AgentConversationMemberPresenceItem
+declare const reaction: AgentConversationReaction
+declare const connector: BoundConnectorClient
+declare const shell: AgentConversationShellSource
+declare const legacyShell: AgentConversationShellSourceV1
+declare const agentLoop: BoundAgentLoopClient
+declare const legacyAgentLoop: BoundAgentLoopClientV1
+declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
+declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
+declare const hostDom: BoundHostDomClient
+const discovered = await connector.discover()
+if (discovered.status === 'accepted') discovered.snapshot.registrations satisfies readonly unknown[]
+if (resolution.status === 'unsupported') resolution.code satisfies 'unsupported-kind' | 'unsupported-provider' | 'reference-unavailable'
+definition.avatar satisfies AgentAvatarRef | undefined
+participant.avatar satisfies AgentAvatarRef | undefined
+if (participant.role === 'agent') participant.agentIdentity?.agentId satisfies string | undefined
+activeRun.detailsUrl.target satisfies 'host' | 'external'
+if (item.kind === 'message') {
+  item.source satisfies 'agent-loop' | 'chatroom-acknowledgement'
+  for (const value of item.reactions) value.state satisfies 'pending' | 'completed' | 'failed'
+}
+presence.state satisfies 'inviting' | 'creating' | 'joined' | 'ready' | 'failed'
+reaction.actorParticipantId satisfies string
+if (reaction.value.kind === 'emoji') reaction.value.emoji satisfies string
+else reaction.value.token satisfies string
+createCommand.commandId satisfies AgentLoopOperationId
+sendCommand.commandId satisfies AgentLoopOperationId
+agentLoop.durableLedger.operationId satisfies 'commandId'
+agentLoop.durableLedger.scope satisfies 'owner-provider'
+agentLoop.durableLedger.providerAffinity satisfies 'generation-fenced'
+agentLoop.durableLedger.survivesClientDispose satisfies true
+agentLoop.durableLedger.payloadMatch satisfies 'structural-exact'
+agentLoop.durableLedger.retention.active satisfies 'logical-task-lifetime'
+agentLoop.durableLedger.retention.recoveryDays satisfies 30
+const installedDelivery = { disposition: 'reconciled' } satisfies AgentLoopDelivery
+installedDelivery.disposition satisfies AgentLoopDeliveryDisposition
+const installedEvent = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v2.schema.json',
+  contract: 'cordisx.agent-loop-event/v2',
+  schemaVersion: 2,
+  eventId: 'installed-event',
+  binding: { bindingId: 'installed-binding', generation: 1 },
+  sequence: 0,
+  occurredAt: '2026-08-31T00:00:00.000Z',
+  causation: { operationId: createCommand.commandId },
+  type: 'lifecycle',
+  lifecycle: { phase: 'binding.created' },
+} satisfies AgentLoopEvent
+installedEvent.causation.operationId satisfies AgentLoopOperationId
+const legacyCreate = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v1.schema.json',
+  contract: 'cordisx.agent-loop-command/v1',
+  schemaVersion: 1,
+  commandId: 'legacy-create',
+  type: 'create-or-bind',
+  definition: definition.identity,
+  definitions: [definition],
+  target: { mode: 'create' },
+} satisfies AgentLoopCommandV1
+const legacyParticipant = {
+  participantId: 'legacy-participant',
+  role: 'agent',
+  displayName: { key: 'legacy.agent', fallback: 'Legacy Agent' },
+} satisfies AgentConversationParticipantV1
+const legacyCreated = await legacyAgentLoop.createOrBind(legacyCreate)
+if (legacyCreated.status === 'accepted') legacyCreated.binding.task satisfies string
+// @ts-expect-error v1 intentionally has no durable cross-client ledger descriptor
+legacyAgentLoop.durableLedger
+const created = await agentLoop.createOrBind(createCommand)
+if (created.status === 'accepted') {
+  if (created.detailsUrl.target === 'host') created.detailsUrl.url satisfies \`app:\${string}\`
+  else created.detailsUrl.url satisfies \`https:\${string}\` | \`codex:\${string}\` | \`claude:\${string}\`
+  created.delivery.disposition satisfies AgentLoopDeliveryDisposition
+} else if (created.status === 'denied') {
+  created.authorization.state satisfies 'denied'
+} else if ('code' in created) {
+  created.code satisfies AgentLoopCreateOrBindUnavailableCode
+  created.authorization.state satisfies 'allowed'
+} else {
+  created.authorization.state satisfies 'unavailable'
+}
+const sent = await agentLoop.send(sendCommand)
+if (sent.status === 'accepted') {
+  sent.messageId satisfies string
+  sent.turn satisfies string
+  sent.delivery.disposition satisfies AgentLoopDeliveryDisposition
+} else if (sent.status === 'denied') {
+  sent.authorization.state satisfies 'denied'
+} else if ('code' in sent) {
+  sent.code satisfies AgentLoopOperationUnavailableCode
+  sent.authorization.state satisfies 'allowed'
+} else {
+  sent.authorization.state satisfies 'unavailable'
+}
+// @ts-expect-error task details are persisted results, not a resolver operation
+agentLoop.resolveTaskPresentation
+// @ts-expect-error Agent Loop owns no task-details open or navigation operation
+agentLoop.openTaskDetails
+const roots = await hostDom.catalog()
+roots.authority satisfies 'host'
+void canonical
+void cloned
+void effective
+void shell
+void legacyShell
+void legacyParticipant
+`)
   run(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer.ts')], consumer)
   writeFileSync(join(consumer, 'consumer.mjs'), `import { AGENT_AVATAR_UNKNOWN_SEED, canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar } from '@cordisx/protocol/agent-avatar/v1'\nimport assert from 'node:assert/strict'\nconst canonical = canonicalizeAgentAvatarSeed({ namespace: 'agent-definition', agentId: '  Ångent  ' })\nassert.equal(canonical, 'cordisx.agent-avatar.seed/v1:agent-definition:7:Ångent')\nassert.equal(canonicalizeAgentAvatarSeed({ namespace: 'unknown' }), AGENT_AVATAR_UNKNOWN_SEED)\nconst source = { kind: 'asset', ref: 'avatar-assets:reviewer' }\nconst cloned = cloneAgentAvatarRef(source)\nassert.notEqual(cloned, source)\nassert.ok(Object.isFrozen(cloned))\nsource.ref = 'avatar-assets:mutated'\nassert.equal(cloned.ref, 'avatar-assets:reviewer')\nconst parent = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'parent' })\nconst fallback = resolveAgentDefinitionAvatar({ agentId: 'child', inherit: 'inherit', parentAvatars: [parent] })\nassert.equal(fallback.seed, 'cordisx.agent-avatar.seed/v1:agent-definition:5:child')\nassert.ok(Object.isFrozen(fallback))\n`)
   run(process.execPath, [join(consumer, 'consumer.mjs')], consumer)

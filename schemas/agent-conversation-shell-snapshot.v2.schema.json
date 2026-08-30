@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v2.schema.json",
+  "title": "CordisX Agent Conversation Shell Snapshot v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "generation", "snapshotSequence", "selection", "items", "composer", "headerActions"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v2.schema.json" },
+    "contract": { "const": "cordisx.agent-conversation-shell-snapshot/v2" },
+    "schemaVersion": { "const": 2 },
+    "binding": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/bindingRef" },
+    "generation": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/generation" },
+    "snapshotSequence": { "type": "integer", "minimum": 0 },
+    "selection": { "$ref": "#/$defs/selection" },
+    "items": { "type": "array", "maxItems": 500, "items": { "$ref": "#/$defs/item" } },
+    "composer": { "$ref": "#/$defs/composer" },
+    "headerActions": { "type": "array", "maxItems": 12, "items": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/action" } }
+  },
+  "$defs": {
+    "selection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "no-room" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "roomId", "title", "multiParticipant", "participantPresentation", "participants"],
+          "properties": {
+            "kind": { "const": "room" },
+            "roomId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+            "title": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+            "secondary": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+            "multiParticipant": { "type": "boolean" },
+            "participantPresentation": { "enum": ["none", "host-initials"] },
+            "participants": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/participant" } },
+            "activeRuns": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/activeRun" } }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "multiParticipant": { "const": false } }, "required": ["multiParticipant"] },
+              "then": { "properties": { "participantPresentation": { "const": "none" } } }
+            }
+          ]
+        }
+      ]
+    },
+    "participant": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["participantId", "role", "displayName"],
+          "properties": {
+            "participantId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+            "role": { "enum": ["human", "system"] },
+            "displayName": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+            "avatar": { "$ref": "agent-avatar.v1.schema.json" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["participantId", "role", "displayName"],
+          "properties": {
+            "participantId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+            "role": { "const": "agent" },
+            "displayName": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+            "avatar": { "$ref": "agent-avatar.v1.schema.json" },
+            "agentIdentity": { "$ref": "agent-loop-common.v2.schema.json#/$defs/definitionIdentity" }
+          }
+        }
+      ]
+    },
+    "activeRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["participantId", "memberId", "runId", "lifecycle", "detailsUrl"],
+      "properties": {
+        "participantId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "memberId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "runId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "lifecycle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["phase"],
+          "properties": {
+            "phase": { "enum": ["active", "running", "waiting", "attention"] },
+            "updatedAt": { "type": "string", "format": "date-time" }
+          }
+        },
+        "detailsUrl": { "$ref": "agent-loop-task-details-common.v2.schema.json#/$defs/detailsUrl" }
+      }
+    },
+    "textBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "text"],
+      "properties": {
+        "kind": { "const": "text" },
+        "text": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" }
+      }
+    },
+    "reactionValue": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "emoji"],
+          "properties": {
+            "kind": { "const": "emoji" },
+            "emoji": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[^\\u0000-\\u001F\\u007F]+$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "token"],
+          "properties": {
+            "kind": { "const": "semantic" },
+            "token": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{0,31}$" }
+          }
+        }
+      ]
+    },
+    "reaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reactionId", "actorParticipantId", "value", "state"],
+      "properties": {
+        "reactionId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "actorParticipantId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "value": { "$ref": "#/$defs/reactionValue" },
+        "state": { "enum": ["pending", "completed", "failed"] }
+      }
+    },
+    "memberPresence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "itemId", "sequence", "participantId", "memberId", "runId", "state", "retryable"],
+      "properties": {
+        "kind": { "const": "member-presence" },
+        "itemId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "sequence": { "type": "integer", "minimum": 0 },
+        "participantId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "memberId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "runId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+        "state": { "enum": ["inviting", "creating", "joined", "ready", "failed"] },
+        "retryable": { "type": "boolean" },
+        "diagnostic": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+        "retry": { "$ref": "ui-common.v1.schema.json#/$defs/commandReference" }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["retry"], "properties": { "retry": true } },
+          "then": {
+            "properties": { "state": { "const": "failed" }, "retryable": { "const": true } }
+          }
+        }
+      ]
+    },
+    "item": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "itemId", "messageId", "sequence", "source", "author", "body", "reactions", "timestamp", "deliveryState", "runState", "ariaLive", "actions"],
+          "properties": {
+            "kind": { "const": "message" },
+            "itemId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+            "messageId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+            "sequence": { "type": "integer", "minimum": 0 },
+            "source": { "enum": ["agent-loop", "chatroom-acknowledgement"] },
+            "author": { "$ref": "#/$defs/participant" },
+            "body": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/textBlock" } },
+            "reactions": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/reaction" } },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "deliveryState": { "enum": ["pending", "sent", "delivered", "failed"] },
+            "runState": { "enum": ["idle", "running", "stopped", "failed"] },
+            "ariaLive": { "enum": ["off", "polite"] },
+            "actions": { "type": "array", "maxItems": 8, "items": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/action" } }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "itemId", "sequence", "label", "state", "ariaLive"],
+          "properties": {
+            "kind": { "const": "status" },
+            "itemId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
+            "sequence": { "type": "integer", "minimum": 0 },
+            "label": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+            "state": { "enum": ["info", "working", "warning", "error"] },
+            "ariaLive": { "enum": ["off", "polite"] }
+          }
+        },
+        { "$ref": "#/$defs/memberPresence" }
+      ]
+    },
+    "composer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["availability", "placeholder", "disabled", "submit"],
+      "properties": {
+        "availability": { "enum": ["available", "unavailable"] },
+        "placeholder": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
+        "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+        "submit": { "$ref": "ui-common.v1.schema.json#/$defs/commandReference" }
+      }
+    }
+  }
+}

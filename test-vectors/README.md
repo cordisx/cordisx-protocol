@@ -156,15 +156,29 @@ OneWorks implementation package is a Protocol production or peer dependency.
 Negative vectors reject raw URLs and paths, data/base64 payloads, unqualified
 or oversized refs, byte-length/NFC drift, and unsupported schema versions.
 
-Agent Loop v1 suites live in `agent-loop/valid` and `agent-loop/invalid`.
-They cover self-contained Agent-definition ancestry, exact field inheritance,
+Agent Loop v1 compatibility suites remain in `agent-loop/valid` and
+`agent-loop/invalid`; their formal files and per-client idempotency behavior are
+unchanged. Agent Loop v2 suites live in `agent-loop-v2/valid` and
+`agent-loop-v2/invalid`. They cover self-contained Agent-definition ancestry,
+exact field inheritance,
 opaque active task bindings, create-or-bind/send authorization reuse, ordered
 text/image-reference content, proactive message/approval/lifecycle events,
-per-client idempotent command replay, independent multi-binding subscriptions,
-snapshot replay before live pages, and terminal binding closure. They reject
-missing/cyclic/unused definitions, Room fields, image URLs, closed-binding
-sends, authorization drift, command-id reuse with a different command, orphan
-approval resolutions, and late events.
+owner-provider durable command replay across bound-client recreation,
+executed/replayed/reconciled delivery, independent multi-binding subscriptions,
+snapshot replay before live pages, terminal binding closure, and direct
+persisted task-details URLs for accepted create and explicit bind results. URL
+goldens freeze host `app:` versus external `https:`/`codex:`/`claude:` targets,
+canonical form, and exact length boundaries. Lifecycle vectors cover atomic
+generation replacement, binding/client isolation, missing details resources,
+and active-provider-association cleanup after provider replacement, disable,
+uninstall, closure, and dispose. This does not require durable Chatroom history
+to remove a closed run's persisted URL. They reject missing/cyclic/unused
+definitions, Room fields, image or
+unsafe task-details URLs, closed/stale/cross-binding attempts, forged capability
+use, authorization drift, command-id reuse with a different command, provider
+affinity/generation drift, provider-private bounded retention, expired recovery,
+operation-incompatible authorization, orphan
+approval resolutions, and late events. No vector introduces a navigation API.
 
 Channel Manager v2 vectors additionally cover strict snapshot/request/result
 identity, profile and Host-generation fencing, operation-to-exact-target
