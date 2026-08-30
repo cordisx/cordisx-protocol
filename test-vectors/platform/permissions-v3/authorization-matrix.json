@@ -1,0 +1,26 @@
+{
+  "trustStates": [
+    { "label": "ordinary-dom", "official": false, "certified": false, "capability": "ui.extension-points.render", "expectedMode": "explicit-user" },
+    { "label": "certified-only-dom", "official": false, "certified": true, "capability": "ui.extension-points.render", "expectedMode": "certified-implicit" },
+    { "label": "official-only-dom", "official": true, "certified": false, "capability": "ui.extension-points.render", "expectedMode": "explicit-user" },
+    { "label": "official-certified-dom", "official": true, "certified": true, "capability": "ui.extension-points.render", "expectedMode": "certified-implicit" },
+    { "label": "ordinary-non-dom", "official": false, "certified": false, "capability": "tasks.content.read", "expectedMode": "explicit-user" },
+    { "label": "certified-only-non-dom", "official": false, "certified": true, "capability": "tasks.content.read", "expectedMode": "explicit-user" },
+    { "label": "official-only-non-dom", "official": true, "certified": false, "capability": "tasks.content.read", "expectedMode": "explicit-user" },
+    { "label": "official-certified-non-dom", "official": true, "certified": true, "capability": "tasks.content.read", "expectedMode": "explicit-user" }
+  ],
+  "leaseInvalidations": [
+    "artifact-version-change",
+    "artifact-digest-change",
+    "certification-missing",
+    "certification-revoked",
+    "certification-expired",
+    "source-revoked",
+    "scope-expansion",
+    "runtime-generation-change",
+    "module-generation-change",
+    "plugin-disabled",
+    "plugin-uninstalled"
+  ],
+  "forbiddenSelfClaims": ["official", "certified", "certification", "authorizationMode"]
+}
