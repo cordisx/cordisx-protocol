@@ -194,10 +194,15 @@ function validateResolverCase(vector) {
 function validateOneWorksRc8Case(vector) {
   const errors = []
   if (vector.core?.spec !== '@oneworks/avatar@1.0.0-rc.8') errors.push('core package is not exact @oneworks/avatar rc.8')
+  if (vector.core?.integrity !== 'sha512-9vKWfiPUlEfVzcO+6Q2QsCmqlINZb2CpXjN4M/JO2+v0IwqsGIcWGaxW44lf3moSQj70lEmnF6F7bZofw7mcXQ==') errors.push('core package integrity drifted from @oneworks/avatar rc.8')
+  if (vector.core?.shasum !== 'd392232f850014c323f19a3a952c45d2d432b381') errors.push('core package shasum drifted from @oneworks/avatar rc.8')
   if (vector.react?.spec !== '@oneworks/avatar-react@1.0.0-rc.8') errors.push('React package is not exact @oneworks/avatar-react rc.8')
+  if (vector.react?.integrity !== 'sha512-fJ+p2LLG5tb3YV5QAAm/3gnkEFuCfMSR/WttpvMv8xNp64Ou6TB4Tz5QE6LqOwgT7q67qrBluZMwDfQUjX++aw==') errors.push('React package integrity drifted from @oneworks/avatar-react rc.8')
+  if (vector.react?.shasum !== '6a62a452fe4a3f1ffa40c057f09b186d29ba84ca') errors.push('React package shasum drifted from @oneworks/avatar-react rc.8')
   for (const packageName of ['@oneworks/avatar', '@oneworks/avatar-react']) {
     if (packageManifest.dependencies?.[packageName] !== undefined) errors.push(`${packageName} must not be a Protocol production dependency`)
     if (packageManifest.peerDependencies?.[packageName] !== undefined) errors.push(`${packageName} must not be a Protocol peer dependency`)
+    if (packageManifest.optionalDependencies?.[packageName] !== undefined) errors.push(`${packageName} must not be a Protocol optional dependency`)
   }
   for (let index = 0; index < (vector.golden?.length ?? 0); index += 1) {
     const entry = vector.golden[index]
