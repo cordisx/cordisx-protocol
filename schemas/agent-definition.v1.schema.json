@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+  "title": "CordisX Agent Definition v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "identity", "inherit"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-definition/v1" },
+    "schemaVersion": { "const": 1 },
+    "identity": { "$ref": "agent-loop-common.v1.schema.json#/$defs/definitionIdentity" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "description": { "type": "string", "maxLength": 2000 },
+    "extends": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": { "$ref": "agent-loop-common.v1.schema.json#/$defs/definitionIdentity" }
+    },
+    "inherit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["promptSections", "rules", "skills", "tools", "mcpServers", "runtimeDefaults"],
+      "properties": {
+        "promptSections": { "$ref": "agent-loop-common.v1.schema.json#/$defs/inheritanceMode" },
+        "rules": { "$ref": "agent-loop-common.v1.schema.json#/$defs/inheritanceMode" },
+        "skills": { "$ref": "agent-loop-common.v1.schema.json#/$defs/inheritanceMode" },
+        "tools": { "$ref": "agent-loop-common.v1.schema.json#/$defs/objectInheritanceMode" },
+        "mcpServers": { "$ref": "agent-loop-common.v1.schema.json#/$defs/objectInheritanceMode" },
+        "runtimeDefaults": { "$ref": "agent-loop-common.v1.schema.json#/$defs/objectInheritanceMode" }
+      }
+    },
+    "promptSections": {
+      "type": "array",
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/promptSection" }
+    },
+    "rules": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "$ref": "agent-loop-common.v1.schema.json#/$defs/identifier" }
+    },
+    "skills": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "$ref": "agent-loop-common.v1.schema.json#/$defs/identifier" }
+    },
+    "tools": { "$ref": "agent-loop-common.v1.schema.json#/$defs/filter" },
+    "mcpServers": { "$ref": "agent-loop-common.v1.schema.json#/$defs/filter" },
+    "runtimeDefaults": { "$ref": "#/$defs/runtimeDefaults" }
+  },
+  "$defs": {
+    "promptSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sectionId", "kind", "text"],
+      "properties": {
+        "sectionId": { "$ref": "agent-loop-common.v1.schema.json#/$defs/identifier" },
+        "kind": {
+          "enum": ["introduction", "personality", "role", "operations", "tools", "knowledge", "memory-policy", "memory", "other"]
+        },
+        "text": { "type": "string", "minLength": 1, "maxLength": 100000 }
+      }
+    },
+    "runtimeDefaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "adapterId": { "$ref": "agent-loop-common.v1.schema.json#/$defs/identifier" },
+        "model": { "$ref": "platform-model.v1.schema.json#/$defs/modelRef" },
+        "effort": { "enum": ["low", "medium", "high", "xhigh"] }
+      },
+      "minProperties": 1
+    }
+  }
+}

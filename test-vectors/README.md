@@ -145,6 +145,14 @@ registration-qualified run bindings, non-empty replay, serialized replay/live
 ordering, disposal terminality, and the absence of caller, bridge, or second
 connection fields.
 
+Agent Loop v1 suites live in `agent-loop/valid` and `agent-loop/invalid`.
+They cover self-contained Agent-definition ancestry, exact field inheritance,
+opaque active task bindings, create-or-bind/send authorization reuse, ordered
+text/image-reference content, proactive message/approval/lifecycle events,
+snapshot replay before live pages, and terminal binding closure. They reject
+missing/cyclic/unused definitions, Room fields, image URLs, closed-binding
+sends, authorization drift, orphan approval resolutions, and late events.
+
 Channel Manager v2 vectors additionally cover strict snapshot/request/result
 identity, profile and Host-generation fencing, operation-to-exact-target
 matching, stale-operation suppression, account-scoped safe-log pages, opaque

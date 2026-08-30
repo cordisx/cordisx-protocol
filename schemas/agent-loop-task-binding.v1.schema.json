@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json",
+  "title": "CordisX Agent Loop Task Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "definition", "task", "state"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-loop-task-binding/v1" },
+    "schemaVersion": { "const": 1 },
+    "binding": { "$ref": "agent-loop-common.v1.schema.json#/$defs/bindingIdentity" },
+    "definition": { "$ref": "agent-loop-common.v1.schema.json#/$defs/definitionIdentity" },
+    "task": { "$ref": "agent-loop-common.v1.schema.json#/$defs/opaqueHandle" },
+    "state": { "enum": ["active", "closed"] }
+  }
+}

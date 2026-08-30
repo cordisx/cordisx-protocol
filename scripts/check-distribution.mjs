@@ -15,6 +15,7 @@ const expectedFiles = [
     .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
     .map((entry) => `schemas/${entry.name}`),
   'types/agent-conversation-shell.v1.d.ts',
+  'types/agent-loop.v1.d.ts',
   'types/connector-service.v1.d.ts',
   'types/host-dom.v1.d.ts',
 ].sort()
@@ -41,7 +42,7 @@ try {
   const consumer = join(temp, 'consumer')
   run(process.execPath, [process.env.npm_execpath ?? 'node_modules/npm/bin/npm-cli.js', 'install', '--ignore-scripts', '--no-package-lock', '--prefix', consumer, archive])
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
-  writeFileSync(join(consumer, 'consumer.ts'), `import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'\nimport type { AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v1'\nimport type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'\ndeclare const connector: BoundConnectorClient\ndeclare const shell: AgentConversationShellSource\ndeclare const hostDom: BoundHostDomClient\nconst discovered = await connector.discover()\nif (discovered.status === 'accepted') discovered.snapshot.registrations satisfies readonly unknown[]\nconst roots = await hostDom.catalog()\nroots.authority satisfies 'host'\nvoid shell\n`)
+  writeFileSync(join(consumer, 'consumer.ts'), `import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'\nimport type { AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v1'\nimport type { BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v1'\nimport type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'\ndeclare const connector: BoundConnectorClient\ndeclare const shell: AgentConversationShellSource\ndeclare const agentLoop: BoundAgentLoopClient\ndeclare const hostDom: BoundHostDomClient\nconst discovered = await connector.discover()\nif (discovered.status === 'accepted') discovered.snapshot.registrations satisfies readonly unknown[]\nconst roots = await hostDom.catalog()\nroots.authority satisfies 'host'\nvoid shell\nvoid agentLoop\n`)
   run(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer.ts')], consumer)
 
   const installed = JSON.parse(readFileSync(join(consumer, 'node_modules/@cordisx/protocol/package.json'), 'utf8'))

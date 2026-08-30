@@ -92,6 +92,13 @@ surface separately from the Host-only principal/user/authorization binding. It
 requires exact registration-qualified run bindings, an ordered subscription
 page stream with unsubscribe/dispose lifetime, replay through the fixed
 snapshot before live pages, and no caller identity construction by plugins.
+Agent Loop conformance covers the bounded self-contained definition catalog,
+field inheritance vocabulary, exact task binding and authorization
+correlation, text/image-reference content, proactive message/approval/lifecycle
+events, replay/live ordering, and terminal closure. It rejects missing,
+cyclic, duplicate, or unused definitions and Room, path, URL, callback, raw
+bridge, secret, and credential fields. It is Protocol-only evidence and does
+not prove Host/Chatroom wiring or image rendering.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

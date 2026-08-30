@@ -161,6 +161,19 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   surface plus typed discover/execute/subscribe outcomes;
 - `connector-bound-client-lifecycle.v1.schema.json`: executable client and
   subscription terminal-state projection for unsubscribe and owner disposal;
+- `agent-loop-common.v1.schema.json` and `agent-definition.v1.schema.json`:
+  room-neutral Agent identity, field-specific inheritance, structured prompt
+  sections, filters, runtime defaults, and text/image-reference content;
+- `agent-loop-task-binding.v1.schema.json`, `agent-loop-command.v1.schema.json`,
+  and `agent-loop-result.v1.schema.json`: opaque generation-fenced task
+  binding plus Host-bound create-or-bind/send exchanges that reuse existing
+  task/turn authorization outcomes;
+- `agent-loop-event.v1.schema.json`,
+  `agent-loop-event-subscription.v1.schema.json`, and
+  `agent-loop-event-page.v1.schema.json`: proactive ordered
+  message/approval/lifecycle events with replay/live paging; and
+- `agent-loop-bound-client.v1.schema.json`: the fiber-owned injected Agent
+  Loop client surface;
 - `service-config-common.v1.schema.json`: shared plugin/service identity,
   profile/generation scope, form schema projection, exact application modes,
   secret slots, and bounded errors for launcher service configuration;

@@ -14,6 +14,8 @@
     "icon-theme.v1.test.ts",
     "connector-service.v1.d.ts",
     "connector-service.v1.test.ts",
+    "agent-loop.v1.d.ts",
+    "agent-loop.v1.test.ts",
     "agent-conversation-shell.v1.d.ts",
     "agent-conversation-shell.v1.test.ts",
     "host-dom.v1.d.ts",
