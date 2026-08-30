@@ -23,7 +23,9 @@ The machine-readable contracts are:
   catalog source; and
 - `schemas/marketplace-official.v1.schema.json` and
   `schemas/marketplace-certification.v1.schema.json` for the two independent
-  trust dimensions embedded by a version-3 feed.
+  trust dimensions embedded by a version-3 feed; and
+- `schemas/marketplace-certified-permission-projection.v1.schema.json` for the
+  Host-owned exact Certified input consumed by permission policy.
 
 Version 2 adds localization only for human-facing feed metadata. It does not
 define installation, executable package resolution, signatures, provenance,
@@ -63,7 +65,7 @@ to use its existing fallback and localization rules underneath. Hosts may also
 accept a bare canonical HTTPS URL as an ergonomic quick-import shorthand and
 project it to an enabled minimal v1 record.
 
-Official status is deliberately absent. A source cannot self-assert that it is
+Official status is deliberately absent. A source import cannot self-assert that it is
 official, trusted, certified, or safe through import data. Hosts derive an
 undeletable built-in source from their configured trust root and may let the
 user disable it. Importing, renaming, annotating, enabling, or disabling a
@@ -225,4 +227,8 @@ not HTML, and do not execute URLs or plugin code merely because an entry passed
 schema validation. HTTPS and schema validity do not establish publisher
 identity, artifact integrity, review, official status, certification, or
 safety. Those claims require a configured Marketplace trust root and a separate
-version-bound trust record; they never grant permissions or bypass Host policy.
+version-bound trust record. Official never affects permission policy. Active
+Certified may be projected as exact-artifact eligibility for only the
+DOM/rendering capabilities explicitly marked by the PermissionBroker's own
+catalog; the broker still issues and audits the normal constrained grant or
+lease. Every other permission and Host policy path remains unchanged.

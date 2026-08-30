@@ -1,0 +1,37 @@
+{
+  "case": "expired-certification-cannot-project",
+  "evaluatedAt": "2026-08-24T13:00:00Z",
+  "subject": {
+    "pluginId": "notes",
+    "version": "1.3.0",
+    "canonicalSource": "https://github.com/example/notes",
+    "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v1.schema.json",
+    "schemaVersion": 1,
+    "kind": "cordisx-certified-permission-eligibility",
+    "status": "active",
+    "source": "https://github.com/example/notes",
+    "pluginId": "notes",
+    "version": "1.3.0",
+    "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "reviewPolicy": {
+      "id": "cordisx-marketplace-review",
+      "version": "1.0.0"
+    },
+    "reviewedAt": "2026-08-20T08:00:00Z",
+    "expiresAt": "2026-08-23T08:00:00Z",
+    "evidence": {
+      "kind": "protected-marketplace-review",
+      "reference": "https://github.com/cordisx/marketplace/pull/42"
+    },
+    "feed": {
+      "generatedAt": "2026-08-24T12:31:00Z",
+      "root": "https://raw.githubusercontent.com/cordisx/marketplace/main/marketplace.json",
+      "authority": "cordisx.marketplace.codeowners/v1"
+    },
+    "fingerprint": "sha256:cce9be54450b0fef5e2f19c11043740033a2e2eb189df32f99c23847a8102f71",
+    "revision": "2026-08-24T12:31:00Z"
+  }
+}

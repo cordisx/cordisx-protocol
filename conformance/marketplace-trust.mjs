@@ -1,4 +1,5 @@
 import { readFile, readdir } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -9,6 +10,7 @@ const schemaNames = [
   'ui-common.v1.schema.json',
   'plugin-lifecycle-common.v1.schema.json',
   'marketplace-certification.v1.schema.json',
+  'marketplace-certified-permission-projection.v1.schema.json',
   'marketplace-official.v1.schema.json',
   'marketplace-plugin.v3.schema.json',
   'marketplace-feed.v3.schema.json',
@@ -28,6 +30,9 @@ for (const schema of schemas.values()) ajv.addSchema(schema)
 const certificationSchema = schemas.get('marketplace-certification.v1.schema.json')
 const validateCertificationSchema = ajv.getSchema(certificationSchema.$id)
 if (validateCertificationSchema === undefined) throw new Error('certification schema was not registered')
+const certifiedPermissionProjectionSchema = schemas.get('marketplace-certified-permission-projection.v1.schema.json')
+const validateCertifiedPermissionProjectionSchema = ajv.getSchema(certifiedPermissionProjectionSchema.$id)
+if (validateCertifiedPermissionProjectionSchema === undefined) throw new Error('certified permission projection schema was not registered')
 const officialSchema = schemas.get('marketplace-official.v1.schema.json')
 const validateOfficialSchema = ajv.getSchema(officialSchema.$id)
 if (validateOfficialSchema === undefined) throw new Error('official publisher schema was not registered')
@@ -90,6 +95,45 @@ export function validateCertification(value, options = {}) {
     if (revokedAt < reviewedAt) errors.push({ message: 'revokedAt must not be before reviewedAt' })
     if (revokedAt > evaluatedAt) errors.push({ message: 'revokedAt must not be after evaluatedAt' })
   }
+  return errors
+}
+
+export function validateCertifiedPermissionProjection(value, options = {}) {
+  const errors = []
+  if (!validateCertifiedPermissionProjectionSchema(value)) return validateCertifiedPermissionProjectionSchema.errors ?? []
+  if (options.subject !== undefined && !sameIdentity({
+    pluginId: value.pluginId,
+    version: value.version,
+    canonicalSource: value.source,
+    integrity: value.integrity,
+  }, options.subject)) {
+    errors.push({ message: 'certified permission projection must exactly match pluginId, version, canonicalSource, and integrity' })
+  }
+
+  const evaluatedAt = instant(options.evaluatedAt, 'evaluatedAt', errors)
+  const feedGeneratedAt = instant(value.feed.generatedAt, 'feed.generatedAt', errors)
+  const reviewedAt = instant(value.reviewedAt, 'reviewedAt', errors)
+  const expiresAt = instant(value.expiresAt, 'expiresAt', errors)
+  if (errors.length > 0) return errors
+
+  if (feedGeneratedAt > evaluatedAt) errors.push({ message: 'feedGeneratedAt must not be after evaluatedAt' })
+  if (reviewedAt > feedGeneratedAt) errors.push({ message: 'reviewedAt must not be after feedGeneratedAt' })
+  if (expiresAt <= reviewedAt) errors.push({ message: 'expiresAt must be after reviewedAt' })
+  if (expiresAt <= evaluatedAt) errors.push({ message: 'expired certification cannot produce an active permission projection' })
+  if (value.revision !== value.feed.generatedAt) errors.push({ message: 'projection revision must equal the source feed generatedAt' })
+  const fingerprintPayload = {
+    source: value.source,
+    pluginId: value.pluginId,
+    version: value.version,
+    integrity: value.integrity,
+    reviewPolicy: value.reviewPolicy,
+    reviewedAt: value.reviewedAt,
+    expiresAt: value.expiresAt,
+    evidence: value.evidence,
+    feed: value.feed,
+  }
+  const fingerprint = `sha256:${createHash('sha256').update(JSON.stringify(fingerprintPayload)).digest('hex')}`
+  if (value.fingerprint !== fingerprint) errors.push({ message: 'projection fingerprint must cover every security-relevant field in canonical order' })
   return errors
 }
 
@@ -238,6 +282,13 @@ function validateVector(vector) {
   })
 }
 
+function validateProjectionVector(vector) {
+  return validateCertifiedPermissionProjection(vector.value, {
+    evaluatedAt: vector.evaluatedAt,
+    subject: vector.subject,
+  })
+}
+
 let failures = 0
 for (const vectorGroup of ['marketplace-certification', 'marketplace-official']) {
   for (const kind of ['valid', 'invalid']) {
@@ -249,6 +300,18 @@ for (const vectorGroup of ['marketplace-certification', 'marketplace-official'])
         console.error(`${path.relative(root, file)} should ${shouldPass ? 'pass' : 'fail'}`, errors)
         failures += 1
       }
+    }
+  }
+}
+
+for (const kind of ['valid', 'invalid']) {
+  for (const file of await jsonFiles(path.join(root, 'test-vectors/marketplace-certified-permission-projection', kind))) {
+    const vector = JSON.parse(await readFile(file, 'utf8'))
+    const errors = validateProjectionVector(vector)
+    const shouldPass = kind === 'valid'
+    if ((errors.length === 0) !== shouldPass) {
+      console.error(`${path.relative(root, file)} should ${shouldPass ? 'pass' : 'fail'}`, errors)
+      failures += 1
     }
   }
 }

@@ -5,6 +5,13 @@ Deterministic manifest, package identity, signature, grant, activation, and comp
 Marketplace v1 vectors live in `marketplace/valid`, `marketplace/invalid`, and
 `marketplace/feeds`.
 
+Marketplace trust vectors cover the four independent Official/Certified states,
+exact artifact binding, revocation, expiry, and manifest self-claims. The
+`marketplace-certified-permission-projection` suite additionally proves that
+only an active exact Certified record can produce the Host-owned permission
+eligibility input, with all trust and review fields covered by its fingerprint;
+Official and permission allowlists are forbidden from that projection.
+
 Structured UI v1 suites live in `ui/valid` and `ui/invalid` and cover commands,
 surface entries, distinct native sidebar menu points, routes, pages, host
 outlets, structured app/main page headers, body-only mount boundaries, and

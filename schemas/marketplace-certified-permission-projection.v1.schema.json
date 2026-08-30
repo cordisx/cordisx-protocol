@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v1.schema.json",
+  "title": "CordisX Certified Permission Eligibility Projection v1",
+  "description": "Host-owned projection of one active exact-artifact certification. It is a PermissionBroker eligibility input, never a grant or plugin-authored claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "kind",
+    "status",
+    "source",
+    "pluginId",
+    "version",
+    "integrity",
+    "reviewPolicy",
+    "reviewedAt",
+    "expiresAt",
+    "evidence",
+    "feed",
+    "fingerprint",
+    "revision"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "cordisx-certified-permission-eligibility" },
+    "status": { "const": "active" },
+    "source": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/canonicalPublicSource" },
+    "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+    "integrity": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" },
+    "reviewPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "cordisx-marketplace-review" },
+        "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" }
+      }
+    },
+    "reviewedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reference"],
+      "properties": {
+        "kind": { "const": "protected-marketplace-review" },
+        "reference": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://github\\.com/cordisx/marketplace/(?:pull/[1-9][0-9]*|commit/[a-f0-9]{40})$",
+          "maxLength": 2048
+        }
+      }
+    },
+    "feed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generatedAt", "root", "authority"],
+      "properties": {
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "root": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://[^?#]+$",
+          "maxLength": 2048
+        },
+        "authority": { "const": "cordisx.marketplace.codeowners/v1" }
+      }
+    },
+    "fingerprint": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" },
+    "revision": { "type": "string", "format": "date-time" }
+  }
+}
