@@ -1,0 +1,5 @@
+{
+  "case": "room-settings-text-normalization",
+  "names": ["A", "Architecture Review", "房间名称", "😀"],
+  "descriptions": ["A", "First line\nSecond line", "群聊介绍", "é"]
+}

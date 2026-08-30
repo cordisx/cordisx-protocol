@@ -1,0 +1,23 @@
+{
+  "case": "approval-item-invalid-updates",
+  "mutations": [
+    "unknown-item",
+    "cross-kind",
+    "participant",
+    "member",
+    "run",
+    "binding-id",
+    "binding-generation",
+    "turn",
+    "approval-id",
+    "approval-kind",
+    "timeline-order",
+    "duplicate-decision",
+    "terminal-actions",
+    "failed-without-diagnostic",
+    "callback",
+    "dom",
+    "html",
+    "raw-task"
+  ]
+}

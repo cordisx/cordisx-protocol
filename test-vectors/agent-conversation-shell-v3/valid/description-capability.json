@@ -1,0 +1,11 @@
+{
+  "case": "description-capability-fail-closed",
+  "initialDescription": "omitted",
+  "patch": {
+    "name": "Must Not Apply",
+    "description": { "state": "present", "text": "Capability is absent." }
+  },
+  "expectedStatus": "unavailable",
+  "expectedCode": "settings-unavailable",
+  "expectedMutationCount": 0
+}

@@ -1,0 +1,110 @@
+{
+  "case": "room-settings-cas",
+  "initialSnapshot": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v3.schema.json",
+    "contract": "cordisx.agent-conversation-shell-snapshot/v3",
+    "schemaVersion": 3,
+    "binding": { "bindingId": "binding-room-settings", "ownerGeneration": "owner-generation-7" },
+    "generation": "source-generation-4",
+    "snapshotSequence": 41,
+    "selection": {
+      "kind": "room",
+      "roomId": "room-7",
+      "title": { "key": "room.title", "fallback": "Architecture" },
+      "description": { "state": "empty" },
+      "multiParticipant": true,
+      "participantPresentation": "host-initials",
+      "participants": [
+        { "participantId": "participant-owner", "role": "human", "displayName": { "key": "participant.owner", "fallback": "Owner" } },
+        { "participantId": "participant-agent", "role": "agent", "displayName": { "key": "participant.agent", "fallback": "Reviewer" }, "agentIdentity": { "agentId": "reviewer", "revision": "definition-2" } }
+      ],
+      "activeRuns": [
+        {
+          "participantId": "participant-agent",
+          "memberId": "member-agent",
+          "runId": "run-agent",
+          "lifecycle": { "phase": "running", "updatedAt": "2026-08-31T08:00:00.000Z" },
+          "detailsUrl": { "url": "app://-/tasks/task-agent", "target": "host" }
+        }
+      ]
+    },
+    "items": [
+      { "kind": "status", "itemId": "item-1", "sequence": 0, "label": { "key": "room.ready", "fallback": "Ready" }, "state": "info", "ariaLive": "polite" }
+    ],
+    "composer": { "availability": "available", "placeholder": { "key": "composer.message", "fallback": "Message" }, "disabled": { "value": false }, "submit": { "id": "chatroom:submit" } },
+    "headerActions": []
+  },
+  "request": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-request.v3.schema.json",
+    "contract": "cordisx.agent-conversation-shell-room-settings-request/v3",
+    "schemaVersion": 3,
+    "requestId": "settings-operation-9",
+    "binding": { "bindingId": "binding-room-settings", "ownerGeneration": "owner-generation-7" },
+    "generation": "source-generation-4",
+    "roomId": "room-7",
+    "expectedSnapshotSequence": 41,
+    "patch": {
+      "name": "Architecture Review",
+      "description": { "state": "present", "text": "Plan the migration.\nRecord decisions." }
+    }
+  },
+  "appliedResult": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-result.v3.schema.json",
+    "contract": "cordisx.agent-conversation-shell-room-settings-result/v3",
+    "schemaVersion": 3,
+    "requestId": "settings-operation-9",
+    "binding": { "bindingId": "binding-room-settings", "ownerGeneration": "owner-generation-7" },
+    "generation": "source-generation-4",
+    "roomId": "room-7",
+    "expectedSnapshotSequence": 41,
+    "type": "update-room-settings",
+    "status": "applied",
+    "code": "applied",
+    "snapshotSequence": 42
+  },
+  "expectedSnapshot": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v3.schema.json",
+    "contract": "cordisx.agent-conversation-shell-snapshot/v3",
+    "schemaVersion": 3,
+    "binding": { "bindingId": "binding-room-settings", "ownerGeneration": "owner-generation-7" },
+    "generation": "source-generation-4",
+    "snapshotSequence": 42,
+    "selection": {
+      "kind": "room",
+      "roomId": "room-7",
+      "title": { "key": "room.title", "fallback": "Architecture Review" },
+      "description": { "state": "present", "text": { "key": "room.description", "fallback": "Plan the migration.\nRecord decisions." } },
+      "multiParticipant": true,
+      "participantPresentation": "host-initials",
+      "participants": [
+        { "participantId": "participant-owner", "role": "human", "displayName": { "key": "participant.owner", "fallback": "Owner" } },
+        { "participantId": "participant-agent", "role": "agent", "displayName": { "key": "participant.agent", "fallback": "Reviewer" }, "agentIdentity": { "agentId": "reviewer", "revision": "definition-2" } }
+      ],
+      "activeRuns": [
+        {
+          "participantId": "participant-agent",
+          "memberId": "member-agent",
+          "runId": "run-agent",
+          "lifecycle": { "phase": "running", "updatedAt": "2026-08-31T08:00:00.000Z" },
+          "detailsUrl": { "url": "app://-/tasks/task-agent", "target": "host" }
+        }
+      ]
+    },
+    "items": [
+      { "kind": "status", "itemId": "item-1", "sequence": 0, "label": { "key": "room.ready", "fallback": "Ready" }, "state": "info", "ariaLive": "polite" }
+    ],
+    "composer": { "availability": "available", "placeholder": { "key": "composer.message", "fallback": "Message" }, "disabled": { "value": false }, "submit": { "id": "chatroom:submit" } },
+    "headerActions": []
+  },
+  "clearRequest": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-request.v3.schema.json",
+    "contract": "cordisx.agent-conversation-shell-room-settings-request/v3",
+    "schemaVersion": 3,
+    "requestId": "settings-operation-10",
+    "binding": { "bindingId": "binding-room-settings", "ownerGeneration": "owner-generation-7" },
+    "generation": "source-generation-4",
+    "roomId": "room-7",
+    "expectedSnapshotSequence": 42,
+    "patch": { "description": { "state": "empty" } }
+  }
+}

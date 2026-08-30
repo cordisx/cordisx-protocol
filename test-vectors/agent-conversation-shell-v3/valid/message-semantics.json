@@ -1,0 +1,68 @@
+{
+  "case": "conversation-self-introduction-acknowledgement",
+  "conversation": {
+    "kind": "message",
+    "itemId": "item-conversation",
+    "messageId": "message-conversation",
+    "sequence": 1,
+    "source": "agent-loop",
+    "semantic": { "purpose": "conversation", "causation": { "operationId": "operation-send" } },
+    "author": { "participantId": "participant-agent", "role": "agent", "displayName": { "key": "participant.agent", "fallback": "Reviewer" }, "agentIdentity": { "agentId": "reviewer", "revision": "definition-2" } },
+    "body": [{ "kind": "text", "text": { "key": "message.conversation", "fallback": "I reviewed the change." } }],
+    "reactions": [],
+    "timestamp": "2026-08-31T10:00:00.000Z",
+    "deliveryState": "delivered",
+    "runState": "idle",
+    "ariaLive": "polite",
+    "actions": []
+  },
+  "selfIntroduction": {
+    "kind": "message",
+    "itemId": "item-self-introduction",
+    "messageId": "message-introduction",
+    "sequence": 2,
+    "source": "agent-loop",
+    "semantic": {
+      "purpose": "member-self-introduction",
+      "causation": { "operationId": "operation-introduction" },
+      "participantId": "participant-agent",
+      "memberId": "member-agent",
+      "runId": "run-agent",
+      "binding": { "bindingId": "binding-introduction", "generation": 4 },
+      "turn": "turn-introduction"
+    },
+    "author": { "participantId": "participant-agent", "role": "agent", "displayName": { "key": "participant.agent", "fallback": "Reviewer" }, "agentIdentity": { "agentId": "reviewer", "revision": "definition-2" } },
+    "body": [{ "kind": "text", "text": { "key": "message.self-introduction", "fallback": "I review changes and explain risks before they ship." } }],
+    "reactions": [],
+    "timestamp": "2026-08-31T10:00:01.000Z",
+    "deliveryState": "delivered",
+    "runState": "idle",
+    "ariaLive": "polite",
+    "actions": []
+  },
+  "acknowledgement": {
+    "kind": "message",
+    "itemId": "item-acknowledgement",
+    "messageId": "message-acknowledgement",
+    "sequence": 3,
+    "source": "chatroom-acknowledgement",
+    "semantic": { "purpose": "chatroom-acknowledgement" },
+    "author": { "participantId": "participant-owner", "role": "human", "displayName": { "key": "participant.owner", "fallback": "Owner" } },
+    "body": [{ "kind": "text", "text": { "key": "message.acknowledgement", "fallback": "Sent." } }],
+    "reactions": [],
+    "timestamp": "2026-08-31T10:00:02.000Z",
+    "deliveryState": "delivered",
+    "runState": "idle",
+    "ariaLive": "polite",
+    "actions": []
+  },
+  "agentLoopProjection": {
+    "operationId": "operation-introduction",
+    "participantId": "participant-agent",
+    "memberId": "member-agent",
+    "runId": "run-agent",
+    "binding": { "bindingId": "binding-introduction", "generation": 4 },
+    "turn": "turn-introduction",
+    "messageId": "message-introduction"
+  }
+}

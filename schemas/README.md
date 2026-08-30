@@ -170,6 +170,15 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   mapping, exact active-run/presence triples, AgentLoop-v2-canonical details
   URLs, closed-source messages, reactions, member-presence progress, and
   generation-fenced ordered updates;
+- `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v3.schema.json`
+  plus `agent-conversation-shell-room-settings-{request,result}.v3.schema.json`
+  and `agent-conversation-shell-room-collection-leading-visual.v3.schema.json`:
+  the complete Shell v3 successor, reusing the frozen v2 item definitions while
+  adding an optional explicit-empty/present Room description and an atomic,
+  request-idempotent, owner/binding/generation/Room/snapshot-fenced settings
+  mutation with closed applied, conflict, and unavailable results, plus a
+  standalone embedded semantic-icon or Room-associated composite-avatar value
+  for Host-owned collection rows;
 - `agent-loop-common.v1.schema.json`, the unchanged `agent-loop-*.v1` family,
   and `agent-definition.v1.schema.json`:
   room-neutral Agent identity, field-specific inheritance, structured prompt
@@ -187,6 +196,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `agent-loop-bound-client.v2.schema.json`: the fiber-owned injected Agent
   Loop client surface with a provider-owned, generation-fenced durable operation
   ledger that survives client disposal;
+- `agent-loop-{common,task-binding,command,result,event,event-subscription,event-page,bound-client}.v3.schema.json`:
+  the complete Agent Loop v3 successor, preserving v2 create/bind/send and its
+  durable ledger while adding an exact-binding `approval-decision`,
+  `approvals.decide` authorization, closed conflict/unavailable results, and
+  required operation causation for decision-resolved approval events; it also
+  adds durable request/cancel member-self-introduction intents, stable accepted
+  turn/message identities, and causation-fenced introduction/cancellation
+  events without a prompt, body, model, response, or consumer-time field;
 - `agent-loop-task-details-common.v2.schema.json`: canonical Host or external
   details URL used by accepted create-or-bind results;
 - `agent-avatar.v1.schema.json` and

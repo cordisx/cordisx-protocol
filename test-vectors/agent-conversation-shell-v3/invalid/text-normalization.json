@@ -1,0 +1,5 @@
+{
+  "case": "room-settings-invalid-text-normalization",
+  "names": ["", " Architecture", "Architecture ", "Room\nName", "Room\tName", "é", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
+  "descriptions": ["", " Description", "Description ", "First\rSecond", "First\tSecond", "é"]
+}

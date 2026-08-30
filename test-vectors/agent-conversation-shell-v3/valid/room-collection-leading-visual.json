@@ -1,0 +1,50 @@
+{
+  "case": "room-collection-leading-visual",
+  "countVectors": [
+    { "kind": "room-composite-avatar", "roomId": "room-count-0", "participants": [] },
+    { "kind": "room-composite-avatar", "roomId": "room-count-1", "participants": [
+      { "participantId": "participant-1", "avatar": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:1:a" } }
+    ] },
+    { "kind": "room-composite-avatar", "roomId": "room-count-2", "participants": [
+      { "participantId": "participant-1", "avatar": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:1:a" } },
+      { "participantId": "participant-2", "avatar": { "kind": "asset", "ref": "asset:avatar-2" } }
+    ] },
+    { "kind": "room-composite-avatar", "roomId": "room-count-3", "participants": [
+      { "participantId": "participant-1", "avatar": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:1:a" } },
+      { "participantId": "participant-2", "avatar": { "kind": "asset", "ref": "asset:avatar-2" } },
+      { "participantId": "participant-3", "avatar": { "kind": "definition", "ref": "definition:avatar-3", "schema": "oneworks.avatar", "definitionVersion": 1 } }
+    ] },
+    { "kind": "room-composite-avatar", "roomId": "room-count-5", "participants": [
+      { "participantId": "participant-1", "avatar": { "kind": "generated", "algorithm": "oneworks-avatar-seed", "algorithmVersion": 1, "seed": "cordisx.agent-avatar.seed/v1:agent-definition:1:a" } },
+      { "participantId": "participant-2", "avatar": { "kind": "asset", "ref": "asset:avatar-2" } },
+      { "participantId": "participant-3", "avatar": { "kind": "definition", "ref": "definition:avatar-3", "schema": "oneworks.avatar", "definitionVersion": 1 } },
+      { "participantId": "participant-4", "avatar": { "kind": "platform", "provider": "oneworks", "identityRef": "identity:avatar-4" } },
+      { "participantId": "participant-5", "avatar": { "kind": "asset", "ref": "asset:avatar-5", "revision": "revision:avatar-5" } }
+    ] }
+  ],
+  "initialCollection": {
+    "revision": 7,
+    "rows": [
+      { "rowId": "row-alpha", "kind": "room", "label": "Alpha", "route": { "id": "chatroom.room", "params": { "roomId": "room-alpha" } } },
+      { "rowId": "row-beta", "kind": "room", "label": "Beta", "route": { "id": "chatroom.room", "params": { "roomId": "room-beta" } } },
+      { "rowId": "row-create", "kind": "create-room", "label": "New room", "route": { "id": "chatroom.new", "params": {} }, "leadingVisual": { "kind": "semantic-icon", "icon": "host:action.add" } }
+    ]
+  },
+  "visualCollection": {
+    "revision": 8,
+    "rows": [
+      { "rowId": "row-alpha", "kind": "room", "label": "Alpha", "route": { "id": "chatroom.room", "params": { "roomId": "room-alpha" } }, "leadingVisual": { "kind": "room-composite-avatar", "roomId": "room-alpha", "participants": [
+        { "participantId": "alpha-1", "avatar": { "kind": "asset", "ref": "asset:alpha-1" } },
+        { "participantId": "alpha-2", "avatar": { "kind": "asset", "ref": "asset:alpha-2" } },
+        { "participantId": "alpha-3", "avatar": { "kind": "asset", "ref": "asset:alpha-3" } },
+        { "participantId": "alpha-4", "avatar": { "kind": "asset", "ref": "asset:alpha-4" } },
+        { "participantId": "alpha-5", "avatar": { "kind": "asset", "ref": "asset:alpha-5" } }
+      ] } },
+      { "rowId": "row-beta", "kind": "room", "label": "Beta", "route": { "id": "chatroom.room", "params": { "roomId": "room-beta" } }, "leadingVisual": { "kind": "room-composite-avatar", "roomId": "room-beta", "participants": [
+        { "participantId": "beta-1", "avatar": { "kind": "asset", "ref": "asset:beta-1" } },
+        { "participantId": "beta-2", "avatar": { "kind": "asset", "ref": "asset:beta-2" } }
+      ] } },
+      { "rowId": "row-create", "kind": "create-room", "label": "New room", "route": { "id": "chatroom.new", "params": {} }, "leadingVisual": { "kind": "semantic-icon", "icon": "host:action.add" } }
+    ]
+  }
+}

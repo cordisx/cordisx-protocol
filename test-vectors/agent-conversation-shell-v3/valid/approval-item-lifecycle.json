@@ -1,0 +1,24 @@
+{
+  "case": "approval-item-lifecycle",
+  "pending": {
+    "kind": "approval",
+    "itemId": "item-approval-a",
+    "sequence": 1,
+    "participantId": "participant-agent",
+    "memberId": "member-agent",
+    "runId": "run-agent",
+    "binding": { "bindingId": "binding-a", "generation": 3 },
+    "turn": "turn-a",
+    "approvalId": "approval-a",
+    "approvalKind": "command",
+    "rationale": { "key": "approval.rationale", "fallback": "Run the requested command?" },
+    "state": "pending",
+    "actions": [
+      { "decision": "approve", "command": { "id": "chatroom:approval-approve", "arguments": { "operation": "approval-a" } } },
+      { "decision": "deny", "command": { "id": "chatroom:approval-deny", "arguments": { "operation": "approval-a" } } },
+      { "decision": "cancel", "command": { "id": "chatroom:approval-cancel", "arguments": { "operation": "approval-a" } } }
+    ]
+  },
+  "terminalStates": ["approved", "denied", "cancelled"],
+  "failedDiagnostic": { "key": "approval.failed", "fallback": "Approval decision could not be delivered." }
+}

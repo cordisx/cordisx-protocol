@@ -18,12 +18,16 @@
     "agent-loop.v1.test.ts",
     "agent-loop.v2.d.ts",
     "agent-loop.v2.test.ts",
+    "agent-loop.v3.d.ts",
+    "agent-loop.v3.test.ts",
     "agent-avatar.v1.d.ts",
     "agent-avatar.v1.test.ts",
     "agent-conversation-shell.v1.d.ts",
     "agent-conversation-shell.v1.test.ts",
     "agent-conversation-shell.v2.d.ts",
     "agent-conversation-shell.v2.test.ts",
+    "agent-conversation-shell.v3.d.ts",
+    "agent-conversation-shell.v3.test.ts",
     "host-dom.v1.d.ts",
     "host-dom.v1.test.ts"
   ]

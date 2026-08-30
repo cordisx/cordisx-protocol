@@ -1,0 +1,46 @@
+{
+  "case": "room-settings-typed-results",
+  "results": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-result.v3.schema.json",
+      "contract": "cordisx.agent-conversation-shell-room-settings-result/v3",
+      "schemaVersion": 3,
+      "requestId": "request-owner-stale",
+      "binding": { "bindingId": "binding-1", "ownerGeneration": "owner-1" },
+      "generation": "generation-1",
+      "roomId": "room-1",
+      "expectedSnapshotSequence": 5,
+      "type": "update-room-settings",
+      "status": "conflict",
+      "code": "owner-conflict",
+      "currentSnapshotSequence": 8
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-result.v3.schema.json",
+      "contract": "cordisx.agent-conversation-shell-room-settings-result/v3",
+      "schemaVersion": 3,
+      "requestId": "request-snapshot-stale",
+      "binding": { "bindingId": "binding-1", "ownerGeneration": "owner-2" },
+      "generation": "generation-2",
+      "roomId": "room-1",
+      "expectedSnapshotSequence": 7,
+      "type": "update-room-settings",
+      "status": "conflict",
+      "code": "snapshot-conflict",
+      "currentSnapshotSequence": 8
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-result.v3.schema.json",
+      "contract": "cordisx.agent-conversation-shell-room-settings-result/v3",
+      "schemaVersion": 3,
+      "requestId": "request-disposed",
+      "binding": { "bindingId": "binding-1", "ownerGeneration": "owner-2" },
+      "generation": "generation-2",
+      "roomId": "room-1",
+      "expectedSnapshotSequence": 8,
+      "type": "update-room-settings",
+      "status": "unavailable",
+      "code": "disposed"
+    }
+  ]
+}
