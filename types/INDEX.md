@@ -37,5 +37,7 @@ event, callback, owner/profile binding, or private renderer bridge.
 `agent-loop.v1.d.ts` exposes the room-neutral Agent definition and inheritance
 catalog, opaque task binding, typed create-or-bind/send exchanges, proactive
 message/approval/lifecycle events, ordered subscription pages, and the
-fiber-owned `BoundAgentLoopClient`. It exposes no Room, UI, path, credential,
+fiber-owned `BoundAgentLoopClient`. Explicit `AgentLoopCreateOrBindResult` and
+`AgentLoopSendResult` aliases retain accepted, denied, and unavailable branches
+under TypeScript discrimination. It exposes no Room, UI, path, credential,
 callback, raw bridge, or external-channel type.

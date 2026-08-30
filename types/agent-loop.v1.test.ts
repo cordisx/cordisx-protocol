@@ -1,7 +1,9 @@
 import type {
   AgentDefinition,
   AgentLoopCommand,
+  AgentLoopCreateOrBindResult,
   AgentLoopEvent,
+  AgentLoopSendResult,
   AgentLoopTaskBinding,
   BoundAgentLoopClient,
 } from '@cordisx/protocol/agent-loop/v1'
@@ -80,14 +82,41 @@ const event = {
 
 void event
 
+const deniedCreate = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v1.schema.json',
+  contract: 'cordisx.agent-loop-result/v1',
+  schemaVersion: 1,
+  commandId: 'command-create',
+  type: 'create-or-bind',
+  status: 'denied',
+  authorization: { capability: 'tasks.create', state: 'denied', code: 'policy-denied' },
+} satisfies AgentLoopCreateOrBindResult
+
+const unavailableSend = {
+  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v1.schema.json',
+  contract: 'cordisx.agent-loop-result/v1',
+  schemaVersion: 1,
+  commandId: 'command-send',
+  type: 'send',
+  status: 'unavailable',
+  authorization: { capability: 'turns.submit', state: 'unavailable', code: 'host-unavailable' },
+} satisfies AgentLoopSendResult
+
+void deniedCreate
+void unavailableSend
+
 declare const client: BoundAgentLoopClient
 
 async function consume() {
   const created = await client.createOrBind(create)
   if (created.status === 'accepted') void created.binding.task
+  else if (created.status === 'denied') void created.authorization.code
+  else void created.authorization.code
 
   const sent = await client.send(send)
   if (sent.status === 'accepted') void sent.messageId
+  else if (sent.status === 'denied') void sent.authorization.code
+  else void sent.authorization.code
 
   const subscribed = await client.subscribe(binding, -1)
   if (subscribed.status === 'accepted') {

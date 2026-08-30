@@ -96,9 +96,14 @@ interface AgentLoopResultBase {
 
 export type AgentLoopResult =
   | (AgentLoopResultBase & { type: 'create-or-bind'; status: 'accepted'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'allowed' }>; binding: AgentLoopTaskBinding })
+  | (AgentLoopResultBase & { type: 'create-or-bind'; status: 'denied'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'denied' }> })
+  | (AgentLoopResultBase & { type: 'create-or-bind'; status: 'unavailable'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'unavailable' }> })
   | (AgentLoopResultBase & { type: 'send'; status: 'accepted'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'allowed' }>; binding: AgentLoopTaskBinding; messageId: string })
-  | (AgentLoopResultBase & { type: 'create-or-bind' | 'send'; status: 'denied'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'denied' }> })
-  | (AgentLoopResultBase & { type: 'create-or-bind' | 'send'; status: 'unavailable'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'unavailable' }> })
+  | (AgentLoopResultBase & { type: 'send'; status: 'denied'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'denied' }> })
+  | (AgentLoopResultBase & { type: 'send'; status: 'unavailable'; authorization: Extract<AgentLoopAuthorizationOutcome, { state: 'unavailable' }> })
+
+export type AgentLoopCreateOrBindResult = Extract<AgentLoopResult, { type: 'create-or-bind' }>
+export type AgentLoopSendResult = Extract<AgentLoopResult, { type: 'send' }>
 
 interface AgentLoopEventBase {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json'
@@ -171,8 +176,8 @@ export interface BoundAgentLoopClient {
   readonly $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-bound-client.v1.schema.json'
   readonly contract: 'cordisx.bound-agent-loop-client/v1'
   readonly schemaVersion: 1
-  createOrBind(command: Extract<AgentLoopCommand, { type: 'create-or-bind' }>): Promise<Extract<AgentLoopResult, { type: 'create-or-bind' }>>
-  send(command: Extract<AgentLoopCommand, { type: 'send' }>): Promise<Extract<AgentLoopResult, { type: 'send' }>>
+  createOrBind(command: Extract<AgentLoopCommand, { type: 'create-or-bind' }>): Promise<AgentLoopCreateOrBindResult>
+  send(command: Extract<AgentLoopCommand, { type: 'send' }>): Promise<AgentLoopSendResult>
   subscribe(binding: AgentLoopTaskBinding, afterSequence: number): Promise<AgentLoopSubscribeRuntimeResult>
   dispose(): void
 }
