@@ -86,7 +86,12 @@
           },
           {
             "if": { "properties": { "capability": { "const": "ui.extension-points.render" } }, "required": ["capability"] },
-            "then": { "properties": { "resourceClass": { "const": "dom-rendering" }, "certifiedImplicitApproval": { "const": true } } },
+            "then": {
+              "properties": {
+                "resourceClass": { "const": "dom-rendering" }, "certifiedImplicitApproval": { "const": true },
+                "sensitivity": { "const": "general" }, "persistentAllow": { "const": true }, "persistentDeny": { "const": true }
+              }
+            },
             "else": { "properties": { "scope": { "type": "object", "properties": { "extensionPoints": false } } } }
           },
           {
