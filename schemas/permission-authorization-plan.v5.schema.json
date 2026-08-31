@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v5.schema.json",
+  "title": "CordisX Permission Authorization Plan v5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "planId", "operation", "profileId", "identity", "catalogVersion", "binding", "declarations"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v5.schema.json" },
+    "schemaVersion": { "const": 5 },
+    "planId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "operation": { "enum": ["install", "update", "enable", "runtime"] },
+    "profileId": { "$ref": "permission-common.v4.schema.json#/$defs/profileId" },
+    "identity": { "$ref": "permission-common.v4.schema.json#/$defs/identity" },
+    "catalogVersion": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" },
+    "binding": { "$ref": "permission-common.v4.schema.json#/$defs/binding" },
+    "declarations": {
+      "type": "array",
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capability", "required", "scope", "securityFingerprint", "policy", "decisionRequired", "authorizationMode",
+          "resourceClass", "certifiedImplicitApproval", "sensitivity", "persistentAllow", "persistentDeny",
+          "allowedDecisions", "defaultDecision", "presentation"
+        ],
+        "properties": {
+          "capability": { "$ref": "permission-common.v4.schema.json#/$defs/capability" },
+          "required": { "type": "boolean" },
+          "rationale": { "$ref": "plugin-manifest.v5.schema.json#/$defs/rationale" },
+          "security": { "$ref": "plugin-manifest.v5.schema.json#/$defs/securityDeclaration" },
+          "scope": { "$ref": "permission-common.v4.schema.json#/$defs/scope" },
+          "securityFingerprint": { "$ref": "permission-common.v4.schema.json#/$defs/securityFingerprint" },
+          "policy": { "$ref": "permission-common.v4.schema.json#/$defs/policy" },
+          "decisionRequired": { "type": "boolean" },
+          "authorizationMode": { "enum": ["explicit-user", "persistent-policy", "certified-implicit"] },
+          "resourceClass": { "enum": ["non-dom", "dom-rendering", "host-dom"] },
+          "certifiedImplicitApproval": { "type": "boolean" },
+          "certification": { "$ref": "permission-common.v4.schema.json#/$defs/certificationProjection" },
+          "sensitivity": { "enum": ["low", "general", "sensitive", "high-risk"] },
+          "persistentAllow": { "type": "boolean" },
+          "persistentDeny": { "type": "boolean" },
+          "allowedDecisions": {
+            "type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true,
+            "items": { "$ref": "permission-common.v4.schema.json#/$defs/decision" }
+          },
+          "defaultDecision": { "$ref": "permission-common.v4.schema.json#/$defs/decision" },
+          "presentation": {
+            "type": "object", "additionalProperties": false,
+            "required": ["name", "description", "risk", "limitation"],
+            "properties": {
+              "name": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "description": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "risk": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+              "limitation": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+            }
+          }
+        },
+        "allOf": [
+          { "$ref": "permission-common.v4.schema.json#/$defs/capabilityScopeFence" },
+          {
+            "if": { "properties": { "authorizationMode": { "const": "certified-implicit" } }, "required": ["authorizationMode"] },
+            "then": {
+              "required": ["certification"],
+              "properties": {
+                "decisionRequired": { "const": false },
+                "policy": { "const": "ask" },
+                "certification": { "$ref": "permission-common.v4.schema.json#/$defs/certificationProjection" }
+              }
+            },
+            "else": { "properties": { "certification": false } }
+          },
+          {
+            "if": { "properties": { "authorizationMode": { "const": "explicit-user" } }, "required": ["authorizationMode"] },
+            "then": { "properties": { "decisionRequired": { "const": true }, "policy": { "const": "ask" } } }
+          },
+          {
+            "if": { "properties": { "authorizationMode": { "const": "persistent-policy" } }, "required": ["authorizationMode"] },
+            "then": {
+              "properties": {
+                "decisionRequired": { "const": false },
+                "policy": { "enum": ["allow-persistent", "deny-persistent"] }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "capability": { "const": "ui.extension-points.render" } }, "required": ["capability"] },
+            "then": { "properties": { "resourceClass": { "const": "dom-rendering" }, "certifiedImplicitApproval": { "const": true } } },
+            "else": { "properties": { "scope": { "type": "object", "properties": { "extensionPoints": false } } } }
+          },
+          {
+            "if": { "properties": { "capability": { "const": "ui.host-dom.read" } }, "required": ["capability"] },
+            "then": {
+              "properties": {
+                "resourceClass": { "const": "host-dom" }, "certifiedImplicitApproval": { "const": true },
+                "sensitivity": { "const": "sensitive" }, "persistentAllow": { "const": true }, "persistentDeny": { "const": true }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "capability": { "const": "ui.host-dom.modify" } }, "required": ["capability"] },
+            "then": {
+              "properties": {
+                "resourceClass": { "const": "host-dom" }, "certifiedImplicitApproval": { "const": true },
+                "sensitivity": { "const": "high-risk" }, "persistentAllow": { "const": false }, "persistentDeny": { "const": true },
+                "policy": { "enum": ["ask", "deny-persistent"] },
+                "allowedDecisions": { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "enum": ["allow-once", "deny-once", "deny-persistent"] } },
+                "defaultDecision": { "enum": ["allow-once", "deny-once", "deny-persistent"] }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "capability": { "enum": ["ui.extension-points.render", "ui.host-dom.read", "ui.host-dom.modify"] } }, "required": ["capability"] },
+            "else": { "properties": { "resourceClass": { "const": "non-dom" }, "certifiedImplicitApproval": { "const": false } } }
+          }
+        ]
+      }
+    }
+  }
+}

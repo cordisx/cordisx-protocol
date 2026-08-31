@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v5.schema.json",
+  "schemaVersion": 5,
+  "planId": "certified-enable-1",
+  "operation": "enable",
+  "profileId": "work",
+  "identity": { "source": "https://marketplace.example/plugins/tool", "pluginId": "tool" },
+  "catalogVersion": "2026-08-30",
+  "binding": { "operationId": "certified-enable-1", "runtimeGeneration": "runtime-1" },
+  "declarations": [{
+    "capability": "models.read",
+    "required": true,
+    "scope": { "providers": ["codex"] },
+    "securityFingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "policy": "deny-persistent",
+    "decisionRequired": false,
+    "authorizationMode": "certified-implicit",
+    "resourceClass": "non-dom",
+    "certifiedImplicitApproval": false,
+    "sensitivity": "general",
+    "persistentAllow": true,
+    "persistentDeny": true,
+    "allowedDecisions": ["allow-once", "allow-persistent", "deny-once", "deny-persistent"],
+    "defaultDecision": "allow-once",
+    "presentation": {
+      "name": { "key": "permission.models.read.name", "fallback": "Read model information" },
+      "description": { "key": "permission.models.read.description", "fallback": "Reads selected model information." },
+      "risk": { "key": "permission.models.read.risk", "fallback": "May expose model metadata." },
+      "limitation": { "key": "permission.models.read.limitation", "fallback": "Only declared providers are visible." }
+    }
+  }]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v5.schema.json",
+  "schemaVersion": 5,
+  "planId": "certified-enable-1",
+  "operation": "enable",
+  "profileId": "work",
+  "identity": { "source": "https://marketplace.example/plugins/tool", "pluginId": "tool" },
+  "catalogVersion": "2026-08-30",
+  "binding": { "operationId": "certified-enable-1", "runtimeGeneration": "runtime-1", "moduleGeneration": "module-1" },
+  "declarations": [{
+    "capability": "models.read",
+    "required": true,
+    "scope": { "providers": ["codex"] },
+    "securityFingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "policy": "ask",
+    "decisionRequired": false,
+    "authorizationMode": "certified-implicit",
+    "resourceClass": "non-dom",
+    "certifiedImplicitApproval": false,
+    "certification": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v1.schema.json",
+      "schemaVersion": 1,
+      "kind": "cordisx-certified-permission-eligibility",
+      "status": "active",
+      "source": "https://marketplace.example/plugins/tool",
+      "pluginId": "tool",
+      "version": "1.2.3",
+      "integrity": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "reviewPolicy": { "id": "cordisx-marketplace-review", "version": "1.0.0" },
+      "reviewedAt": "2026-08-01T00:00:00Z",
+      "expiresAt": "2027-08-01T00:00:00Z",
+      "evidence": { "kind": "protected-marketplace-review", "reference": "https://github.com/cordisx/marketplace/pull/42" },
+      "feed": { "generatedAt": "2026-08-30T00:00:00Z", "root": "https://marketplace.example/feed.json", "authority": "cordisx.marketplace.codeowners/v1" },
+      "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "revision": "2026-08-30T00:00:00Z"
+    },
+    "sensitivity": "general",
+    "persistentAllow": true,
+    "persistentDeny": true,
+    "allowedDecisions": ["allow-once", "allow-persistent", "deny-once", "deny-persistent"],
+    "defaultDecision": "allow-once",
+    "presentation": {
+      "name": { "key": "permission.models.read.name", "fallback": "Read model information" },
+      "description": { "key": "permission.models.read.description", "fallback": "Reads selected model information." },
+      "risk": { "key": "permission.models.read.risk", "fallback": "May expose model metadata." },
+      "limitation": { "key": "permission.models.read.limitation", "fallback": "Only declared providers are visible." }
+    }
+  }]
+}
