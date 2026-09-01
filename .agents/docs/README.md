@@ -31,6 +31,9 @@ Specified areas:
   reasoning range with bounded semantic material stages and strict cleanup.
 - `session-backdrop-presentation/`: Host-owned session ambience and transparent
   portrait projection driven by native reasoning progress.
+- `composer-submit-celebration/`: control-plane-v1 profile for observing an
+  accepted native submit activation and requesting one bounded, Host-owned,
+  generation-fenced celebration with mandatory timeout and rollback cleanup.
 - `manager-settings-tabs/`: structured Manager settings content-tab surface
   versions 4/5, catalog versions 3/4, controlled body-only outlet,
   deterministic projection, authorization origin, and lifecycle.

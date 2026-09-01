@@ -1,0 +1,1 @@
+{ "mutation": "duration-over-limit", "expectedError": "durationMs must be between 250 and 5000" }

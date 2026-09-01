@@ -1,0 +1,1 @@
+{ "mutation": "rollback-leak", "expectedError": "failure-rollback must remove the presentation" }

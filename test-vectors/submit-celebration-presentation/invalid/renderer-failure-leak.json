@@ -1,0 +1,1 @@
+{ "mutation": "renderer-failure-leak", "expectedError": "renderer-failure must remove the presentation" }

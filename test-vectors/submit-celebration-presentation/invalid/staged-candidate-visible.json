@@ -1,0 +1,1 @@
+{ "mutation": "staged-candidate-visible", "expectedError": "candidate-abort must never start the presentation" }

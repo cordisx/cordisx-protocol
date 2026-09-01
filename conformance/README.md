@@ -40,6 +40,12 @@ escalation into a new control mode. Host-priority vectors also freeze the
 non-empty top-winner rule and the empty native/none fallback, while principal
 vectors permit separate explicit and legacy handles for the same owner but
 reject handle reuse across either origin.
+Submit celebration presentation conformance applies that frozen control plane
+to `composer.toolbar.items`. It verifies the exact version property,
+Host-projected native submit activation, correlated Host-brokered confetti
+request, bounded duration, typed denied/unavailable downgrade, exclusive
+observer selection, timeout/fiber/generation/abort/rollback/failure cleanup,
+and rejection of public selectors or test markers.
 Icon theme conformance freezes the closed 64-key version-1 semantic catalog,
 including distinct trust provenance plus Manager action, content, and agent-turn
 control semantics,

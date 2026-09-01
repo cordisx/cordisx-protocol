@@ -1,0 +1,312 @@
+{
+  "profile": "cordisx.composer-submit-celebration/v1",
+  "principals": [
+    { "handle": "principal:celebration", "source": "https://plugins.example/celebration", "pluginId": "celebration", "origin": "explicit" },
+    { "handle": "principal:denied-celebration", "source": "https://plugins.example/denied-celebration", "pluginId": "denied-celebration", "origin": "explicit" }
+  ],
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-control-catalog.v1.schema.json",
+    "schemaVersion": 1,
+    "points": [
+      {
+        "id": "composer.toolbar.items",
+        "modes": [
+          { "id": "compose", "stacking": "ordered", "coexistsWith": ["proxy"], "defaultAuthorization": "allow" },
+          { "id": "proxy", "stacking": "exclusive", "exclusiveGroup": "submit-observer", "coexistsWith": ["compose"], "defaultAuthorization": "deny" }
+        ],
+        "exclusiveGroups": [
+          { "id": "submit-observer", "modes": ["proxy"], "cardinality": "one", "selection": "host-priority", "nativeFallback": true }
+        ],
+        "safeProperties": [
+          {
+            "id": "celebrationProfile",
+            "schema": { "type": "string", "enum": ["cordisx.composer-submit-celebration/v1"] },
+            "visibility": "renderer-safe",
+            "mutable": false
+          }
+        ],
+        "safeCommands": [
+          {
+            "id": "presentCelebration",
+            "dispatch": "host-brokered",
+            "arguments": [
+              { "id": "requestId", "schema": { "type": "string" }, "required": true },
+              { "id": "activationId", "schema": { "type": "string" }, "required": true },
+              { "id": "effect", "schema": { "type": "string", "enum": ["confetti"] }, "required": true },
+              { "id": "durationMs", "schema": { "type": "integer" }, "required": true }
+            ]
+          },
+          {
+            "id": "dismissCelebration",
+            "dispatch": "host-brokered",
+            "arguments": [
+              { "id": "requestId", "schema": { "type": "string" }, "required": true }
+            ]
+          }
+        ],
+        "safeEvents": [
+          {
+            "id": "submitActivated",
+            "delivery": "host-projected",
+            "payload": [
+              { "id": "activationId", "schema": { "type": "string" }, "required": true }
+            ]
+          }
+        ],
+        "ownership": { "scope": "point", "suppressesDescendantsWhenModes": [] }
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:celebration",
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/celebration", "pluginId": "celebration", "pointId": "composer.toolbar.items" },
+      "claimId": "submit-celebration",
+      "contributionId": "submit-celebration",
+      "mode": "proxy",
+      "priority": 100,
+      "requestedBindings": {
+        "properties": ["celebrationProfile"],
+        "commands": ["presentCelebration", "dismissCelebration"],
+        "events": ["submitActivated"]
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-declaration.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:denied-celebration",
+      "origin": "explicit",
+      "identity": { "source": "https://plugins.example/denied-celebration", "pluginId": "denied-celebration", "pointId": "composer.toolbar.items" },
+      "claimId": "submit-celebration",
+      "contributionId": "submit-celebration",
+      "mode": "proxy",
+      "priority": 50,
+      "requestedBindings": {
+        "properties": ["celebrationProfile"],
+        "commands": ["presentCelebration"],
+        "events": ["submitActivated"]
+      }
+    }
+  ],
+  "authorizations": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:celebration",
+      "identity": { "source": "https://plugins.example/celebration", "pluginId": "celebration", "pointId": "composer.toolbar.items" },
+      "claimId": "submit-celebration",
+      "mode": "proxy",
+      "policy": "allow"
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-authorization.v1.schema.json",
+      "schemaVersion": 1,
+      "principalHandle": "principal:denied-celebration",
+      "identity": { "source": "https://plugins.example/denied-celebration", "pluginId": "denied-celebration", "pointId": "composer.toolbar.items" },
+      "claimId": "submit-celebration",
+      "mode": "proxy",
+      "policy": "deny"
+    }
+  ],
+  "snapshots": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-snapshot.v1.schema.json",
+      "schemaVersion": 1,
+      "authority": "host",
+      "hostGeneration": "host-celebration-7",
+      "revision": 3,
+      "points": [
+        {
+          "id": "composer.toolbar.items",
+          "state": "active",
+          "reason": "point.mounted",
+          "candidates": [
+            {
+              "principalHandle": "principal:celebration",
+              "origin": "explicit",
+              "identity": { "source": "https://plugins.example/celebration", "pluginId": "celebration", "pointId": "composer.toolbar.items" },
+              "claimId": "submit-celebration",
+              "contributionId": "submit-celebration",
+              "mode": "proxy",
+              "priority": 100,
+              "authorization": "allowed",
+              "state": "selected",
+              "reason": "policy.host-priority",
+              "selection": { "authority": "host-policy", "hostGeneration": "host-celebration-7", "exclusiveGroup": "submit-observer", "reason": "policy.host-priority" },
+              "bindings": {
+                "properties": [
+                  { "id": "celebrationProfile", "value": "cordisx.composer-submit-celebration/v1" }
+                ],
+                "commands": [
+                  { "id": "presentCelebration", "available": true },
+                  { "id": "dismissCelebration", "available": true }
+                ],
+                "events": [
+                  { "id": "submitActivated", "available": true }
+                ]
+              }
+            },
+            {
+              "principalHandle": "principal:denied-celebration",
+              "origin": "explicit",
+              "identity": { "source": "https://plugins.example/denied-celebration", "pluginId": "denied-celebration", "pointId": "composer.toolbar.items" },
+              "claimId": "submit-celebration",
+              "contributionId": "submit-celebration",
+              "mode": "proxy",
+              "priority": 50,
+              "authorization": "denied",
+              "state": "denied",
+              "reason": "authorization.denied"
+            }
+          ],
+          "groupDecisions": [
+            {
+              "groupId": "submit-observer",
+              "outcome": "selected",
+              "selectedClaim": {
+                "principalHandle": "principal:celebration",
+                "identity": { "source": "https://plugins.example/celebration", "pluginId": "celebration", "pointId": "composer.toolbar.items" },
+                "claimId": "submit-celebration",
+                "mode": "proxy"
+              },
+              "authority": "host-policy",
+              "hostGeneration": "host-celebration-7",
+              "reason": "policy.host-priority"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "event": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-event.v1.schema.json",
+        "schemaVersion": 1,
+        "authority": "host",
+        "principalHandle": "principal:celebration",
+        "hostGeneration": "host-celebration-7",
+        "sequence": 1,
+        "identity": { "source": "https://plugins.example/celebration", "pluginId": "celebration", "pointId": "composer.toolbar.items" },
+        "claimId": "submit-celebration",
+        "contributionId": "submit-celebration",
+        "mode": "proxy",
+        "eventId": "submitActivated",
+        "payload": { "activationId": "activation:submit-101" }
+      },
+      "expectedAccepted": true
+    }
+  ],
+  "accesses": [
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-access.v1.schema.json",
+        "schemaVersion": 1,
+        "principalHandle": "principal:celebration",
+        "invocationId": "invoke:celebration-101",
+        "hostGeneration": "host-celebration-7",
+        "operation": "point.host-command.invoke",
+        "identity": { "source": "https://plugins.example/celebration", "pluginId": "celebration", "pointId": "composer.toolbar.items" },
+        "claimId": "submit-celebration",
+        "contributionId": "submit-celebration",
+        "mode": "proxy",
+        "commandId": "presentCelebration",
+        "arguments": {
+          "requestId": "request:celebration-101",
+          "activationId": "activation:submit-101",
+          "effect": "confetti",
+          "durationMs": 2400
+        }
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-result.v1.schema.json",
+        "schemaVersion": 1,
+        "authority": "host",
+        "invocationId": "invoke:celebration-101",
+        "hostGeneration": "host-celebration-7",
+        "revision": 4,
+        "outcome": "accepted",
+        "reason": "command.accepted"
+      },
+      "expectedAuthorized": true
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-access.v1.schema.json",
+        "schemaVersion": 1,
+        "principalHandle": "principal:celebration",
+        "invocationId": "invoke:dismiss-101",
+        "hostGeneration": "host-celebration-7",
+        "operation": "point.host-command.invoke",
+        "identity": { "source": "https://plugins.example/celebration", "pluginId": "celebration", "pointId": "composer.toolbar.items" },
+        "claimId": "submit-celebration",
+        "contributionId": "submit-celebration",
+        "mode": "proxy",
+        "commandId": "dismissCelebration",
+        "arguments": { "requestId": "request:celebration-101" }
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-result.v1.schema.json",
+        "schemaVersion": 1,
+        "authority": "host",
+        "invocationId": "invoke:dismiss-101",
+        "hostGeneration": "host-celebration-7",
+        "revision": 5,
+        "outcome": "accepted",
+        "reason": "command.accepted"
+      },
+      "expectedAuthorized": true
+    },
+    {
+      "request": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-access.v1.schema.json",
+        "schemaVersion": 1,
+        "principalHandle": "principal:denied-celebration",
+        "invocationId": "invoke:denied-101",
+        "hostGeneration": "host-celebration-7",
+        "operation": "point.host-command.invoke",
+        "identity": { "source": "https://plugins.example/denied-celebration", "pluginId": "denied-celebration", "pointId": "composer.toolbar.items" },
+        "claimId": "submit-celebration",
+        "contributionId": "submit-celebration",
+        "mode": "proxy",
+        "commandId": "presentCelebration",
+        "arguments": {
+          "requestId": "request:denied-101",
+          "activationId": "activation:not-issued",
+          "effect": "confetti",
+          "durationMs": 2400
+        }
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-control-result.v1.schema.json",
+        "schemaVersion": 1,
+        "authority": "host",
+        "invocationId": "invoke:denied-101",
+        "hostGeneration": "host-celebration-7",
+        "revision": 5,
+        "outcome": "rejected",
+        "reason": "authorization.denied"
+      },
+      "expectedAuthorized": false
+    }
+  ],
+  "profileHarness": {
+    "fiberGeneration": "celebration-module-42",
+    "lifecycleScenarios": [
+      { "transition": "duration-elapsed", "requestId": "request:timeout", "before": "active", "after": "removed", "nativeState": "unchanged", "replayed": false },
+      { "transition": "fiber-unload", "requestId": "request:unload", "before": "active", "after": "removed", "nativeState": "unchanged", "replayed": false },
+      { "transition": "generation-replacement", "requestId": "request:replace", "before": "active", "after": "removed", "nativeState": "unchanged", "replayed": false },
+      { "transition": "candidate-abort", "requestId": "request:candidate", "before": "staged", "after": "not-started", "nativeState": "unchanged", "replayed": false },
+      { "transition": "failure-rollback", "requestId": "request:rollback", "before": "active", "after": "removed", "nativeState": "unchanged", "replayed": false },
+      { "transition": "renderer-failure", "requestId": "request:failure", "before": "partial", "after": "removed", "nativeState": "unchanged", "replayed": false }
+    ],
+    "compatibilityScenarios": [
+      { "condition": "profile-absent", "status": "unavailable", "diagnostic": "celebration.unavailable", "effect": "not-started" },
+      { "condition": "point-not-mounted", "status": "unavailable", "diagnostic": "point.not-mounted", "effect": "not-started" },
+      { "condition": "claim-denied", "status": "denied", "diagnostic": "authorization.denied", "effect": "not-started" }
+    ]
+  }
+}

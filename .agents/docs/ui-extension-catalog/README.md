@@ -1,7 +1,7 @@
 # UI extension catalog protocol
 
 This specification is normative for the host-neutral CordisX UI extension
-catalog, structured surface contribution versions 2 through 6, and host-generated
+catalog, structured surface contribution versions 2 through 7, and host-generated
 invocation context version 1. It is independent of Codex selectors, React,
 native DOM layout, and distribution format.
 
@@ -90,6 +90,12 @@ session stage driven by the native reasoning value. Plugins provide closed
 material/ambience tokens and bounded embedded PNG portraits; the Host owns
 decoding, responsive placement, contrast, motion, and cleanup. See
 [`session-backdrop-presentation`](../session-backdrop-presentation/README.md).
+
+The separate
+[`composer submit celebration profile`](../composer-submit-celebration/README.md)
+does not add a surface or payload family. It uses the existing
+`composer.toolbar.items` point and control-plane-v1 scalar bindings so native
+submit observation and transient full-window presentation remain Host-owned.
 
 Contribution options retain `group`, `order`, `when`, and disabled state. The
 host decides direct-action capacity, overflow, keyboard hints, focus,

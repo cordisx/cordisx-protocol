@@ -44,6 +44,14 @@ command results, eligible host-priority native/none drift, cross-origin handle
 reuse, and legacy authority escalation. The nested valid suite includes
 simultaneous explicit and legacy claims for one source/plugin owner.
 
+The `extension-point-control/valid/submit-celebration.json` golden and
+`submit-celebration-presentation/invalid` mutations profile the existing v1
+control plane for native submit observation plus Host-owned transient confetti.
+They cover exact profile discovery, activation correlation, duration bounds,
+explicit denied/unavailable results, candidate invisibility, deterministic
+timeout/unload/replacement/rollback/failure cleanup, and rejection of selectors
+or test markers on the public wire.
+
 Icon theme v1 vectors live in `icon-theme/valid` and `icon-theme/invalid`.
 They cover Reicon default/fallback exact profile/version/generation pins,
 no-raw-data complete-coverage proof, plugin-principal-bound namespaces,
