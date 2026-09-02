@@ -24,6 +24,9 @@ Specified areas:
 - `agent-history/`: read-only, permission-scoped historical Agent projections,
   opaque pagination/tail, payload policy, provenance, and privacy contract
   version 1.
+- `agent-runtime/`: additive Agent Registry/live handles, read-only Session
+  registry, append-only SessionEvent truth, closed subscription fences, and
+  Agent-scoped approval version 1; existing AgentLoop contracts remain intact.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution versions 2 through 7, availability, contextual
   invocation, DSH intent mapping, and explicit replacement refusals.

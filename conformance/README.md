@@ -17,6 +17,11 @@ snapshot pagination, and rejection of host-specific public fields.
 Agent-history conformance covers privacy-bounded historical pages, allowed
 version-2 projections, payload-policy clamping, source identity, coverage, and
 path/offset/provider leakage rejection.
+Agent/Session runtime conformance additively covers create/resume collision
+semantics, `AgentId = SessionId`, MessageId-only admission, pending-message
+discard, fixed Session snapshots, contiguous replay-to-live delivery,
+first-terminal subscription closure, and exact Agent-scoped approval identity.
+These checks do not delete or replace AgentLoop v1-v4 conformance.
 UI extension catalog conformance covers the complete version-2 point
 vocabulary, payload-family mapping, independent stability/availability,
 generation-fenced surface origin, host-only contextual identity, and

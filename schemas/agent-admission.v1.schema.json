@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission.v1.schema.json",
+  "title": "CordisX Agent Message Admission v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "status", "messageId"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-admission/v1" },
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["accepted", "denied", "unavailable"] },
+    "messageId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "code": { "enum": ["permission-denied", "source-denied", "agent-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable", "unsupported"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "denied" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "enum": ["permission-denied", "source-denied"] } } } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "enum": ["agent-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable", "unsupported"] } } } },
+    { "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] }, "then": { "properties": { "code": false } } }
+  ]
+}

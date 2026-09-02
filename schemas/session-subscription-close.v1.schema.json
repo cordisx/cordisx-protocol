@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/session-subscription-close.v1.schema.json",
+  "title": "CordisX Session Subscription Close v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "sessionId", "sessionGeneration", "subscriptionGeneration", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/session-subscription-close.v1.schema.json" },
+    "contract": { "const": "cordisx.session-subscription-close/v1" },
+    "schemaVersion": { "const": 1 },
+    "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "sessionGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "subscriptionGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "status": { "const": "closed" },
+    "code": {
+      "enum": [
+        "unsubscribed",
+        "session-replaced",
+        "route-replaced",
+        "plugin-generation-replaced",
+        "connection-replaced",
+        "permission-revoked",
+        "host-unavailable",
+        "unknown-required-event",
+        "observer-failed"
+      ]
+    }
+  }
+}
