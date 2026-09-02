@@ -94,7 +94,7 @@ const catalog = {
   ],
 }
 expectValid(catalog, 'v3 catalog must be schema-valid')
-expect(catalog.entries.length === 28, 'v3 catalog must retain 27 non-DOM entries and add exactly one controlled DOM entry')
+expect(catalog.entries.length === 23, 'v3 catalog must retain 22 non-DOM entries and add exactly one controlled DOM entry')
 expect(catalog.entries.filter(entry => entry.certifiedImplicitApproval).map(entry => entry.capability).join(',') === 'ui.extension-points.render', 'only controlled DOM rendering may be certification-eligible')
 
 const identity = Object.freeze({ source: 'https://plugins.example.test/example-plugin', pluginId: 'example-plugin' })

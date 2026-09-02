@@ -11,8 +11,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const schemaNames = [
   'ui-common.v1.schema.json',
   'agent-avatar.v1.schema.json',
-  'session-common.v1.schema.json',
-  'agents-common.v1.schema.json',
+  'agent-loop-common.v1.schema.json',
+  'agent-loop-common.v2.schema.json',
+  'agent-loop-common.v3.schema.json',
+  'agent-loop-task-details-common.v2.schema.json',
   'agent-conversation-shell-common.v1.schema.json',
   'agent-conversation-shell-common.v2.schema.json',
   'agent-conversation-shell-snapshot.v2.schema.json',
@@ -99,17 +101,17 @@ function approvalSnapshotErrors(snapshot) {
   const errors = snapshotErrors(snapshot)
   if (errors.length > 0 || snapshot.selection.kind !== 'room') return errors
   const participants = new Map(snapshot.selection.participants.map(participant => [participant.participantId, participant]))
-  const activeRuns = new Set((snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.sessionId}`))
+  const activeRuns = new Set((snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.runId}`))
   const approvalTuples = new Set()
   for (const item of snapshot.items) {
     if (item.kind !== 'approval') continue
     const participant = participants.get(item.participantId)
     if (participant === undefined) errors.push('approval participant is not current')
     else if (participant.role !== 'agent' || participant.agentIdentity === undefined) errors.push('approval participant lacks exact Agent Definition identity')
-    const runKey = `${item.participantId}\u0000${item.memberId}\u0000${item.sessionId}`
-    if (!activeRuns.has(runKey)) errors.push('approval lacks exact active participant/member/session association')
-    const tuple = `${item.sessionId}\u0000${item.turn}\u0000${item.approvalId}`
-    if (approvalTuples.has(tuple)) errors.push('approval session/turn/approvalId tuple is duplicated')
+    const runKey = `${item.participantId}\u0000${item.memberId}\u0000${item.runId}`
+    if (!activeRuns.has(runKey)) errors.push('approval lacks exact active participant/member/run association')
+    const tuple = `${item.binding.bindingId}\u0000${item.binding.generation}\u0000${item.turn}\u0000${item.approvalId}`
+    if (approvalTuples.has(tuple)) errors.push('approval binding/turn/approvalId tuple is duplicated')
     approvalTuples.add(tuple)
     const decisions = new Set()
     for (const action of item.actions) {
@@ -127,8 +129,8 @@ function approvalTransitionErrors(previous, next) {
   if (previous.kind !== next.kind) errors.push('approval update changed item kind')
   if (previous.sequence !== next.sequence) errors.push('approval update moved timeline position')
   if (errors.length > 0 || previous.kind !== 'approval' || next.kind !== 'approval') return errors
-  if (previous.participantId !== next.participantId || previous.memberId !== next.memberId || previous.sessionId !== next.sessionId) errors.push('approval participant/member/session relation drift')
-  if (previous.sessionId !== next.sessionId) errors.push('approval session drift')
+  if (previous.participantId !== next.participantId || previous.memberId !== next.memberId || previous.runId !== next.runId) errors.push('approval participant/member/run relation drift')
+  if (!isDeepStrictEqual(previous.binding, next.binding)) errors.push('approval binding drift')
   if (previous.turn !== next.turn || previous.approvalId !== next.approvalId || previous.approvalKind !== next.approvalKind) errors.push('approval turn/id/kind drift')
   if (!isDeepStrictEqual(previous.rationale, next.rationale)) errors.push('approval rationale drift')
   if (previous.state === 'pending') {
@@ -168,20 +170,20 @@ function messageSnapshotErrors(snapshot) {
   const errors = snapshotErrors(snapshot)
   if (errors.length > 0 || snapshot.selection.kind !== 'room') return errors
   const participants = new Map(snapshot.selection.participants.map(participant => [participant.participantId, participant]))
-  const activeRuns = new Set((snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.sessionId}`))
+  const activeRuns = new Set((snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.runId}`))
   const selfIntroductionTuples = new Set()
   for (const item of snapshot.items) {
     if (item.kind !== 'message') continue
     const participant = participants.get(item.author.participantId)
     if (participant === undefined || !isDeepStrictEqual(participant, item.author)) errors.push('message author is not the exact current participant')
-    if (item.semantic.purpose === 'conversation' && item.source !== 'session-event') errors.push('conversation message source drift')
+    if (item.semantic.purpose === 'conversation' && item.source !== 'agent-loop') errors.push('conversation message source drift')
     if (item.semantic.purpose === 'chatroom-acknowledgement' && item.source !== 'chatroom-acknowledgement') errors.push('acknowledgement message source drift')
     if (item.semantic.purpose !== 'member-self-introduction') continue
-    if (item.source !== 'session-event' || item.author.role !== 'agent' || item.author.agentIdentity === undefined) errors.push('self-introduction is not a SessionEvent-projected Agent message')
+    if (item.source !== 'agent-loop' || item.author.role !== 'agent' || item.author.agentIdentity === undefined) errors.push('self-introduction is not an AgentLoop-authored Agent message')
     if (item.semantic.participantId !== item.author.participantId) errors.push('self-introduction semantic participant does not match author')
-    const runKey = `${item.semantic.participantId}\u0000${item.semantic.memberId}\u0000${item.semantic.sessionId}`
-    if (!activeRuns.has(runKey)) errors.push('self-introduction lacks exact active participant/member/session association')
-    const tuple = `${item.semantic.sessionId}\u0000${item.messageId}\u0000${item.semantic.correlation.requestMessageId}`
+    const runKey = `${item.semantic.participantId}\u0000${item.semantic.memberId}\u0000${item.semantic.runId}`
+    if (!activeRuns.has(runKey)) errors.push('self-introduction lacks exact active participant/member/run association')
+    const tuple = `${item.semantic.binding.bindingId}\u0000${item.semantic.binding.generation}\u0000${item.semantic.turn}\u0000${item.messageId}\u0000${item.semantic.causation.operationId}`
     if (selfIntroductionTuples.has(tuple)) errors.push('self-introduction operation/message association is duplicated')
     selfIntroductionTuples.add(tuple)
   }
@@ -615,11 +617,13 @@ function expectInvalidApproval(mutation, mutate) {
   mutate(item)
   assert.notDeepEqual(approvalTransitionErrors(approvalVector.pending, item), [], `${mutation} approval update must fail closed`)
 }
-expectInvalidApproval('cross-kind', item => { Object.assign(item, { kind: 'status', label: { key: 'status', fallback: 'Status' }, state: 'info', ariaLive: 'polite' }); delete item.participantId; delete item.memberId; delete item.sessionId; delete item.turn; delete item.approvalId; delete item.approvalKind; delete item.rationale; delete item.actions })
+expectInvalidApproval('cross-kind', item => { Object.assign(item, { kind: 'status', label: { key: 'status', fallback: 'Status' }, state: 'info', ariaLive: 'polite' }); delete item.participantId; delete item.memberId; delete item.runId; delete item.binding; delete item.turn; delete item.approvalId; delete item.approvalKind; delete item.rationale; delete item.actions })
 expectInvalidApproval('participant', item => { item.participantId = 'participant-owner' })
 expectInvalidApproval('member', item => { item.memberId = 'other-member' })
-expectInvalidApproval('session-id', item => { item.sessionId = 'other-session' })
-expectInvalidApproval('turn', item => { item.turn += 1 })
+expectInvalidApproval('run', item => { item.runId = 'other-run' })
+expectInvalidApproval('binding-id', item => { item.binding.bindingId = 'other-binding' })
+expectInvalidApproval('binding-generation', item => { item.binding.generation += 1 })
+expectInvalidApproval('turn', item => { item.turn = 'other-turn' })
 expectInvalidApproval('approval-id', item => { item.approvalId = 'other-approval' })
 expectInvalidApproval('approval-kind', item => { item.approvalKind = 'file-change' })
 expectInvalidApproval('timeline-order', item => { item.sequence += 1 })
@@ -641,7 +645,7 @@ for (const sequence of [approvalBase.snapshotSequence, approvalBase.snapshotSequ
   assert.notDeepEqual(outcome.errors, [], 'stale or skipped approval update sequence must fail closed')
   assert.deepEqual(outcome.snapshot, approvalBase)
 }
-for (const field of ['participantId', 'memberId', 'sessionId']) {
+for (const field of ['participantId', 'memberId', 'runId']) {
   const bad = structuredClone(approvalBase)
   bad.items[1][field] = `unassociated-${field}`
   assert.notDeepEqual(approvalSnapshotErrors(bad), [], `approval ${field} must match an active run`)
@@ -655,20 +659,22 @@ messageBase.items.push(structuredClone(messageVector.conversation), initialSelfI
 assert.deepEqual(messageSnapshotErrors(messageBase), [])
 assert.deepEqual(messageVector.selfIntroduction.semantic, {
   purpose: 'member-self-introduction',
-  correlation: { requestMessageId: messageVector.sessionProjection.requestMessageId },
-  participantId: messageVector.sessionProjection.participantId,
-  memberId: messageVector.sessionProjection.memberId,
-  sessionId: messageVector.sessionProjection.sessionId,
+  causation: { operationId: messageVector.agentLoopProjection.operationId },
+  participantId: messageVector.agentLoopProjection.participantId,
+  memberId: messageVector.agentLoopProjection.memberId,
+  runId: messageVector.agentLoopProjection.runId,
+  binding: messageVector.agentLoopProjection.binding,
+  turn: messageVector.agentLoopProjection.turn,
 })
-assert.equal(messageVector.selfIntroduction.messageId, messageVector.sessionProjection.outputMessageId)
+assert.equal(messageVector.selfIntroduction.messageId, messageVector.agentLoopProjection.messageId)
 assert.equal(messageVector.selfIntroduction.kind, 'message')
-assert.equal(messageVector.selfIntroduction.source, 'session-event')
+assert.equal(messageVector.selfIntroduction.source, 'agent-loop')
 assert.equal(messageVector.selfIntroduction.author.role, 'agent')
 assert.equal(messageVector.selfIntroduction.body.length, 1)
 assert.equal(messageVector.selfIntroduction.body[0].kind, 'text')
 
 // A self-introduction is updated as the same ordinary message bubble. Its
-// durable MessageId, Agent/Session association, identity, and timeline position
+// durable operation, Agent/Run association, identity, and timeline position
 // cannot be rewritten while delivery state converges.
 const selfIntroductionUpdate = { kind: 'item-updated', sequence: 42, item: structuredClone(messageVector.selfIntroduction) }
 const selfIntroductionIncremental = applyMessageUpdate(messageBase, selfIntroductionUpdate)
@@ -713,8 +719,11 @@ for (const [label, mutate] of [
   ['author', item => { item.author.participantId = 'participant-owner'; item.author.role = 'human'; delete item.author.agentIdentity }],
   ['participant', item => { item.semantic.participantId = 'participant-owner' }],
   ['member', item => { item.semantic.memberId = 'other-member' }],
-  ['session', item => { item.semantic.sessionId = 'other-session' }],
-  ['request-message', item => { item.semantic.correlation.requestMessageId = 'other-request-message' }],
+  ['run', item => { item.semantic.runId = 'other-run' }],
+  ['binding-id', item => { item.semantic.binding.bindingId = 'other-binding' }],
+  ['binding-generation', item => { item.semantic.binding.generation += 1 }],
+  ['turn', item => { item.semantic.turn = 'other-turn' }],
+  ['operation', item => { item.semantic.causation.operationId = 'other-operation' }],
   ['purpose', item => { item.semantic = { purpose: 'conversation' } }],
 ]) {
   const invalid = structuredClone(messageVector.selfIntroduction)
@@ -747,7 +756,7 @@ for (const mutate of [
 for (const mutate of [
   snapshot => { snapshot.items[2].semantic.participantId = 'participant-owner' },
   snapshot => { snapshot.items[2].semantic.memberId = 'other-member' },
-  snapshot => { snapshot.items[2].semantic.sessionId = 'other-session' },
+  snapshot => { snapshot.items[2].semantic.runId = 'other-run' },
   snapshot => { snapshot.items[2].author.displayName.fallback = 'Guessed author' },
 ]) {
   const invalid = structuredClone(messageBase)
@@ -848,7 +857,7 @@ const v2SnapshotSchema = JSON.parse(await readFile(path.join(root, 'schemas', 'a
 const v2CommonSchema = JSON.parse(await readFile(path.join(root, 'schemas', 'agent-conversation-shell-common.v2.schema.json'), 'utf8'))
 const v2Ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(v2Ajv)
-for (const name of ['ui-common.v1.schema.json', 'agent-avatar.v1.schema.json', 'session-common.v1.schema.json', 'agents-common.v1.schema.json']) v2Ajv.addSchema(schemas.get(name))
+for (const name of ['ui-common.v1.schema.json', 'agent-avatar.v1.schema.json', 'agent-loop-common.v1.schema.json', 'agent-loop-common.v2.schema.json', 'agent-loop-task-details-common.v2.schema.json']) v2Ajv.addSchema(schemas.get(name))
 v2Ajv.addSchema(v2CommonSchema)
 v2Ajv.addSchema(v2SnapshotSchema)
 const validateV2Snapshot = v2Ajv.getSchema(v2SnapshotSchema.$id)

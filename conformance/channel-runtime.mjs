@@ -111,7 +111,7 @@ export function validateManifest(manifest) {
           errors.push(`${declaration.name} cannot use ${field} scope`)
         }
       }
-    } else if (/^(?:agents|sessions|approvals)\./u.test(declaration.name ?? '')) {
+    } else if (declaration.name?.startsWith('agent.')) {
       for (const field of platformFields) {
         if (scope[field] !== undefined) {
           errors.push(`${declaration.name} cannot use Platform ${field} scope`)

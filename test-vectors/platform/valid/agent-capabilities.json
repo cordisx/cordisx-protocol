@@ -5,43 +5,43 @@
   "name": "Agent Audit",
   "capabilities": [
     {
-      "name": "sessions.read",
+      "name": "agent.events.read",
       "required": true,
-      "reason": { "key": "permission.sessions-read", "fallback": "Read committed Session facts" },
+      "reason": { "key": "permission.agent-events", "fallback": "Read sourced Agent events" },
       "scope": { "sessionIds": ["session-1"] }
     },
     {
-      "name": "sessions.subscribe",
+      "name": "agent.history.read",
       "required": false,
-      "reason": { "key": "permission.sessions-subscribe", "fallback": "Replay and observe Session facts" },
+      "reason": { "key": "permission.agent-history", "fallback": "Read redacted Agent history" },
       "scope": { "sessionIds": ["session-1"] }
     },
     {
-      "name": "agents.message.submit",
+      "name": "agent.messages.append",
       "required": false,
       "reason": { "key": "permission.agent-append", "fallback": "Append plugin-sourced Agent messages" },
       "scope": { "sessionIds": ["session-1"] }
     },
     {
-      "name": "agents.cancel",
+      "name": "agent.steps.reject",
       "required": false,
       "reason": { "key": "permission.agent-reject", "fallback": "Reject proposed Agent steps" },
       "scope": { "sessionIds": ["session-1"] }
     },
     {
-      "name": "agents.message.cancel",
+      "name": "agent.messages.transform",
       "required": false,
       "reason": { "key": "permission.agent-transform", "fallback": "Transform original pre-step batches" },
       "scope": { "sessionIds": ["session-1"] }
     },
     {
-      "name": "agents.create",
+      "name": "agent.prompt.section",
       "required": false,
       "reason": { "key": "permission.agent-prompt-section", "fallback": "Register system prompt sections" },
       "scope": { "sessionIds": ["session-1"] }
     },
     {
-      "name": "agents.resume",
+      "name": "agent.prompt.context",
       "required": false,
       "reason": { "key": "permission.agent-prompt-context", "fallback": "Register dynamic prompt context" },
       "scope": { "sessionIds": ["session-1"] }

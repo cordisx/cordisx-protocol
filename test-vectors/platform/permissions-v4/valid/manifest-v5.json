@@ -5,27 +5,6 @@
   "name": "Host DOM Helper",
   "capabilities": [
     {
-      "name": "sessions.get",
-      "required": false,
-      "scope": {
-        "sessionIds": { "kind": "host-route-param", "routeId": "timeline", "param": "sessionId" }
-      }
-    },
-    {
-      "name": "sessions.read",
-      "required": false,
-      "scope": {
-        "sessionIds": { "kind": "host-route-param", "routeId": "timeline", "param": "sessionId" }
-      }
-    },
-    {
-      "name": "sessions.subscribe",
-      "required": false,
-      "scope": {
-        "sessionIds": { "kind": "host-route-param", "routeId": "timeline", "param": "sessionId" }
-      }
-    },
-    {
       "name": "ui.host-dom.read",
       "required": false,
       "rationale": {

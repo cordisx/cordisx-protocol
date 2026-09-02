@@ -16,7 +16,7 @@
     "binding": { "$ref": "permission-common.v4.schema.json#/$defs/binding" },
     "decisions": {
       "type": "array",
-      "maxItems": 30,
+      "maxItems": 25,
       "items": {
         "type": "object",
         "additionalProperties": false,

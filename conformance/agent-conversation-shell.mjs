@@ -5,13 +5,13 @@ import { isDeepStrictEqual } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
+import { validateAgentLoopTaskDetailsUrl } from './agent-loop-task-details.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const names = [
   'ui-common.v1.schema.json',
   'agent-avatar.v1.schema.json',
-  'session-common.v1.schema.json',
-  'agents-common.v1.schema.json',
+  'agent-loop-common.v1.schema.json',
   'agent-conversation-shell-common.v1.schema.json',
   'agent-conversation-shell-binding.v1.schema.json',
   'agent-conversation-shell-snapshot.v1.schema.json',
@@ -19,6 +19,8 @@ const names = [
   'agent-conversation-shell-page.v1.schema.json',
   'agent-conversation-shell-result.v1.schema.json',
   'agent-conversation-shell-command-context.v1.schema.json',
+  'agent-loop-common.v2.schema.json',
+  'agent-loop-task-details-common.v2.schema.json',
   'agent-conversation-shell-common.v2.schema.json',
   'agent-conversation-shell-binding.v2.schema.json',
   'agent-conversation-shell-snapshot.v2.schema.json',
@@ -35,6 +37,8 @@ const validator = name => ajv.getSchema(schemas.get(name).$id)
 const v = Object.fromEntries(names.map(name => [name, validator(name)]))
 const snapshotSchemaId = schemas.get('agent-conversation-shell-snapshot.v2.schema.json').$id
 const validateItem = ajv.getSchema(`${snapshotSchemaId}#/$defs/item`)
+const validateDetailsUrl = ajv.getSchema(`${schemas.get('agent-loop-task-details-common.v2.schema.json').$id}#/$defs/detailsUrl`)
+if (validateDetailsUrl === undefined) throw new Error('Agent Loop v2 task details URL schema was not registered')
 
 const text = fallback => ({ key: 'chatroom.label', fallback })
 const command = id => ({ id })
@@ -43,14 +47,14 @@ const participant = { participantId: 'participant-1', role: 'agent', displayName
 const identitylessAgent = { participantId: 'participant-2', role: 'agent', displayName: text('Unbound Agent') }
 const humanParticipant = { participantId: 'participant-3', role: 'human', displayName: text('Human') }
 const otherAgent = { participantId: 'participant-4', role: 'agent', displayName: text('Other Agent'), agentIdentity: { agentId: 'writer', revision: 'definition-2' } }
-const activeRunA = { participantId: participant.participantId, memberId: 'member-1', sessionId: 'session-1', lifecycle: { phase: 'running', updatedAt: '2026-08-31T01:00:00.000Z' }, details: { kind: 'host', ref: 'task-1' } }
-const activeRunB = { participantId: participant.participantId, memberId: 'member-1', sessionId: 'session-2', lifecycle: { phase: 'waiting' }, details: { kind: 'host', ref: 'task-2' } }
+const activeRunA = { participantId: participant.participantId, memberId: 'member-1', runId: 'run-1', lifecycle: { phase: 'running', updatedAt: '2026-08-31T01:00:00.000Z' }, detailsUrl: { url: 'app://-/tasks/task-1', target: 'host' } }
+const activeRunB = { participantId: participant.participantId, memberId: 'member-1', runId: 'run-2', lifecycle: { phase: 'waiting' }, detailsUrl: { url: 'https://example.test/tasks/task-2', target: 'external' } }
 const pendingEmoji = { reactionId: 'reaction-emoji', actorParticipantId: humanParticipant.participantId, value: { kind: 'emoji', emoji: '👍🏽' }, state: 'pending' }
 const pendingSemantic = { reactionId: 'reaction-semantic', actorParticipantId: participant.participantId, value: { kind: 'semantic', token: 'acknowledged' }, state: 'pending' }
-const message = { kind: 'message', itemId: 'item-0', messageId: 'message-0', sequence: 0, source: 'session-event', author: participant, body: [{ kind: 'text', text: text('Hello') }], reactions: [pendingEmoji, pendingSemantic], timestamp: '2026-08-29T00:00:00.000Z', deliveryState: 'delivered', runState: 'idle', ariaLive: 'polite', actions: [action('more')] }
+const message = { kind: 'message', itemId: 'item-0', messageId: 'message-0', sequence: 0, source: 'agent-loop', author: participant, body: [{ kind: 'text', text: text('Hello') }], reactions: [pendingEmoji, pendingSemantic], timestamp: '2026-08-29T00:00:00.000Z', deliveryState: 'delivered', runState: 'idle', ariaLive: 'polite', actions: [action('more')] }
 const acknowledgement = { kind: 'message', itemId: 'item-1', messageId: 'message-1', sequence: 1, source: 'chatroom-acknowledgement', author: humanParticipant, body: [{ kind: 'text', text: text('Sent') }], reactions: [], timestamp: '2026-08-29T00:00:01.000Z', deliveryState: 'delivered', runState: 'idle', ariaLive: 'polite', actions: [] }
-const presenceSuccess = { kind: 'member-presence', itemId: 'item-2', sequence: 2, participantId: participant.participantId, memberId: 'member-1', sessionId: 'session-1', state: 'inviting', retryable: false }
-const presenceRetry = { kind: 'member-presence', itemId: 'item-3', sequence: 3, participantId: participant.participantId, memberId: 'member-1', sessionId: 'session-2', state: 'inviting', retryable: false }
+const presenceSuccess = { kind: 'member-presence', itemId: 'item-2', sequence: 2, participantId: participant.participantId, memberId: 'member-1', runId: 'run-1', state: 'inviting', retryable: false }
+const presenceRetry = { kind: 'member-presence', itemId: 'item-3', sequence: 3, participantId: participant.participantId, memberId: 'member-1', runId: 'run-2', state: 'inviting', retryable: false }
 const binding = { $schema: schemas.get('agent-conversation-shell-binding.v2.schema.json').$id, contract: 'cordisx.agent-conversation-shell-binding/v2', schemaVersion: 2, bindingId: 'binding-1', shell: 'agent-desktop', ownerGeneration: 'generation-1', routeSelection: { scope: 'room-or-new', selectedRoomParam: 'roomId' } }
 const snapshot = { $schema: snapshotSchemaId, contract: 'cordisx.agent-conversation-shell-snapshot/v2', schemaVersion: 2, binding: { bindingId: 'binding-1', ownerGeneration: 'generation-1' }, generation: 'generation-1', snapshotSequence: 0, selection: { kind: 'room', roomId: 'room-1', title: text('Room'), secondary: text('Two'), multiParticipant: true, participantPresentation: 'host-initials', participants: [participant, identitylessAgent, humanParticipant, otherAgent], activeRuns: [activeRunA, activeRunB] }, items: [message, acknowledgement, presenceSuccess, presenceRetry], composer: { availability: 'available', placeholder: text('Message'), disabled: { value: false }, submit: command('chatroom:submit') }, headerActions: [action('new-room'), action('manage-agents'), action('more')] }
 const subscription = { $schema: schemas.get('agent-conversation-shell-subscription.v2.schema.json').$id, contract: 'cordisx.agent-conversation-shell-subscription/v2', schemaVersion: 2, subscriptionId: 'subscription-1', binding: snapshot.binding, generation: 'generation-1', afterSequence: -1, snapshotSequence: 0 }
@@ -95,9 +99,10 @@ function selectionAndItemErrors(current) {
     const priorParticipantId = memberParticipants.get(run.memberId)
     if (priorParticipantId !== undefined && priorParticipantId !== run.participantId) errors.push('memberId changed participantId')
     memberParticipants.set(run.memberId, run.participantId)
-    const triple = `${run.participantId}\u0000${run.memberId}\u0000${run.sessionId}`
-    if (activeRunTriples.has(triple)) errors.push('active run participantId/memberId/sessionId triple is duplicated')
+    const triple = `${run.participantId}\u0000${run.memberId}\u0000${run.runId}`
+    if (activeRunTriples.has(triple)) errors.push('active run participantId/memberId/runId triple is duplicated')
     activeRunTriples.add(triple)
+    errors.push(...validateAgentLoopTaskDetailsUrl(run.detailsUrl, validateDetailsUrl))
   }
   const itemIds = new Set()
   const messageIds = new Set()
@@ -131,7 +136,7 @@ function selectionAndItemErrors(current) {
       const priorParticipantId = memberParticipants.get(item.memberId)
       if (priorParticipantId !== undefined && priorParticipantId !== item.participantId) errors.push('memberId changed participantId')
       memberParticipants.set(item.memberId, item.participantId)
-      const key = `${item.participantId}\u0000${item.memberId}\u0000${item.sessionId}`
+      const key = `${item.participantId}\u0000${item.memberId}\u0000${item.runId}`
       if (presenceKeys.has(key)) errors.push('presence relation is duplicated')
       presenceKeys.add(key)
       if (['joined', 'ready'].includes(item.state) && !activeRunTriples.has(key)) errors.push('joined or ready presence lacks an exact active run projection')
@@ -197,7 +202,7 @@ function itemTransitionErrors(previous, next, participants) {
     if (previous.source !== next.source) errors.push('message source drift')
     errors.push(...reactionTransitionErrors(previous.reactions, next.reactions, participants))
   } else if (previous.kind === 'member-presence') {
-    if (previous.participantId !== next.participantId || previous.memberId !== next.memberId || previous.sessionId !== next.sessionId) errors.push('presence relation drift')
+    if (previous.participantId !== next.participantId || previous.memberId !== next.memberId || previous.runId !== next.runId) errors.push('presence relation drift')
     if (!presenceTransitions[previous.state]?.has(next.state)) errors.push('presence transition is invalid')
     if (previous.state === 'failed' && !previous.retryable && next.state !== 'failed') errors.push('non-retryable failure is terminal')
     if (previous.state === next.state && !isDeepStrictEqual(previous, next)) errors.push('same-state presence update is not idempotent')
@@ -258,7 +263,7 @@ assert.ok(validateV1Snapshot(v1Snapshot), ajv.errorsText(validateV1Snapshot.erro
 for (const mutate of [
   value => { value.selection.participants[0].agentIdentity = { agentId: 'v2-only', revision: 'definition-1' } },
   value => { value.selection.activeRuns = [] },
-  value => { value.items[0].source = 'session-event' },
+  value => { value.items[0].source = 'agent-loop' },
   value => { value.items[0].reactions = [] },
 ]) {
   const incompatible = structuredClone(v1Snapshot)
@@ -286,9 +291,15 @@ for (const mutate of [
   assert.notDeepEqual(snapshotErrors(bad), [], 'closed Shell schema mutant must fail')
 }
 
-const rawDetail = structuredClone(snapshot)
-rawDetail.selection.activeRuns[1].details.url = 'https://example.test/tasks/task-2'
-assert.notDeepEqual(snapshotErrors(rawDetail), [], 'Shell v2 must reject raw detail URLs')
+for (const url of [
+  'https://example.test/tasks/%74ask-2',
+  'https://example.test:443/tasks/task-2',
+  'https://example.test/tasks/parent/../task-2',
+]) {
+  const bad = structuredClone(snapshot)
+  bad.selection.activeRuns[1].detailsUrl.url = url
+  assert.notDeepEqual(snapshotErrors(bad), [], 'Shell v2 must share Agent Loop v2 details URL canonicalization')
+}
 
 for (const value of [
   { kind: 'emoji', emoji: '👨‍👩‍👧‍👦' },
@@ -324,7 +335,7 @@ pushUpdate(itemWith(incremental, presenceSuccess.itemId, () => {}))
 pushUpdate(itemWith(incremental, presenceSuccess.itemId, item => { item.state = 'creating' }))
 pushUpdate(itemWith(incremental, presenceSuccess.itemId, item => { item.state = 'joined' }))
 pushUpdate(itemWith(incremental, presenceSuccess.itemId, item => { item.state = 'ready' }))
-pushUpdate(itemWith(incremental, presenceRetry.itemId, item => { item.state = 'failed'; item.retryable = true; item.diagnostic = text('Agent failed to join'); item.retry = { id: 'chatroom:retry-member', arguments: { memberId: item.memberId, sessionId: item.sessionId } } }))
+pushUpdate(itemWith(incremental, presenceRetry.itemId, item => { item.state = 'failed'; item.retryable = true; item.diagnostic = text('Agent failed to join'); item.retry = { id: 'chatroom:retry-member', arguments: { memberId: item.memberId, runId: item.runId } } }))
 pushUpdate(itemWith(incremental, presenceRetry.itemId, item => { item.state = 'creating'; item.retryable = false; delete item.diagnostic; delete item.retry }))
 pushUpdate(itemWith(incremental, presenceRetry.itemId, item => { item.state = 'joined' }))
 pushUpdate(itemWith(incremental, presenceRetry.itemId, item => { item.state = 'ready' }))
@@ -380,7 +391,7 @@ function traceErrors(trace) {
 const trace = { snapshot, subscription, result, context, pages: [replayPage, livePage], expectedFinal: convergedSnapshot }
 assert.deepEqual(traceErrors(trace), [])
 assert.equal(convergedSnapshot.items.length, snapshot.items.length, 'reaction updates must not append timeline items')
-assert.equal(convergedSnapshot.items[0].source, 'session-event')
+assert.equal(convergedSnapshot.items[0].source, 'agent-loop')
 assert.equal(convergedSnapshot.items[1].source, 'chatroom-acknowledgement')
 
 const participants = new Map(snapshot.selection.participants.map(value => [value.participantId, value]))
@@ -415,8 +426,8 @@ for (const mutate of [
   value => { value.items[2].participantId = identitylessAgent.participantId },
   value => { value.selection.activeRuns[1].participantId = otherAgent.participantId },
   value => { value.items[3].participantId = otherAgent.participantId },
-  value => { value.items[2].state = 'joined'; value.selection.activeRuns = value.selection.activeRuns.filter(run => run.sessionId !== value.items[2].sessionId) },
-  value => { value.items[3].state = 'ready'; value.selection.activeRuns = value.selection.activeRuns.filter(run => run.sessionId !== value.items[3].sessionId) },
+  value => { value.items[2].state = 'joined'; value.selection.activeRuns = value.selection.activeRuns.filter(run => run.runId !== value.items[2].runId) },
+  value => { value.items[3].state = 'ready'; value.selection.activeRuns = value.selection.activeRuns.filter(run => run.runId !== value.items[3].runId) },
   value => { value.items[3].state = 'joined'; value.selection.activeRuns[1].participantId = otherAgent.participantId },
 ]) {
   const bad = structuredClone(snapshot)
@@ -442,4 +453,4 @@ for (const wire of [
 
 const shellSchemas = [...schemas.entries()].filter(([name]) => name.startsWith('agent-conversation-shell')).map(([, schema]) => schema)
 for (const token of ['draft-changed', 'html', 'css', 'component', 'callback', 'selector', 'projection', 'fixture', 'avatarurl', 'avatarpath', 'avatardata', 'avatarblob']) assert.ok(!JSON.stringify(shellSchemas).toLowerCase().includes(token), `forbidden ${token}`)
-console.log('Agent conversation shell conformance: frozen v1 plus v2 identity, presence, reaction, Host reference, convergence, and stream checks passed')
+console.log('Agent conversation shell conformance: frozen v1 plus v2 identity, presence, reaction, URL, convergence, and stream checks passed')

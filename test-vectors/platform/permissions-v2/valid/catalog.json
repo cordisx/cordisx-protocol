@@ -88,147 +88,87 @@
       }
     },
     {
-      "capability": "sessions.read", "providerFamily": "agent", "sensitivity": "sensitive",
+      "capability": "agent.events.read", "providerFamily": "agent", "sensitivity": "sensitive",
       "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
       "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
       "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
       "presentation": {
-        "name": { "key": "sessions.read.name", "fallback": "Read Session facts" },
-        "description": { "key": "sessions.read.description", "fallback": "Read committed facts for allowed Sessions." },
-        "risk": { "key": "sessions.read.risk", "fallback": "Session facts can reveal messages and tool metadata." },
-        "limitation": { "key": "sessions.read.limitation", "fallback": "Raw bridge and filesystem access remain unavailable." }
+        "name": { "key": "agent.events.read.name", "fallback": "Read Agent events" },
+        "description": { "key": "agent.events.read.description", "fallback": "Read structured events for allowed Agent sessions." },
+        "risk": { "key": "agent.events.read.risk", "fallback": "Events can reveal task activity and tool metadata." },
+        "limitation": { "key": "agent.events.read.limitation", "fallback": "Raw bridge and filesystem access remain unavailable." }
       }
     },
     {
-      "capability": "sessions.subscribe", "providerFamily": "agent", "sensitivity": "sensitive",
+      "capability": "agent.history.read", "providerFamily": "agent", "sensitivity": "sensitive",
       "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
       "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
       "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
       "presentation": {
-        "name": { "key": "sessions.subscribe.name", "fallback": "Subscribe to Session facts" },
-        "description": { "key": "sessions.subscribe.description", "fallback": "Replay then observe committed facts for allowed Sessions." },
-        "risk": { "key": "sessions.subscribe.risk", "fallback": "Live activity may contain sensitive context." },
-        "limitation": { "key": "sessions.subscribe.limitation", "fallback": "The Host keeps raw storage and transport private." }
+        "name": { "key": "agent.history.read.name", "fallback": "Read Agent history" },
+        "description": { "key": "agent.history.read.description", "fallback": "Read redacted historical Agent projections." },
+        "risk": { "key": "agent.history.read.risk", "fallback": "Historical activity may contain sensitive context." },
+        "limitation": { "key": "agent.history.read.limitation", "fallback": "The Host keeps paths and raw storage private." }
       }
     },
     {
-      "capability": "agents.message.submit", "providerFamily": "agent", "sensitivity": "sensitive",
+      "capability": "agent.messages.append", "providerFamily": "agent", "sensitivity": "sensitive",
       "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
       "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
       "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
       "presentation": {
-        "name": { "key": "agents.message.submit.name", "fallback": "Submit Agent messages" },
-        "description": { "key": "agents.message.submit.description", "fallback": "Submit identified content to an allowed Agent." },
-        "risk": { "key": "agents.message.submit.risk", "fallback": "Submitted content can influence model input." },
-        "limitation": { "key": "agents.message.submit.limitation", "fallback": "Admission never proves an Agent response." }
+        "name": { "key": "agent.messages.append.name", "fallback": "Append Agent messages" },
+        "description": { "key": "agent.messages.append.description", "fallback": "Append attributed content to an allowed Agent session." },
+        "risk": { "key": "agent.messages.append.risk", "fallback": "Added content can influence subsequent model input." },
+        "limitation": { "key": "agent.messages.append.limitation", "fallback": "The Host preserves attribution and ordering." }
       }
     },
     {
-      "capability": "agents.cancel", "providerFamily": "agent", "sensitivity": "high-risk",
+      "capability": "agent.steps.reject", "providerFamily": "agent", "sensitivity": "high-risk",
       "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
       "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
       "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
       "presentation": {
-        "name": { "key": "agents.cancel.name", "fallback": "Cancel Agent activity" },
-        "description": { "key": "agents.cancel.description", "fallback": "Cancel whole activity on an allowed Agent." },
-        "risk": { "key": "agents.cancel.risk", "fallback": "This can stop unrelated work on the Agent." },
-        "limitation": { "key": "agents.cancel.limitation", "fallback": "The Host requires explicit whole-Agent authority." }
+        "name": { "key": "agent.steps.reject.name", "fallback": "Reject Agent steps" },
+        "description": { "key": "agent.steps.reject.description", "fallback": "Reject an Agent step before it proceeds." },
+        "risk": { "key": "agent.steps.reject.risk", "fallback": "This can stop or alter Agent execution." },
+        "limitation": { "key": "agent.steps.reject.limitation", "fallback": "Only the current allowed step may be rejected." }
       }
     },
     {
-      "capability": "agents.message.cancel", "providerFamily": "agent", "sensitivity": "high-risk",
+      "capability": "agent.messages.transform", "providerFamily": "agent", "sensitivity": "high-risk",
       "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
       "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
       "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
       "presentation": {
-        "name": { "key": "agents.message.cancel.name", "fallback": "Cancel pending Agent messages" },
-        "description": { "key": "agents.message.cancel.description", "fallback": "Discard one identified pending Agent message." },
-        "risk": { "key": "agents.message.cancel.risk", "fallback": "This can prevent submitted work from running." },
-        "limitation": { "key": "agents.message.cancel.limitation", "fallback": "Claimed or unrelated work is not cancelled." }
+        "name": { "key": "agent.messages.transform.name", "fallback": "Transform Agent messages" },
+        "description": { "key": "agent.messages.transform.description", "fallback": "Transform attributed messages before model use." },
+        "risk": { "key": "agent.messages.transform.risk", "fallback": "This can materially change model input." },
+        "limitation": { "key": "agent.messages.transform.limitation", "fallback": "Original order and attribution remain Host controlled." }
       }
     },
     {
-      "capability": "agents.create", "providerFamily": "agent", "sensitivity": "sensitive",
+      "capability": "agent.prompt.section", "providerFamily": "agent", "sensitivity": "sensitive",
       "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
       "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
       "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
       "presentation": {
-        "name": { "key": "agents.create.name", "fallback": "Create Agents" },
-        "description": { "key": "agents.create.description", "fallback": "Create an Agent and its Session." },
-        "risk": { "key": "agents.create.risk", "fallback": "Setup and later messages can invoke model activity." },
-        "limitation": { "key": "agents.create.limitation", "fallback": "The Host validates setup and Session identity." }
+        "name": { "key": "agent.prompt.section.name", "fallback": "Add prompt sections" },
+        "description": { "key": "agent.prompt.section.description", "fallback": "Add an attributed section to model input." },
+        "risk": { "key": "agent.prompt.section.risk", "fallback": "Added text can influence model behavior." },
+        "limitation": { "key": "agent.prompt.section.limitation", "fallback": "The Host controls ordering and attribution." }
       }
     },
     {
-      "capability": "agents.resume", "providerFamily": "agent", "sensitivity": "sensitive",
+      "capability": "agent.prompt.context", "providerFamily": "agent", "sensitivity": "sensitive",
       "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
       "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
       "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
       "presentation": {
-        "name": { "key": "agents.resume.name", "fallback": "Resume Agents" },
-        "description": { "key": "agents.resume.description", "fallback": "Resume an Agent over an existing allowed Session." },
-        "risk": { "key": "agents.resume.risk", "fallback": "Resumed context may contain sensitive activity." },
-        "limitation": { "key": "agents.resume.limitation", "fallback": "Concurrent first resume has one deterministic owner." }
-      }
-    },
-    {
-      "capability": "agents.get", "providerFamily": "agent", "sensitivity": "general",
-      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
-      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
-      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
-      "presentation": {
-        "name": { "key": "agents.get.name", "fallback": "Access live Agents" },
-        "description": { "key": "agents.get.description", "fallback": "Get a read-only live Agent handle." },
-        "risk": { "key": "agents.get.risk", "fallback": "Live state can reveal Agent activity." },
-        "limitation": { "key": "agents.get.limitation", "fallback": "No disposal ownership is granted." }
-      }
-    },
-    {
-      "capability": "agents.live.subscribe", "providerFamily": "agent", "sensitivity": "sensitive",
-      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
-      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
-      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
-      "presentation": {
-        "name": { "key": "agents.live.subscribe.name", "fallback": "Observe live Agent coordination" },
-        "description": { "key": "agents.live.subscribe.description", "fallback": "Observe non-durable live state for an allowed Agent." },
-        "risk": { "key": "agents.live.subscribe.risk", "fallback": "Live activity may contain message metadata." },
-        "limitation": { "key": "agents.live.subscribe.limitation", "fallback": "No replay or persistent ledger is provided." }
-      }
-    },
-    {
-      "capability": "sessions.get", "providerFamily": "agent", "sensitivity": "general",
-      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
-      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
-      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
-      "presentation": {
-        "name": { "key": "sessions.get.name", "fallback": "Access Sessions" },
-        "description": { "key": "sessions.get.description", "fallback": "Get a permission-filtered read-only Session handle." },
-        "risk": { "key": "sessions.get.risk", "fallback": "Session metadata may reveal task context." },
-        "limitation": { "key": "sessions.get.limitation", "fallback": "Missing and unauthorized ids are indistinguishable." }
-      }
-    },
-    {
-      "capability": "approvals.request", "providerFamily": "agent", "sensitivity": "sensitive",
-      "recommendedPolicy": "ask", "persistentAllow": true, "persistentDeny": true,
-      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
-      "scopeUpgrade": "strict-expansion", "installPrompt": "explicit", "runtimePrompt": "dynamic-scope",
-      "presentation": {
-        "name": { "key": "approvals.request.name", "fallback": "Request Agent approvals" },
-        "description": { "key": "approvals.request.description", "fallback": "Request an approval for an allowed Agent." },
-        "risk": { "key": "approvals.request.risk", "fallback": "Approval prompts can expose requested action context." },
-        "limitation": { "key": "approvals.request.limitation", "fallback": "Permission and user-input seams remain separate." }
-      }
-    },
-    {
-      "capability": "approvals.answer", "providerFamily": "agent", "sensitivity": "high-risk",
-      "recommendedPolicy": "ask", "persistentAllow": false, "persistentDeny": true,
-      "maximumScope": { "allowedDimensions": ["sessionIds"], "unscopedAllowed": false },
-      "scopeUpgrade": "any-change", "installPrompt": "explicit", "runtimePrompt": "always",
-      "presentation": {
-        "name": { "key": "approvals.answer.name", "fallback": "Answer Agent approvals" },
-        "description": { "key": "approvals.answer.description", "fallback": "Provide terminal decisions for an allowed Agent." },
-        "risk": { "key": "approvals.answer.risk", "fallback": "An allowed decision can authorize a requested action." },
-        "limitation": { "key": "approvals.answer.limitation", "fallback": "Exact Agent generation and first terminal decision are enforced." }
+        "name": { "key": "agent.prompt.context.name", "fallback": "Add prompt context" },
+        "description": { "key": "agent.prompt.context.description", "fallback": "Add attributed context to model input." },
+        "risk": { "key": "agent.prompt.context.risk", "fallback": "Added context can influence model behavior." },
+        "limitation": { "key": "agent.prompt.context.limitation", "fallback": "The Host controls ordering and attribution." }
       }
     },
     {

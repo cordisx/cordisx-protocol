@@ -50,7 +50,7 @@
         }
       },
       {
-        "name": "sessions.subscribe",
+        "name": "agent.events.read",
         "required": false,
         "reason": { "key": "channel.notify", "fallback": "Observe task lifecycle for notifications" },
         "scope": {
