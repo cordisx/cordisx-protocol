@@ -119,6 +119,13 @@ message provenance, reaction and presence state transitions, replacement versus
 incremental convergence, and shared AgentLoop v2 details-URL canonicalization.
 It rejects percent-encoded unreserved characters, default ports, dot segments,
 cross-participant associations, stale updates, callbacks, DOM, and renderer data.
+Agent Conversation Shell v4 conformance exercises the additive
+Session-compatible successor: exact Session ids and event sequences, optional
+structured Agent detail references, Session-scoped approval identity,
+self-introduction Session/message correlation, structured-clone safety, and
+first-terminal subscription closure. It rejects legacy source strings,
+AgentLoop binding/turn/details fields, raw URLs, external project names, and any
+byte change to the complete public v3 Shell family.
 Agent Loop v1 conformance preserves the formal catalog, task binding,
 per-client command idempotency, and ordered event behavior. Agent Loop v2
 conformance covers the bounded self-contained definition catalog,

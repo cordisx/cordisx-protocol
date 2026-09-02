@@ -12,6 +12,7 @@ const expectedExports = [
   './agent-conversation-shell/v1',
   './agent-conversation-shell/v2',
   './agent-conversation-shell/v3',
+  './agent-conversation-shell/v4',
   './agent-loop/v1',
   './agent-loop/v2',
   './agent-loop/v3',
@@ -39,6 +40,7 @@ const expectedFiles = [
   'types/agent-conversation-shell.v1.d.ts',
   'types/agent-conversation-shell.v2.d.ts',
   'types/agent-conversation-shell.v3.d.ts',
+  'types/agent-conversation-shell.v4.d.ts',
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
@@ -114,6 +116,7 @@ import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v
 import type { AgentConversationParticipant as AgentConversationParticipantV1, AgentConversationShellSource as AgentConversationShellSourceV1 } from '@cordisx/protocol/agent-conversation-shell/v1'
 import type { AgentConversationActiveRunDescriptor, AgentConversationItem, AgentConversationMemberPresenceItem, AgentConversationParticipant, AgentConversationReaction, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v2'
 import type { AgentConversationApprovalAction, AgentConversationApprovalItem, AgentConversationMessageItem as AgentConversationMessageItemV3, AgentConversationMessageSemantic, AgentConversationParticipant as AgentConversationParticipantV3, AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef, AgentConversationRoomDescription, AgentConversationRoomSettingsUpdateRequest, AgentConversationRoomSettingsUpdateResult, AgentConversationSelection as AgentConversationSelectionV3, AgentConversationShellCommandContext as AgentConversationShellCommandContextV3, AgentConversationShellSource as AgentConversationShellSourceV3 } from '@cordisx/protocol/agent-conversation-shell/v3'
+import type { AgentConversationActiveRunDescriptor as AgentConversationActiveRunDescriptorV4, AgentConversationApprovalItem as AgentConversationApprovalItemV4, AgentConversationMessageItem as AgentConversationMessageItemV4, AgentConversationShellSubscriptionHandle as AgentConversationShellSubscriptionHandleV4 } from '@cordisx/protocol/agent-conversation-shell/v4'
 import type { AgentLoopCommand as AgentLoopCommandV1, BoundAgentLoopClient as BoundAgentLoopClientV1 } from '@cordisx/protocol/agent-loop/v1'
 import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDelivery, AgentLoopDeliveryDisposition, AgentLoopEvent as AgentLoopEventV2, AgentLoopOperationId, AgentLoopOperationUnavailableCode, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v2'
 import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand as AgentLoopCommandV3, AgentLoopEvent as AgentLoopEventV3, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionIntent, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding as AgentLoopTaskBindingV3, BoundAgentLoopClient as BoundAgentLoopClientV3 } from '@cordisx/protocol/agent-loop/v3'
@@ -138,6 +141,7 @@ declare const connector: BoundConnectorClient
 declare const shell: AgentConversationShellSource
 declare const legacyShell: AgentConversationShellSourceV1
 declare const shellV3: AgentConversationShellSourceV3
+declare const shellSubscriptionV4: AgentConversationShellSubscriptionHandleV4
 declare const agentLoop: BoundAgentLoopClient
 declare const legacyAgentLoop: BoundAgentLoopClientV1
 declare const agentLoopV3: BoundAgentLoopClientV3
@@ -150,6 +154,11 @@ declare const approvals: ApprovalService
 declare const agent: Agent
 declare const session: Session
 declare const userMessage: UserMessage
+const shellRunV4 = { participantId: 'participant-v4', memberId: 'member-v4', runId: 'run-v4', sessionId: 'session-v4', lifecycle: { phase: 'running' }, details: { kind: 'host', ref: 'agent-detail-v4' } } satisfies AgentConversationActiveRunDescriptorV4
+const shellApprovalV4 = { kind: 'approval', itemId: 'approval-item-v4', sequence: 1, participantId: shellRunV4.participantId, memberId: shellRunV4.memberId, runId: shellRunV4.runId, sessionId: shellRunV4.sessionId, agentGeneration: 1, approvalId: 'approval-v4', approvalKind: 'command', state: 'pending', actions: [{ decision: 'approve', command: { id: 'approval.accept' } }] } satisfies AgentConversationApprovalItemV4
+declare const shellMessageV4: AgentConversationMessageItemV4
+shellMessageV4.source.kind satisfies 'session-event' | 'chatroom-acknowledgement'
+shellSubscriptionV4.closed.then(value => value.status satisfies 'closed')
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient

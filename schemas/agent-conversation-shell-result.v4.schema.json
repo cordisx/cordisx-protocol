@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-result.v4.schema.json",
+  "title": "CordisX Agent Conversation Shell Result v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "requestId", "type", "status"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-result.v4.schema.json" },
+    "contract": { "const": "cordisx.agent-conversation-shell-result/v4" },
+    "schemaVersion": { "const": 4 },
+    "requestId": { "$ref": "agent-conversation-shell-common.v4.schema.json#/$defs/opaqueId" },
+    "type": { "enum": ["bind", "subscribe"] },
+    "status": { "enum": ["accepted", "denied", "unavailable"] },
+    "code": { "enum": ["allowed", "policy-denied", "owner-unavailable", "generation-replaced", "disposed"] },
+    "binding": { "$ref": "agent-conversation-shell-binding.v4.schema.json" },
+    "subscription": { "$ref": "agent-conversation-shell-subscription.v4.schema.json" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] },
+      "then": { "required": ["code"], "properties": { "code": { "const": "allowed" } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "denied" } }, "required": ["status"] },
+      "then": { "required": ["code"], "properties": { "code": { "const": "policy-denied" }, "binding": false, "subscription": false } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] },
+      "then": { "required": ["code"], "properties": { "code": { "enum": ["owner-unavailable", "generation-replaced", "disposed"] }, "binding": false, "subscription": false } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "bind" }, "status": { "const": "accepted" } }, "required": ["type", "status"] },
+      "then": { "required": ["binding"], "properties": { "subscription": false } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "subscribe" }, "status": { "const": "accepted" } }, "required": ["type", "status"] },
+      "then": { "required": ["subscription"], "properties": { "binding": false } }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# Agent Conversation Shell v2 and v3
+# Agent Conversation Shell v2, v3, and v4
 
 This data-only source contract serves a Host-owned Agent Desktop conversation
 shell. The production Host renderer is independently implemented in the real
@@ -12,6 +12,11 @@ and reactions; a v2 producer never emits those fields under a v1 schema id.
 The formal v2 schemas and declarations also remain frozen. V3 is the explicit
 successor for Room-description presentation and Room-settings mutation; a v3
 producer never emits those fields under a v1 or v2 schema id.
+V4 is the additive Session-compatible successor. It preserves the complete v3
+Room, settings, collection-leading-visual, and Host-owned presentation surface
+while replacing only the runtime correlations that previously required
+AgentLoop facts. V3 remains byte-for-byte available and a v4 producer never
+emits v4 fields under an earlier schema id.
 
 The v2 contract supports iterative chat-scene UX without prescribing layout. The
 Host owns route selection, chrome, no-room title, DOM, style, accessibility,
@@ -216,3 +221,38 @@ structured identities and never infer an introduction from display text,
 message body, title, author order, or timing. The semantic value is data and
 accessibility provenance only, not a debug label or UI instruction. It contains
 no prompt, hidden body, model, canned response, callback, DOM, or HTML.
+
+## v4 Session-compatible runtime correlations
+
+V4 keeps the Shell-owned `participantId`, `memberId`, and `runId` associations
+used by the accepted Chatroom product path, and adds the exact `sessionId` to
+active-run and member-presence descriptors. An active run may expose only the
+optional structured `AgentDetailReference` returned by the Agent service. The
+Host owns navigation and interpretation of that reference. The Shell carries
+no raw URL, route, DOM, renderer, task binding, or AgentLoop details URL.
+
+Session-derived messages use the closed structured source
+`{ kind: 'session-event', sessionId, eventSeq }`. The sequence is the exact
+persisted `SessionEvent.seq`; the Shell item `sequence` remains the ordered
+Shell projection sequence. Chatroom-authored delivery acknowledgements use the
+separate `{ kind: 'chatroom-acknowledgement' }` source. Producers never infer
+Session provenance from display text, order, timing, or legacy source strings.
+
+An approval item correlates directly through `sessionId`, `agentGeneration`,
+and `approvalId`, alongside the existing Shell participant/member/run
+association. It carries no AgentLoop binding or turn. A member self-introduction
+correlates through the exact `{ sessionId, requestMessageId }` of the accepted
+Session send/follow-up and resulting message event; it likewise carries no
+AgentLoop binding or turn.
+
+The runtime subscription handle exposes a non-rejecting `closed` Promise and an
+idempotent async `unsubscribe()` returning the same terminal projection. The
+closed code union is exhaustive, and first terminal closure wins. Replay pages,
+live pages, Shell generations, binding ownership, settings CAS, and command
+contexts retain their existing v3 fences.
+
+V4 is published alongside v3, not as an in-place change. A Host may expose v4
+only when its source is backed by the formal Agent/Session/Approval services and
+can supply every required correlation. Otherwise it continues to expose v3.
+Host or plugin consumers must not fabricate a Session id, event sequence,
+detail reference, Agent generation, approval id, or message id from a v3 value.

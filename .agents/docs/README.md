@@ -27,6 +27,9 @@ Specified areas:
 - `agent-runtime/`: additive Agent Registry/live handles, read-only Session
   registry, append-only SessionEvent truth, closed subscription fences, and
   Agent-scoped approval version 1; existing AgentLoop contracts remain intact.
+- `agent-conversation-shell/`: Host-owned conversation data plane versions 2
+  through 4; v4 adds exact SessionEvent, Agent detail, approval, and
+  self-introduction correlations while preserving the v3 and AgentLoop paths.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution versions 2 through 7, availability, contextual
   invocation, DSH intent mapping, and explicit replacement refusals.
