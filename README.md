@@ -14,7 +14,7 @@ Version 1 marketplace discovery contracts are defined by:
 - `test-vectors/marketplace` and `conformance/marketplace.mjs`.
 
 Structured UI version 1, the complete UI extension catalog and contribution
-version 2, Platform capabilities, Agent events, and extension-point management
+version 2, Platform capabilities, Agent/Session runtime, and extension-point management
 contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
 conformance vectors in this repository.
 

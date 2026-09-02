@@ -14,7 +14,8 @@ import {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const schemaNames = [
-  'agent-loop-common.v1.schema.json',
+  'session-common.v1.schema.json',
+  'agents-common.v1.schema.json',
   'platform-model.v1.schema.json',
   'agent-avatar.v1.schema.json',
   'agent-avatar-resolution-result.v1.schema.json',

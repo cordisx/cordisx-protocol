@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/session-event.v1.schema.json",
+  "title": "CordisX Session Event v1",
+  "$defs": {
+    "base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "sessionId", "seq", "time", "type", "data"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/session-event.v1.schema.json" },
+        "contract": { "const": "cordisx.session-event/v1" },
+        "schemaVersion": { "const": 1 },
+        "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "seq": { "$ref": "session-common.v1.schema.json#/$defs/seq" },
+        "time": { "$ref": "session-common.v1.schema.json#/$defs/time" },
+        "type": { "type": "string", "minLength": 3, "maxLength": 128, "pattern": "^[a-z][a-z0-9-]*(/[a-z][a-z0-9-]*)+$" },
+        "data": { "$ref": "session-common.v1.schema.json#/$defs/jsonValue" },
+        "ignorable": { "const": true },
+        "sourceEventSeqs": { "type": "array", "maxItems": 16384, "uniqueItems": true, "items": { "$ref": "session-common.v1.schema.json#/$defs/seq" } },
+        "surfaceOp": { "$ref": "session-common.v1.schema.json#/$defs/surfaceOp" }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "properties": {
+        "sourceEventSeqs": { "type": "array", "maxItems": 16384, "uniqueItems": true, "items": { "$ref": "session-common.v1.schema.json#/$defs/seq" } },
+        "surfaceOp": { "$ref": "session-common.v1.schema.json#/$defs/surfaceOp" }
+      }
+    },
+    "logOnly": { "type": "object", "properties": { "sourceEventSeqs": false, "surfaceOp": false } },
+    "turnStart": { "type": "object", "additionalProperties": false, "required": ["turn"], "properties": { "turn": { "type": "integer", "minimum": 1 } } },
+    "turnEnd": { "type": "object", "additionalProperties": false, "required": ["turn", "reason"], "properties": { "turn": { "type": "integer", "minimum": 1 }, "reason": { "$ref": "session-common.v1.schema.json#/$defs/turnEndReason" } } },
+    "step": { "type": "object", "additionalProperties": false, "required": ["turn", "step"], "properties": { "turn": { "type": "integer", "minimum": 1 }, "step": { "type": "integer", "minimum": 1 } } },
+    "chunk": { "type": "object", "additionalProperties": false, "required": ["turn", "step", "chunk"], "properties": { "turn": { "type": "integer", "minimum": 1 }, "step": { "type": "integer", "minimum": 1 }, "chunk": { "$ref": "session-common.v1.schema.json#/$defs/streamChunk" } } },
+    "assistantMessage": { "type": "object", "additionalProperties": false, "required": ["turn", "step", "message"], "properties": { "turn": { "type": "integer", "minimum": 1 }, "step": { "type": "integer", "minimum": 1 }, "message": { "$ref": "session-common.v1.schema.json#/$defs/assistantMessage" }, "usage": { "$ref": "session-common.v1.schema.json#/$defs/tokenUsage" }, "interrupted": { "const": true } } },
+    "toolCall": { "type": "object", "additionalProperties": false, "required": ["turn", "step", "callId", "name", "arguments"], "properties": { "turn": { "type": "integer", "minimum": 1 }, "step": { "type": "integer", "minimum": 1 }, "callId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }, "name": { "$ref": "session-common.v1.schema.json#/$defs/identifier" }, "arguments": { "type": "string", "maxLength": 1000000 } } },
+    "toolResult": { "type": "object", "additionalProperties": false, "required": ["turn", "step", "message"], "properties": { "turn": { "type": "integer", "minimum": 1 }, "step": { "type": "integer", "minimum": 1 }, "message": { "$ref": "session-common.v1.schema.json#/$defs/toolResultMessage" }, "error": { "type": "object", "additionalProperties": false, "required": ["name", "code"], "properties": { "name": { "type": "string", "minLength": 1, "maxLength": 256 }, "code": { "$ref": "session-common.v1.schema.json#/$defs/identifier" } } }, "meta": { "$ref": "session-common.v1.schema.json#/$defs/jsonValue" } } },
+    "requestHeader": { "type": "object", "additionalProperties": false, "required": ["header", "reason"], "properties": { "header": { "type": "object", "additionalProperties": false, "required": ["config"], "properties": { "config": { "type": "object", "additionalProperties": false, "required": ["provider", "model"], "properties": { "provider": { "$ref": "session-common.v1.schema.json#/$defs/identifier" }, "model": { "$ref": "session-common.v1.schema.json#/$defs/identifier" }, "reasoningEffort": { "type": "string", "minLength": 1, "maxLength": 64 }, "temperature": { "type": "number" }, "maxTokens": { "type": "integer", "minimum": 1 }, "stop": { "type": "array", "maxItems": 64, "items": { "type": "string", "minLength": 1, "maxLength": 10000 } } } }, "system": { "type": "string", "maxLength": 2000000 }, "tools": { "type": "array", "maxItems": 1024, "items": { "type": "object", "additionalProperties": false, "required": ["name", "description", "parameters"], "properties": { "name": { "$ref": "session-common.v1.schema.json#/$defs/identifier" }, "description": { "type": "string", "maxLength": 100000 }, "parameters": { "type": "object", "additionalProperties": { "$ref": "session-common.v1.schema.json#/$defs/jsonValue" } } } } } } }, "reason": { "enum": ["initial", "resume", "change", "series"] }, "startsSeries": { "const": true } } },
+    "requestContext": { "type": "object", "additionalProperties": false, "required": ["provider", "model"], "properties": { "provider": { "$ref": "session-common.v1.schema.json#/$defs/identifier" }, "model": { "$ref": "session-common.v1.schema.json#/$defs/identifier" }, "contextWindow": { "type": "integer", "minimum": 1 } } },
+    "inboxSplice": { "type": "object", "additionalProperties": false, "required": ["target", "start", "inserted"], "properties": { "target": { "enum": ["next-turn", "next-step"] }, "start": { "type": "integer", "minimum": 0 }, "removedCount": { "type": "integer", "minimum": 0 }, "inserted": { "type": "array", "maxItems": 4096, "items": { "$ref": "session-common.v1.schema.json#/$defs/userMessage" } }, "outcome": { "const": "canceled" } } },
+    "approvalAsked": { "type": "object", "additionalProperties": false, "required": ["id", "toolName"], "properties": { "id": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }, "toolName": { "$ref": "session-common.v1.schema.json#/$defs/identifier" }, "callId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }, "reason": { "type": "string", "maxLength": 10000 } } },
+    "approvalDecided": { "type": "object", "additionalProperties": false, "required": ["id", "outcome"], "properties": { "id": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }, "outcome": { "$ref": "session-common.v1.schema.json#/$defs/approvalOutcome" } } },
+    "empty": { "type": "object", "additionalProperties": false, "maxProperties": 0 }
+  },
+  "oneOf": [
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "turn/start" }, "data": { "$ref": "#/$defs/turnStart" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "turn/end" }, "data": { "$ref": "#/$defs/turnEnd" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "step/start" }, "data": { "$ref": "#/$defs/step" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "step/end" }, "data": { "$ref": "#/$defs/step" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/surface" }, { "type": "object", "properties": { "type": { "const": "user/message" }, "data": { "$ref": "session-common.v1.schema.json#/$defs/userMessage" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "assistant/chunk" }, "data": { "$ref": "#/$defs/chunk" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/surface" }, { "type": "object", "properties": { "type": { "const": "assistant/message" }, "data": { "$ref": "#/$defs/assistantMessage" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "tool/call" }, "data": { "$ref": "#/$defs/toolCall" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/surface" }, { "type": "object", "properties": { "type": { "const": "tool/result" }, "data": { "$ref": "#/$defs/toolResult" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "request/header" }, "data": { "$ref": "#/$defs/requestHeader" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "request/context" }, "data": { "$ref": "#/$defs/requestContext" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "agent/inbox/spliced" }, "data": { "$ref": "#/$defs/inboxSplice" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "approval/asked" }, "data": { "$ref": "#/$defs/approvalAsked" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "approval/decided" }, "data": { "$ref": "#/$defs/approvalDecided" } } }] },
+    { "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/logOnly" }, { "type": "object", "properties": { "type": { "const": "session/end-seed" }, "data": { "$ref": "#/$defs/empty" } } }] },
+    {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "not": { "enum": ["turn/start", "turn/end", "step/start", "step/end", "user/message", "assistant/chunk", "assistant/message", "tool/call", "tool/result", "request/header", "request/context", "agent/inbox/spliced", "approval/asked", "approval/decided", "session/end-seed"] } },
+            "data": { "$ref": "session-common.v1.schema.json#/$defs/jsonValue" }
+          }
+        }
+      ]
+    }
+  ]
+}

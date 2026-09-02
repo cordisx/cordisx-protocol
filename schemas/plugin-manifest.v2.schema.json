@@ -14,7 +14,7 @@
     "name": { "type": "string", "minLength": 1, "maxLength": 200 },
     "capabilities": {
       "type": "array",
-      "maxItems": 21,
+      "maxItems": 27,
       "items": { "$ref": "#/$defs/capabilityDeclaration" }
     },
     "services": {
@@ -33,12 +33,18 @@
         "tasks.control",
         "turns.submit",
         "turns.control",
-        "agent.events.read",
-        "agent.messages.append",
-        "agent.steps.reject",
-        "agent.messages.transform",
-        "agent.prompt.section",
-        "agent.prompt.context",
+        "agents.create",
+        "agents.resume",
+        "agents.get",
+        "agents.message.submit",
+        "agents.message.cancel",
+        "agents.cancel",
+        "agents.live.subscribe",
+        "sessions.get",
+        "sessions.read",
+        "sessions.subscribe",
+        "approvals.request",
+        "approvals.answer",
         "channel.accounts.read",
         "channel.accounts.connect",
         "channel.events.receive",
@@ -61,7 +67,8 @@
     "agentSessionId": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 512
+      "maxLength": 512,
+      "not": { "const": "*" }
     },
     "scope": {
       "type": "object",

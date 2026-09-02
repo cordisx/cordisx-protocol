@@ -119,7 +119,7 @@ ambiguous anchor is pending and diagnosable, never simulated with an overlay.
 activated and immediately before command dispatch. It carries the originating
 point/contribution plus a host-owned opaque `contextRef`. Agent identity is a
 provider-neutral `sessionKey` with optional turn, step, item, message, and
-tool-call ids aligned with `cordisx.agent-events/v1`. Platform identity is a
+tool-call ids aligned with the public `SessionEvent` identity vocabulary. Platform identity is a
 separate `{ providerId, remoteSessionId }` pair. Neither form is a naked
 cross-provider `sessionId`; workspace and generic context references remain
 opaque.
@@ -169,9 +169,9 @@ two new stable seats `session.header.actions` and `composer.toolbar.items` in
 addition to the existing catalog; other new points remain experimental or
 reserved until that adapter supplies unique-seat evidence.
 
-## DeepSeek Harness mapping and refusal
+## Reference intent mapping and refusal
 
-| DSH intent | CordisX mapping |
+| Reference intent | CordisX mapping |
 | --- | --- |
 | `input.left` / `input.right` | `composer.toolbar.items` semantic anchor/placement |
 | input/composer dock | `composer.dock.above` / `composer.dock.below` presenter |

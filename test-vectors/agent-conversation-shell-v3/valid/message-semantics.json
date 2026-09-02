@@ -5,8 +5,8 @@
     "itemId": "item-conversation",
     "messageId": "message-conversation",
     "sequence": 1,
-    "source": "agent-loop",
-    "semantic": { "purpose": "conversation", "causation": { "operationId": "operation-send" } },
+    "source": "session-event",
+    "semantic": { "purpose": "conversation", "correlation": { "requestMessageId": "message-request" } },
     "author": { "participantId": "participant-agent", "role": "agent", "displayName": { "key": "participant.agent", "fallback": "Reviewer" }, "agentIdentity": { "agentId": "reviewer", "revision": "definition-2" } },
     "body": [{ "kind": "text", "text": { "key": "message.conversation", "fallback": "I reviewed the change." } }],
     "reactions": [],
@@ -21,15 +21,13 @@
     "itemId": "item-self-introduction",
     "messageId": "message-introduction",
     "sequence": 2,
-    "source": "agent-loop",
+    "source": "session-event",
     "semantic": {
       "purpose": "member-self-introduction",
-      "causation": { "operationId": "operation-introduction" },
+      "correlation": { "requestMessageId": "message-request-introduction" },
       "participantId": "participant-agent",
       "memberId": "member-agent",
-      "runId": "run-agent",
-      "binding": { "bindingId": "binding-introduction", "generation": 4 },
-      "turn": "turn-introduction"
+      "sessionId": "session-agent"
     },
     "author": { "participantId": "participant-agent", "role": "agent", "displayName": { "key": "participant.agent", "fallback": "Reviewer" }, "agentIdentity": { "agentId": "reviewer", "revision": "definition-2" } },
     "body": [{ "kind": "text", "text": { "key": "message.self-introduction", "fallback": "I review changes and explain risks before they ship." } }],
@@ -56,13 +54,11 @@
     "ariaLive": "polite",
     "actions": []
   },
-  "agentLoopProjection": {
-    "operationId": "operation-introduction",
+  "sessionProjection": {
+    "requestMessageId": "message-request-introduction",
     "participantId": "participant-agent",
     "memberId": "member-agent",
-    "runId": "run-agent",
-    "binding": { "bindingId": "binding-introduction", "generation": 4 },
-    "turn": "turn-introduction",
-    "messageId": "message-introduction"
+    "sessionId": "session-agent",
+    "outputMessageId": "message-introduction"
   }
 }

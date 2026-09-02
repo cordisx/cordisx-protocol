@@ -1,6 +1,0 @@
-{
-  "case": "events",
-  "events": [
-    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v1.schema.json", "contract": "cordisx.agent-loop-event/v1", "schemaVersion": 1, "eventId": "event-0", "binding": { "bindingId": "binding-1", "generation": 1 }, "sequence": 0, "occurredAt": "2026-08-30T00:00:00.000Z", "type": "approval", "turn": "turn-1", "approval": { "approvalId": "approval-1", "kind": "command", "state": "resolved", "outcome": "approved" } }
-  ]
-}
