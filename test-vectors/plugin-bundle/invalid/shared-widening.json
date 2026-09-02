@@ -1,0 +1,33 @@
+{
+  "case": "snapshot",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-bundle-manager-snapshot.v1.schema.json",
+    "schemaVersion": 1,
+    "profileId": "work",
+    "revision": 3,
+    "pluginRevision": 7,
+    "runtimeGeneration": "runtime-4",
+    "operationsAvailable": true,
+    "bundles": [
+      {
+        "id": "team-workflow",
+        "name": "Team workflow",
+        "version": "1.0.0",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authors": ["CordisX"],
+        "sourceLabel": "team-workflow.bundle",
+        "installedAt": "2026-09-02T01:00:00.000Z",
+        "updatedAt": "2026-09-02T01:00:00.000Z",
+        "status": "active",
+        "enabled": true,
+        "readme": "# Team workflow",
+        "availableOperations": ["enable"],
+        "members": [],
+        "permissions": [],
+        "claims": [],
+        "dependencies": [],
+        "records": []
+      }
+    ]
+  }
+}
