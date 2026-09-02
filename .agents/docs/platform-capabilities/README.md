@@ -53,8 +53,10 @@ The version-1 names are:
 `scope.providers`, `scope.cwdRoots`, and `scope.sessions` are optional lists of
 exact allowed values. Every Platform session scope entry is the structured
 pair `{ providerId, remoteSessionId }`; a naked task or session id is invalid.
-`scope.sessionIds` is reserved for the provider-neutral Agent event ledger and
-must not authorize Platform calls. An absent field requests no restriction for
+`scope.sessionIds` is reserved for the Agent/Session runtime and must not
+authorize Platform calls. Manifest v5 may use its closed Host-route binding
+template for an optional Session-scoped Agent capability; every runtime
+authorization scope remains an exact non-wildcard SessionId array. An absent field requests no restriction for
 that dimension; an empty field requests no values and is invalid. CWD matching
 uses normalized absolute paths and path-segment containment, not string
 prefixes. The broker intersects the declaration with the current user grant

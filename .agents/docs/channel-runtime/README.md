@@ -349,7 +349,7 @@ Manager data, a plugin configuration value, a log entry, or an inbound intent.
 
 ## Compatibility and delivery status
 
-The Channel facade may mirror a high-level DSH/OneWorks connection lifecycle
+The Channel facade may mirror a high-level adapter connection lifecycle
 (`define`, `start`, normalize, send, acknowledge, dispose). Task dispatch is
 not a Channel facade method: an optional consumer subscribes to sourced events
 and uses its own Platform/Agent authority. Bare session ids, full message-batch

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-acquire-request.v1.schema.json",
+  "title": "CordisX Agent Acquire Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "type"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-acquire-request.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-acquire-request/v1" },
+    "schemaVersion": { "const": 1 },
+    "type": { "enum": ["create", "resume"] },
+    "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "mutationId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "options": { "$ref": "agents-common.v1.schema.json#/$defs/agentOptions" },
+    "setup": { "$ref": "agents-common.v1.schema.json#/$defs/setup" }
+  },
+  "allOf": [
+    { "if": { "properties": { "type": { "const": "resume" } }, "required": ["type"] }, "then": { "required": ["sessionId"], "properties": { "sessionId": true } } }
+  ]
+}

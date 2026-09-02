@@ -112,6 +112,24 @@ for (const file of (await readdir(path.join(vectorRoot, 'invalid'))).filter(file
   expectInvalid(JSON.parse(await readFile(path.join(vectorRoot, 'invalid', file), 'utf8')), `invalid vector ${file} must fail closed`)
 }
 
+const routeManifest = JSON.parse(await readFile(path.join(vectorRoot, 'valid', 'manifest-v5.json'), 'utf8'))
+const routeBinding = routeManifest.capabilities.find(value => value.name === 'sessions.read').scope.sessionIds
+function resolveRouteSessionScope(binding, activeRoute, pluginId) {
+  if (binding?.kind !== 'host-route-param' || activeRoute?.active !== true
+    || activeRoute.owner !== pluginId || activeRoute.id !== binding.routeId) return { status: 'unavailable' }
+  const declaredParams = new Set([...activeRoute.path.matchAll(/:([a-z][a-zA-Z0-9]*)/gu)].map(match => match[1]))
+  const sessionId = activeRoute.params?.[binding.param]
+  if (!declaredParams.has(binding.param) || typeof sessionId !== 'string' || sessionId.length === 0 || sessionId === '*') {
+    return { status: 'unavailable' }
+  }
+  return { status: 'resolved', scope: { sessionIds: [sessionId] } }
+}
+const activeTraceRoute = { active: true, owner: 'host-dom-helper', id: 'timeline', path: '/sessions/:sessionId/trace', params: { sessionId: 'session-route-1' } }
+expect(JSON.stringify(resolveRouteSessionScope(routeBinding, activeTraceRoute, routeManifest.id)) === JSON.stringify({ status: 'resolved', scope: { sessionIds: ['session-route-1'] } }), 'Host route binding must resolve to one exact SessionId scope')
+expect(resolveRouteSessionScope(routeBinding, { ...activeTraceRoute, owner: 'other-plugin' }, routeManifest.id).status === 'unavailable', 'cross-owner route binding must fail closed')
+expect(resolveRouteSessionScope(routeBinding, { ...activeTraceRoute, active: false }, routeManifest.id).status === 'unavailable', 'inactive route binding must fail closed')
+expect(resolveRouteSessionScope(routeBinding, { ...activeTraceRoute, params: { sessionId: '*' } }, routeManifest.id).status === 'unavailable', 'wildcard route values must fail closed')
+
 const catalogV1 = JSON.parse(await readFile(path.join(root, 'test-vectors/platform/permissions-v2/valid/catalog.json'), 'utf8'))
 const presentation = (id, name, risk, limitation) => ({
   name: { key: `${id}.name`, fallback: name }, description: { key: `${id}.description`, fallback: name },
@@ -144,9 +162,9 @@ const catalog = {
     },
   ],
 }
-expectValid(catalog, 'v4 catalog must preserve 22 non-DOM entries and add exactly three separately classified DOM entries')
-expect(catalog.entries.length === 25, 'v4 catalog must have exactly 25 entries')
-expect(catalog.entries.slice(0, 22).every(entry => entry.resourceClass === 'non-dom' && entry.certifiedImplicitApproval === false), 'the original 22 entries must remain non-DOM and ineligible')
+expectValid(catalog, 'v4 catalog must preserve 27 non-DOM entries and add exactly three separately classified DOM entries')
+expect(catalog.entries.length === 30, 'v4 catalog must have exactly 30 entries')
+expect(catalog.entries.slice(0, 27).every(entry => entry.resourceClass === 'non-dom' && entry.certifiedImplicitApproval === false), 'the 27 non-DOM entries must remain ineligible')
 expectInvalid({ ...catalog, entries: catalog.entries.map(entry => entry.capability === 'ui.host-dom.modify' ? { ...entry, persistentAllow: true } : entry) }, 'Host DOM modify catalog entry must never enable persistent allow')
 
 const identity = Object.freeze({ source: 'https://plugins.example.test/host-dom-helper', pluginId: 'host-dom-helper' })
@@ -199,6 +217,18 @@ const explicitDecision = {
 }
 expectValid(explicitDecision, 'explicit Host DOM decision must be valid')
 expectInvalid({ ...explicitDecision, origin: 'certified-implicit', certification }, 'serialized input must not forge Certified authority')
+const sessionRead = {
+  ...explicitRead,
+  capability: 'sessions.read',
+  scope: { sessionIds: ['session-route-1'] },
+  resourceClass: 'non-dom',
+  certifiedImplicitApproval: false,
+  presentation: catalog.entries.find(entry => entry.capability === 'sessions.read').presentation,
+}
+expectValid({ ...certifiedPlan, operation: 'runtime', declarations: [sessionRead] }, 'runtime Session authorization must use the exact Host-resolved SessionId')
+expectInvalid({ ...certifiedPlan, operation: 'runtime', declarations: [{ ...sessionRead, scope: { sessionIds: routeBinding } }] }, 'runtime Session authorization must reject unresolved manifest bindings')
+expectInvalid({ ...certifiedPlan, operation: 'runtime', declarations: [{ ...sessionRead, scope: { sessionIds: ['*'] } }] }, 'runtime Session authorization must reject wildcard Session ids')
+expectInvalid({ ...certifiedPlan, operation: 'runtime', declarations: [{ ...sessionRead, scope: { sessionIds: [] } }] }, 'runtime Session authorization must reject empty Session scopes')
 function decisionMatchesPlan(plan, decision) {
   if (decision.planId !== plan.planId || decision.operation !== plan.operation || decision.profileId !== plan.profileId
     || JSON.stringify(decision.identity) !== JSON.stringify(plan.identity) || JSON.stringify(decision.binding) !== JSON.stringify(plan.binding)

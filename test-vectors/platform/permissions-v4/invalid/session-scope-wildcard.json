@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v5.schema.json",
+  "schemaVersion": 5,
+  "id": "trace",
+  "capabilities": [
+    { "name": "sessions.read", "required": true, "scope": { "sessionIds": ["*"] } }
+  ],
+  "services": []
+}

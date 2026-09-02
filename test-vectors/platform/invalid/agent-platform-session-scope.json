@@ -4,9 +4,9 @@
   "id": "agent-platform-session-scope",
   "capabilities": [
     {
-      "name": "agent.events.read",
+      "name": "sessions.read",
       "required": false,
-      "reason": { "key": "permission.agent-events", "fallback": "Read Agent events" },
+      "reason": { "key": "permission.sessions-read", "fallback": "Read Session facts" },
       "scope": {
         "sessions": [
           { "providerId": "cliproxy-main", "remoteSessionId": "thread-1" }

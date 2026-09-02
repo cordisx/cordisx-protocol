@@ -22,9 +22,9 @@
         {
           "participantId": "participant-agent",
           "memberId": "member-agent",
-          "runId": "run-agent",
+          "sessionId": "session-agent",
           "lifecycle": { "phase": "running", "updatedAt": "2026-08-31T08:00:00.000Z" },
-          "detailsUrl": { "url": "app://-/tasks/task-agent", "target": "host" }
+          "details": { "kind": "host", "ref": "task-agent" }
         }
       ]
     },
@@ -84,9 +84,9 @@
         {
           "participantId": "participant-agent",
           "memberId": "member-agent",
-          "runId": "run-agent",
+          "sessionId": "session-agent",
           "lifecycle": { "phase": "running", "updatedAt": "2026-08-31T08:00:00.000Z" },
-          "detailsUrl": { "url": "app://-/tasks/task-agent", "target": "host" }
+          "details": { "kind": "host", "ref": "task-agent" }
         }
       ]
     },

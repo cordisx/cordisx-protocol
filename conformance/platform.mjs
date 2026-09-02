@@ -108,11 +108,11 @@ export function validateManifest(manifest) {
   for (const declaration of manifest?.capabilities ?? []) {
     if (seen.has(declaration.name)) errors.push(`duplicate capability declaration: ${declaration.name}`)
     seen.add(declaration.name)
-    const isAgent = declaration.name?.startsWith('agent.')
-    if (isAgent && declaration.scope?.sessions !== undefined) {
+    const isAgentRuntime = /^(?:agents|sessions|approvals)\./u.test(declaration.name ?? '')
+    if (isAgentRuntime && declaration.scope?.sessions !== undefined) {
       errors.push(`${declaration.name} cannot use provider-aware Platform session scope`)
     }
-    if (!isAgent && declaration.scope?.sessionIds !== undefined) {
+    if (!isAgentRuntime && declaration.scope?.sessionIds !== undefined) {
       errors.push(`${declaration.name} cannot use provider-neutral Agent session scope`)
     }
   }

@@ -11,12 +11,16 @@ projection, Platform manifest capabilities/scopes, composite model/session
 identity, query-bound pages, declaration fingerprints, host extension-point descriptor
 identity, canonical point policy, surface/outlet/page-header authorization
 origin, and downgrade behavior.
-Agent-event conformance additionally covers per-session sequence, stable event
-identity, provenance/source consistency, causal ordering, delivery transitions,
-snapshot pagination, and rejection of host-specific public fields.
-Agent-history conformance covers privacy-bounded historical pages, allowed
-version-2 projections, payload-policy clamping, source identity, coverage, and
-path/offset/provider leakage rejection.
+Agents conformance covers deterministic create/resume collision semantics,
+Host versus caller SessionId authority, owner/generation identity, closed
+permissions, MessageId-only admission, per-message cancellation, unavailable
+whole-Agent idle, Host-owned detail references, and non-durable extensible live
+events. Sessions conformance covers append-only fact ordering, fixed snapshots,
+snapshot-pinned paging, structured clone data, approval pairing, extension
+policy, source-event lineage, and an atomic contiguous replay-to-post-commit-live
+boundary. Approval conformance covers exact Agent/Session/generation identity,
+first terminal decision, and separation from permission, user-input, and
+elicitation seams.
 UI extension catalog conformance covers the complete version-2 point
 vocabulary, payload-family mapping, independent stability/availability,
 generation-fenced surface origin, host-only contextual identity, and
@@ -102,28 +106,10 @@ Agent Conversation Shell conformance preserves the frozen v1 wire contract and
 exercises the explicit v2 successor. V2 checks exact Agent participant identity,
 fixed `memberId` to `participantId` mapping, exact active-run/presence triples,
 message provenance, reaction and presence state transitions, replacement versus
-incremental convergence, and shared AgentLoop v2 details-URL canonicalization.
-It rejects percent-encoded unreserved characters, default ports, dot segments,
-cross-participant associations, stale updates, callbacks, DOM, and renderer data.
-Agent Loop v1 conformance preserves the formal catalog, task binding,
-per-client command idempotency, and ordered event behavior. Agent Loop v2
-conformance covers the bounded self-contained definition catalog,
-field inheritance vocabulary, exact task binding and authorization
-correlation, owner-provider durable command replay across client recreation,
-provider-private bounded retention, independent multi-binding fan-out,
-text/image-reference content, proactive message/approval/lifecycle events,
-per-binding-generation replay/live ordering, terminal closure, and the direct
-persisted task-details URL returned by every accepted create or explicit bind.
-Task-details fixtures freeze the target/scheme allowlist, 2048-character and
-canonical-form boundary, two-client/two-binding isolation, atomic generation
-replacement, and fail-closed active-provider-association cleanup after provider
-replacement, disable, uninstall, binding closure, or client disposal. This
-active authority model does not constrain Chatroom's durable history: a closed
-run may retain its persisted URL. The fixtures reject unsafe URL syntax,
-stale/cross-client/cross-binding access, forged capabilities, missing details
-resources, and task body, prompt, CLI, provider trace, route, path, or token
-fields. Agent Loop exposes no navigation operation. It is Protocol-only
-evidence and does not prove Host/Chatroom wiring or image rendering.
+incremental convergence, SessionId domain correlation, and Host-owned detail
+references. It rejects raw URLs, private runtime bindings, cross-participant
+associations, stale updates, callbacks, DOM, and renderer data. This is
+Protocol-only evidence and does not prove Host/Chatroom wiring or rendering.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,
@@ -149,8 +135,8 @@ variadic Console argument snapshots, zero-touch Host call phases, permission
 projection, terminal uniqueness, and the rule that success cannot precede real
 Host dispatch.
 
-Permission v4 conformance freezes the complete 25-entry catalog, preserves the
-original 22 capabilities as non-DOM, and separates structured rendering from
+Permission v4 conformance freezes the complete 30-entry catalog, preserves 27
+capabilities as non-DOM, and separates structured rendering from
 `ui.host-dom.read` and `ui.host-dom.modify`. It validates canonical root and
 closed-operation scope families, structured rationale/security declarations,
 four independent Official/Certified states, exact Certified projection

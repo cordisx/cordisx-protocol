@@ -63,20 +63,11 @@ directions, `action.favorite-active`, omitted 13-key coverage, the prior digest,
 accessibility text, and raw publisher identity. Existing trust, selection,
 fallback, rollback, and Connector suites remain part of `npm run check`.
 
-Agent-event v1 suites live in `agent-events/valid` and `agent-events/invalid`.
-The complete valid page is the stacked-consumer fixture for event identity,
-message delivery, chunk boundaries, paging, provenance, and causal parents.
-
-Agent-event v2 suites live in `agent-events-v2/valid` and
-`agent-events-v2/invalid`; delivery snapshot suites live in
-`agent-delivery/valid` and `agent-delivery/invalid`. They cover stable delivery
-ids, owner/generation fencing, cancellable boundaries, terminal idempotence,
-and successful pre-step/prompt contribution lifecycle.
-
-Agent-history v1 suites live in `agent-history/valid` and
-`agent-history/invalid`. They cover bounded historical pages, privacy/source
-invariants, payload policy, and rejection of unprovable CordisX lifecycle
-events.
+Agent/Session runtime conformance is executable in `conformance/agents.mjs`,
+`conformance/sessions.mjs`, and `conformance/approval.mjs`. It covers
+create/resume ownership, MessageId admission and cancellation, fixed Session
+snapshots, contiguous replay-to-live delivery, extensible events, approval
+pairing, and fail-closed generation and permission replacement.
 
 UI extension catalog suites live in `ui-extension-catalog/valid` and
 `ui-extension-catalog/invalid`. They cover every version-2 surface/outlet id,
@@ -156,29 +147,9 @@ OneWorks implementation package is a Protocol production or peer dependency.
 Negative vectors reject raw URLs and paths, data/base64 payloads, unqualified
 or oversized refs, byte-length/NFC drift, and unsupported schema versions.
 
-Agent Loop v1 compatibility suites remain in `agent-loop/valid` and
-`agent-loop/invalid`; their formal files and per-client idempotency behavior are
-unchanged. Agent Loop v2 suites live in `agent-loop-v2/valid` and
-`agent-loop-v2/invalid`. They cover self-contained Agent-definition ancestry,
-exact field inheritance,
-opaque active task bindings, create-or-bind/send authorization reuse, ordered
-text/image-reference content, proactive message/approval/lifecycle events,
-owner-provider durable command replay across bound-client recreation,
-executed/replayed/reconciled delivery, independent multi-binding subscriptions,
-snapshot replay before live pages, terminal binding closure, and direct
-persisted task-details URLs for accepted create and explicit bind results. URL
-goldens freeze host `app:` versus external `https:`/`codex:`/`claude:` targets,
-canonical form, and exact length boundaries. Lifecycle vectors cover atomic
-generation replacement, binding/client isolation, missing details resources,
-and active-provider-association cleanup after provider replacement, disable,
-uninstall, closure, and dispose. This does not require durable Chatroom history
-to remove a closed run's persisted URL. They reject missing/cyclic/unused
-definitions, Room fields, image or
-unsafe task-details URLs, closed/stale/cross-binding attempts, forged capability
-use, authorization drift, command-id reuse with a different command, provider
-affinity/generation drift, provider-private bounded retention, expired recovery,
-operation-incompatible authorization, orphan
-approval resolutions, and late events. No vector introduces a navigation API.
+The retired public loop/event/history vectors are intentionally absent. New
+runtime vectors must exercise only the public Agents, Sessions, approval, and
+Shell schemas; Host-internal integration tests live with the Host owner.
 
 Channel Manager v2 vectors additionally cover strict snapshot/request/result
 identity, profile and Host-generation fencing, operation-to-exact-target

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-live-event.v1.schema.json",
+  "title": "CordisX Agent Live Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agentId", "sessionId", "agentGeneration", "time", "type", "data"],
+  "properties": {
+    "agentId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "agentGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "time": { "$ref": "session-common.v1.schema.json#/$defs/time" },
+    "type": { "type": "string", "minLength": 3, "maxLength": 128, "pattern": "^[a-z][a-z0-9.-]*/[a-z][a-z0-9./-]*$" },
+    "data": { "$ref": "session-common.v1.schema.json#/$defs/jsonValue" }
+  },
+  "allOf": [
+    { "if": { "properties": { "type": { "const": "agent/created" } }, "required": ["type"] }, "then": { "properties": { "data": { "type": "object", "additionalProperties": false, "maxProperties": 0 } } } },
+    { "if": { "properties": { "type": { "const": "agent/disposed" } }, "required": ["type"] }, "then": { "properties": { "data": { "type": "object", "additionalProperties": false, "required": ["reason"], "properties": { "reason": { "enum": ["owner-disposed", "runtime-disposed", "agent-replaced", "plugin-generation-replaced", "connection-replaced"] } } } } } },
+    { "if": { "properties": { "type": { "const": "agent/status" } }, "required": ["type"] }, "then": { "properties": { "data": { "type": "object", "additionalProperties": false, "required": ["status"], "properties": { "status": { "enum": ["idle", "running"] } } } } } },
+    { "if": { "properties": { "type": { "enum": ["agent/inbox/inserted", "agent/inbox/discarded"] } }, "required": ["type"] }, "then": { "properties": { "data": { "type": "object", "additionalProperties": false, "required": ["message"], "properties": { "message": { "$ref": "session-common.v1.schema.json#/$defs/userMessage" } } } } } },
+    { "if": { "properties": { "type": { "const": "agent/inbox/claimed" } }, "required": ["type"] }, "then": { "properties": { "data": { "type": "object", "additionalProperties": false, "required": ["message", "turn"], "properties": { "message": { "$ref": "session-common.v1.schema.json#/$defs/userMessage" }, "turn": { "type": "integer", "minimum": 1 } } } } } },
+    { "if": { "properties": { "type": { "const": "agent/session-start" } }, "required": ["type"] }, "then": { "properties": { "data": { "type": "object", "additionalProperties": false, "required": ["source"], "properties": { "source": { "enum": ["startup", "resume", "clear", "compact"] } } } } } }
+  ]
+}

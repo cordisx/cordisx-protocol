@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agents-common.v1.schema.json",
+  "title": "CordisX Agents Common Types v1",
+  "$defs": {
+    "identifier": { "$ref": "session-common.v1.schema.json#/$defs/identifier" },
+    "opaqueId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "generation": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "capability": { "enum": ["agents.create", "agents.resume", "agents.get", "agents.message.submit", "agents.message.cancel", "agents.cancel", "agents.live.subscribe", "sessions.get", "sessions.read", "sessions.subscribe", "approvals.request", "approvals.answer"] },
+    "hostReference": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$" },
+    "definitionIdentity": {
+      "type": "object", "additionalProperties": false, "required": ["agentId", "revision"],
+      "properties": { "agentId": { "$ref": "#/$defs/identifier" }, "revision": { "$ref": "#/$defs/opaqueId" } }
+    },
+    "inheritanceMode": { "enum": ["append", "prepend", "merge", "replace", "none"] },
+    "objectInheritanceMode": { "enum": ["merge", "replace", "none"] },
+    "filter": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "include": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } },
+        "exclude": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } }
+      },
+      "anyOf": [
+        { "required": ["include"], "properties": { "include": true } },
+        { "required": ["exclude"], "properties": { "exclude": true } }
+      ]
+    },
+    "agentOptions": {
+      "type": "object", "additionalProperties": { "$ref": "session-common.v1.schema.json#/$defs/jsonValue" },
+      "properties": {
+        "provider": { "$ref": "#/$defs/identifier" },
+        "model": { "$ref": "#/$defs/identifier" },
+        "reasoningEffort": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "maxTokens": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "setup": {
+      "type": "object", "additionalProperties": false, "required": ["definition", "definitions"],
+      "properties": {
+        "definition": { "$ref": "#/$defs/definitionIdentity" },
+        "definitions": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "agent-definition.v1.schema.json" } }
+      }
+    },
+    "hostDetailRef": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "ref"],
+      "properties": { "kind": { "const": "host" }, "ref": { "$ref": "#/$defs/hostReference" } }
+    },
+    "owner": { "$ref": "session-common.v1.schema.json#/$defs/pluginOwner" }
+  }
+}

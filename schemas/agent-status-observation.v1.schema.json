@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-status-observation.v1.schema.json",
+  "title": "CordisX Agent Status Observation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["available", "unavailable"] },
+    "value": { "enum": ["idle", "running"] },
+    "code": { "enum": ["whole-agent-idle-unobservable", "agent-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "available" } }, "required": ["status"] }, "then": { "required": ["value"], "properties": { "value": true, "code": false } } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": true, "value": false } } }
+  ]
+}

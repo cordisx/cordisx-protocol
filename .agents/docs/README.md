@@ -15,15 +15,12 @@ Specified areas:
   opaque handles, root catalogs, isolation, and revocation version 4.
 - `extension-points/`: host descriptor catalogs, canonical point policy, and
   surface/outlet authorization origin version 1.
-- `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery
-  handles, cancellation, pre-step/prompt lifecycle, permission, degradation,
-  and pagination contracts versions 1 and 2.
-- `agent-history/`: read-only, permission-scoped historical Agent projections,
-  opaque pagination/tail, payload policy, provenance, and privacy contract
-  version 1.
+- `agent-runtime/`: Agent Registry/live handles, read-only Session
+  registry and append-only SessionEvent truth, atomic replay-to-live delivery,
+  MessageId admission, ownership, permissions, and Agent-scoped approval.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution versions 2 through 7, availability, contextual
-  invocation, DSH intent mapping, and explicit replacement refusals.
+  invocation, reference intent mapping, and explicit replacement refusals.
 - `icon-theme/`: closed semantic icon keys, Reicon default/fallback, versioned
   provider registration and selection, normalized vector resolution, exact
   generation disposal/rollback, and strict Host rendering ownership.
@@ -49,9 +46,6 @@ Specified areas:
 - `connector-service/`: room-neutral connector descriptor, registration,
   command, message/event, generation, disposal, public consumer,
   Host-bound authorization, and serialized subscription contracts version 1.
-- `agent-loop/`: Host-bound room-neutral Agent definitions, self-contained
-  inheritance catalogs, task bindings, create-or-bind/send operations, and
-  proactive message/approval/lifecycle events version 1.
 - `agent-avatar/`: stable generated, asset, definition, and reserved platform
   Agent identity references with canonical seed and inheritance semantics.
 - `plugin-configuration/`: Standard Schema validation, Schemastery form
