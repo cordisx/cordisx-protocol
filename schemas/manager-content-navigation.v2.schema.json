@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v2.schema.json",
+  "title": "CordisX Manager Content Navigation Declaration v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "route", "header"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v2.schema.json"
+    },
+    "schemaVersion": { "const": 2 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "route": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/sameOwnerRouteReference" },
+    "parentRoute": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/sameOwnerRouteReference" },
+    "header": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/headerDescription" },
+    "tabs": {
+      "type": "array",
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/tabDescription" }
+    }
+  },
+  "$defs": {
+    "tabDescription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "route"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "route": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/sameOwnerRouteReference" },
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+      }
+    }
+  }
+}

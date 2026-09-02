@@ -1,0 +1,16 @@
+{
+  "case": "command",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v1.schema.json",
+    "contract": "cordisx.agent-loop-command/v1",
+    "schemaVersion": 1,
+    "commandId": "command-create",
+    "type": "create-or-bind",
+    "definition": { "agentId": "reviewer", "revision": "definition-1" },
+    "definitions": [
+      { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json", "contract": "cordisx.agent-definition/v1", "schemaVersion": 1, "identity": { "agentId": "reviewer", "revision": "definition-1" }, "inherit": { "promptSections": "append", "rules": "merge", "skills": "merge", "tools": "replace", "mcpServers": "replace", "runtimeDefaults": "merge" } },
+      { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json", "contract": "cordisx.agent-definition/v1", "schemaVersion": 1, "identity": { "agentId": "unused", "revision": "definition-x" }, "inherit": { "promptSections": "append", "rules": "merge", "skills": "merge", "tools": "replace", "mcpServers": "replace", "runtimeDefaults": "merge" } }
+    ],
+    "target": { "mode": "create" }
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "case": "idempotency",
+  "exchanges": [
+    {
+      "command": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v2.schema.json",
+        "contract": "cordisx.agent-loop-command/v2",
+        "schemaVersion": 2,
+        "commandId": "bind-once",
+        "type": "create-or-bind",
+        "definition": {
+          "agentId": "writer",
+          "revision": "definition-1"
+        },
+        "definitions": [
+          {
+            "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+            "contract": "cordisx.agent-definition/v1",
+            "schemaVersion": 1,
+            "identity": {
+              "agentId": "writer",
+              "revision": "definition-1"
+            },
+            "inherit": {
+              "promptSections": "none",
+              "rules": "none",
+              "skills": "none",
+              "tools": "none",
+              "mcpServers": "none",
+              "runtimeDefaults": "none"
+            }
+          }
+        ],
+        "target": {
+          "mode": "bind",
+          "task": "task-writer"
+        }
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+        "contract": "cordisx.agent-loop-result/v2",
+        "schemaVersion": 2,
+        "commandId": "bind-once",
+        "type": "create-or-bind",
+        "status": "accepted",
+        "authorization": {
+          "capability": "tasks.content.read",
+          "state": "allowed",
+          "code": "allowed"
+        },
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-writer",
+            "generation": 3
+          },
+          "definition": {
+            "agentId": "writer",
+            "revision": "definition-1"
+          },
+          "task": "task-writer",
+          "state": "active"
+        },
+        "detailsUrl": {
+          "url": "codex://tasks/task-writer",
+          "target": "external"
+        },
+        "delivery": {
+          "disposition": "executed"
+        }
+      }
+    },
+    {
+      "command": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v2.schema.json",
+        "contract": "cordisx.agent-loop-command/v2",
+        "schemaVersion": 2,
+        "commandId": "bind-once",
+        "type": "create-or-bind",
+        "definition": {
+          "agentId": "writer",
+          "revision": "definition-1"
+        },
+        "definitions": [
+          {
+            "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+            "contract": "cordisx.agent-definition/v1",
+            "schemaVersion": 1,
+            "identity": {
+              "agentId": "writer",
+              "revision": "definition-1"
+            },
+            "inherit": {
+              "promptSections": "none",
+              "rules": "none",
+              "skills": "none",
+              "tools": "none",
+              "mcpServers": "none",
+              "runtimeDefaults": "none"
+            }
+          }
+        ],
+        "target": {
+          "mode": "bind",
+          "task": "task-writer"
+        }
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+        "contract": "cordisx.agent-loop-result/v2",
+        "schemaVersion": 2,
+        "commandId": "bind-once",
+        "type": "create-or-bind",
+        "status": "accepted",
+        "authorization": {
+          "capability": "tasks.content.read",
+          "state": "allowed",
+          "code": "allowed"
+        },
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-writer",
+            "generation": 3
+          },
+          "definition": {
+            "agentId": "writer",
+            "revision": "definition-1"
+          },
+          "task": "task-writer",
+          "state": "active"
+        },
+        "detailsUrl": {
+          "url": "codex://tasks/task-writer",
+          "target": "external"
+        },
+        "delivery": {
+          "disposition": "replayed"
+        }
+      }
+    },
+    {
+      "command": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v2.schema.json",
+        "contract": "cordisx.agent-loop-command/v2",
+        "schemaVersion": 2,
+        "commandId": "send-once",
+        "type": "send",
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-writer",
+            "generation": 3
+          },
+          "definition": {
+            "agentId": "writer",
+            "revision": "definition-1"
+          },
+          "task": "task-writer",
+          "state": "active"
+        },
+        "content": [
+          {
+            "kind": "text",
+            "text": "Draft the summary."
+          }
+        ]
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+        "contract": "cordisx.agent-loop-result/v2",
+        "schemaVersion": 2,
+        "commandId": "send-once",
+        "type": "send",
+        "status": "accepted",
+        "authorization": {
+          "capability": "turns.submit",
+          "state": "allowed",
+          "code": "allowed"
+        },
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-writer",
+            "generation": 3
+          },
+          "definition": {
+            "agentId": "writer",
+            "revision": "definition-1"
+          },
+          "task": "task-writer",
+          "state": "active"
+        },
+        "messageId": "message-once",
+        "turn": "turn-once",
+        "delivery": {
+          "disposition": "executed"
+        }
+      }
+    },
+    {
+      "command": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v2.schema.json",
+        "contract": "cordisx.agent-loop-command/v2",
+        "schemaVersion": 2,
+        "commandId": "send-once",
+        "type": "send",
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-writer",
+            "generation": 3
+          },
+          "definition": {
+            "agentId": "writer",
+            "revision": "definition-1"
+          },
+          "task": "task-writer",
+          "state": "active"
+        },
+        "content": [
+          {
+            "kind": "text",
+            "text": "Draft the summary."
+          }
+        ]
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+        "contract": "cordisx.agent-loop-result/v2",
+        "schemaVersion": 2,
+        "commandId": "send-once",
+        "type": "send",
+        "status": "accepted",
+        "authorization": {
+          "capability": "turns.submit",
+          "state": "allowed",
+          "code": "allowed"
+        },
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-writer",
+            "generation": 3
+          },
+          "definition": {
+            "agentId": "writer",
+            "revision": "definition-1"
+          },
+          "task": "task-writer",
+          "state": "active"
+        },
+        "messageId": "message-once",
+        "turn": "turn-once",
+        "delivery": {
+          "disposition": "replayed"
+        }
+      }
+    }
+  ]
+}

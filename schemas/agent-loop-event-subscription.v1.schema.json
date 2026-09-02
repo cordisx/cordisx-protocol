@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-subscription.v1.schema.json",
+  "title": "CordisX Agent Loop Event Subscription v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscriptionId", "binding", "afterSequence", "snapshotSequence"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event-subscription.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-loop-event-subscription/v1" },
+    "schemaVersion": { "const": 1 },
+    "subscriptionId": { "$ref": "agent-loop-common.v1.schema.json#/$defs/opaqueHandle" },
+    "binding": {
+      "$ref": "agent-loop-common.v1.schema.json#/$defs/bindingIdentity",
+      "description": "Exact binding generation that independently scopes this subscription and its cursor."
+    },
+    "afterSequence": { "type": "integer", "minimum": -1 },
+    "snapshotSequence": { "type": "integer", "minimum": 0 }
+  }
+}

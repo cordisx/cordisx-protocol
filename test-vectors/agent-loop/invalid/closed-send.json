@@ -1,0 +1,12 @@
+{
+  "case": "command",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v1.schema.json",
+    "contract": "cordisx.agent-loop-command/v1",
+    "schemaVersion": 1,
+    "commandId": "command-send",
+    "type": "send",
+    "binding": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json", "contract": "cordisx.agent-loop-task-binding/v1", "schemaVersion": 1, "binding": { "bindingId": "binding-1", "generation": 1 }, "definition": { "agentId": "reviewer", "revision": "definition-1" }, "task": "task-1", "state": "closed" },
+    "content": [{ "kind": "text", "text": "Too late." }]
+  }
+}

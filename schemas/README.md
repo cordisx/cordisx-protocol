@@ -2,16 +2,6 @@
 
 Machine-readable CordisX manifest and protocol schemas belong here.
 
-- `plugin-bundle.v1.schema.json`: one non-executable explicit-local bundle
-  manifest with exact member versions and contained package directories;
-- `plugin-bundle-lifecycle-operation.v1.schema.json` and
-  `plugin-bundle-lifecycle-result.v1.schema.json`: revision/runtime-fenced
-  bundle inspection, application, policy, optional-member, adoption, and
-  impact outcomes;
-- `plugin-bundle-manager-snapshot.v1.schema.json`: redacted Host Manager
-  projection for header metadata, README, members, effective permissions,
-  relations, claims, and bounded records;
-
 - `marketplace-plugin.v1.schema.json`: one discovery-only plugin entry;
 - `marketplace-feed.v1.schema.json`: one aggregate marketplace feed;
 - `marketplace-plugin.v4.schema.json` and `marketplace-feed.v4.schema.json`:
@@ -56,6 +46,10 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `surface-contribution.v7.schema.json`: the additive session backdrop
   presentation family driven by native reasoning progress, with closed ambience
   tokens and bounded embedded PNG portraits;
+- `navigation-collection-actions.v1.schema.json`: an at-most-eight immutable
+  action list for the versioned successor to Host-owned route-only dynamic
+  navigation collection rows, with explicit command, enclosing-route copy,
+  and bounded-text copy effects plus Host-owned confirmation and feedback;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `route.v2.schema.json`: route-v1 navigation fields plus required localized
   product title and description metadata;
@@ -68,9 +62,20 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `manager-content-navigation.v1.schema.json`: a same-owner Manager content
   subroute declaration with an optional parent route, Host-resolved title
   source, and tab-to-route map;
+- `manager-content-navigation.v2.schema.json`: the frozen v1 declaration plus
+  an optional localized tab label that can differ from its target route title;
 - `manager-content-projection.v1.schema.json`: a renderer-safe, Host-generated
   Manager header/breadcrumb/back/history/tab projection, including opaque
   dynamic-record titles;
+- `manager-collection-common.v1.schema.json`,
+  `manager-collection-registration.v1.schema.json`,
+  `manager-collection-query.v1.schema.json`, and
+  `manager-collection-snapshot.v1.schema.json`: generic Host-rendered Manager
+  body collections with stable views, Host-owned title/summary search,
+  query-fenced data-only snapshots, same-owner row routes, closed visuals, and
+  predecessor structured actions plus one Host text-input command action;
+- `manager-collection-action-result.v1.schema.json`: applied, rejected,
+  conflict, or unavailable action outcome with no arbitrary business payload;
 - `outlet.v1.schema.json`: one host/adapter-owned outlet declaration.
 - `plugin-manifest.v1.schema.json`: one runtime plugin manifest with
   versioned Platform capability declarations, reasons, and maximum scopes.
@@ -78,15 +83,15 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   and launcher-resolved `channel-adapter` services;
 - `plugin-manifest.v3.schema.json`: Channel service declarations with mandatory
   explicit Host schema or no-configuration mode;
-- `plugin-manifest.v5.schema.json`: Host DOM declarations plus a closed,
-  optional `host-route-param` Session scope template; the Host resolves the
-  template to exact non-wildcard Session ids before runtime authorization;
+- `plugin-manifest.v5.schema.json`: additive `ui.host-dom.read` and
+  `ui.host-dom.modify` declarations with exact Host root and closed operation
+  scopes; frozen manifest v1-v4 remain unchanged;
 - `permission-common.v4.schema.json`, `permission-policy.v4.schema.json`,
   `permission-authorization-plan.v4.schema.json`, and
   `permission-authorization-decision.v4.schema.json`: Host DOM root/operation
   dimensions in the existing profile ledger, plan, and explicit decision path;
-- `permission-capability-catalog.v3.schema.json`: complete 30-entry catalog
-  with 27 non-DOM entries, structured rendering, and separately
+- `permission-capability-catalog.v3.schema.json`: complete 25-entry catalog
+  with the original 22 non-DOM entries, structured rendering, and separately
   classified Host DOM read/modify eligibility;
 - `host-dom-common.v1.schema.json`: canonical root ids, closed read/modify
   operations, opaque handles/node refs, safe attributes, and Host-rendered
@@ -177,8 +182,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   participant list plus text-message/status timeline contract;
 - `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v2.schema.json`:
   explicit Shell v2 successor with Agent identity, fixed member-to-participant
-  mapping, exact active-run/presence triples, Host-owned detail references,
-  closed-source messages, reactions, member-presence progress, and
+  mapping, exact active-run/presence triples, AgentLoop-v2-canonical details
+  URLs, closed-source messages, reactions, member-presence progress, and
   generation-fenced ordered updates;
 - `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v3.schema.json`
   plus `agent-conversation-shell-room-settings-{request,result}.v3.schema.json`
@@ -189,37 +194,44 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   mutation with closed applied, conflict, and unavailable results, plus a
   standalone embedded semantic-icon or Room-associated composite-avatar value
   for Host-owned collection rows;
-- `agent-definition.v1.schema.json` and `agents-common.v1.schema.json`:
-  business-neutral Agent identity, explicit field inheritance, prompt sections,
-  filters, runtime defaults, setup catalogs, closed capabilities, and Host-owned
-  detail references without URLs;
-- `agent-acquire-request.v1.schema.json` and
-  `agent-acquire-result.v1.schema.json`: create/resume admission, Host versus
-  caller SessionId authority, retry identity for message-less mutations,
-  deterministic collision outcomes, exact generations, and owner projection;
-- `agent-admission.v1.schema.json` and
-  `agent-message-cancellation-result.v1.schema.json`: MessageId-only submission
-  admission and one-pending-message discard with no turn/output causation;
-- `agent-mutation-result.v1.schema.json`: typed whole-Agent cancel and
-  owner-handle dispose admission for message-less mutations only;
-- `agent-status-observation.v1.schema.json` and
-  `agent-live-event.v1.schema.json`: explicit whole-Agent status availability
-  plus merge-extensible non-durable live coordination projections;
-- `session-common.v1.schema.json`, `session-snapshot.v1.schema.json`,
-  `session-read-request.v1.schema.json`, and
-  `session-event-page.v1.schema.json`: permission-filtered fixed snapshots and
-  immutable cursor paging over one exact Session generation;
-- `session-event.v1.schema.json`: append-only, extensible turn/step/message/
-  chunk/tool/request/inbox/approval facts, with closed provenance and optional
-  surface source-event lineage;
-- `session-subscribe-request.v1.schema.json` and
-  `session-subscription-page.v1.schema.json`: atomic replay-through watermark
-  followed by contiguous post-commit live pages;
-- `session-subscription-close.v1.schema.json`: first-terminal, generation-bound
-  closure signal for explicit unsubscribe and spontaneous Host fencing; and
-- `approval-question.v1.schema.json` and `approval-decision.v1.schema.json`:
-  Agent-scoped approval identity and closed terminal outcome mirrored into the
-  same SessionEvent log;
+- `agent-loop-common.v1.schema.json`, the unchanged `agent-loop-*.v1` family,
+  and `agent-definition.v1.schema.json`:
+  room-neutral Agent identity, field-specific inheritance, structured prompt
+  sections, filters, runtime defaults, text/image-reference content, and the
+  original per-client command-id contract;
+- `agent-loop-task-binding.v2.schema.json`, `agent-loop-command.v2.schema.json`,
+  and `agent-loop-result.v2.schema.json`: opaque generation-fenced task
+  binding plus durable operation-id create-or-bind/send exchanges, accepted
+  delivery dispositions, stable send turn identity, and typed resource failures
+  that remain separate from existing task/turn authorization outcomes;
+- `agent-loop-event.v2.schema.json`,
+  `agent-loop-event-subscription.v2.schema.json`, and
+  `agent-loop-event-page.v2.schema.json`: proactive ordered
+  message/approval/lifecycle events with replay/live paging; and
+- `agent-loop-bound-client.v2.schema.json`: the fiber-owned injected Agent
+  Loop client surface with a provider-owned, generation-fenced durable operation
+  ledger that survives client disposal;
+- `agent-loop-{common,task-binding,command,result,event,event-subscription,event-page,bound-client}.v3.schema.json`:
+  the complete Agent Loop v3 successor, preserving v2 create/bind/send and its
+  durable ledger while adding an exact-binding `approval-decision`,
+  `approvals.decide` authorization, closed conflict/unavailable results, and
+  required operation causation for decision-resolved approval events; it also
+  adds durable request/cancel member-self-introduction intents, stable accepted
+  turn/message identities, and causation-fenced introduction/cancellation
+  events without a prompt, body, model, response, or consumer-time field;
+- `agent-loop-{common,task-binding,command,result,event,event-subscription,event-page,bound-client}.v4.schema.json`:
+  the immutable additive Agent Loop v4 successor. It preserves every v3 byte
+  while the v4 wire surface applies the intentional approval corrections and
+  required accepted-result causation. Approval commands/results use terminal-state
+  `approved`, `denied`, and `cancelled` tokens, and allowed-authorization
+  unavailability adds `binding-closed` for approval and self-introduction.
+  Accepted approval and request/cancel member-self-introduction results carry
+  structured causation whose
+  `operationId` exactly equals that result's own `commandId`; a cancellation
+  still uses `requestOperationId` to identify the original request. All
+  non-accepted results and accepted create/bind/send results forbid causation;
+- `agent-loop-task-details-common.v2.schema.json`: canonical Host or external
+  details URL used by accepted create-or-bind results;
 - `agent-avatar.v1.schema.json` and
   `agent-avatar-resolution-result.v1.schema.json`: stable generated, asset,
   definition, and reserved platform Agent avatar references plus a typed
@@ -286,8 +298,17 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   accepted/rejected command acknowledgement with no arbitrary result data; and
 - `extension-point-control-event.v1.schema.json`: Host-authored,
   generation-fenced scalar event projection for an exact selected claim.
+- `agent-event.v1.schema.json`: one sourced Session/Agent ledger event;
+- `agent-event-page.v1.schema.json`: one snapshot-bounded query page.
+- `agent-event.v2.schema.json`: one sourced event with delivery ownership and
+  successful input-contribution lifecycle;
+- `agent-event-page.v2.schema.json`: one version-2 snapshot-bounded query page;
+- `agent-delivery-snapshot.v1.schema.json`: one immutable owner- and
+  generation-fenced public delivery snapshot.
+- `agent-history-page.v1.schema.json`: one permission-scoped, privacy-bounded,
+  snapshot-paged historical Agent event projection.
 - `surface-invocation-context.v1.schema.json`: immutable host-generated
-  contextual surface identity.
+  contextual surface identity aligned with the Agent event id vocabulary.
 - `plugin-config-common.v1.schema.json`: shared plugin identity, runtime scope,
   field paths, schema projections, and redacted secret slots;
 - `plugin-config-descriptor.v1.schema.json`: one Host-generated configuration

@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+  "title": "CordisX Agent Loop Result v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "commandId", "type", "status", "authorization"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json" },
+    "contract": { "const": "cordisx.agent-loop-result/v2" },
+    "schemaVersion": { "const": 2 },
+    "commandId": { "$ref": "agent-loop-common.v2.schema.json#/$defs/opaqueHandle" },
+    "type": { "enum": ["create-or-bind", "send"] },
+    "status": { "enum": ["accepted", "denied", "unavailable"] },
+    "code": {
+      "enum": [
+        "details-unavailable",
+        "operation-conflict",
+        "reconciliation-required",
+        "operation-expired",
+        "provider-replaced"
+      ]
+    },
+    "authorization": { "$ref": "agent-loop-common.v2.schema.json#/$defs/authorizationOutcome" },
+    "binding": { "$ref": "agent-loop-task-binding.v2.schema.json" },
+    "detailsUrl": { "$ref": "agent-loop-task-details-common.v2.schema.json#/$defs/detailsUrl" },
+    "messageId": { "$ref": "agent-loop-common.v2.schema.json#/$defs/opaqueHandle" },
+    "turn": { "$ref": "agent-loop-common.v2.schema.json#/$defs/opaqueHandle" },
+    "delivery": { "$ref": "#/$defs/delivery" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "create-or-bind" } } },
+      "then": {
+        "properties": {
+          "authorization": {
+            "type": "object",
+            "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read"] } }
+          }
+        }
+      }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "send" } } },
+      "then": {
+        "properties": {
+          "authorization": {
+            "type": "object",
+            "properties": { "capability": { "const": "turns.submit" } }
+          }
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["delivery"],
+        "properties": {
+          "authorization": { "type": "object", "properties": { "state": { "const": "allowed" } } },
+          "code": false,
+          "delivery": true
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "denied" } } },
+      "then": {
+        "properties": {
+          "authorization": { "type": "object", "properties": { "state": { "const": "denied" } } },
+          "code": false,
+          "binding": false,
+          "detailsUrl": false,
+          "messageId": false,
+          "turn": false,
+          "delivery": false
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "unavailable" } } },
+      "then": {
+        "properties": {
+          "binding": false,
+          "detailsUrl": false,
+          "messageId": false,
+          "turn": false,
+          "delivery": false
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "authorization": { "type": "object", "properties": { "state": { "const": "unavailable" } } },
+              "code": false
+            }
+          },
+          {
+            "required": ["code"],
+            "properties": {
+              "type": { "const": "create-or-bind" },
+              "authorization": {
+                "type": "object",
+                "properties": {
+                  "capability": { "enum": ["tasks.create", "tasks.content.read"] },
+                  "state": { "const": "allowed" }
+                }
+              },
+              "code": {
+                "enum": [
+                  "details-unavailable",
+                  "operation-conflict",
+                  "reconciliation-required",
+                  "operation-expired",
+                  "provider-replaced"
+                ]
+              }
+            }
+          },
+          {
+            "required": ["code"],
+            "properties": {
+              "type": { "const": "send" },
+              "authorization": {
+                "type": "object",
+                "properties": {
+                  "capability": { "const": "turns.submit" },
+                  "state": { "const": "allowed" }
+                }
+              },
+              "code": {
+                "enum": [
+                  "operation-conflict",
+                  "reconciliation-required",
+                  "operation-expired",
+                  "provider-replaced"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "create-or-bind" }, "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["binding", "detailsUrl", "delivery"],
+        "properties": {
+          "authorization": {
+            "type": "object",
+            "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read"] }, "state": { "const": "allowed" } }
+          },
+          "binding": true,
+          "detailsUrl": true,
+          "messageId": false,
+          "turn": false,
+          "delivery": true
+        }
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "send" }, "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["binding", "messageId", "turn", "delivery"],
+        "properties": {
+          "authorization": {
+            "type": "object",
+            "properties": { "capability": { "const": "turns.submit" }, "state": { "const": "allowed" } }
+          },
+          "binding": true,
+          "detailsUrl": false,
+          "messageId": true,
+          "turn": true,
+          "delivery": true
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition"],
+      "properties": {
+        "disposition": { "enum": ["executed", "replayed", "reconciled"] }
+      }
+    }
+  }
+}

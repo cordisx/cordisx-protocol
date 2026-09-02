@@ -1,0 +1,44 @@
+{
+  "case": "events",
+  "events": [
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v2.schema.json",
+      "contract": "cordisx.agent-loop-event/v2",
+      "schemaVersion": 2,
+      "eventId": "event-0",
+      "binding": {
+        "bindingId": "binding-1",
+        "generation": 1
+      },
+      "sequence": 0,
+      "occurredAt": "2026-08-30T00:00:00.000Z",
+      "type": "lifecycle",
+      "lifecycle": {
+        "phase": "binding.closed"
+      }
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v2.schema.json",
+      "contract": "cordisx.agent-loop-event/v2",
+      "schemaVersion": 2,
+      "eventId": "event-1",
+      "binding": {
+        "bindingId": "binding-1",
+        "generation": 1
+      },
+      "sequence": 1,
+      "occurredAt": "2026-08-30T00:00:01.000Z",
+      "type": "message",
+      "message": {
+        "messageId": "message-1",
+        "role": "assistant",
+        "content": [
+          {
+            "kind": "text",
+            "text": "Late."
+          }
+        ]
+      }
+    }
+  ]
+}

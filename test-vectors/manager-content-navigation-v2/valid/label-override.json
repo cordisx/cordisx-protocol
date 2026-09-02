@@ -1,0 +1,28 @@
+{
+  "owners": [{ "id": "channels", "source": "file:///opt/cordisx/plugins/channels.mjs" }],
+  "routes": [
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "channels", "path": "/manager/channels", "outlet": "manager.content", "page": "channels", "title": { "key": "channels.title", "fallback": "Manage channels" }, "description": { "key": "channels.description", "fallback": "Manage connected channels." } } },
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "channel-detail", "path": "/manager/channels/:channelId", "outlet": "manager.content", "page": "channel-detail", "title": { "key": "channel.detail.title", "fallback": "Channel" }, "description": { "key": "channel.detail.description", "fallback": "Review this channel." } } },
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "channel-settings", "path": "/manager/channels/:channelId/settings", "outlet": "manager.content", "page": "channel-settings", "title": { "key": "channel.settings.title", "fallback": "Settings" }, "description": { "key": "channel.settings.description", "fallback": "Configure this channel." } } }
+  ],
+  "pages": [
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "channels", "title": { "key": "channels.title", "fallback": "Manage channels" }, "description": { "key": "channels.description", "fallback": "Manage connected channels." }, "icon": "host:channels", "chrome": "standard" } },
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "channel-detail", "title": { "key": "channel.detail.title", "fallback": "Channel" }, "description": { "key": "channel.detail.description", "fallback": "Review this channel." }, "icon": "host:channels", "chrome": "standard" } },
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "channel-settings", "title": { "key": "channel.settings.title", "fallback": "Settings" }, "description": { "key": "channel.settings.description", "fallback": "Configure this channel." }, "icon": "host:settings", "chrome": "standard" } }
+  ],
+  "declarations": [
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v2.schema.json", "schemaVersion": 2, "id": "channels", "route": { "id": "channels" }, "header": { "title": { "kind": "route" } } } },
+    { "owner": "channels", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v2.schema.json", "schemaVersion": 2, "id": "channel-detail", "route": { "id": "channel-detail", "params": { "channelId": "channel-42" } }, "parentRoute": { "id": "channels" }, "header": { "title": { "kind": "record", "recordIdParam": "channelId", "fallback": { "key": "channel.unknown", "fallback": "Channel" } } }, "tabs": [{ "id": "overview", "route": { "id": "channel-detail", "params": { "channelId": "channel-42" } }, "label": { "key": "channel.overview", "fallback": "Overview" } }, { "id": "settings", "route": { "id": "channel-settings", "params": { "channelId": "channel-42" } } }] } }
+  ],
+  "activeDeclaration": "channels:channel-detail",
+  "projection": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v1.schema.json",
+    "schemaVersion": 1,
+    "route": { "id": "channels:channel-detail", "params": { "channelId": "channel-42" } },
+    "header": { "title": { "kind": "record", "recordId": "channel-42", "text": { "key": "channel.name", "fallback": "Support channel" } }, "description": { "key": "channel.detail.description", "fallback": "Review this channel." }, "icon": "host:channels" },
+    "breadcrumbs": [{ "route": { "id": "channels:channels" }, "text": { "key": "channels.title", "fallback": "Manage channels" } }],
+    "back": { "available": true, "route": { "id": "channels:channels" } },
+    "history": { "index": 1, "length": 2, "canGoBack": true, "canGoForward": false },
+    "tabs": [{ "id": "overview", "route": { "id": "channels:channel-detail", "params": { "channelId": "channel-42" } }, "text": { "key": "channel.overview", "fallback": "Overview" }, "active": true, "disabled": false }, { "id": "settings", "route": { "id": "channels:channel-settings", "params": { "channelId": "channel-42" } }, "text": { "key": "channel.settings.title", "fallback": "Settings" }, "active": false, "disabled": false }]
+  }
+}

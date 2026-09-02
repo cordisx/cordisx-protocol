@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-query.v1.schema.json",
+  "title": "CordisX Host-owned Manager Collection Query v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "collectionId", "queryRevision", "view", "search"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-query.v1.schema.json" },
+    "contract": { "const": "cordisx.manager-collection-query/v1" },
+    "schemaVersion": { "const": 1 },
+    "collectionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "queryRevision": { "type": "integer", "minimum": 0 },
+    "view": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "search": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "normalized"],
+      "properties": {
+        "input": { "type": "string", "maxLength": 256, "pattern": "^[^\\u0000-\\u001F\\u007F]*$" },
+        "normalized": {
+          "type": "string",
+          "maxLength": 8192,
+          "pattern": "^[^\\u0000-\\u001F\\u007F]*$",
+          "description": "Exact Host-generated nfkc-casefold value; source approximations are forbidden."
+        }
+      }
+    }
+  }
+}

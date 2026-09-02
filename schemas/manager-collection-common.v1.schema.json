@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-common.v1.schema.json",
+  "title": "CordisX Manager Collection Common v1",
+  "$defs": {
+    "opaqueId": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[A-Za-z0-9._~-]+$" },
+    "displayText": {
+      "allOf": [
+        { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        { "type": "object", "required": ["fallback"], "properties": { "fallback": true } }
+      ]
+    },
+    "sameOwnerRouteReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "params": {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9]*$" },
+          "additionalProperties": { "$ref": "ui-common.v1.schema.json#/$defs/scalar" }
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "emptyTitle", "emptyDescription"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "label": { "$ref": "#/$defs/displayText" },
+        "emptyTitle": { "$ref": "#/$defs/displayText" },
+        "emptyDescription": { "$ref": "#/$defs/displayText" }
+      }
+    },
+    "search": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fields", "normalization", "label", "placeholder", "noMatchTitle", "noMatchDescription"],
+      "properties": {
+        "fields": { "const": ["title", "summary"] },
+        "normalization": {
+          "const": "nfkc-casefold",
+          "description": "Unicode 17.0.0 toNFKC_Casefold followed by the Manager collection v1 whitespace algorithm."
+        },
+        "label": { "$ref": "#/$defs/displayText" },
+        "placeholder": { "$ref": "#/$defs/displayText" },
+        "noMatchTitle": { "$ref": "#/$defs/displayText" },
+        "noMatchDescription": { "$ref": "#/$defs/displayText" }
+      }
+    },
+    "avatarStackEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "avatar"],
+      "properties": {
+        "id": { "$ref": "#/$defs/opaqueId" },
+        "avatar": { "$ref": "agent-avatar.v1.schema.json" }
+      }
+    },
+    "leadingVisual": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "icon"],
+          "properties": {
+            "kind": { "const": "semantic-icon" },
+            "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "avatar"],
+          "properties": {
+            "kind": { "const": "avatar" },
+            "avatar": { "$ref": "agent-avatar.v1.schema.json" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "entries"],
+          "properties": {
+            "kind": { "const": "avatar-stack" },
+            "entries": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "#/$defs/avatarStackEntry" } }
+          }
+        }
+      ]
+    },
+    "textInputCommandReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+        "arguments": {
+          "type": "object",
+          "maxProperties": 32,
+          "additionalProperties": { "$ref": "ui-common.v1.schema.json#/$defs/jsonValue" }
+        }
+      }
+    },
+    "textInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argument", "title", "label", "submitLabel", "minLength", "maxLength", "trim"],
+      "properties": {
+        "argument": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "title": { "$ref": "#/$defs/displayText" },
+        "description": { "$ref": "#/$defs/displayText" },
+        "label": { "$ref": "#/$defs/displayText" },
+        "placeholder": { "$ref": "#/$defs/displayText" },
+        "submitLabel": { "$ref": "#/$defs/displayText" },
+        "initialValue": { "type": "string", "maxLength": 4000, "pattern": "^[^\\u0000-\\u001F\\u007F]*$" },
+        "minLength": { "type": "integer", "minimum": 0, "maximum": 4000 },
+        "maxLength": { "type": "integer", "minimum": 1, "maximum": 4000 },
+        "trim": { "enum": ["none", "both"] }
+      }
+    },
+    "textInputAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "label", "placement", "tone", "pressed", "disabled", "command", "input", "feedback"],
+      "properties": {
+        "kind": { "const": "text-input-command" },
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "label": { "$ref": "#/$defs/displayText" },
+        "ariaLabel": { "$ref": "#/$defs/displayText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/iconToken" },
+        "placement": { "enum": ["direct", "overflow"] },
+        "tone": { "const": "neutral" },
+        "pressed": { "type": "boolean" },
+        "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+        "command": { "$ref": "#/$defs/textInputCommandReference" },
+        "input": { "$ref": "#/$defs/textInput" },
+        "feedback": { "$ref": "navigation-collection-actions.v1.schema.json#/$defs/feedback" }
+      }
+    },
+    "action": {
+      "oneOf": [
+        { "$ref": "navigation-collection-actions.v1.schema.json#/$defs/action" },
+        { "$ref": "#/$defs/textInputAction" }
+      ]
+    },
+    "actions": { "type": "array", "maxItems": 8, "uniqueItems": true, "items": { "$ref": "#/$defs/action" } },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "summary", "leadingVisual", "route", "order", "disabled", "actions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/opaqueId" },
+        "title": { "$ref": "#/$defs/displayText" },
+        "summary": { "$ref": "#/$defs/displayText" },
+        "leadingVisual": { "$ref": "#/$defs/leadingVisual" },
+        "route": { "$ref": "#/$defs/sameOwnerRouteReference" },
+        "order": { "type": "integer", "minimum": -1000000000, "maximum": 1000000000 },
+        "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+        "actions": { "$ref": "#/$defs/actions" }
+      }
+    }
+  }
+}

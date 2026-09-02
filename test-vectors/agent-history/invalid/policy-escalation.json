@@ -1,0 +1,12 @@
+{
+  "contract": "cordisx.agent-history/v1",
+  "schemaVersion": 1,
+  "sessionId": "session-1",
+  "snapshotId": "snapshot.history.0001",
+  "limit": 1,
+  "requestedPayloadPolicy": "referenced",
+  "effectivePayloadPolicy": "inline",
+  "source": { "kind": "historical", "adapterId": "codex-history", "adapterVersion": "rollout-jsonl-v1", "hostId": "codex-desktop", "profileId": "profile.opaque.0001" },
+  "coverage": { "state": "complete", "compacted": false, "corruptLines": 0, "oversizedLines": 0, "redactedFields": 0, "tailAvailable": false },
+  "events": []
+}

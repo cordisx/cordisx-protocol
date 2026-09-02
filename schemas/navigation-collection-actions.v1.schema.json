@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/navigation-collection-actions.v1.schema.json",
+  "title": "CordisX Navigation Collection Actions v1",
+  "type": "array",
+  "maxItems": 8,
+  "uniqueItems": true,
+  "items": { "$ref": "#/$defs/action" },
+  "$defs": {
+    "feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["success", "failure"],
+      "properties": {
+        "success": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "failure": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+      }
+    },
+    "confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "description", "confirmLabel"],
+      "properties": {
+        "title": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "description": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "confirmLabel": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+      }
+    },
+    "copyText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[^\\u0000]+$"
+        }
+      }
+    },
+    "commandAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "label", "placement", "tone", "pressed", "disabled", "command", "feedback"],
+      "properties": {
+        "kind": { "const": "command" },
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "ariaLabel": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/iconToken" },
+        "placement": { "enum": ["direct", "overflow"] },
+        "tone": { "enum": ["neutral", "danger"] },
+        "pressed": { "type": "boolean" },
+        "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+        "command": { "$ref": "ui-common.v1.schema.json#/$defs/commandReference" },
+        "confirmation": { "$ref": "#/$defs/confirmation" },
+        "feedback": { "$ref": "#/$defs/feedback" }
+      }
+    },
+    "copyRouteLinkAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "label", "placement", "tone", "pressed", "disabled", "feedback"],
+      "properties": {
+        "kind": { "const": "copy-route-link" },
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "ariaLabel": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/iconToken" },
+        "placement": { "enum": ["direct", "overflow"] },
+        "tone": { "enum": ["neutral", "danger"] },
+        "pressed": { "type": "boolean" },
+        "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+        "feedback": { "$ref": "#/$defs/feedback" }
+      }
+    },
+    "copyTextAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "label", "placement", "tone", "pressed", "disabled", "text", "feedback"],
+      "properties": {
+        "kind": { "const": "copy-text" },
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "ariaLabel": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/iconToken" },
+        "placement": { "enum": ["direct", "overflow"] },
+        "tone": { "enum": ["neutral", "danger"] },
+        "pressed": { "type": "boolean" },
+        "disabled": { "$ref": "ui-common.v1.schema.json#/$defs/disabled" },
+        "text": { "$ref": "#/$defs/copyText" },
+        "feedback": { "$ref": "#/$defs/feedback" }
+      }
+    },
+    "action": {
+      "oneOf": [
+        { "$ref": "#/$defs/commandAction" },
+        { "$ref": "#/$defs/copyRouteLinkAction" },
+        { "$ref": "#/$defs/copyTextAction" }
+      ]
+    }
+  }
+}

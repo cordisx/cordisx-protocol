@@ -1,0 +1,15 @@
+{
+  "case": "approval-decision-conflicts",
+  "cases": [
+    { "mutation": "binding-generation", "expectedStatus": "conflict", "expectedCode": "binding-conflict" },
+    { "mutation": "turn", "expectedStatus": "conflict", "expectedCode": "approval-conflict" },
+    { "mutation": "approval-id", "expectedStatus": "conflict", "expectedCode": "approval-conflict" },
+    { "mutation": "same-operation-different-decision", "expectedStatus": "conflict", "expectedCode": "operation-conflict" },
+    { "mutation": "already-differently-resolved", "expectedStatus": "conflict", "expectedCode": "approval-conflict" },
+    { "mutation": "approval-expired", "expectedStatus": "unavailable", "expectedCode": "approval-expired" },
+    { "mutation": "approval-unavailable", "expectedStatus": "unavailable", "expectedCode": "approval-unavailable" },
+    { "mutation": "provider-replaced", "expectedStatus": "unavailable", "expectedCode": "provider-replaced" },
+    { "mutation": "operation-expired", "expectedStatus": "unavailable", "expectedCode": "operation-expired" },
+    { "mutation": "reconciliation-required", "expectedStatus": "unavailable", "expectedCode": "reconciliation-required" }
+  ]
+}

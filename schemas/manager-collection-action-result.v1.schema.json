@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-action-result.v1.schema.json",
+  "title": "CordisX Manager Collection Action Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "collectionId", "itemId", "actionId", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-action-result.v1.schema.json" },
+    "contract": { "const": "cordisx.manager-collection-action-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "collectionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "itemId": { "$ref": "manager-collection-common.v1.schema.json#/$defs/opaqueId" },
+    "actionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "status": { "enum": ["applied", "rejected", "conflict", "unavailable"] },
+    "code": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "revision": { "type": "integer", "minimum": 0 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "applied" } }, "required": ["status"] },
+      "then": { "required": ["revision"] },
+      "else": { "not": { "required": ["revision"] } }
+    }
+  ]
+}

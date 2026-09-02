@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-details-common.v2.schema.json",
+  "title": "CordisX Agent Loop Task Details Common v2",
+  "$defs": {
+    "detailsUrlValue": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 2048,
+      "format": "uri",
+      "pattern": "^(?!.*%(?:0[0-9A-F]|1[0-9A-F]|7F))(?!.*%(?![0-9A-F]{2}))(?![A-Za-z][A-Za-z0-9+.-]*://[^/?#]*@)[^\\u0000-\\u0020\\u007F\\\\?#]+$"
+    },
+    "detailsUrl": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["url", "target"],
+          "properties": {
+            "url": {
+              "allOf": [
+                { "$ref": "#/$defs/detailsUrlValue" },
+                { "type": "string", "pattern": "^app:" }
+              ]
+            },
+            "target": { "const": "host" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["url", "target"],
+          "properties": {
+            "url": {
+              "allOf": [
+                { "$ref": "#/$defs/detailsUrlValue" },
+                { "type": "string", "pattern": "^(?:https|codex|claude):" }
+              ]
+            },
+            "target": { "const": "external" }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,5 +1,9 @@
 # Manager Content navigation protocol v1
 
+This document remains normative for frozen v1. The additive v2 successor is
+specified in [`v2.md`](./v2.md); it adds only an optional localized tab label
+while retaining the projection-v1 renderer shape.
+
 This specification defines a generic subroute declaration and a separate renderer-safe Host projection for standard pages in the CordisX Manager. It is not a Channel-specific API and it does not expose a renderer navigation controller. A Channel (or any other plugin) registers data; the Host owns the Manager header, breadcrumb trail, back action, history, tablist, accessibility, selection, route stack, and all lifecycle cleanup.
 
 ## Contracts and compatibility

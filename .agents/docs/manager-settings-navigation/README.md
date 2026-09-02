@@ -71,6 +71,30 @@ actions are data, never callback or DOM seats. Any action icon accepted for
 this outlet is a Host token. The trusted-local page mount receives only the
 controlled body child, route/page props, and an `AbortSignal`.
 
+## Multi-page plugin applications and body primitives
+
+A plugin application with multiple top-level Manager destinations contributes
+one independent surface record, route-v2 record, and page-v3 record per
+destination. The contribution id is the navigation-row identity, the route id
+and canonical path are the navigation identity, and the page id is the
+controlled mount identity. The route supplies destination text; the page
+supplies standard-shell text and icon. There is no aggregate application
+record, page-kind discriminator, or plugin-supplied navigation group beyond
+the existing closed insertion seam.
+
+Top-level rows, standard page chrome, route-level breadcrumbs/back/history,
+route-level tabs from `manager-content-navigation.v1`, page-v3 header actions,
+focus, accessibility, and mount lifecycle are reusable Host primitives. Trees,
+business lists, record detail layouts, and body-local controls remain inside
+the plugin's authorized controlled body unless a separate versioned Protocol
+contract explicitly gives their projection, selection, accessibility, and
+lifecycle to the Host. Page names or the number of pages in one plugin are not
+reasons to add a new wire shape.
+
+A body that needs a Host-rendered searchable collection uses the independent
+[`manager-collection`](../manager-collection/README.md) contract. That contract
+does not grant access to Manager chrome or alter this navigation surface.
+
 ## Deterministic projection and collisions
 
 The current Manager IA has no top-level Settings destination. The projection is

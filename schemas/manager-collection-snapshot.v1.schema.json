@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-snapshot.v1.schema.json",
+  "title": "CordisX Manager Collection Snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "collectionId", "queryRevision", "view", "normalizedSearch", "revision", "items"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-snapshot.v1.schema.json" },
+    "contract": { "const": "cordisx.manager-collection-snapshot/v1" },
+    "schemaVersion": { "const": 1 },
+    "collectionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "queryRevision": { "type": "integer", "minimum": 0 },
+    "view": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "normalizedSearch": {
+      "type": "string",
+      "maxLength": 8192,
+      "pattern": "^[^\\u0000-\\u001F\\u007F]*$",
+      "description": "Exact echo of the Host-generated query.search.normalized fence."
+    },
+    "revision": { "type": "integer", "minimum": 0 },
+    "items": { "type": "array", "maxItems": 1000, "items": { "$ref": "manager-collection-common.v1.schema.json#/$defs/item" } }
+  }
+}

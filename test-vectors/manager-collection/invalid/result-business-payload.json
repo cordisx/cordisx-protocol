@@ -1,0 +1,1 @@
+{ "target": "result.payload", "op": "set", "value": { "room": { "id": "room-1" } } }

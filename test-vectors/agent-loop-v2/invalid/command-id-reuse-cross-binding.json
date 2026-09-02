@@ -1,0 +1,131 @@
+{
+  "case": "idempotency",
+  "exchanges": [
+    {
+      "command": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v2.schema.json",
+        "contract": "cordisx.agent-loop-command/v2",
+        "schemaVersion": 2,
+        "commandId": "reused-send",
+        "type": "send",
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-a",
+            "generation": 2
+          },
+          "definition": {
+            "agentId": "agent-a",
+            "revision": "definition-a"
+          },
+          "task": "task-a",
+          "state": "active"
+        },
+        "content": [
+          {
+            "kind": "text",
+            "text": "Handle this input."
+          }
+        ]
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+        "contract": "cordisx.agent-loop-result/v2",
+        "schemaVersion": 2,
+        "commandId": "reused-send",
+        "type": "send",
+        "status": "accepted",
+        "authorization": {
+          "capability": "turns.submit",
+          "state": "allowed",
+          "code": "allowed"
+        },
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-a",
+            "generation": 2
+          },
+          "definition": {
+            "agentId": "agent-a",
+            "revision": "definition-a"
+          },
+          "task": "task-a",
+          "state": "active"
+        },
+        "messageId": "message-a",
+        "turn": "turn-a",
+        "delivery": {
+          "disposition": "executed"
+        }
+      }
+    },
+    {
+      "command": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v2.schema.json",
+        "contract": "cordisx.agent-loop-command/v2",
+        "schemaVersion": 2,
+        "commandId": "reused-send",
+        "type": "send",
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-b",
+            "generation": 5
+          },
+          "definition": {
+            "agentId": "agent-b",
+            "revision": "definition-b"
+          },
+          "task": "task-b",
+          "state": "active"
+        },
+        "content": [
+          {
+            "kind": "text",
+            "text": "Handle this input."
+          }
+        ]
+      },
+      "result": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+        "contract": "cordisx.agent-loop-result/v2",
+        "schemaVersion": 2,
+        "commandId": "reused-send",
+        "type": "send",
+        "status": "accepted",
+        "authorization": {
+          "capability": "turns.submit",
+          "state": "allowed",
+          "code": "allowed"
+        },
+        "binding": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+          "contract": "cordisx.agent-loop-task-binding/v2",
+          "schemaVersion": 2,
+          "binding": {
+            "bindingId": "binding-b",
+            "generation": 5
+          },
+          "definition": {
+            "agentId": "agent-b",
+            "revision": "definition-b"
+          },
+          "task": "task-b",
+          "state": "active"
+        },
+        "messageId": "message-b",
+        "turn": "turn-b",
+        "delivery": {
+          "disposition": "replayed"
+        }
+      }
+    }
+  ]
+}
