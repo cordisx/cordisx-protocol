@@ -40,6 +40,8 @@ bundle, a direct claim, or an enabled dependent still requires it. Uninstalling
 a bundle removes only that bundle's claims. Shared, directly claimed, and
 runtime-required plugins are retained. Only orphaned auto-managed members are
 removal candidates, and the impact plan must be explicitly accepted.
+An empty `impactToken` requests that plan; only the returned non-empty token can
+confirm the state-changing request against the same revisions.
 
 Bundle application is a coordinated sequence over the existing single-plugin
 package lifecycle. Members are installed dependency-first and removed in

@@ -35,6 +35,12 @@
       "type": "string",
       "pattern": "^permission:[a-f0-9]{64}$"
     },
+    "impactConfirmation": {
+      "oneOf": [
+        { "const": "" },
+        { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" }
+      ]
+    },
     "claimKind": { "enum": ["bundle", "direct", "runtime-dependency"] },
     "operationKind": {
       "enum": [

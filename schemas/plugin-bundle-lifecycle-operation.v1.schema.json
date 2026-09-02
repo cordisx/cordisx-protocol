@@ -53,7 +53,7 @@
           "properties": {
             "kind": { "enum": ["enable", "disable", "uninstall"] },
             "bundleId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
-            "impactToken": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" }
+            "impactToken": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/impactConfirmation" }
           }
         },
         {
@@ -78,7 +78,7 @@
               "maxItems": 1024,
               "items": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/pluginPermissionReference" }
             },
-            "impactToken": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" }
+            "impactToken": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/impactConfirmation" }
           }
         },
         {
@@ -90,7 +90,7 @@
             "bundleId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
             "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
             "enabled": { "type": "boolean" },
-            "impactToken": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" }
+            "impactToken": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/impactConfirmation" }
           }
         },
         {
@@ -101,7 +101,7 @@
             "kind": { "const": "adopt-member" },
             "bundleId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
             "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
-            "impactToken": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" }
+            "impactToken": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/impactConfirmation" }
           }
         }
       ]
