@@ -41,7 +41,7 @@
     "plan": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["bundle", "memberActions", "conflicts"],
+      "required": ["bundle", "memberActions", "permissionRequests", "conflicts"],
       "properties": {
         "bundle": {
           "type": "object",
@@ -67,6 +67,23 @@
               "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
               "action": { "enum": ["install", "update", "share", "enable", "disable", "retain", "remove", "skip"] },
               "reason": { "enum": ["bundle-required", "bundle-optional", "existing-exact", "direct-claim", "other-bundle-claim", "runtime-dependency", "orphaned"] }
+            }
+          }
+        },
+        "permissionRequests": {
+          "type": "array",
+          "maxItems": 1024,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["permissionId", "pluginId", "capability", "scopeLabel", "required", "defaultPolicy"],
+            "properties": {
+              "permissionId": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/permissionId" },
+              "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+              "capability": { "type": "string", "minLength": 1, "maxLength": 128 },
+              "scopeLabel": { "type": "string", "minLength": 1, "maxLength": 512 },
+              "required": { "type": "boolean" },
+              "defaultPolicy": { "const": "ask" }
             }
           }
         },

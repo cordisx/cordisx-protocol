@@ -74,7 +74,11 @@ function validateOperation(value) {
 }
 
 function validateResult(value) {
-  return validators.result(value) ? [] : schemaErrors(validators.result)
+  if (!validators.result(value)) return schemaErrors(validators.result)
+  if (value.plan === undefined) return []
+  const errors = []
+  for (const id of duplicates(value.plan.permissionRequests.map(item => item.permissionId))) errors.push(`duplicate permission request: ${id}`)
+  return errors
 }
 
 function validateSnapshot(value) {

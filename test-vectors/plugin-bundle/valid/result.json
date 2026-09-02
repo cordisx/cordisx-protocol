@@ -28,6 +28,16 @@
         { "pluginId": "storage", "version": "1.0.0", "action": "share", "reason": "existing-exact" },
         { "pluginId": "notes", "version": "1.2.0", "action": "install", "reason": "bundle-optional" }
       ],
+      "permissionRequests": [
+        {
+          "permissionId": "permission:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "pluginId": "notes",
+          "capability": "workspace.read",
+          "scopeLabel": "Current workspace",
+          "required": true,
+          "defaultPolicy": "ask"
+        }
+      ],
       "conflicts": []
     }
   }

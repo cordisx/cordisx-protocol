@@ -20,6 +20,10 @@ same tuple is shared. A same-version/different-digest tuple is an integrity
 conflict. A different active version is a version conflict. CordisX has one
 active version for each plugin id.
 
+The plan projects every exact current member permission id with plugin,
+capability, scope label, required state, and an `ask` default. Installation
+cannot proceed until each required entry receives an explicit choice.
+
 ## Claims and lifecycle
 
 The durable bundle registry is revision fenced independently from the plugin
