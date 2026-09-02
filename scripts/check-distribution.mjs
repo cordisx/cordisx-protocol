@@ -23,6 +23,7 @@ const requiredSchemas = [
   'schemas/session-event-page.v1.schema.json',
   'schemas/session-subscribe-request.v1.schema.json',
   'schemas/session-subscription-page.v1.schema.json',
+  'schemas/session-subscription-close.v1.schema.json',
 ]
 const forbiddenName = /(?:agent-loop|agent-event(?:\.|-page)|agent-history|agent-delivery-snapshot)/
 
@@ -35,7 +36,8 @@ for (const name of [...readdirSync(join(root, 'types')), ...readdirSync(join(roo
 
 const work = mkdtempSync(join(tmpdir(), 'cordisx-protocol-distribution-'))
 try {
-  const packed = JSON.parse(execFileSync('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', work], { cwd: root, encoding: 'utf8' }))
+  const packOutput = JSON.parse(execFileSync('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', work], { cwd: root, encoding: 'utf8' }))
+  const packed = Array.isArray(packOutput) ? packOutput : Object.values(packOutput)
   assert.equal(packed.length, 1)
   const tarball = join(work, packed[0].filename)
   const entries = execFileSync('tar', ['-tf', tarball], { encoding: 'utf8' }).trim().split('\n')
