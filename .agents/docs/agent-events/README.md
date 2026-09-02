@@ -25,12 +25,29 @@ successful input-contribution lifecycle. Adapter bindings may still report
 - Delivery snapshot contract: `cordisx.agent-delivery/v1`, defined by
   `schemas/agent-delivery-snapshot.v1.schema.json`.
 
-## One runtime and three public faces
+## One native authority and public projections
 
 The HostRuntime owns one current-connection adapter, one Permission Broker, one
 generation, and one event ledger. `ctx.platform`, `ctx.agents`,
-`ctx.agentEvents`, and `ctx.systemPrompt` are projections of that runtime. They
-must not create independent task, turn, inbox, permission, or connection state.
+`ctx.agentEvents`, `ctx.systemPrompt`, and `ctx.agentLoop` are projections of
+that runtime. They must not create independent task, turn, inbox, permission,
+adapter, ledger, or connection state.
+
+`ctx.agentLoop` may expose a task-specific command and subscription contract
+while `ctx.agentEvents` exposes a broader Session projection. The shapes and
+permission scopes may differ, but every overlapping native fact must pass
+through one Host-private adapter normalization and append path. The Host may
+then derive both immutable public projections from that committed fact. It must
+not poll or subscribe to the same Desktop Agent source through a second
+adapter, reconstruct a parallel renderer ledger, or let a consumer read a raw
+Electron/app-server bridge.
+
+When a durable `ctx.agentHistory` projection is offered as history of the same
+Agent authority, it replays the same Host-owned normalization path with
+explicit historical provenance and coverage. A separate file parser remains a
+different evidence source and must not be presented as same-authority live
+history. Consumers must show that mode as unavailable unless the Host exposes
+the required brokered projection.
 
 `ctx.agentEvents` is read-only to plugins:
 
@@ -234,6 +251,12 @@ connection. It must preserve the native scheduler, request ids, timeouts,
 approvals, and stream ownership. Starting another app-server, constructing a
 second AppHost, or exposing a raw Electron/app-server bridge is
 non-conforming.
+
+An AgentLoop subscription is not a second observation seat. Its native
+lifecycle read is owned by the same Host adapter authority and commits each
+overlapping fact at most once before notifying either public projection.
+Repeated polling, replay, multiple plugin subscribers, and binding rehydration
+must not append duplicate Agent events.
 
 The adapter status modes are `unavailable`, `read-only`, and `read-write`.
 Experimental protocol fields are named in diagnostics. When a safe
