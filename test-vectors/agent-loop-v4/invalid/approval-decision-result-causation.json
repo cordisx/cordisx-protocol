@@ -1,0 +1,24 @@
+{
+  "case": "approval-decision-invalid-result-causation-and-target",
+  "cases": [
+    { "mutation": "missing-result-causation", "expected": "schema-invalid" },
+    { "mutation": "wrong-result-causation", "expected": "semantic-invalid" },
+    { "mutation": "event-result-causation-drift", "expected": "semantic-invalid" },
+    { "mutation": "binding-id", "expectedStatus": "conflict", "expectedCode": "binding-conflict" },
+    { "mutation": "binding-generation", "expectedStatus": "conflict", "expectedCode": "binding-conflict" },
+    { "mutation": "binding-task", "expectedStatus": "conflict", "expectedCode": "binding-conflict" },
+    { "mutation": "binding-definition", "expectedStatus": "conflict", "expectedCode": "binding-conflict" },
+    { "mutation": "consumer-binding-state", "expectedStatus": "conflict", "expectedCode": "binding-conflict" },
+    { "mutation": "authoritative-binding-closed", "expectedStatus": "unavailable", "expectedCode": "binding-closed" },
+    { "mutation": "turn", "expectedStatus": "conflict", "expectedCode": "approval-conflict" },
+    { "mutation": "approval-id", "expectedStatus": "conflict", "expectedCode": "approval-conflict" },
+    { "mutation": "kind-drift", "expected": "semantic-invalid" },
+    { "mutation": "not-pending", "expectedStatus": "conflict", "expectedCode": "approval-conflict" },
+    { "mutation": "same-operation-different-decision", "expectedStatus": "conflict", "expectedCode": "operation-conflict" },
+    { "mutation": "approval-expired", "expectedStatus": "unavailable", "expectedCode": "approval-expired" },
+    { "mutation": "approval-unavailable", "expectedStatus": "unavailable", "expectedCode": "approval-unavailable" },
+    { "mutation": "provider-replaced", "expectedStatus": "unavailable", "expectedCode": "provider-replaced" },
+    { "mutation": "operation-expired", "expectedStatus": "unavailable", "expectedCode": "operation-expired" },
+    { "mutation": "reconciliation-required", "expectedStatus": "unavailable", "expectedCode": "reconciliation-required" }
+  ]
+}

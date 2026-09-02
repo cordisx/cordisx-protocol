@@ -1,0 +1,137 @@
+{
+  "registration": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-registration.v1.schema.json",
+    "contract": "cordisx.manager-collection-registration/v1",
+    "schemaVersion": 1,
+    "id": "rooms",
+    "label": { "key": "manager.rooms.label", "fallback": "Rooms" },
+    "description": { "key": "manager.rooms.description", "fallback": "Manage active and archived rooms." },
+    "views": [
+      { "id": "active", "label": { "key": "manager.rooms.active", "fallback": "Active" }, "emptyTitle": { "key": "manager.rooms.active.empty", "fallback": "No active rooms" }, "emptyDescription": { "key": "manager.rooms.active.empty-description", "fallback": "Active rooms appear here." } },
+      { "id": "archived", "label": { "key": "manager.rooms.archived", "fallback": "Archived" }, "emptyTitle": { "key": "manager.rooms.archived.empty", "fallback": "No archived rooms" }, "emptyDescription": { "key": "manager.rooms.archived.empty-description", "fallback": "Archived rooms appear here." } }
+    ],
+    "defaultView": "active",
+    "search": {
+      "fields": ["title", "summary"],
+      "normalization": "nfkc-casefold",
+      "label": { "key": "manager.rooms.search", "fallback": "Search rooms" },
+      "placeholder": { "key": "manager.rooms.search-placeholder", "fallback": "Search by title or summary" },
+      "noMatchTitle": { "key": "manager.rooms.no-match", "fallback": "No matching rooms" },
+      "noMatchDescription": { "key": "manager.rooms.no-match-description", "fallback": "Try a different search." }
+    }
+  },
+  "query": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-query.v1.schema.json",
+    "contract": "cordisx.manager-collection-query/v1",
+    "schemaVersion": 1,
+    "collectionId": "rooms",
+    "queryRevision": 4,
+    "view": "active",
+    "search": { "input": "Project", "normalized": "project" }
+  },
+  "snapshot": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-snapshot.v1.schema.json",
+    "contract": "cordisx.manager-collection-snapshot/v1",
+    "schemaVersion": 1,
+    "collectionId": "rooms",
+    "queryRevision": 4,
+    "view": "active",
+    "normalizedSearch": "project",
+    "revision": 12,
+    "items": [
+      {
+        "id": "room-1",
+        "title": { "key": "manager.rooms.dynamic-title", "params": { "title": "Project room" }, "fallback": "Project room" },
+        "summary": { "key": "manager.rooms.dynamic-summary", "params": { "summary": "Product planning" }, "fallback": "Product planning" },
+        "leadingVisual": { "kind": "semantic-icon", "icon": "host:layers" },
+        "route": { "id": "room-detail", "params": { "roomId": "room-1" } },
+        "order": 100,
+        "disabled": { "value": false },
+        "actions": [
+          {
+            "kind": "text-input-command",
+            "id": "rename",
+            "label": { "key": "manager.rooms.rename", "fallback": "Rename" },
+            "placement": "overflow",
+            "tone": "neutral",
+            "pressed": false,
+            "disabled": { "value": false },
+            "command": { "id": "rename-room", "arguments": { "roomId": "room-1" } },
+            "input": {
+              "argument": "title",
+              "title": { "key": "manager.rooms.rename-title", "fallback": "Rename room" },
+              "label": { "key": "manager.rooms.rename-label", "fallback": "Room title" },
+              "submitLabel": { "key": "manager.rooms.rename-submit", "fallback": "Rename" },
+              "initialValue": "Project room",
+              "minLength": 1,
+              "maxLength": 256,
+              "trim": "both"
+            },
+            "feedback": {
+              "success": { "key": "manager.rooms.rename-success", "fallback": "Room renamed." },
+              "failure": { "key": "manager.rooms.rename-failure", "fallback": "Room could not be renamed." }
+            }
+          },
+          {
+            "kind": "command",
+            "id": "pin",
+            "label": { "key": "manager.rooms.pin", "fallback": "Pin" },
+            "placement": "direct",
+            "tone": "neutral",
+            "pressed": false,
+            "disabled": { "value": false },
+            "command": { "id": "pin-room", "arguments": { "roomId": "room-1" } },
+            "feedback": {
+              "success": { "key": "manager.rooms.pin-success", "fallback": "Room pinned." },
+              "failure": { "key": "manager.rooms.pin-failure", "fallback": "Room could not be pinned." }
+            }
+          },
+          {
+            "kind": "command",
+            "id": "archive",
+            "label": { "key": "manager.rooms.archive", "fallback": "Archive" },
+            "placement": "overflow",
+            "tone": "neutral",
+            "pressed": false,
+            "disabled": { "value": false },
+            "command": { "id": "archive-room", "arguments": { "roomId": "room-1" } },
+            "feedback": {
+              "success": { "key": "manager.rooms.archive-success", "fallback": "Room archived." },
+              "failure": { "key": "manager.rooms.archive-failure", "fallback": "Room could not be archived." }
+            }
+          },
+          {
+            "kind": "command",
+            "id": "delete",
+            "label": { "key": "manager.rooms.delete", "fallback": "Delete" },
+            "placement": "overflow",
+            "tone": "danger",
+            "pressed": false,
+            "disabled": { "value": false },
+            "command": { "id": "delete-room", "arguments": { "roomId": "room-1" } },
+            "confirmation": {
+              "title": { "key": "manager.rooms.delete-title", "fallback": "Delete room?" },
+              "description": { "key": "manager.rooms.delete-description", "fallback": "This action cannot be undone." },
+              "confirmLabel": { "key": "manager.rooms.delete-confirm", "fallback": "Delete" }
+            },
+            "feedback": {
+              "success": { "key": "manager.rooms.delete-success", "fallback": "Room deleted." },
+              "failure": { "key": "manager.rooms.delete-failure", "fallback": "Room could not be deleted." }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "result": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-action-result.v1.schema.json",
+    "contract": "cordisx.manager-collection-action-result/v1",
+    "schemaVersion": 1,
+    "collectionId": "rooms",
+    "itemId": "room-1",
+    "actionId": "rename",
+    "status": "applied",
+    "code": "renamed",
+    "revision": 13
+  }
+}

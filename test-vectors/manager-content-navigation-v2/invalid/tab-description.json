@@ -1,0 +1,6 @@
+{
+  "base": "valid/label-override.json",
+  "operations": [
+    { "op": "set", "path": "declarations.1.document.tabs.0.description", "value": { "key": "channel.overview.description", "fallback": "Not part of v2." } }
+  ]
+}

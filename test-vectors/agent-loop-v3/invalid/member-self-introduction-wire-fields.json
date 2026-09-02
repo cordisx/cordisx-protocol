@@ -1,0 +1,4 @@
+{
+  "case": "member-self-introduction-forbidden-wire-fields",
+  "fields": ["issuedAt", "firstObservedAt", "closedAt", "text", "content", "prompt", "hiddenPrompt", "body", "model", "response"]
+}

@@ -1,0 +1,221 @@
+{
+  "case": "task-details-urls",
+  "accepted": [
+    {
+      "value": {
+        "url": "app://-/tasks/task-1",
+        "target": "host"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "codex://tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "claude://tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%C3%85ngent",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/a%2Fb",
+        "target": "external"
+      }
+    },
+    {
+      "construct": {
+        "prefix": "https://example.test/tasks/",
+        "fill": "a",
+        "length": 2048
+      },
+      "target": "external"
+    }
+  ],
+  "rejected": [
+    {
+      "value": {
+        "url": "app://-/tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/task-1",
+        "target": "host"
+      }
+    },
+    {
+      "value": {
+        "url": "file:///tmp/task",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "data:text/plain,task",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "javascript:alert(1)",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "blob:https://example.test/id",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "http://example.test/tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "HTTPS://example.test/tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://EXAMPLE.test/tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test:443/tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/a/../task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://user@example.test/tasks/task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/task-1?mode=raw",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/task-1#trace",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/ task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/\ttask-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/ task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test\\tasks\\task-1",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%2f",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%00",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%0A",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%1F",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%7F",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%41",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "https://example.test/tasks/%7E",
+        "target": "external"
+      }
+    },
+    {
+      "value": {
+        "url": "app:",
+        "target": "host"
+      }
+    },
+    {
+      "construct": {
+        "prefix": "https://example.test/tasks/",
+        "fill": "a",
+        "length": 2049
+      },
+      "target": "external"
+    }
+  ]
+}

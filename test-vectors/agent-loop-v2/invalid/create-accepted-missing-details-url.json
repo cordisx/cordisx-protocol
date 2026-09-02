@@ -1,0 +1,64 @@
+{
+  "case": "exchange",
+  "command": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v2.schema.json",
+    "contract": "cordisx.agent-loop-command/v2",
+    "schemaVersion": 2,
+    "commandId": "create-without-details-url",
+    "type": "create-or-bind",
+    "definition": {
+      "agentId": "worker",
+      "revision": "definition-1"
+    },
+    "definitions": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json",
+        "contract": "cordisx.agent-definition/v1",
+        "schemaVersion": 1,
+        "identity": {
+          "agentId": "worker",
+          "revision": "definition-1"
+        },
+        "inherit": {
+          "promptSections": "none",
+          "rules": "none",
+          "skills": "none",
+          "tools": "none",
+          "mcpServers": "none",
+          "runtimeDefaults": "none"
+        }
+      }
+    ],
+    "target": {
+      "mode": "create"
+    }
+  },
+  "result": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v2.schema.json",
+    "contract": "cordisx.agent-loop-result/v2",
+    "schemaVersion": 2,
+    "commandId": "create-without-details-url",
+    "type": "create-or-bind",
+    "status": "accepted",
+    "authorization": {
+      "capability": "tasks.create",
+      "state": "allowed",
+      "code": "allowed"
+    },
+    "binding": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json",
+      "contract": "cordisx.agent-loop-task-binding/v2",
+      "schemaVersion": 2,
+      "binding": {
+        "bindingId": "binding-worker",
+        "generation": 1
+      },
+      "definition": {
+        "agentId": "worker",
+        "revision": "definition-1"
+      },
+      "task": "task-worker",
+      "state": "active"
+    }
+  }
+}

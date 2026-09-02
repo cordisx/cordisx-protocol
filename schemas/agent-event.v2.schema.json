@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-event.v2.schema.json",
+  "title": "CordisX Agent Event v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "eventId", "sessionId", "seq", "time", "type", "provenance", "source", "data"],
+  "properties": {
+    "contract": { "const": "cordisx.agent-events/v2" },
+    "schemaVersion": { "const": 2 },
+    "eventId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "sessionId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "turnId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "stepId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "itemId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "messageId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "deliveryId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "contributionId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "toolCallId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "contextId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "seq": { "type": "integer", "minimum": 0 },
+    "time": { "type": "integer", "minimum": 0 },
+    "type": {
+      "enum": [
+        "session.lifecycle",
+        "turn.lifecycle",
+        "step.lifecycle",
+        "item.lifecycle",
+        "message.observed",
+        "message.delivery",
+        "input.contribution",
+        "content.chunk",
+        "diagnostic"
+      ]
+    },
+    "provenance": { "enum": ["observed", "cordisx", "inferred"] },
+    "source": { "$ref": "agent-event.v1.schema.json#/$defs/source" },
+    "causalParentId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+    "data": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "session.lifecycle" } } },
+      "then": { "properties": { "data": { "$ref": "agent-event.v1.schema.json#/$defs/sessionLifecycle" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "turn.lifecycle" } } },
+      "then": { "required": ["turnId"], "properties": { "turnId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "data": { "$ref": "agent-event.v1.schema.json#/$defs/turnLifecycle" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "step.lifecycle" } } },
+      "then": { "required": ["turnId", "stepId"], "properties": { "turnId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "stepId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "data": { "$ref": "agent-event.v1.schema.json#/$defs/stepLifecycle" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "item.lifecycle" } } },
+      "then": { "required": ["turnId", "itemId"], "properties": { "turnId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "itemId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "data": { "$ref": "agent-event.v1.schema.json#/$defs/itemLifecycle" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "message.observed" } } },
+      "then": { "required": ["messageId"], "properties": { "messageId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "data": { "$ref": "agent-event.v1.schema.json#/$defs/observedMessage" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "message.delivery" } } },
+      "then": { "required": ["messageId", "deliveryId"], "properties": { "messageId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "deliveryId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "data": { "$ref": "#/$defs/messageDelivery" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "input.contribution" } } },
+      "then": { "required": ["contributionId"], "properties": { "contributionId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "data": { "$ref": "#/$defs/inputContribution" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "content.chunk" } } },
+      "then": { "required": ["turnId", "itemId"], "properties": { "turnId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "itemId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }, "data": { "$ref": "agent-event.v1.schema.json#/$defs/contentChunk" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "diagnostic" } } },
+      "then": { "properties": { "data": { "$ref": "agent-event.v1.schema.json#/$defs/diagnostic" } } }
+    }
+  ],
+  "$defs": {
+    "messageDelivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "target", "wakeup", "owner"],
+      "properties": {
+        "stage": { "enum": ["requested", "permission", "queued", "claimed", "projected", "forwarded", "failed", "expired", "cancelled"] },
+        "target": { "enum": ["next-turn", "next-step"] },
+        "wakeup": { "type": "boolean" },
+        "owner": { "$ref": "agent-event.v1.schema.json#/$defs/pluginSource" },
+        "message": { "$ref": "agent-event.v1.schema.json#/$defs/userMessage" },
+        "capability": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "policy": { "enum": ["ask", "deny", "allow"] },
+        "decision": { "enum": ["allow", "deny", "timeout"] },
+        "declarationFingerprint": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "cancelReason": { "enum": ["requested", "clear-pending", "owner-disposed", "plugin-blocked", "permission-blocked", "generation-replaced"] },
+        "diagnostic": { "$ref": "agent-event.v1.schema.json#/$defs/diagnostic" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "stage": { "enum": ["failed", "expired", "cancelled"] } } },
+          "then": { "required": ["diagnostic"], "properties": { "diagnostic": { "$ref": "agent-event.v1.schema.json#/$defs/diagnostic" } } }
+        },
+        {
+          "if": { "properties": { "stage": { "const": "cancelled" } } },
+          "then": { "required": ["cancelReason"], "properties": { "cancelReason": { "enum": ["requested", "clear-pending", "owner-disposed", "plugin-blocked", "permission-blocked", "generation-replaced"] } } }
+        }
+      ]
+    },
+    "inputContribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "stage"],
+      "properties": {
+        "kind": { "enum": ["pre-step.append", "system-prompt.section", "system-prompt.context"] },
+        "stage": { "enum": ["registered", "evaluated", "projected", "forwarded", "released", "failed"] },
+        "evaluationId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" },
+        "messageIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" }
+        },
+        "capability": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "releaseReason": { "enum": ["explicit", "owner-disposed", "plugin-blocked", "permission-blocked", "generation-replaced"] },
+        "diagnostic": { "$ref": "agent-event.v1.schema.json#/$defs/diagnostic" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "stage": { "enum": ["evaluated", "projected", "forwarded"] } } },
+          "then": { "required": ["evaluationId"], "properties": { "evaluationId": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "const": "pre-step.append" },
+              "stage": { "enum": ["evaluated", "projected", "forwarded"] }
+            }
+          },
+          "then": { "required": ["messageIds"], "properties": { "messageIds": { "type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": { "$ref": "agent-event.v1.schema.json#/$defs/opaqueId" } } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "pre-step.append" } } },
+          "then": { "properties": { "stage": { "enum": ["evaluated", "projected", "forwarded", "failed"] } } }
+        },
+        {
+          "if": { "properties": { "stage": { "const": "released" } } },
+          "then": { "required": ["releaseReason"], "properties": { "releaseReason": { "enum": ["explicit", "owner-disposed", "plugin-blocked", "permission-blocked", "generation-replaced"] } } }
+        },
+        {
+          "if": { "properties": { "stage": { "const": "failed" } } },
+          "then": { "required": ["diagnostic"], "properties": { "diagnostic": { "$ref": "agent-event.v1.schema.json#/$defs/diagnostic" } } }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "contract": "cordisx.agent-history/v1",
+  "schemaVersion": 1,
+  "sessionId": "session-history-2",
+  "snapshotId": "snapshot.history.none",
+  "limit": 100,
+  "requestedPayloadPolicy": "inline",
+  "effectivePayloadPolicy": "referenced",
+  "source": {
+    "kind": "historical",
+    "adapterId": "codex-history",
+    "adapterVersion": "rollout-jsonl-v1",
+    "hostId": "codex-desktop",
+    "profileId": "profile.opaque.0001"
+  },
+  "coverage": {
+    "state": "unavailable",
+    "compacted": false,
+    "corruptLines": 0,
+    "oversizedLines": 0,
+    "redactedFields": 0,
+    "tailAvailable": false
+  },
+  "events": [],
+  "diagnostics": [
+    { "code": "history-unavailable", "severity": "warning", "count": 1 }
+  ]
+}

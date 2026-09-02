@@ -1,0 +1,6 @@
+{
+  "base": "valid/label-override.json",
+  "operations": [
+    { "op": "set", "path": "projection.tabs.1.text", "value": { "key": "channel.wrong", "fallback": "Wrong" } }
+  ]
+}

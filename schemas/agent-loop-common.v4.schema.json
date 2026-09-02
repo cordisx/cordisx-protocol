@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-common.v4.schema.json",
+  "title": "CordisX Agent Loop Common Types v4",
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$" },
+    "opaqueHandle": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "generation": { "type": "integer", "minimum": 1 },
+    "definitionIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agentId", "revision"],
+      "properties": {
+        "agentId": { "$ref": "#/$defs/identifier" },
+        "revision": { "$ref": "#/$defs/opaqueHandle" }
+      }
+    },
+    "bindingIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bindingId", "generation"],
+      "properties": {
+        "bindingId": { "$ref": "#/$defs/opaqueHandle" },
+        "generation": { "$ref": "#/$defs/generation" }
+      }
+    },
+    "inheritanceMode": { "enum": ["append", "prepend", "merge", "replace", "none"] },
+    "objectInheritanceMode": { "enum": ["merge", "replace", "none"] },
+    "filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } },
+        "exclude": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } }
+      },
+      "anyOf": [
+        { "required": ["include"], "properties": { "include": true } },
+        { "required": ["exclude"], "properties": { "exclude": true } }
+      ]
+    },
+    "contentPart": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "text"],
+          "properties": { "kind": { "const": "text" }, "text": { "type": "string", "minLength": 1, "maxLength": 100000 } }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "ref", "mediaType"],
+          "properties": {
+            "kind": { "const": "image-ref" },
+            "ref": { "$ref": "#/$defs/opaqueHandle" },
+            "mediaType": { "type": "string", "minLength": 7, "maxLength": 128, "pattern": "^image/[A-Za-z0-9.+-]+$" },
+            "alt": { "type": "string", "maxLength": 2000 }
+          }
+        }
+      ]
+    },
+    "content": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/contentPart" } },
+    "authorizationOutcome": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false, "required": ["capability", "state", "code"],
+          "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read", "turns.submit", "turns.introduce", "approvals.decide"] }, "state": { "const": "allowed" }, "code": { "const": "allowed" } }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["capability", "state", "code"],
+          "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read", "turns.submit", "turns.introduce", "approvals.decide"] }, "state": { "const": "denied" }, "code": { "enum": ["user-denied", "policy-denied"] } }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["capability", "state", "code"],
+          "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read", "turns.submit", "turns.introduce", "approvals.decide"] }, "state": { "const": "unavailable" }, "code": { "enum": ["host-unavailable", "task-unavailable", "unsupported"] } }
+        }
+      ]
+    }
+  }
+}

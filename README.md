@@ -14,15 +14,24 @@ Version 1 marketplace discovery contracts are defined by:
 - `test-vectors/marketplace` and `conformance/marketplace.mjs`.
 
 Structured UI version 1, the complete UI extension catalog and contribution
-version 2, Platform capabilities, Agent/Session runtime, and extension-point management
+version 2, Platform capabilities, Agent events, and extension-point management
 contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
 conformance vectors in this repository.
 
-The additive Manager Content v1 contract separates plugin-declared subroute
+The additive Manager Content v1/v2 contracts separate plugin-declared subroute
 and tab route references from the Host-owned renderer-safe header, breadcrumb,
-back, and history projection. It supports dynamic opaque record titles without
-granting DOM, raw bridge, router, or secret access. See
+back, and history projection. V2 adds only an optional localized tab label so
+tab chrome can differ from route/top-level navigation text. They support
+dynamic opaque record titles without granting DOM, raw bridge, router, or
+secret access. See
 `.agents/docs/manager-content-navigation/README.md`.
+
+Manager collection v1 defines a Host-rendered searchable collection inside an
+authorized Manager page body: stable views, Host-owned query/search, fenced
+data sources, structured rows, predecessor navigation-collection actions, one
+Host text-input command action, and closed results. It exposes no private
+HostCollection, DOM, list, drawer, input, dialog, confirmation, feedback, or
+clipboard handle. See `.agents/docs/manager-collection/README.md`.
 
 Icon theme provider v1 makes Reicon the Host default and fallback while
 allowing future principal-bound theme providers to register partial semantic
@@ -32,6 +41,13 @@ DOM, styling, state, accessibility, fallback, and lifecycle ownership. See
 Its closed 64-key catalog distinguishes certified third-party provenance from
 official first-party provenance and preserves distinct Manager action, content,
 and agent-turn-control meanings without carrying publisher identity or UI text.
+
+Navigation collection actions v1 defines the closed immutable action list for
+a Host's versioned successor to route-only dynamic navigation collection rows.
+Commands, enclosing-route deep-link copy, bounded plain-text copy, structured
+confirmation, and localized feedback are explicit data; the Host retains all
+DOM, menu, clipboard, confirmation, routing, accessibility, and lifecycle
+ownership. See `.agents/docs/navigation-collection-actions/README.md`.
 
 Dynamic local packages and plugin generations are defined by the frozen
 package/operation/result v1 schemas, the explicit-local source v1, separate

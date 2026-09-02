@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v3.schema.json",
+  "title": "CordisX Agent Loop Result v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "commandId", "type", "status", "authorization"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-result.v3.schema.json" },
+    "contract": { "const": "cordisx.agent-loop-result/v3" },
+    "schemaVersion": { "const": 3 },
+    "commandId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "type": { "enum": ["create-or-bind", "send", "approval-decision", "request-member-self-introduction", "cancel-member-self-introduction"] },
+    "status": { "enum": ["accepted", "conflict", "denied", "unavailable"] },
+    "code": {
+      "enum": [
+        "details-unavailable",
+        "operation-conflict",
+        "binding-conflict",
+        "approval-conflict",
+        "reconciliation-required",
+        "operation-expired",
+        "provider-replaced",
+        "approval-expired",
+        "approval-unavailable",
+        "member-conflict",
+        "run-conflict",
+        "introduction-conflict",
+        "introduction-completed",
+        "introduction-cancelled",
+        "introduction-expired",
+        "introduction-unavailable",
+        "introduction-not-found"
+      ]
+    },
+    "authorization": { "$ref": "agent-loop-common.v3.schema.json#/$defs/authorizationOutcome" },
+    "binding": { "$ref": "agent-loop-task-binding.v3.schema.json" },
+    "detailsUrl": { "$ref": "agent-loop-task-details-common.v2.schema.json#/$defs/detailsUrl" },
+    "messageId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "turn": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "approvalId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "decision": { "enum": ["approve", "deny", "cancel"] },
+    "participantId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "memberId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "runId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "requestOperationId": { "$ref": "agent-loop-common.v3.schema.json#/$defs/opaqueHandle" },
+    "delivery": { "$ref": "#/$defs/delivery" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "create-or-bind" } } },
+      "then": { "properties": { "authorization": { "type": "object", "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read"] } } } } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "send" } } },
+      "then": { "properties": { "authorization": { "type": "object", "properties": { "capability": { "const": "turns.submit" } } } } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "const": "approval-decision" } } },
+      "then": { "properties": { "authorization": { "type": "object", "properties": { "capability": { "const": "approvals.decide" } } } } }
+    },
+    {
+      "if": { "required": ["type"], "properties": { "type": { "enum": ["request-member-self-introduction", "cancel-member-self-introduction"] } } },
+      "then": { "properties": { "authorization": { "type": "object", "properties": { "capability": { "const": "turns.introduce" } } } } }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["delivery"],
+        "properties": {
+          "authorization": { "type": "object", "properties": { "state": { "const": "allowed" } } },
+          "code": false,
+          "delivery": true
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "conflict" } } },
+      "then": {
+        "required": ["code"],
+        "properties": {
+          "binding": false,
+          "detailsUrl": false,
+          "messageId": false,
+          "turn": false,
+          "approvalId": false,
+          "decision": false,
+          "participantId": false,
+          "memberId": false,
+          "runId": false,
+          "requestOperationId": false,
+          "delivery": false
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "type": { "const": "approval-decision" },
+              "authorization": { "type": "object", "properties": { "capability": { "const": "approvals.decide" }, "state": { "const": "allowed" } } },
+              "code": { "enum": ["operation-conflict", "binding-conflict", "approval-conflict"] }
+            }
+          },
+          {
+            "properties": {
+              "type": { "enum": ["request-member-self-introduction", "cancel-member-self-introduction"] },
+              "authorization": { "type": "object", "properties": { "capability": { "const": "turns.introduce" }, "state": { "const": "allowed" } } },
+              "code": { "enum": ["operation-conflict", "binding-conflict", "member-conflict", "run-conflict", "introduction-conflict", "introduction-completed", "introduction-cancelled"] }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "denied" } } },
+      "then": {
+        "properties": {
+          "authorization": { "type": "object", "properties": { "state": { "const": "denied" } } },
+          "code": false,
+          "binding": false,
+          "detailsUrl": false,
+          "messageId": false,
+          "turn": false,
+          "approvalId": false,
+          "decision": false,
+          "participantId": false,
+          "memberId": false,
+          "runId": false,
+          "requestOperationId": false,
+          "delivery": false
+        }
+      }
+    },
+    {
+      "if": { "required": ["status"], "properties": { "status": { "const": "unavailable" } } },
+      "then": {
+        "properties": {
+          "binding": false,
+          "detailsUrl": false,
+          "messageId": false,
+          "turn": false,
+          "approvalId": false,
+          "decision": false,
+          "participantId": false,
+          "memberId": false,
+          "runId": false,
+          "requestOperationId": false,
+          "delivery": false
+        },
+        "oneOf": [
+          {
+            "properties": { "authorization": { "type": "object", "properties": { "state": { "const": "unavailable" } } }, "code": false }
+          },
+          {
+            "required": ["code"],
+            "properties": {
+              "type": { "const": "create-or-bind" },
+              "authorization": { "type": "object", "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read"] }, "state": { "const": "allowed" } } },
+              "code": { "enum": ["details-unavailable", "operation-conflict", "reconciliation-required", "operation-expired", "provider-replaced"] }
+            }
+          },
+          {
+            "required": ["code"],
+            "properties": {
+              "type": { "const": "send" },
+              "authorization": { "type": "object", "properties": { "capability": { "const": "turns.submit" }, "state": { "const": "allowed" } } },
+              "code": { "enum": ["operation-conflict", "reconciliation-required", "operation-expired", "provider-replaced"] }
+            }
+          },
+          {
+            "required": ["code"],
+            "properties": {
+              "type": { "const": "approval-decision" },
+              "authorization": { "type": "object", "properties": { "capability": { "const": "approvals.decide" }, "state": { "const": "allowed" } } },
+              "code": { "enum": ["reconciliation-required", "operation-expired", "provider-replaced", "approval-expired", "approval-unavailable"] }
+            }
+          },
+          {
+            "required": ["code"],
+            "properties": {
+              "type": { "enum": ["request-member-self-introduction", "cancel-member-self-introduction"] },
+              "authorization": { "type": "object", "properties": { "capability": { "const": "turns.introduce" }, "state": { "const": "allowed" } } },
+              "code": { "enum": ["reconciliation-required", "operation-expired", "provider-replaced", "introduction-expired", "introduction-unavailable", "introduction-not-found"] }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "create-or-bind" }, "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["binding", "detailsUrl", "delivery"],
+        "properties": {
+          "authorization": { "type": "object", "properties": { "capability": { "enum": ["tasks.create", "tasks.content.read"] }, "state": { "const": "allowed" } } },
+          "binding": true, "detailsUrl": true, "messageId": false, "turn": false, "approvalId": false, "decision": false, "participantId": false, "memberId": false, "runId": false, "requestOperationId": false, "delivery": true
+        }
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "send" }, "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["binding", "messageId", "turn", "delivery"],
+        "properties": {
+          "authorization": { "type": "object", "properties": { "capability": { "const": "turns.submit" }, "state": { "const": "allowed" } } },
+          "binding": true, "detailsUrl": false, "messageId": true, "turn": true, "approvalId": false, "decision": false, "participantId": false, "memberId": false, "runId": false, "requestOperationId": false, "delivery": true
+        }
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "approval-decision" }, "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["binding", "turn", "approvalId", "decision", "delivery"],
+        "properties": {
+          "authorization": { "type": "object", "properties": { "capability": { "const": "approvals.decide" }, "state": { "const": "allowed" } } },
+          "binding": true, "detailsUrl": false, "messageId": false, "turn": true, "approvalId": true, "decision": true, "participantId": false, "memberId": false, "runId": false, "requestOperationId": false, "delivery": true
+        }
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "request-member-self-introduction" }, "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["binding", "participantId", "memberId", "runId", "turn", "messageId", "delivery"],
+        "properties": {
+          "authorization": { "type": "object", "properties": { "capability": { "const": "turns.introduce" }, "state": { "const": "allowed" } } },
+          "binding": true, "detailsUrl": false, "messageId": true, "turn": true, "approvalId": false, "decision": false, "participantId": true, "memberId": true, "runId": true, "requestOperationId": false, "delivery": true
+        }
+      }
+    },
+    {
+      "if": { "required": ["type", "status"], "properties": { "type": { "const": "cancel-member-self-introduction" }, "status": { "const": "accepted" } } },
+      "then": {
+        "required": ["binding", "participantId", "memberId", "runId", "requestOperationId", "turn", "messageId", "delivery"],
+        "properties": {
+          "authorization": { "type": "object", "properties": { "capability": { "const": "turns.introduce" }, "state": { "const": "allowed" } } },
+          "binding": true, "detailsUrl": false, "messageId": true, "turn": true, "approvalId": false, "decision": false, "participantId": true, "memberId": true, "runId": true, "requestOperationId": true, "delivery": true
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "delivery": {
+      "type": "object", "additionalProperties": false, "required": ["disposition"],
+      "properties": { "disposition": { "enum": ["executed", "replayed", "reconciled"] } }
+    }
+  }
+}
