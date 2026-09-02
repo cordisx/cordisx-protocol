@@ -45,6 +45,14 @@ credential, platform, or task type.
 
 Run `npm run typecheck` to compile the strict positive and negative fixtures.
 
+`agents.v1.d.ts`, `sessions.v1.d.ts`, and `approval.v1.d.ts` expose the
+additive `ctx.agents`, `ctx.sessions`, and `ctx.approvals` contracts. Agent is a
+live handle whose `AgentId` is the same `SessionId`; Session is read-only and
+SessionEvent is the new surface's sole persistent fact. Snapshot-pinned paging,
+atomic replay-to-live subscription, `closed` first-terminal fencing, and
+Agent-scoped approvals are explicit. The declarations coexist with and do not
+remove the frozen AgentLoop v1-v4 entrypoints.
+
 `agent-avatar.v1.d.ts` exposes the closed immutable Agent avatar reference
 union, canonical seed inputs and helpers, Agent Definition fallback input, and
 typed resolution result. Qualified refs expose no URL, path, bytes, DOM, CSS,

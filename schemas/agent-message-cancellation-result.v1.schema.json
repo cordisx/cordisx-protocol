@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-message-cancellation-result.v1.schema.json",
+  "title": "CordisX Agent Message Cancellation Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "status", "messageId"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-message-cancellation-result.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-message-cancellation-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["accepted", "denied", "unavailable", "conflict", "not-found"] },
+    "messageId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "code": { "enum": ["permission-denied", "agent-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable", "unsupported", "already-claimed"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "conflict" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "const": "already-claimed" } } } },
+    { "if": { "properties": { "status": { "const": "denied" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "const": "permission-denied" } } } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "enum": ["agent-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable", "unsupported"] } } } },
+    { "if": { "properties": { "status": { "enum": ["accepted", "not-found"] } }, "required": ["status"] }, "then": { "properties": { "code": false } } }
+  ]
+}

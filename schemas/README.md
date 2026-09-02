@@ -232,6 +232,24 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   non-accepted results and accepted create/bind/send results forbid causation;
 - `agent-loop-task-details-common.v2.schema.json`: canonical Host or external
   details URL used by accepted create-or-bind results;
+- `agents-common.v1.schema.json`, `agent-acquire-request.v1.schema.json`,
+  `agent-acquire-result.v1.schema.json`, `agent-admission.v1.schema.json`,
+  `agent-message-cancellation-result.v1.schema.json`,
+  `agent-mutation-result.v1.schema.json`,
+  `agent-status-observation.v1.schema.json`, and
+  `agent-live-event.v1.schema.json`: additive Agent Registry acquisition,
+  MessageId-only admission, live handle state, cancellation, ownership, and
+  non-durable coordination events with `AgentId = SessionId`;
+- `session-common.v1.schema.json`, `session-snapshot.v1.schema.json`,
+  `session-read-request.v1.schema.json`, `session-event.v1.schema.json`,
+  `session-event-page.v1.schema.json`, `session-subscribe-request.v1.schema.json`,
+  `session-subscription-page.v1.schema.json`, and
+  `session-subscription-close.v1.schema.json`: the additive read-only Session
+  surface, sole persistent SessionEvent fact stream, fixed-watermark paging,
+  contiguous replay-to-live delivery, and first-terminal closure fences;
+- `approval-question.v1.schema.json` and `approval-decision.v1.schema.json`:
+  the independent Agent-scoped approval seam with exact question/decision
+  identity and fail-closed terminal outcomes;
 - `agent-avatar.v1.schema.json` and
   `agent-avatar-resolution-result.v1.schema.json`: stable generated, asset,
   definition, and reserved platform Agent avatar references plus a typed

@@ -16,8 +16,15 @@ const expectedExports = [
   './agent-loop/v2',
   './agent-loop/v3',
   './agent-loop/v4',
+  './agents/v1',
+  './sessions/v1',
+  './approval/v1',
   './connector-service/v1',
   './host-dom/v1',
+  './manager-collection/v1',
+  './manager-content-navigation/v1',
+  './manager-content-navigation/v2',
+  './navigation-collection-actions/v1',
 ].sort()
 const expectedFiles = [
   'LICENSE',
@@ -36,8 +43,15 @@ const expectedFiles = [
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
   'types/agent-loop.v4.d.ts',
+  'types/agents.v1.d.ts',
+  'types/sessions.v1.d.ts',
+  'types/approval.v1.d.ts',
   'types/connector-service.v1.d.ts',
   'types/host-dom.v1.d.ts',
+  'types/manager-collection.v1.d.ts',
+  'types/manager-content-navigation.v1.d.ts',
+  'types/manager-content-navigation.v2.d.ts',
+  'types/navigation-collection-actions.v1.d.ts',
 ].sort()
 const frozenAgentLoopFiles = [
   ...readdirSync(join(root, 'schemas'))
@@ -104,6 +118,9 @@ import type { AgentLoopCommand as AgentLoopCommandV1, BoundAgentLoopClient as Bo
 import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDelivery, AgentLoopDeliveryDisposition, AgentLoopEvent as AgentLoopEventV2, AgentLoopOperationId, AgentLoopOperationUnavailableCode, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v2'
 import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand as AgentLoopCommandV3, AgentLoopEvent as AgentLoopEventV3, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionIntent, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding as AgentLoopTaskBindingV3, BoundAgentLoopClient as BoundAgentLoopClientV3 } from '@cordisx/protocol/agent-loop/v3'
 import type { AgentLoopApprovalDecisionResult as AgentLoopApprovalDecisionResultV4, AgentLoopApprovalDecisionUnavailableCode as AgentLoopApprovalDecisionUnavailableCodeV4, AgentLoopCancelMemberSelfIntroductionResult as AgentLoopCancelMemberSelfIntroductionResultV4, AgentLoopCommand as AgentLoopCommandV4, AgentLoopCreateOrBindResult as AgentLoopCreateOrBindResultV4, AgentLoopEvent as AgentLoopEventV4, AgentLoopMemberSelfIntroductionUnavailableCode as AgentLoopMemberSelfIntroductionUnavailableCodeV4, AgentLoopRequestMemberSelfIntroductionResult as AgentLoopRequestMemberSelfIntroductionResultV4, AgentLoopSendResult as AgentLoopSendResultV4, AgentLoopTaskBinding as AgentLoopTaskBindingV4, BoundAgentLoopClient as BoundAgentLoopClientV4 } from '@cordisx/protocol/agent-loop/v4'
+import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
+import type { ApprovalService } from '@cordisx/protocol/approval/v1'
+import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
 const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
 const canonical = canonicalizeAgentAvatarSeed({ namespace: 'agent-definition', agentId: ' reviewer ' })
@@ -127,9 +144,28 @@ declare const agentLoopV3: BoundAgentLoopClientV3
 declare const approvalBindingV3: AgentLoopTaskBindingV3
 declare const agentLoopV4: BoundAgentLoopClientV4
 declare const bindingV4: AgentLoopTaskBindingV4
+declare const agents: AgentRegistry
+declare const sessions: SessionRegistry
+declare const approvals: ApprovalService
+declare const agent: Agent
+declare const session: Session
+declare const userMessage: UserMessage
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient
+agents.create({ mutationId: 'create-installed-consumer' })
+agents.resume({ sessionId: session.id, mutationId: 'resume-installed-consumer' })
+agents.get(agent.id)
+sessions.get(session.id)
+session.snapshot().then(result => { if (result.status === 'available') void session.read({ afterSeq: -1, snapshotSeq: result.snapshot.snapshotSeq }) })
+session.subscribe({ afterSeq: -1 }, page => { page.events satisfies readonly SessionEvent[] })
+agent.followup(userMessage)
+agent.steer(userMessage)
+agent.inject(userMessage)
+agent.discard(userMessage.id)
+agent.cancel({ kind: 'user' })
+agent.whenIdle()
+approvals.request({ agent, toolName: 'shell' })
 const discovered = await connector.discover()
 if (discovered.status === 'accepted') discovered.snapshot.registrations satisfies readonly unknown[]
 if (resolution.status === 'unsupported') resolution.code satisfies 'unsupported-kind' | 'unsupported-provider' | 'reference-unavailable'

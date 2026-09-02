@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-question.v1.schema.json",
+  "title": "CordisX Agent-scoped Approval Question v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "id", "agentId", "sessionId", "agentGeneration", "toolName"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-question.v1.schema.json" },
+    "contract": { "const": "cordisx.approval-question/v1" },
+    "schemaVersion": { "const": 1 },
+    "id": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "agentId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "agentGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "toolName": { "$ref": "session-common.v1.schema.json#/$defs/identifier" },
+    "callId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "reason": { "type": "string", "maxLength": 10000 }
+  }
+}
