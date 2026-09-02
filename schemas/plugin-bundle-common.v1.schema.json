@@ -67,6 +67,15 @@
         "permissionId": { "$ref": "#/$defs/permissionId" },
         "policy": { "$ref": "#/$defs/policy" }
       }
+    },
+    "pluginPermissionReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pluginId", "permissionId"],
+      "properties": {
+        "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "permissionId": { "$ref": "#/$defs/permissionId" }
+      }
     }
   }
 }

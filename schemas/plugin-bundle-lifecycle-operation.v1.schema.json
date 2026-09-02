@@ -59,7 +59,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["kind", "bundleId", "bundlePermissions", "pluginOverrides", "impactToken"],
+          "required": ["kind", "bundleId", "bundlePermissions", "pluginOverrides", "clearPluginOverrides", "impactToken"],
           "properties": {
             "kind": { "const": "set-permissions" },
             "bundleId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
@@ -72,6 +72,11 @@
               "type": "array",
               "maxItems": 1024,
               "items": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/pluginPermissionOverride" }
+            },
+            "clearPluginOverrides": {
+              "type": "array",
+              "maxItems": 1024,
+              "items": { "$ref": "plugin-bundle-common.v1.schema.json#/$defs/pluginPermissionReference" }
             },
             "impactToken": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/transactionId" }
           }

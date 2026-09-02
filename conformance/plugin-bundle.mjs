@@ -70,6 +70,12 @@ function validateOperation(value) {
   if ('pluginOverrides' in operation) {
     for (const key of duplicates(operation.pluginOverrides.map(item => `${item.pluginId}\0${item.permissionId}`))) errors.push(`duplicate plugin override: ${key}`)
   }
+  if ('clearPluginOverrides' in operation) {
+    const clearKeys = operation.clearPluginOverrides.map(item => `${item.pluginId}\0${item.permissionId}`)
+    for (const key of duplicates(clearKeys)) errors.push(`duplicate cleared plugin override: ${key}`)
+    const assigned = new Set(operation.pluginOverrides.map(item => `${item.pluginId}\0${item.permissionId}`))
+    for (const key of clearKeys) if (assigned.has(key)) errors.push(`plugin override is both assigned and cleared: ${key}`)
+  }
   return errors
 }
 

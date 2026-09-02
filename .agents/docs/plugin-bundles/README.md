@@ -63,8 +63,9 @@ result against the plugin identity; the bundle id is provenance only.
 Removing or disabling a restrictive bundle must never silently widen a shared
 plugin. The Host retains the prior restrictive value as a safety floor until a
 separate, explicit permission review accepts the wider result. Bundle policy
-updates affect inherited entries only. Clearing plugin overrides is a separate
-confirmed action.
+updates affect inherited entries only. A `set-permissions` review explicitly
+lists overrides to clear in `clearPluginOverrides`; omission never clears an
+existing global override.
 
 ## Manager projection
 
