@@ -194,6 +194,15 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   mutation with closed applied, conflict, and unavailable results, plus a
   standalone embedded semantic-icon or Room-associated composite-avatar value
   for Host-owned collection rows;
+- `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v4.schema.json`,
+  `agent-conversation-shell-subscription-close.v4.schema.json`, the v4
+  Room-settings request/result schemas, and the v4 Room collection leading
+  visual schema: the additive Session-compatible Shell successor. Active runs
+  and presence carry exact Session ids; messages carry closed structured
+  SessionEvent or Chatroom-acknowledgement sources; approvals carry exact
+  Session/generation/approval identity; introductions carry Session/message
+  correlation; and subscription closure is first-terminal and fenced. V3 and
+  every AgentLoop schema remain unchanged and available;
 - `agent-loop-common.v1.schema.json`, the unchanged `agent-loop-*.v1` family,
   and `agent-definition.v1.schema.json`:
   room-neutral Agent identity, field-specific inheritance, structured prompt

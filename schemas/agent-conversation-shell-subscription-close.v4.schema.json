@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-subscription-close.v4.schema.json",
+  "title": "CordisX Agent Conversation Shell Subscription Close v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscriptionId", "binding", "generation", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-subscription-close.v4.schema.json" },
+    "contract": { "const": "cordisx.agent-conversation-shell-subscription-close/v4" },
+    "schemaVersion": { "const": 4 },
+    "subscriptionId": { "$ref": "agent-conversation-shell-common.v4.schema.json#/$defs/opaqueId" },
+    "binding": { "$ref": "agent-conversation-shell-common.v4.schema.json#/$defs/bindingRef" },
+    "generation": { "$ref": "agent-conversation-shell-common.v4.schema.json#/$defs/generation" },
+    "status": { "const": "closed" },
+    "code": { "enum": ["unsubscribed", "explicit", "owner-disposed", "generation-replaced", "permission-revoked", "connection-replaced", "observer-failed"] }
+  }
+}

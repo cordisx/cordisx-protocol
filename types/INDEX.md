@@ -86,6 +86,15 @@ items carry exact participant/run/binding/turn/approval association and bounded
 pending Host command actions; the dedicated approval command context preserves
 the shell binding, owner generation, shell generation, and item fence.
 
+`agent-conversation-shell.v4.d.ts` is the additive Session-compatible
+successor. It retains v3 Room/settings/collection and Shell-owned run
+associations, adds exact `sessionId` plus optional `AgentDetailReference` to
+active runs, uses structured SessionEvent message provenance, correlates
+approvals by Session/generation/approval id, and correlates introductions by
+Session/message id. Its subscription handle exposes a non-rejecting closed
+fence. It contains no AgentLoop binding, turn, details URL, raw navigation, or
+renderer authority; v3 remains independently importable.
+
 `host-dom.v1.d.ts` exposes the versioned Host root catalog and one principal-bound
 client. Plugins can request only canonical root ids, closed read/modify operations,
 opaque handles, bounded serialized projections, and Host-rendered structured
