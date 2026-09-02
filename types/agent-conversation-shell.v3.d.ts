@@ -1,5 +1,5 @@
 import type { AgentAvatarRef } from './agent-avatar.v1.js'
-import type { AgentDefinitionIdentity, AgentDetailReference } from './agents.v1.js'
+import type { AgentDefinitionIdentity, AgentLoopBindingIdentity, AgentLoopTaskDetailsUrl } from './agent-loop.v3.js'
 
 export interface LocalizedText { key: string; fallback: string; namespace?: string }
 export type JsonValue = string | number | boolean | null | readonly JsonValue[] | { readonly [key: string]: JsonValue }
@@ -9,13 +9,13 @@ export interface AgentConversationShellBinding { bindingId: string; shell: 'agen
 export type AgentConversationParticipant =
   | { participantId: string; role: 'human' | 'system'; displayName: LocalizedText; avatar?: AgentAvatarRef; agentIdentity?: never }
   | { participantId: string; role: 'agent'; displayName: LocalizedText; avatar?: AgentAvatarRef; agentIdentity?: AgentDefinitionIdentity }
-export interface AgentConversationActiveRunDescriptor { participantId: string; memberId: string; sessionId: string; lifecycle: { phase: 'active' | 'running' | 'waiting' | 'attention'; updatedAt?: string }; details?: AgentDetailReference }
+export interface AgentConversationActiveRunDescriptor { participantId: string; memberId: string; runId: string; lifecycle: { phase: 'active' | 'running' | 'waiting' | 'attention'; updatedAt?: string }; detailsUrl: AgentLoopTaskDetailsUrl }
 export interface AgentConversationAction { id: string; label: LocalizedText; icon?: `host:${string}`; command: CommandReference; disabled: Disabled }
 export type AgentConversationReactionValue =
   | { kind: 'emoji'; emoji: string }
   | { kind: 'semantic'; token: string }
 export interface AgentConversationReaction { reactionId: string; actorParticipantId: string; value: AgentConversationReactionValue; state: 'pending' | 'completed' | 'failed' }
-type AgentConversationMemberPresenceBase = { kind: 'member-presence'; itemId: string; sequence: number; participantId: string; memberId: string; sessionId: string; diagnostic?: LocalizedText }
+type AgentConversationMemberPresenceBase = { kind: 'member-presence'; itemId: string; sequence: number; participantId: string; memberId: string; runId: string; diagnostic?: LocalizedText }
 export type AgentConversationMemberPresenceItem =
   | (AgentConversationMemberPresenceBase & { state: 'inviting' | 'creating' | 'joined' | 'ready'; retryable: boolean; retry?: never })
   | (AgentConversationMemberPresenceBase & { state: 'failed'; retryable: false; retry?: never })
@@ -34,8 +34,9 @@ type AgentConversationApprovalItemBase = {
   sequence: number
   participantId: string
   memberId: string
-  sessionId: string
-  turn: number
+  runId: string
+  binding: AgentLoopBindingIdentity
+  turn: string
   approvalId: string
   approvalKind: 'command' | 'file-change' | 'external-action' | 'other'
   rationale?: LocalizedText
@@ -58,12 +59,12 @@ type AgentConversationMessageItemBase = {
   actions: readonly AgentConversationAction[]
 }
 export type AgentConversationMessageSemantic =
-  | { purpose: 'conversation'; correlation?: { requestMessageId: string } }
-  | { purpose: 'member-self-introduction'; correlation: { requestMessageId: string }; participantId: string; memberId: string; sessionId: string }
+  | { purpose: 'conversation'; causation?: { operationId: string } }
+  | { purpose: 'member-self-introduction'; causation: { operationId: string }; participantId: string; memberId: string; runId: string; binding: AgentLoopBindingIdentity; turn: string }
   | { purpose: 'chatroom-acknowledgement' }
 export type AgentConversationMessageItem =
-  | (AgentConversationMessageItemBase & { source: 'session-event'; author: AgentConversationParticipant; semantic: Extract<AgentConversationMessageSemantic, { purpose: 'conversation' }> })
-  | (AgentConversationMessageItemBase & { source: 'session-event'; author: Extract<AgentConversationParticipant, { role: 'agent' }> & { agentIdentity: AgentDefinitionIdentity }; semantic: Extract<AgentConversationMessageSemantic, { purpose: 'member-self-introduction' }> })
+  | (AgentConversationMessageItemBase & { source: 'agent-loop'; author: AgentConversationParticipant; semantic: Extract<AgentConversationMessageSemantic, { purpose: 'conversation' }> })
+  | (AgentConversationMessageItemBase & { source: 'agent-loop'; author: Extract<AgentConversationParticipant, { role: 'agent' }> & { agentIdentity: AgentDefinitionIdentity }; semantic: Extract<AgentConversationMessageSemantic, { purpose: 'member-self-introduction' }> })
   | (AgentConversationMessageItemBase & { source: 'chatroom-acknowledgement'; author: AgentConversationParticipant; semantic: Extract<AgentConversationMessageSemantic, { purpose: 'chatroom-acknowledgement' }> })
 export type AgentConversationItem =
   | AgentConversationMessageItem

@@ -1,98 +1,218 @@
 # Agent Conversation Shell v2 and v3
 
-This data-only contract feeds a Host-owned conversation shell. The Host owns
-route selection, chrome, DOM, style, accessibility, virtualization, scrolling,
-composer state, focus, loading/error presentation, avatar resolution, and
-navigation. The plugin supplies bounded structured data only.
+This data-only source contract serves a Host-owned Agent Desktop conversation
+shell. The production Host renderer is independently implemented in the real
+Host renderer/runtime. Playground visuals may later consume that production
+renderer, never the reverse. No current Playground component, demo DOM,
+geometry, copy, selector, or hardcoded visual is normative here.
 
-V1 remains frozen. V2 adds exact Agent participant identity, active-run and
-member-presence projections, message provenance, and reactions. V3 adds Room
-description/settings, Room collection leading visuals, approval items, and
-explicit message semantics. A producer never emits later-version fields under
-an earlier schema id.
+The formal v1 wire contract remains frozen and consumable. V2 is the additive
+successor for Agent identity, active runs, member presence, message provenance,
+and reactions; a v2 producer never emits those fields under a v1 schema id.
+The formal v2 schemas and declarations also remain frozen. V3 is the explicit
+successor for Room-description presentation and Room-settings mutation; a v3
+producer never emits those fields under a v1 or v2 schema id.
 
-## Participants, active runs, and navigation
+The v2 contract supports iterative chat-scene UX without prescribing layout. The
+Host owns route selection, chrome, no-room title, DOM, style, accessibility,
+virtualization, the only timeline scroll owner, fixed composer, focus, loading
+and error states, avatar resolution, caching, theme, and fallback.
+The plugin supplies only bounded data.
 
-Only explicit multi-participant Rooms may request `host-initials`. A participant
-may carry an `AgentAvatarRef`; raw assets, paths, data payloads, and URLs are
-forbidden. Message authors repeat the exact participant identity so a timeline
-item cannot override the Room-owned avatar or Agent definition identity.
+Only explicit multi-participant rooms may request `host-initials`. A participant
+identity may carry one optional `AgentAvatarRef`; it never carries a raw asset,
+path, data payload, or URL. The room participant list owns that reference. A
+timeline message author with the same `participantId` MUST repeat the exact
+participant identity, including its avatar reference, so a run, item, or update
+cannot override the member-owned avatar. Host consumers resolve author identity
+against the participant list before rendering.
 
-An Agent participant may carry one immutable `AgentDefinitionIdentity`. Human
-and system participants cannot. `activeRuns` is an optional complete array
-owned by the selected Room. Each item associates an exact participant,
-Chatroom member, authoritative Session, active-only lifecycle, and optional
-`AgentDetailReference { kind: 'host', ref }`. The Host resolves this reference
-through its router. No arbitrary URL, task handle, private runtime binding,
-route, trace, body, DOM value, or renderer authority crosses the contract.
+An `agent` participant may additionally carry its exact immutable
+`AgentDefinitionIdentity`. Human and system participants cannot assert one. An
+Agent participant without that identity remains a valid message author, but the
+Host must not display an Agent-specific entry or navigation action for it.
 
-Snapshot replacement atomically replaces `activeRuns`; there is no per-run
-patch. Inactive runs are removed. Chatroom may retain its own durable domain
-history, but a RoomRun needs only the authoritative `SessionId` plus domain
-presence/correlation. It must not recreate task binding, rebind state, runtime
-cursor, public projections, or a second delivery ledger.
+The room selection owns the optional complete `activeRuns` array. Each entry
+links one exact `participantId` to consumer-local `memberId` and `runId`, an
+active-only lifecycle projection, and its canonical structured `detailsUrl`.
+Chatroom persists the full private AgentLoop binding separately for its own
+send/subscribe operations and atomically stores the URL returned for the run
+rather than recomputing it from UI state.
+Chatroom owns those relations and lifecycle facts. The Host renders identity
+from the referenced participant's exact Agent identity, navigates only through
+the persisted structured URL; it never receives the private binding and never
+guesses from display name, avatar, array position, or order. Entries may target
+only selected `agent` participants with an `agentIdentity`. One `memberId` is
+fixed to one `participantId` throughout a snapshot, and active runs plus
+joined/ready presence items associate through the exact
+`(participantId, memberId, runId)` triple.
 
-## Timeline and commands
+`snapshot-replaced` atomically replaces the entire `activeRuns` array inside one
+generation-fenced snapshot. There is no run-level merge or patch operation, and
+a stale shell generation cannot update it. Inactive, closed, or failed runs are
+removed rather than projected as active; Chatroom may retain their canonical
+URL in its own durable history. The descriptor never carries a raw task handle,
+arbitrary URL, route, body, trace, DOM value, or renderer authority. Its
+structured URL uses the same v2 AgentLoop semantic validator and rejects
+non-canonical percent escapes, default ports, and dot-segment normalization.
 
-Messages use the closed source pair `session-event` or
-`chatroom-acknowledgement`. Session-backed messages come from permission-filtered
-`ctx.sessions` facts; acknowledgements are Chatroom domain output and cannot
-impersonate the Agent runtime. Reactions and member presence use bounded,
-structured, generation-fenced updates. Retry and other actions are normal Host
-`CommandReference` values and never callbacks.
+No image payload, arbitrary URL, HTML, CSS, component, callback, selector, rich
+media, Connector conversation/run handle, or renderer projection exists. The
+only URL is the bounded structured task `detailsUrl`. Composer unsent text is
+Host-ephemeral. The Host generates bounded plain-text submit payload, and v2 has
+no per-keystroke stream or draft persistence.
 
-The composer exposes availability, placeholder, disabled state, and one Host
-command only. Unsent text stays Host-ephemeral. The plugin receives bounded
-plain-text submission and creates a formally identified `UserMessage` through
-`ctx.agents`; it does not receive per-keystroke data.
+Bindings and command contexts are Host-generated and generation-fenced. Pages
+are ordered and terminal disposal rejects late/cross-shell updates. The JSON
+subscription descriptor is separate from its Host runtime stream handle.
+Fixtures are package-excluded Host test data validating this same snapshot;
+they are neither public protocol nor a product default.
 
-Subscriptions publish ordered pages and terminate on unsubscribe, binding or
-owner-generation replacement. Snapshot replacement and incremental updates
-must converge. All command contexts are Host-authored and fenced by shell
-binding, owner generation, shell generation, and exact item identity.
+Messages carry one required closed `source`: `agent-loop` for projected Agent
+Loop output or `chatroom-acknowledgement` for a Chatroom-authored delivery
+acknowledgement. Each message also owns a bounded complete `reactions` array.
+A reaction has a stable `reactionId`, an exact `actorParticipantId`, a
+structured emoji or semantic value, and `pending`, `completed`, or `failed`
+state. Reaction actors must exist in the selected participant set, reaction ids
+are unique within the message, and terminal reaction states do not regress.
 
-## V3 Room settings and collection visual
+Emoji values are NFC, 1 through 32 Unicode code points, contain emoji semantics,
+have no leading or trailing whitespace, and contain no controls. Semantic
+reaction tokens use `^[a-z][a-z0-9.-]{0,31}$`. Plugins do not provide markup,
+style, event handlers, or arbitrary reaction payloads.
 
-The optional description has `empty` or `present` state; omission means the
-source offers no description capability. A settings mutation uses exact Room,
-snapshot, owner-generation, and shell-generation fences plus a request id.
-Name and description changes are atomic, and closed applied/conflict/unavailable
-results contain no storage or replacement snapshot.
+`member-presence` is a separate ordered timeline item for one exact
+`participantId`, `memberId`, and `runId`. Its state is `inviting`, `creating`,
+`joined`, `ready`, or `failed`; its diagnostic is an optional bounded
+`LocalizedText`. A retry command may appear only when state is `failed` and
+`retryable` is true. It is a normal Host command reference with bounded JSON
+arguments and cannot carry a callback. Presence updates keep the same item and
+identity tuple; terminal `ready` does not regress, while retry starts a new
+attempt through the Host command path.
 
-`AgentConversationRoomCollectionLeadingVisual` is either a semantic Host icon
-or an exact Room-associated ordered composite of formal participant avatar
-references. The Host validates the structured Room association and owns the
-collection row, selection, routing, rendering, accessibility, and composition.
+## v2 closure
 
-## V3 approvals
+| Requirement | Contract and check |
+| --- | --- |
+| Host shell ownership | binding + documentation; no route/page/surface mutation |
+| Room, participants, Agent/avatar identity and initials opt-in | snapshot closed union; agent-only optional `AgentDefinitionIdentity`; optional `AgentAvatarRef`; author/member identity conformance; single-participant initials negative case |
+| Active Agent runs | room-owned bounded atomic array; fixed member-to-participant mapping; exact participant/member/run association; AgentLoop-v2-canonical details URL; active-only lifecycle, generation and uniqueness conformance |
+| Ordered messages, reactions, presence and status | closed message source; bounded structured reaction and member-presence item unions plus AJV/state conformance |
+| Composer submit | availability/placeholder/disabled/command only; no draft field |
+| Commands and lifecycle | Host command context, exact binding/generation, typed result/page schemas |
+| Unsafe data | conformance rejects arbitrary URL/route, task body/trace, HTML, callback, DOM and raw handle fields |
 
-An approval item associates the exact participant, member, `SessionId`, turn,
-and approval id. Pending items expose one through three
-structured approve/deny/cancel Host commands and transition once to an approved,
-denied, cancelled, or failed terminal state. The Host owns dispatch and
-presentation. Chatroom invokes the public Agent-scoped approval seam; the
-authoritative `approval/asked` and `approval/decided` facts remain in that same
-SessionEvent log. Rationale, labels, action order, and timing are never used for
-identity or correlation.
+## v3 Room description and settings
 
-## V3 message semantics and self-introduction
+V3 retains the complete v2 participant, active-run, timeline, command, and
+subscription data plane. A selected Room may additionally provide
+`description`. Omission means that Room has not declared a description
+capability, so the Host does not render an add-introduction entry. Explicit
+`{ state: 'empty' }` means the capability is available with no current value;
+the Host may render “添加群聊介绍” and open the same Host-owned Settings
+inspector used for an existing description. `{ state: 'present', text }`
+provides bounded localized presentation text. The title continues to use the
+existing `LocalizedText` field and stable participant ordering is unchanged.
 
-Every message has one structured semantic value:
+`AgentConversationShellSource.updateRoomSettings(request)` is the only v3
+mutation seam. The Host owns the inspector, form, drawer, accessibility, and
+validation presentation. Chatroom owns persistence and applies the mutation as
+one atomic compare-and-swap. The data-only request carries a stable `requestId`,
+exact `bindingId` and `ownerGeneration`, shell `generation`, `roomId`,
+`expectedSnapshotSequence`, and a non-empty `patch`. `name` is plain user text
+with 1 through 256 Unicode code points. A present description is plain user
+text with 1 through 4000 Unicode code points; only the explicit `empty` variant
+clears it. Both values are NFC and have no leading or trailing whitespace.
+Description text may contain LF but not other C0 controls or DEL.
+The JSON Schema length checks are structural guards; code-point counts are the
+authoritative semantic bounds.
 
-- Session-backed conversation: `{ purpose: 'conversation', correlation? }`;
-- Session-backed member introduction: `{ purpose: 'member-self-introduction',
-  correlation, participantId, memberId, sessionId }`;
-- Chatroom delivery acknowledgement:
-  `{ purpose: 'chatroom-acknowledgement' }`.
+The response echoes the exact request fence. An `applied` result uses code
+`applied` and returns `snapshotSequence` exactly equal to
+`expectedSnapshotSequence + 1`. A `conflict` result uses one of
+`request-conflict`, `owner-conflict`, `generation-conflict`, `room-conflict`, or
+`snapshot-conflict`; it may report `currentSnapshotSequence` but never an
+applied `snapshotSequence`. An `unavailable` result uses `owner-unavailable`,
+`settings-unavailable`, or `disposed` and reports neither sequence.
 
-`correlation.requestMessageId` is the formally admitted UserMessage identity.
-It records a domain relationship only; it does not assert that one assistant
-message or turn terminal was caused by the request. The introduction is a
-Chatroom orchestration intent implemented with `Agent.followup`/`steer`/
-`inject` as appropriate. Cancellation uses `Agent.discard(requestMessageId)`
-while pending, never a generic self-introduction command or whole-Agent cancel.
+Within a source owner, the same `requestId` plus the exact same binding,
+generation, Room, expected sequence, and patch is an idempotent replay and
+returns the original result, including the original applied sequence. Reusing
+the id with any divergent field returns `request-conflict` and performs no
+mutation. If `description` was omitted from the selected Room, a description
+patch returns `settings-unavailable`. A mixed name-and-description patch is
+atomic: if either field is unsupported or any fence fails, neither field is
+changed. The next snapshot is published through the existing ordered snapshot
+stream; the mutation result does not carry plugin storage or a replacement
+snapshot.
 
-The Host and Chatroom correlate only exact structured identities and never
-infer purpose from display text, body, author order, or timing. No semantic
-value contains prompts, hidden content, model choice, canned output, callbacks,
-DOM, CSS, HTML, native payload, or raw transport data.
+V3 adds no permission decision, DOM, callback, route, local-storage field, raw
+storage handle, or UI implementation. Existing authorization results remain the
+only security input. Host code must not infer or directly mutate Chatroom state.
+
+## v3 Room collection leading visual
+
+V3 additionally defines one standalone embedded
+`AgentConversationRoomCollectionLeadingVisual` value. It is either a bounded
+semantic Host icon or a `room-composite-avatar` carrying the exact `roomId` and
+an ordered list of zero through 64 `{ participantId, avatar }` entries. Every
+avatar is a formal `AgentAvatarRef`; participant ids are unique within the
+composite, and their order is the Chatroom-owned stable participant order. The
+Host compares the structured `roomId` with the generic collection row's exact
+`route.params.roomId` association and fails closed on mismatch. It never
+derives association from title, participant display name, current selection,
+array position outside the supplied list, or avatar seed.
+
+The generic collection row, collection snapshot and revision, selection,
+routing, rendering, accessibility, and group-avatar composition remain
+Host-owned. Protocol defines only the embedded leading-visual payload. A
+semantic New Room row uses `{ kind: 'semantic-icon', icon: 'host:action.add' }`.
+Chatroom atomically replaces a whole row or whole collection revision; partial
+participant-list patching is not defined. The payload contains no callback,
+DOM, CSS, raw image, path, URL, title inference, or current-selection fallback.
+
+## v3 approval timeline item
+
+V3 adds one closed `approval` timeline item associated with an exact
+`participantId`, `memberId`, `runId`, AgentLoop v3 `(bindingId, generation)`,
+`turn`, and `approvalId`. Its `approvalKind` is `command`, `file-change`,
+`external-action`, or `other`; `rationale` is optional bounded localized text.
+The association and timeline position are immutable across `item-updated`.
+
+Pending items contain one through three structured actions with unique
+`approve`, `deny`, or `cancel` decisions. Each action carries only a normal
+Host `CommandReference`. Pending transitions once to `approved`, `denied`,
+`cancelled`, or `failed`; terminal items have an empty actions array and never
+return to pending. Failed items require a bounded diagnostic, while all other
+states forbid one. Snapshot replacement and incremental update must converge on
+the same item and order.
+
+The Host invokes an action through the v3 `scope: 'approval'` command context,
+fenced by the exact shell binding, owner generation, shell generation, and
+`itemId`. Chatroom resolves that current pending item and constructs the exact
+AgentLoop v3 decision command from its association. The Host owns dispatch,
+rendering, labels, accessibility, and disabled/loading presentation;
+AgentLoop/provider owns decision execution and authoritative resolution.
+Consumers correlate a resolved decision through the AgentLoop v3 causation
+operation id and never by rationale, label, action order, or display text. No
+approval item or action carries callback, DOM, HTML, CSS, provider trace, raw
+command, file contents, or authorization data.
+
+## v3 message semantics
+
+Every v3 message has one required structured `semantic` value. AgentLoop
+conversation messages use `{ purpose: 'conversation', causation? }`.
+AgentLoop member introductions use `{ purpose: 'member-self-introduction',
+causation, participantId, memberId, runId, binding, turn }`. Chatroom delivery
+acknowledgements use only `{ purpose: 'chatroom-acknowledgement' }`. Source and
+purpose are closed pairs: the first two require `source: 'agent-loop'`, and the
+third requires `source: 'chatroom-acknowledgement'`.
+
+A member introduction author is an Agent participant with an exact
+`agentIdentity`; semantic `participantId` equals the author's participant id.
+Its member/run/binding/turn and causation match the accepted AgentLoop v3
+request and resulting message event. Host and Chatroom correlate these
+structured identities and never infer an introduction from display text,
+message body, title, author order, or timing. The semantic value is data and
+accessibility provenance only, not a debug label or UI instruction. It contains
+no prompt, hidden body, model, canned response, callback, DOM, or HTML.

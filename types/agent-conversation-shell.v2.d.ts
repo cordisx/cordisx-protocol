@@ -1,5 +1,5 @@
 import type { AgentAvatarRef } from './agent-avatar.v1.js'
-import type { AgentDefinitionIdentity, AgentDetailReference } from './agents.v1.js'
+import type { AgentDefinitionIdentity, AgentLoopTaskDetailsUrl } from './agent-loop.v2.js'
 
 export interface LocalizedText { key: string; fallback: string; namespace?: string }
 export type JsonValue = string | number | boolean | null | readonly JsonValue[] | { readonly [key: string]: JsonValue }
@@ -9,19 +9,19 @@ export interface AgentConversationShellBinding { bindingId: string; shell: 'agen
 export type AgentConversationParticipant =
   | { participantId: string; role: 'human' | 'system'; displayName: LocalizedText; avatar?: AgentAvatarRef; agentIdentity?: never }
   | { participantId: string; role: 'agent'; displayName: LocalizedText; avatar?: AgentAvatarRef; agentIdentity?: AgentDefinitionIdentity }
-export interface AgentConversationActiveRunDescriptor { participantId: string; memberId: string; sessionId: string; lifecycle: { phase: 'active' | 'running' | 'waiting' | 'attention'; updatedAt?: string }; details?: AgentDetailReference }
+export interface AgentConversationActiveRunDescriptor { participantId: string; memberId: string; runId: string; lifecycle: { phase: 'active' | 'running' | 'waiting' | 'attention'; updatedAt?: string }; detailsUrl: AgentLoopTaskDetailsUrl }
 export interface AgentConversationAction { id: string; label: LocalizedText; icon?: `host:${string}`; command: CommandReference; disabled: Disabled }
 export type AgentConversationReactionValue =
   | { kind: 'emoji'; emoji: string }
   | { kind: 'semantic'; token: string }
 export interface AgentConversationReaction { reactionId: string; actorParticipantId: string; value: AgentConversationReactionValue; state: 'pending' | 'completed' | 'failed' }
-type AgentConversationMemberPresenceBase = { kind: 'member-presence'; itemId: string; sequence: number; participantId: string; memberId: string; sessionId: string; diagnostic?: LocalizedText }
+type AgentConversationMemberPresenceBase = { kind: 'member-presence'; itemId: string; sequence: number; participantId: string; memberId: string; runId: string; diagnostic?: LocalizedText }
 export type AgentConversationMemberPresenceItem =
   | (AgentConversationMemberPresenceBase & { state: 'inviting' | 'creating' | 'joined' | 'ready'; retryable: boolean; retry?: never })
   | (AgentConversationMemberPresenceBase & { state: 'failed'; retryable: false; retry?: never })
   | (AgentConversationMemberPresenceBase & { state: 'failed'; retryable: true; retry?: CommandReference })
 export type AgentConversationItem =
-  | { kind: 'message'; itemId: string; messageId: string; sequence: number; source: 'session-event' | 'chatroom-acknowledgement'; author: AgentConversationParticipant; body: readonly [{ kind: 'text'; text: LocalizedText }, ...{ kind: 'text'; text: LocalizedText }[]]; reactions: readonly AgentConversationReaction[]; timestamp: string; deliveryState: 'pending' | 'sent' | 'delivered' | 'failed'; runState: 'idle' | 'running' | 'stopped' | 'failed'; ariaLive: 'off' | 'polite'; actions: readonly AgentConversationAction[] }
+  | { kind: 'message'; itemId: string; messageId: string; sequence: number; source: 'agent-loop' | 'chatroom-acknowledgement'; author: AgentConversationParticipant; body: readonly [{ kind: 'text'; text: LocalizedText }, ...{ kind: 'text'; text: LocalizedText }[]]; reactions: readonly AgentConversationReaction[]; timestamp: string; deliveryState: 'pending' | 'sent' | 'delivered' | 'failed'; runState: 'idle' | 'running' | 'stopped' | 'failed'; ariaLive: 'off' | 'polite'; actions: readonly AgentConversationAction[] }
   | { kind: 'status'; itemId: string; sequence: number; label: LocalizedText; state: 'info' | 'working' | 'warning' | 'error'; ariaLive: 'off' | 'polite' }
   | AgentConversationMemberPresenceItem
 export type AgentConversationSelection =

@@ -3,13 +3,12 @@
 Status: normative additive successor to permission v3. Permission v4 preserves
 one Host-owned Permission Broker, policy engine, profile ledger, authorization
 plan, decision path, grant/lease lifecycle, audit stream, security fingerprint,
-and scope-expansion rule. It includes the Agent/Session runtime capability
-family and adds two Host DOM capabilities: `ui.host-dom.read` and
-`ui.host-dom.modify`.
+and scope-expansion rule. It adds two manifest-declared capabilities:
+`ui.host-dom.read` and `ui.host-dom.modify`.
 
 `ui.extension-points.render` remains the separate structured-contribution
 capability from permission v3. It cannot be interpreted as direct Host DOM read
-or modification authority. The 27 non-DOM capability entries remain
+or modification authority. The original 22 capability entries remain
 `resourceClass: non-dom` and are never upgraded by a Host DOM scope.
 
 ## Trust and authorization
@@ -46,15 +45,15 @@ make an unsupported, unknown, unmounted, or unavailable Host root usable.
 
 ## Manifest, package, catalog, plan, and policy versions
 
-`plugin-manifest.v5` includes the Agent/Session runtime names and the two Host
-DOM capability names. Each Host DOM declaration requires structured rationale,
-a security declaration, non-empty canonical `rootIds[]`, and non-empty closed
-`operations[]`. `plugin-package.v4` may reference manifest v1 through v5.
+`plugin-manifest.v5` adds only the two Host DOM capability names. Each requires
+structured rationale, a security declaration, non-empty canonical `rootIds[]`,
+and non-empty closed `operations[]`. `plugin-package.v4` may reference manifest
+v1 through v5. Frozen manifest v1-v4 and package v1-v3 remain unchanged.
 
 Permission common/policy/plan/decision v4 and capability catalog v3 add the
-root/operation dimensions without changing prior keys. Catalog v3 contains 30
-complete entries: 27 non-DOM entries, structured rendering, Host DOM read, and
-Host DOM modify. Host DOM read is `sensitive`. Host DOM modify is
+root/operation dimensions without changing prior keys. Catalog v3 contains 25
+complete entries: the original 22 non-DOM entries, structured rendering, Host
+DOM read, and Host DOM modify. Host DOM read is `sensitive`. Host DOM modify is
 `high-risk`, defaults to `ask`, permits persistent denial, and does not expose
 `allow-persistent`; an ordinary allow is therefore exact allow-once.
 
@@ -63,14 +62,6 @@ fingerprinting. A new root, operation, or capability is a strict scope
 expansion and returns to authorization. A read declaration cannot contain a
 modify operation, and a modify declaration cannot contain a read operation.
 No other capability may carry either Host DOM scope dimension.
-
-For optional Agent/Session capabilities whose Session id comes from a Host
-route, manifest v5 accepts the closed declaration template
-`sessionIds: { kind: "host-route-param", routeId, param }`. It is not a policy,
-plan, decision, or grant scope. Permission v4 documents always contain the
-Host-resolved exact `sessionIds: [id]`; empty and wildcard Session scopes are
-invalid. See `../agent-runtime/README.md` for route ownership and replacement
-fences.
 
 ## Authority and anti-forgery boundary
 

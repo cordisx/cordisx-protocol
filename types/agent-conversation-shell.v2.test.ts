@@ -17,11 +17,11 @@ context.submitPayload satisfies string
 const participant: AgentConversationParticipant = { participantId: 'agent-1', role: 'agent', displayName: { key: 'agent.name', fallback: 'Agent' }, avatar: cloneAgentAvatarRef({ kind: 'asset', ref: 'asset:avatar-1', revision: 'revision:avatar-1' }), agentIdentity: { agentId: 'reviewer', revision: 'definition-4' } }
 if (participant.avatar) participant.avatar.kind satisfies 'generated' | 'asset' | 'definition' | 'platform'
 participant.agentIdentity?.agentId satisfies string | undefined
-const activeRun: AgentConversationActiveRunDescriptor = { participantId: participant.participantId, memberId: 'member-1', sessionId: 'session-1', lifecycle: { phase: 'running', updatedAt: '2026-08-31T01:00:00.000Z' }, details: { kind: 'host', ref: 'task-1' } }
-activeRun.details?.kind satisfies 'host' | undefined
+const activeRun: AgentConversationActiveRunDescriptor = { participantId: participant.participantId, memberId: 'member-1', runId: 'run-1', lifecycle: { phase: 'running', updatedAt: '2026-08-31T01:00:00.000Z' }, detailsUrl: { url: 'app://-/tasks/task-1', target: 'host' } }
+activeRun.detailsUrl.target satisfies 'host' | 'external'
 const reaction: AgentConversationReaction = { reactionId: 'reaction-1', actorParticipantId: participant.participantId, value: { kind: 'emoji', emoji: '👍' }, state: 'completed' }
-const message: AgentConversationItem = { kind: 'message', itemId: 'item-1', messageId: 'message-1', sequence: 0, source: 'session-event', author: participant, body: [{ kind: 'text', text: { key: 'message.one', fallback: 'Done' } }], reactions: [reaction], timestamp: '2026-08-31T01:00:00.000Z', deliveryState: 'delivered', runState: 'idle', ariaLive: 'polite', actions: [] }
-const presence: AgentConversationMemberPresenceItem = { kind: 'member-presence', itemId: 'presence-1', sequence: 1, participantId: participant.participantId, memberId: 'member-1', sessionId: 'session-1', state: 'failed', retryable: true, diagnostic: { key: 'presence.failed', fallback: 'Agent failed to join' }, retry: { id: 'chatroom:retry-member', arguments: { memberId: 'member-1', sessionId: 'session-1' } } }
+const message: AgentConversationItem = { kind: 'message', itemId: 'item-1', messageId: 'message-1', sequence: 0, source: 'agent-loop', author: participant, body: [{ kind: 'text', text: { key: 'message.one', fallback: 'Done' } }], reactions: [reaction], timestamp: '2026-08-31T01:00:00.000Z', deliveryState: 'delivered', runState: 'idle', ariaLive: 'polite', actions: [] }
+const presence: AgentConversationMemberPresenceItem = { kind: 'member-presence', itemId: 'presence-1', sequence: 1, participantId: participant.participantId, memberId: 'member-1', runId: 'run-1', state: 'failed', retryable: true, diagnostic: { key: 'presence.failed', fallback: 'Agent failed to join' }, retry: { id: 'chatroom:retry-member', arguments: { memberId: 'member-1', runId: 'run-1' } } }
 void message
 void presence
 source.dispose()
@@ -36,7 +36,7 @@ participant.activeRuns
 // @ts-expect-error human/system participants cannot assert an Agent Definition identity
 const humanAgentIdentity: AgentConversationParticipant = { participantId: 'human-1', role: 'human', displayName: { key: 'human.name', fallback: 'Human' }, agentIdentity: { agentId: 'reviewer', revision: 'definition-4' } }
 void humanAgentIdentity
-// @ts-expect-error Host shell active runs do not expose private runtime bindings
+// @ts-expect-error Host shell active runs do not expose the private AgentLoop binding
 const leakedBinding: AgentConversationActiveRunDescriptor = { ...activeRun, taskDetails: { bindingId: 'binding-private', generation: 1 } }
 void leakedBinding
 // @ts-expect-error message source is a closed union

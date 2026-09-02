@@ -71,7 +71,7 @@
             "role": { "const": "agent" },
             "displayName": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
             "avatar": { "$ref": "agent-avatar.v1.schema.json" },
-            "agentIdentity": { "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity" }
+            "agentIdentity": { "$ref": "agent-loop-common.v2.schema.json#/$defs/definitionIdentity" }
           }
         }
       ]
@@ -79,11 +79,11 @@
     "activeRun": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["participantId", "memberId", "sessionId", "lifecycle"],
+      "required": ["participantId", "memberId", "runId", "lifecycle", "detailsUrl"],
       "properties": {
         "participantId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
         "memberId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
-        "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "runId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
         "lifecycle": {
           "type": "object",
           "additionalProperties": false,
@@ -93,7 +93,7 @@
             "updatedAt": { "type": "string", "format": "date-time" }
           }
         },
-        "details": { "$ref": "agents-common.v1.schema.json#/$defs/hostDetailRef" }
+        "detailsUrl": { "$ref": "agent-loop-task-details-common.v2.schema.json#/$defs/detailsUrl" }
       }
     },
     "textBlock": {
@@ -141,14 +141,14 @@
     "memberPresence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "itemId", "sequence", "participantId", "memberId", "sessionId", "state", "retryable"],
+      "required": ["kind", "itemId", "sequence", "participantId", "memberId", "runId", "state", "retryable"],
       "properties": {
         "kind": { "const": "member-presence" },
         "itemId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
         "sequence": { "type": "integer", "minimum": 0 },
         "participantId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
         "memberId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
-        "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "runId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
         "state": { "enum": ["inviting", "creating", "joined", "ready", "failed"] },
         "retryable": { "type": "boolean" },
         "diagnostic": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/displayText" },
@@ -174,7 +174,7 @@
             "itemId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
             "messageId": { "$ref": "agent-conversation-shell-common.v2.schema.json#/$defs/opaqueId" },
             "sequence": { "type": "integer", "minimum": 0 },
-            "source": { "enum": ["session-event", "chatroom-acknowledgement"] },
+            "source": { "enum": ["agent-loop", "chatroom-acknowledgement"] },
             "author": { "$ref": "#/$defs/participant" },
             "body": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/textBlock" } },
             "reactions": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/reaction" } },

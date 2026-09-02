@@ -6,7 +6,7 @@
     "id": "over-scoped-agent",
     "capabilities": [
       {
-        "name": "sessions.read",
+        "name": "agent.events.read",
         "required": false,
         "reason": { "key": "events", "fallback": "Read events" },
         "scope": {

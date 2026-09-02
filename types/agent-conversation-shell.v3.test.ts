@@ -22,8 +22,8 @@ const selfIntroductionMessage: AgentConversationMessageItem = {
   itemId: 'message-item-introduction-1',
   messageId: 'message-introduction-1',
   sequence: 3,
-  source: 'session-event',
-  semantic: { purpose: 'member-self-introduction', correlation: { requestMessageId: 'message-request-1' }, participantId: selfIntroductionAuthor.participantId, memberId: 'member-1', sessionId: 'session-1' },
+  source: 'agent-loop',
+  semantic: { purpose: 'member-self-introduction', causation: { operationId: 'operation-introduction-1' }, participantId: selfIntroductionAuthor.participantId, memberId: 'member-1', runId: 'run-1', binding: { bindingId: 'binding-1', generation: 3 }, turn: 'turn-introduction-1' },
   author: selfIntroductionAuthor,
   body: [{ kind: 'text', text: { key: 'message.introduction', fallback: 'Hello, I am Reviewer.' } }],
   reactions: [],
@@ -45,8 +45,9 @@ const pendingApproval: AgentConversationApprovalItem = {
   sequence: 2,
   participantId: 'agent-1',
   memberId: 'member-1',
-  sessionId: 'session-1',
-  turn: 1,
+  runId: 'run-1',
+  binding: { bindingId: 'binding-1', generation: 3 },
+  turn: 'turn-1',
   approvalId: 'approval-1',
   approvalKind: 'command',
   state: 'pending',
@@ -56,7 +57,7 @@ const pendingApproval: AgentConversationApprovalItem = {
     { decision: 'deny', command: { id: 'chatroom.approval.deny', arguments: { approvalId: 'approval-1' } } }
   ]
 }
-pendingApproval.actions[0]?.decision satisfies 'approve' | 'deny' | 'cancel' | undefined
+pendingApproval.actions[0].decision satisfies 'approve' | 'deny' | 'cancel'
 const failedApproval: AgentConversationApprovalItem = { ...pendingApproval, state: 'failed', actions: [], diagnostic: { key: 'approval.failed', fallback: 'Decision failed' } }
 void failedApproval
 
@@ -172,7 +173,7 @@ void callbackApproval
 // @ts-expect-error every v3 message requires semantic provenance
 const semanticlessMessage: AgentConversationMessageItem = { ...conversationMessage, semantic: undefined }
 void semanticlessMessage
-// @ts-expect-error acknowledgements cannot claim Session-backed conversation semantics
+// @ts-expect-error acknowledgements cannot claim AgentLoop conversation semantics
 const mismatchedAcknowledgement: AgentConversationMessageItem = { ...acknowledgementMessage, semantic: { purpose: 'conversation' } }
 void mismatchedAcknowledgement
 // @ts-expect-error self-introduction messages must be authored by an Agent
