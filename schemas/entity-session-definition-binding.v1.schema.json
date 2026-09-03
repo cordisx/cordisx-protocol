@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-session-definition-binding.v1.schema.json",
+  "title": "CordisX Session-persisted Entity Definition Binding v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["source", "owner", "resolution"],
+  "properties": {
+    "source": { "const": "entity-registry" },
+    "owner": { "$ref": "entity-common.v1.schema.json#/$defs/owner" },
+    "resolution": { "$ref": "entity-common.v1.schema.json#/$defs/definitionResolution" }
+  }
+}

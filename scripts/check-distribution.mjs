@@ -18,6 +18,7 @@ const expectedExports = [
   './agent-loop/v3',
   './agent-loop/v4',
   './agents/v1',
+  './entities/v1',
   './sessions/v1',
   './approval/v1',
   './connector-service/v1',
@@ -46,6 +47,7 @@ const expectedFiles = [
   'types/agent-loop.v3.d.ts',
   'types/agent-loop.v4.d.ts',
   'types/agents.v1.d.ts',
+  'types/entities.v1.d.ts',
   'types/sessions.v1.d.ts',
   'types/approval.v1.d.ts',
   'types/connector-service.v1.d.ts',
@@ -122,6 +124,7 @@ import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDe
 import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand as AgentLoopCommandV3, AgentLoopEvent as AgentLoopEventV3, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionIntent, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding as AgentLoopTaskBindingV3, BoundAgentLoopClient as BoundAgentLoopClientV3 } from '@cordisx/protocol/agent-loop/v3'
 import type { AgentLoopApprovalDecisionResult as AgentLoopApprovalDecisionResultV4, AgentLoopApprovalDecisionUnavailableCode as AgentLoopApprovalDecisionUnavailableCodeV4, AgentLoopCancelMemberSelfIntroductionResult as AgentLoopCancelMemberSelfIntroductionResultV4, AgentLoopCommand as AgentLoopCommandV4, AgentLoopCreateOrBindResult as AgentLoopCreateOrBindResultV4, AgentLoopEvent as AgentLoopEventV4, AgentLoopMemberSelfIntroductionUnavailableCode as AgentLoopMemberSelfIntroductionUnavailableCodeV4, AgentLoopRequestMemberSelfIntroductionResult as AgentLoopRequestMemberSelfIntroductionResultV4, AgentLoopSendResult as AgentLoopSendResultV4, AgentLoopTaskBinding as AgentLoopTaskBindingV4, BoundAgentLoopClient as BoundAgentLoopClientV4 } from '@cordisx/protocol/agent-loop/v4'
 import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
+import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
@@ -149,11 +152,18 @@ declare const approvalBindingV3: AgentLoopTaskBindingV3
 declare const agentLoopV4: BoundAgentLoopClientV4
 declare const bindingV4: AgentLoopTaskBindingV4
 declare const agents: AgentRegistry
+declare const entityAgents: EntityBackedAgentRegistry
+declare const entities: EntityRegistry
 declare const sessions: SessionRegistry
 declare const approvals: ApprovalService
 declare const agent: Agent
 declare const session: Session
 declare const userMessage: UserMessage
+declare const entityBoundEvent: EntityDefinitionBoundSessionEvent
+const entityFile = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-file.v1.schema.json', contract: 'cordisx.entity-file/v1', schemaVersion: 1, agentId: 'reviewer', inherit: { promptSections: 'append', rules: 'append', skills: 'append', tools: 'merge', mcpServers: 'merge', runtimeDefaults: 'merge' }, promptSections: [{ sectionId: 'role', kind: 'role', source: { kind: 'markdown', path: './prompts/role.md' } }] } satisfies EntityFile
+entities.get({ agentId: entityFile.agentId, revision: entityBoundEvent.data.resolution.digest })
+entityAgents.create({ definition: entityBoundEvent.data.resolution.identity, mutationId: 'create-entity-installed-consumer' })
+entityAgents.resume({ sessionId: entityBoundEvent.sessionId, definitionSource: 'session-persisted' })
 const shellRunV4 = { participantId: 'participant-v4', memberId: 'member-v4', runId: 'run-v4', sessionId: 'session-v4', lifecycle: { phase: 'running' }, details: { kind: 'host', ref: 'agent-detail-v4' } } satisfies AgentConversationActiveRunDescriptorV4
 const shellApprovalV4 = { kind: 'approval', itemId: 'approval-item-v4', sequence: 1, participantId: shellRunV4.participantId, memberId: shellRunV4.memberId, runId: shellRunV4.runId, sessionId: shellRunV4.sessionId, agentGeneration: 1, approvalId: 'approval-v4', approvalKind: 'command', state: 'pending', actions: [{ decision: 'approve', command: { id: 'approval.accept' } }] } satisfies AgentConversationApprovalItemV4
 declare const shellMessageV4: AgentConversationMessageItemV4

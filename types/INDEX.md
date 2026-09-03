@@ -144,3 +144,13 @@ drift is `binding-conflict` and fails before a side effect. Non-accepted results
 and accepted create/bind/send results expose no result causation. Every other
 v3 command, event, binding, lifecycle, authorization, retry, cancellation, and
 ledger field is preserved.
+
+`entities.v1.d.ts` exposes the Host-bound, installation/profile-scoped local
+Agent entity registry. Editable `EntityFile` values omit computed identity and
+revision, reference only bounded same-entity Markdown paths, and compile to the
+existing `AgentDefinition`. Records carry exact content digest/revision,
+logical owner/access, and no local path. Package templates are create-if-absent;
+CAS saves, ordered file-change pages, first-terminal closure, typed sharing and
+quota authorization boundaries, and entity-backed Agent create/resume overloads
+are explicit. Existing inline `AgentSetup`, Agents/Sessions, and AgentLoop types
+remain independently importable.

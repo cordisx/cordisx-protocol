@@ -145,6 +145,13 @@ stale/cross-client/cross-binding access, forged capabilities, missing details
 resources, and task body, prompt, CLI, provider trace, route, path, or token
 fields. Agent Loop exposes no navigation operation. It is Protocol-only
 evidence and does not prove Host/Chatroom wiring or image rendering.
+Entities v1 conformance validates editable-source non-self-reference,
+byte-framed deterministic digests, exact compilation to AgentDefinition,
+relative Markdown and symlink-containment refusal, package path/id agreement,
+template create-if-absent behavior, installation/profile visibility, CAS save
+shape, structured-clone records/pages, create against the current revision,
+resume against the Session-persisted definition after local edit/removal,
+inline AgentSetup compatibility, and first-terminal subscription closure.
 Plugin configuration conformance covers closed v1 mode compatibility, explicit
 v2 live/plugin/service/app restart modes, staged app-restart results, redacted
 descriptors, profile/plugin/generation scope, revision-fenced JSON mutations,

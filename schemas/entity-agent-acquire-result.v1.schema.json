@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-agent-acquire-result.v1.schema.json",
+  "title": "CordisX Entity-backed Agent Acquire Result v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "operation", "status"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-agent-acquire-result.v1.schema.json" },
+    "contract": { "const": "cordisx.entity-agent-acquire-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "operation": { "enum": ["create", "resume"] },
+    "mutationId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "status": { "enum": ["accepted", "denied", "unavailable", "conflict"] },
+    "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "agentGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "sessionGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "owner": { "$ref": "agents-common.v1.schema.json#/$defs/owner" },
+    "sessionIdSource": { "enum": ["host", "caller"] },
+    "disposition": { "enum": ["created", "resumed", "replayed"] },
+    "details": { "$ref": "agents-common.v1.schema.json#/$defs/hostDetailRef" },
+    "definitionResolution": { "$ref": "entity-common.v1.schema.json#/$defs/definitionResolution" },
+    "definitionSource": { "enum": ["registry-current", "session-persisted"] },
+    "code": { "enum": ["permission-denied", "runtime-unavailable", "session-unavailable", "host-unavailable", "unsupported", "entity-not-found", "entity-revision-stale", "entity-invalid", "mutation-conflict", "session-already-exists", "agent-already-live", "setup-conflict"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] }, "then": { "required": ["sessionId", "agentGeneration", "sessionGeneration", "owner", "sessionIdSource", "disposition", "definitionResolution", "definitionSource"], "properties": { "sessionId": true, "agentGeneration": true, "sessionGeneration": true, "owner": true, "sessionIdSource": true, "disposition": true, "definitionResolution": true, "definitionSource": true, "code": false } } },
+    { "if": { "properties": { "status": { "const": "denied" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "const": "permission-denied" }, "sessionId": false, "agentGeneration": false, "sessionGeneration": false, "owner": false, "sessionIdSource": false, "disposition": false, "details": false, "definitionResolution": false, "definitionSource": false } } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "enum": ["runtime-unavailable", "session-unavailable", "host-unavailable", "unsupported", "entity-not-found", "entity-revision-stale", "entity-invalid"] }, "sessionId": false, "agentGeneration": false, "sessionGeneration": false, "owner": false, "sessionIdSource": false, "disposition": false, "details": false, "definitionResolution": false, "definitionSource": false } } },
+    { "if": { "properties": { "status": { "const": "conflict" } }, "required": ["status"] }, "then": { "required": ["code"], "properties": { "code": { "enum": ["mutation-conflict", "session-already-exists", "agent-already-live", "setup-conflict"] }, "sessionId": false, "agentGeneration": false, "sessionGeneration": false, "owner": false, "sessionIdSource": false, "disposition": false, "details": false, "definitionResolution": false, "definitionSource": false } } },
+    { "if": { "properties": { "operation": { "const": "create" }, "status": { "const": "accepted" } }, "required": ["operation", "status"] }, "then": { "properties": { "definitionSource": { "const": "registry-current" } } } },
+    { "if": { "properties": { "operation": { "const": "resume" }, "status": { "const": "accepted" } }, "required": ["operation", "status"] }, "then": { "properties": { "definitionSource": { "const": "session-persisted" } } } },
+    { "if": { "properties": { "operation": { "const": "resume" }, "status": { "const": "unavailable" } }, "required": ["operation", "status"] }, "then": { "properties": { "code": { "enum": ["runtime-unavailable", "session-unavailable", "host-unavailable", "unsupported", "entity-revision-stale"] } } } }
+  ]
+}

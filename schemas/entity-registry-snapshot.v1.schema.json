@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-snapshot.v1.schema.json",
+  "title": "CordisX Scoped Entity Registry Snapshot v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "registryRevision", "entities"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-snapshot.v1.schema.json" },
+    "contract": { "const": "cordisx.entity-registry-snapshot/v1" },
+    "schemaVersion": { "const": 1 },
+    "binding": { "$ref": "entity-common.v1.schema.json#/$defs/binding" },
+    "registryRevision": { "type": "integer", "minimum": 0 },
+    "entities": { "type": "array", "maxItems": 1024, "items": { "$ref": "entity-common.v1.schema.json#/$defs/record" } }
+  }
+}

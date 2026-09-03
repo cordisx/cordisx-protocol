@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-change-page.v1.schema.json",
+  "title": "CordisX Scoped Entity Registry Change Page v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscription", "phase", "changes", "nextRevision", "hasMore"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-change-page.v1.schema.json" },
+    "contract": { "const": "cordisx.entity-registry-change-page/v1" },
+    "schemaVersion": { "const": 1 },
+    "subscription": { "$ref": "entity-common.v1.schema.json#/$defs/subscription" },
+    "phase": { "enum": ["replay", "live"] },
+    "changes": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/change" } },
+    "nextRevision": { "type": "integer", "minimum": 0 },
+    "hasMore": { "type": "boolean" }
+  },
+  "$defs": {
+    "change": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "sequence", "entity"],
+          "properties": {
+            "kind": { "enum": ["entity-added", "entity-updated"] },
+            "sequence": { "type": "integer", "minimum": 1 },
+            "entity": { "$ref": "entity-common.v1.schema.json#/$defs/record" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "sequence", "identity", "owner"],
+          "properties": {
+            "kind": { "const": "entity-removed" },
+            "sequence": { "type": "integer", "minimum": 1 },
+            "identity": { "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity" },
+            "owner": { "$ref": "entity-common.v1.schema.json#/$defs/owner" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "sequence", "agentId", "owner", "code"],
+          "properties": {
+            "kind": { "const": "entity-invalidated" },
+            "sequence": { "type": "integer", "minimum": 1 },
+            "agentId": { "$ref": "entity-common.v1.schema.json#/$defs/localId" },
+            "owner": { "$ref": "entity-common.v1.schema.json#/$defs/owner" },
+            "code": { "enum": ["invalid-entity", "missing-prompt-file", "symlink-escape", "io-error"] }
+          }
+        }
+      ]
+    }
+  }
+}

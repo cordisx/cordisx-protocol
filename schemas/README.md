@@ -334,6 +334,22 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   generation-fenced public delivery snapshot.
 - `agent-history-page.v1.schema.json`: one permission-scoped, privacy-bounded,
   snapshot-paged historical Agent event projection.
+- `entity-file.v1.schema.json` and `entity-common.v1.schema.json`: editable
+  profile-local Agent definition source, bounded same-entity Markdown
+  references, deterministic digest/revision, compiled definition records, and
+  Host-bound installation/profile scope;
+- `entity-session-definition-binding.v1.schema.json`: the exact definition
+  snapshot persisted in an ignorable `entity/definition-bound` SessionEvent so
+  resume does not depend on the mutable local entity directory;
+- `entity-template-declaration.v1.schema.json` and
+  `entity-template-materialization-result.v1.schema.json`: package-relative
+  create-if-absent templates with exact digest and closed preservation/errors;
+- `entity-registry-{snapshot,request,result,change-page,subscription-close}.v1.schema.json`:
+  scoped read/CAS-save, ordered file changes, typed sharing/quota boundaries,
+  and first-terminal subscription fences without caller paths or owner scope;
+- `entity-agent-acquire-{request,result}.v1.schema.json`: current-registry
+  definition resolution for create and Session-persisted definition resolution
+  for resume while frozen inline Agent acquire v1 remains valid;
 - `surface-invocation-context.v1.schema.json`: immutable host-generated
   contextual surface identity aligned with the Agent event id vocabulary.
 - `plugin-config-common.v1.schema.json`: shared plugin identity, runtime scope,
@@ -367,6 +383,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   exact protocol requirements, and dependencies;
 - `plugin-package.v4.schema.json`: package-v3 boundaries plus a separately
   digested runtime-manifest v5 reference; frozen package v1-v3 are unchanged;
+- `plugin-package.v5.schema.json`: package-v4 boundaries plus optional
+  package-relative entities-v1 template declarations; package v1-v4 remain
+  unchanged;
 - `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or
   last-good activation record without filesystem paths;
 - `plugin-lifecycle-operation.v1.schema.json`: revision- and

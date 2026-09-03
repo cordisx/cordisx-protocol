@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-template-materialization-result.v1.schema.json",
+  "title": "CordisX Entity Template Materialization Result v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "owner", "packageVersion", "packageDigest", "agentId", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-template-materialization-result.v1.schema.json" },
+    "contract": { "const": "cordisx.entity-template-materialization-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "owner": { "$ref": "entity-common.v1.schema.json#/$defs/owner" },
+    "packageVersion": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+    "packageDigest": { "$ref": "entity-common.v1.schema.json#/$defs/digest" },
+    "agentId": { "$ref": "entity-common.v1.schema.json#/$defs/localId" },
+    "status": { "enum": ["materialized", "preserved", "rejected"] },
+    "code": { "enum": ["created", "entity-present", "invalid-template", "template-digest-mismatch", "template-path-invalid", "symlink-escape", "ownership-conflict", "quota-authorization-required"] },
+    "entity": { "$ref": "entity-common.v1.schema.json#/$defs/record" }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "materialized" } }, "required": ["status"] }, "then": { "properties": { "code": { "const": "created" }, "entity": true }, "required": ["entity"] } },
+    { "if": { "properties": { "status": { "const": "preserved" } }, "required": ["status"] }, "then": { "properties": { "code": { "const": "entity-present" }, "entity": false } } },
+    { "if": { "properties": { "status": { "const": "rejected" } }, "required": ["status"] }, "then": { "properties": { "code": { "enum": ["invalid-template", "template-digest-mismatch", "template-path-invalid", "symlink-escape", "ownership-conflict", "quota-authorization-required"] }, "entity": false } } }
+  ]
+}
