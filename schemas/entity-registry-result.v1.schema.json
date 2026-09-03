@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-result.v1.schema.json",
+  "title": "CordisX Scoped Entity Registry Result v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "operation", "status"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-result.v1.schema.json" },
+    "contract": { "const": "cordisx.entity-registry-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "operation": { "enum": ["get", "save", "subscribe"] },
+    "status": { "enum": ["found", "not-found", "applied", "conflict", "rejected", "subscribed", "unavailable"] },
+    "disposition": { "enum": ["created", "updated", "replayed"] },
+    "entity": { "$ref": "entity-common.v1.schema.json#/$defs/record" },
+    "subscription": { "$ref": "entity-common.v1.schema.json#/$defs/subscription" },
+    "currentRevision": { "$ref": "entity-common.v1.schema.json#/$defs/revision" },
+    "code": { "enum": ["mutation-conflict", "entity-exists", "revision-conflict", "entity-not-declared", "invalid-entity", "invalid-prompt-path", "missing-prompt-file", "unexpected-prompt-file", "duplicate-prompt-file", "symlink-escape", "sharing-authorization-required", "quota-authorization-required", "host-unavailable", "registry-disposed", "plugin-generation-replaced"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "found" } }, "required": ["status"] }, "then": { "properties": { "operation": { "const": "get" }, "entity": true, "disposition": false, "subscription": false, "currentRevision": false, "code": false }, "required": ["entity"] } },
+    { "if": { "properties": { "status": { "const": "not-found" } }, "required": ["status"] }, "then": { "properties": { "operation": { "const": "get" }, "disposition": false, "entity": false, "subscription": false, "currentRevision": false, "code": false } } },
+    { "if": { "properties": { "status": { "const": "applied" } }, "required": ["status"] }, "then": { "properties": { "operation": { "const": "save" }, "disposition": true, "entity": true, "subscription": false, "currentRevision": false, "code": false }, "required": ["disposition", "entity"] } },
+    { "if": { "properties": { "status": { "const": "conflict" } }, "required": ["status"] }, "then": { "properties": { "operation": { "const": "save" }, "disposition": false, "entity": false, "subscription": false, "code": { "enum": ["mutation-conflict", "entity-exists", "revision-conflict"] } }, "required": ["code"] } },
+    { "if": { "properties": { "status": { "const": "rejected" } }, "required": ["status"] }, "then": { "properties": { "operation": { "const": "save" }, "disposition": false, "entity": false, "subscription": false, "currentRevision": false, "code": { "enum": ["entity-not-declared", "invalid-entity", "invalid-prompt-path", "missing-prompt-file", "unexpected-prompt-file", "duplicate-prompt-file", "symlink-escape", "sharing-authorization-required", "quota-authorization-required"] } }, "required": ["code"] } },
+    { "if": { "properties": { "status": { "const": "subscribed" } }, "required": ["status"] }, "then": { "properties": { "operation": { "const": "subscribe" }, "subscription": true, "disposition": false, "entity": false, "currentRevision": false, "code": false }, "required": ["subscription"] } },
+    { "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] }, "then": { "properties": { "disposition": false, "entity": false, "subscription": false, "currentRevision": false, "code": { "enum": ["host-unavailable", "registry-disposed", "plugin-generation-replaced"] } }, "required": ["code"] } }
+  ]
+}

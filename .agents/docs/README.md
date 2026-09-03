@@ -27,6 +27,9 @@ Specified areas:
 - `agent-runtime/`: additive Agent Registry/live handles, read-only Session
   registry, append-only SessionEvent truth, closed subscription fences, and
   Agent-scoped approval version 1; existing AgentLoop contracts remain intact.
+- `entities/`: Host-managed profile-local Agent entity files, package-relative
+  no-overwrite templates, scoped registries, deterministic revisions, file
+  change fences, and exact AgentDefinition resolution version 1.
 - `agent-conversation-shell/`: Host-owned conversation data plane versions 2
   through 4; v4 adds exact SessionEvent, Agent detail, approval, and
   self-introduction correlations while preserving the v3 and AgentLoop paths.

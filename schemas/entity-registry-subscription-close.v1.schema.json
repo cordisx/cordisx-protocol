@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-subscription-close.v1.schema.json",
+  "title": "CordisX Scoped Entity Registry Subscription Close v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscriptionId", "binding", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-subscription-close.v1.schema.json" },
+    "contract": { "const": "cordisx.entity-registry-subscription-close/v1" },
+    "schemaVersion": { "const": 1 },
+    "subscriptionId": { "$ref": "entity-common.v1.schema.json#/$defs/opaqueId" },
+    "binding": { "$ref": "entity-common.v1.schema.json#/$defs/binding" },
+    "status": { "const": "closed" },
+    "code": { "enum": ["unsubscribed", "registry-disposed", "plugin-generation-replaced", "permission-revoked", "connection-replaced", "observer-failed"] }
+  }
+}

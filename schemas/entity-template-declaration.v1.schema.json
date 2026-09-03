@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-template-declaration.v1.schema.json",
+  "title": "CordisX Package Entity Template Declaration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agentId", "entityPath", "digest"],
+  "properties": {
+    "agentId": { "$ref": "entity-common.v1.schema.json#/$defs/localId" },
+    "entityPath": { "$ref": "entity-common.v1.schema.json#/$defs/templatePath" },
+    "digest": { "$ref": "entity-common.v1.schema.json#/$defs/digest" }
+  }
+}

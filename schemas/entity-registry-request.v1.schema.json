@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-request.v1.schema.json",
+  "title": "CordisX Scoped Entity Registry Request v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "operation"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-registry-request.v1.schema.json" },
+    "contract": { "const": "cordisx.entity-registry-request/v1" },
+    "schemaVersion": { "const": 1 },
+    "operation": { "enum": ["get", "save", "subscribe"] },
+    "identity": { "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity" },
+    "mutationId": { "$ref": "entity-common.v1.schema.json#/$defs/opaqueId" },
+    "expectedRevision": { "oneOf": [{ "$ref": "entity-common.v1.schema.json#/$defs/revision" }, { "type": "null" }] },
+    "entity": { "$ref": "entity-file.v1.schema.json" },
+    "promptFiles": { "type": "array", "maxItems": 64, "uniqueItems": true, "items": { "$ref": "entity-common.v1.schema.json#/$defs/promptFile" } },
+    "afterRevision": { "type": "integer", "minimum": 0 }
+  },
+  "allOf": [
+    { "if": { "properties": { "operation": { "const": "get" } }, "required": ["operation"] }, "then": { "required": ["identity"], "properties": { "identity": true, "mutationId": false, "expectedRevision": false, "entity": false, "promptFiles": false, "afterRevision": false } } },
+    { "if": { "properties": { "operation": { "const": "save" } }, "required": ["operation"] }, "then": { "required": ["mutationId", "expectedRevision", "entity", "promptFiles"], "properties": { "mutationId": true, "expectedRevision": true, "entity": true, "promptFiles": true, "identity": false, "afterRevision": false } } },
+    { "if": { "properties": { "operation": { "const": "subscribe" } }, "required": ["operation"] }, "then": { "required": ["afterRevision"], "properties": { "afterRevision": true, "identity": false, "mutationId": false, "expectedRevision": false, "entity": false, "promptFiles": false } } }
+  ]
+}

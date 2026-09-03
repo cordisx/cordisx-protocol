@@ -31,6 +31,8 @@
     "sessions.v1.test.ts",
     "agents.v1.d.ts",
     "agents.v1.test.ts",
+    "entities.v1.d.ts",
+    "entities.v1.test.ts",
     "approval.v1.d.ts",
     "approval.v1.test.ts",
     "agent-avatar.v1.d.ts",

@@ -93,3 +93,19 @@ separately digested runtime manifest. Manifest v5 adds the explicit
 `ui.host-dom.read` and `ui.host-dom.modify` declarations with Host-catalog root
 ids and closed operation sets. Frozen package v1-v3 and manifest v1-v4 remain
 unchanged and never gain Host DOM authority by reinterpretation.
+
+## Package manifest v5
+
+Package v5 preserves every package-v4 field and adds only the optional
+`entityTemplates` declaration array. Each entry binds one local Agent id to a
+package-relative `./entities/<agentId>/entity.json` and exact entities-v1 tree
+digest. The entity-file schema must appear in `compatibility.protocolSchemas`.
+The Host validates the complete package artifact, path/id agreement, entity
+schema, referenced Markdown paths, digest, and symlink containment before it
+may materialize a template.
+
+Template authority is create-if-absent only. An existing profile-local entity
+directory is preserved byte-for-byte across package update, enable, reload, and
+rollback, including when its user-edited content is invalid. Package v1-v4 and
+runtime manifests v1-v5 remain unchanged and do not gain entity declarations by
+reinterpretation.

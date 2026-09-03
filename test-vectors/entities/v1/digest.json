@@ -1,0 +1,14 @@
+{
+  "algorithm": "cordisx.entity-tree/v1",
+  "files": [
+    {
+      "path": "entity.json",
+      "content": "{\"$schema\":\"https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-file.v1.schema.json\",\"contract\":\"cordisx.entity-file/v1\",\"schemaVersion\":1,\"agentId\":\"reviewer\",\"name\":\"Reviewer\",\"inherit\":{\"promptSections\":\"append\",\"rules\":\"append\",\"skills\":\"append\",\"tools\":\"merge\",\"mcpServers\":\"merge\",\"runtimeDefaults\":\"merge\"},\"promptSections\":[{\"sectionId\":\"role\",\"kind\":\"role\",\"source\":{\"kind\":\"markdown\",\"path\":\"./prompts/role.md\"}}]}"
+    },
+    {
+      "path": "prompts/role.md",
+      "content": "Review changes carefully.\n"
+    }
+  ],
+  "expectedDigest": "sha256:6b78ee12e8a99aa8503502cd946f6423556f6824411fec95f4e8222b08a86e8e"
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-common.v1.schema.json",
+  "title": "CordisX Entity Common Types v1",
+  "$defs": {
+    "localId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "opaqueId": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "revision": { "$ref": "#/$defs/digest" },
+    "markdownPath": { "type": "string", "minLength": 14, "maxLength": 512, "pattern": "^\\./prompts/[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\\.md$" },
+    "templatePath": { "type": "string", "minLength": 24, "maxLength": 512, "pattern": "^\\./entities/[A-Za-z0-9][A-Za-z0-9._-]{0,127}/entity\\.json$" },
+    "owner": {
+      "type": "object", "additionalProperties": false, "required": ["profileId", "installationId", "pluginId"],
+      "properties": {
+        "profileId": { "$ref": "#/$defs/localId" },
+        "installationId": { "$ref": "#/$defs/opaqueId" },
+        "pluginId": { "$ref": "#/$defs/localId" }
+      }
+    },
+    "binding": {
+      "type": "object", "additionalProperties": false, "required": ["profileId", "installationId", "pluginId", "pluginGeneration"],
+      "properties": {
+        "profileId": { "$ref": "#/$defs/localId" },
+        "installationId": { "$ref": "#/$defs/opaqueId" },
+        "pluginId": { "$ref": "#/$defs/localId" },
+        "pluginGeneration": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "promptSource": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "text"],
+          "properties": { "kind": { "const": "inline" }, "text": { "type": "string", "minLength": 1, "maxLength": 100000 } }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "path"],
+          "properties": { "kind": { "const": "markdown" }, "path": { "$ref": "#/$defs/markdownPath" } }
+        }
+      ]
+    },
+    "promptSection": {
+      "type": "object", "additionalProperties": false, "required": ["sectionId", "kind", "source"],
+      "properties": {
+        "sectionId": { "$ref": "agents-common.v1.schema.json#/$defs/identifier" },
+        "kind": { "enum": ["introduction", "personality", "role", "operations", "tools", "knowledge", "memory-policy", "memory", "other"] },
+        "source": { "$ref": "#/$defs/promptSource" }
+      }
+    },
+    "promptFile": {
+      "type": "object", "additionalProperties": false, "required": ["path", "text"],
+      "properties": {
+        "path": { "$ref": "#/$defs/markdownPath" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 100000 }
+      }
+    },
+    "definitionResolution": {
+      "type": "object", "additionalProperties": false, "required": ["identity", "digest", "definition"],
+      "properties": {
+        "identity": { "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "definition": { "$ref": "agent-definition.v1.schema.json" }
+      }
+    },
+    "record": {
+      "type": "object", "additionalProperties": false, "required": ["identity", "digest", "definition", "owner", "access", "origin"],
+      "properties": {
+        "identity": { "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "definition": { "$ref": "agent-definition.v1.schema.json" },
+        "owner": { "$ref": "#/$defs/owner" },
+        "access": { "enum": ["owned", "shared-read", "shared-write"] },
+        "origin": { "enum": ["local", "materialized-template"] }
+      }
+    },
+    "subscription": {
+      "type": "object", "additionalProperties": false, "required": ["subscriptionId", "binding", "afterRevision", "replayThrough"],
+      "properties": {
+        "subscriptionId": { "$ref": "#/$defs/opaqueId" },
+        "binding": { "$ref": "#/$defs/binding" },
+        "afterRevision": { "type": "integer", "minimum": 0 },
+        "replayThrough": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
