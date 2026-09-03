@@ -1,0 +1,70 @@
+{
+  "owner": "chatroom",
+  "route": { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "composer-settings", "path": "/manager/chatroom/composer", "outlet": "manager.content", "page": "composer-settings", "title": { "key": "composer.settings", "fallback": "Composer" }, "description": { "key": "composer.settings.description", "fallback": "Configure composer behavior." } } },
+  "page": { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "composer-settings", "title": { "key": "composer.settings", "fallback": "Composer" }, "description": { "key": "composer.settings.description", "fallback": "Configure composer behavior." }, "chrome": "standard" } },
+  "declaration": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v4.schema.json",
+    "schemaVersion": 4,
+    "id": "composer-settings",
+    "route": { "id": "composer-settings" },
+    "header": { "title": { "kind": "route" } },
+    "body": {
+      "kind": "plugin-config-form",
+      "namespace": "chatroom",
+      "defaultMaterialization": { "mode": "missing-only", "fields": [{ "path": ["shortcutPolicy"], "value": "enter" }] }
+    }
+  },
+  "projection": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v3.schema.json",
+    "schemaVersion": 3,
+    "route": { "id": "chatroom:composer-settings" },
+    "header": { "title": { "kind": "route", "text": { "key": "composer.settings", "fallback": "Composer" } }, "description": { "key": "composer.settings.description", "fallback": "Configure composer behavior." } },
+    "breadcrumbs": [],
+    "back": { "available": false },
+    "history": { "index": 0, "length": 1, "canGoBack": false, "canGoForward": false },
+    "tabs": [],
+    "body": {
+      "kind": "plugin-config-form",
+      "binding": {
+        "bindingId": "config-form-1",
+        "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" },
+        "scope": { "profileId": "default", "generation": "generation-7" },
+        "declarationId": "composer-settings",
+        "namespace": "chatroom"
+      },
+      "sequence": 2,
+      "configuration": {
+        "version": 2,
+        "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" },
+        "scope": { "profileId": "default", "generation": "generation-7" },
+        "namespace": "chatroom",
+        "schema": { "kind": "schemastery", "envelope": { "type": "object", "properties": { "shortcutPolicy": { "type": "string", "enum": ["enter", "mod-enter"], "default": "enter" } } } },
+        "value": { "shortcutPolicy": "enter" },
+        "user": { "shortcutPolicy": "enter" },
+        "revision": 1,
+        "lastGoodRevision": 1,
+        "applies": "live",
+        "writable": true,
+        "secrets": []
+      },
+      "draft": { "baseRevision": 1, "dirty": false, "value": { "shortcutPolicy": "enter" }, "validation": { "state": "unvalidated" } }
+    }
+  },
+  "commands": [
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json", "contract": "cordisx.manager-content-config-command/v1", "schemaVersion": 1, "commandId": "materialize-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 0, "operation": "defaults.materialize", "materializationId": "defaults-chatroom-composer-v1" },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json", "contract": "cordisx.manager-content-config-command/v1", "schemaVersion": 1, "commandId": "materialize-2", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 1, "operation": "defaults.materialize", "materializationId": "defaults-chatroom-composer-v1-reload" },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json", "contract": "cordisx.manager-content-config-command/v1", "schemaVersion": 1, "commandId": "validate-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 1, "operation": "draft.validate", "operations": [{ "op": "set", "path": ["shortcutPolicy"], "value": "mod-enter" }] },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json", "contract": "cordisx.manager-content-config-command/v1", "schemaVersion": 1, "commandId": "save-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 1, "operation": "draft.save", "mutationId": "save-chatroom-composer-1", "operations": [{ "op": "set", "path": ["shortcutPolicy"], "value": "mod-enter" }] }
+  ],
+  "results": [
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-result.v1.schema.json", "contract": "cordisx.manager-content-config-result/v1", "schemaVersion": 1, "commandId": "materialize-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 0, "operation": "defaults.materialize", "status": "applied", "code": "defaults-materialized", "revision": 1, "applies": "live", "resultingGeneration": "generation-7" },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-result.v1.schema.json", "contract": "cordisx.manager-content-config-result/v1", "schemaVersion": 1, "commandId": "materialize-2", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 1, "operation": "defaults.materialize", "status": "preserved", "code": "values-present", "revision": 1 },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-result.v1.schema.json", "contract": "cordisx.manager-content-config-result/v1", "schemaVersion": 1, "commandId": "validate-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 1, "operation": "draft.validate", "status": "validated", "code": "valid", "revision": 1, "validation": { "state": "valid" } },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-result.v1.schema.json", "contract": "cordisx.manager-content-config-result/v1", "schemaVersion": 1, "commandId": "save-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "expectedRevision": 1, "operation": "draft.save", "status": "applied", "code": "saved", "revision": 2, "applies": "live", "resultingGeneration": "generation-7" }
+  ],
+  "subscriptionPages": [
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-page.v1.schema.json", "contract": "cordisx.manager-content-config-subscription-page/v1", "schemaVersion": 1, "subscription": { "subscriptionId": "subscription-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "afterSequence": 0, "replayThrough": 2 }, "phase": "replay", "updates": [{ "kind": "snapshot-replaced", "sequence": 2, "body": { "kind": "plugin-config-form", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "sequence": 2, "configuration": { "version": 2, "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "namespace": "chatroom", "schema": { "kind": "schemastery", "envelope": { "type": "object", "properties": { "shortcutPolicy": { "type": "string", "enum": ["enter", "mod-enter"], "default": "enter" } } } }, "value": { "shortcutPolicy": "enter" }, "user": { "shortcutPolicy": "enter" }, "revision": 1, "lastGoodRevision": 1, "applies": "live", "writable": true, "secrets": [] }, "draft": { "baseRevision": 1, "dirty": false, "value": { "shortcutPolicy": "enter" }, "validation": { "state": "unvalidated" } } } }], "nextAfterSequence": 2, "hasMore": false },
+    { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-page.v1.schema.json", "contract": "cordisx.manager-content-config-subscription-page/v1", "schemaVersion": 1, "subscription": { "subscriptionId": "subscription-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "afterSequence": 0, "replayThrough": 2 }, "phase": "live", "updates": [{ "kind": "disposed", "sequence": 3, "reason": "generation-replaced" }], "nextAfterSequence": 3, "hasMore": false }
+  ],
+  "subscriptionClose": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-close.v1.schema.json", "contract": "cordisx.manager-content-config-subscription-close/v1", "schemaVersion": 1, "subscriptionId": "subscription-1", "binding": { "bindingId": "config-form-1", "identity": { "source": "file:///opt/cordisx/plugins/chatroom.mjs", "pluginId": "chatroom" }, "scope": { "profileId": "default", "generation": "generation-7" }, "declarationId": "composer-settings", "namespace": "chatroom" }, "status": "closed", "code": "generation-replaced" }
+}

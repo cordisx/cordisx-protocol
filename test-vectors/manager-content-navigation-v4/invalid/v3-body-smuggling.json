@@ -1,0 +1,1 @@
+{"operations":[{"op":"set","path":"declaration.$schema","value":"https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v3.schema.json"},{"op":"set","path":"declaration.schemaVersion","value":3}]}

@@ -74,6 +74,11 @@ The v3 suite additionally freezes v1/v2 bytes, validates the fixed
 Agent-avatar record summary and projection-v2 equality, preserves the summary
 through tab selection, and rejects invalid visuals/text, status smuggling, and
 duplicate exact Agent-definition detail claims.
+The v4 suite freezes all predecessor and reused plugin-config bytes, validates
+the Host-only form binding/projection, same-ledger draft commands, missing-only
+default convergence and no-overwrite behavior, secret redaction, CAS, and
+terminal subscription closure. It rejects callbacks, foreign namespaces,
+schema/default divergence, stale generations, and post-disposal updates.
 Manager collection conformance covers generic Host-rendered body collections:
 stable views, exact title/summary search, Host-owned normalized queries,
 source snapshot fences, same-owner routes, unique rows/actions, predecessor

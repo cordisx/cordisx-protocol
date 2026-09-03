@@ -53,8 +53,8 @@ Specified areas:
 - `manager-content-navigation/`: generic Manager subroute declarations plus
   the separate Host-owned header/breadcrumb/back/history/tab projection,
   including dynamic renderer-safe record titles, the v2 optional tab-label
-  override, and v3 fixed record summaries plus exact Agent-definition detail
-  subjects.
+  override, v3 fixed record summaries plus exact Agent-definition detail
+  subjects, and v4 Host-owned plugin configuration form bodies.
 - `manager-collection/`: Host-rendered Manager body collections with stable
   views, Host-owned title/summary search, query-fenced sources, structured
   rows/actions, text-input commands, closed results, and strict lifecycle.

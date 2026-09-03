@@ -1,0 +1,1 @@
+{"operations":[{"op":"set","path":"projection.body.configuration.schema","value":{"kind":"standard","renderable":false}}]}

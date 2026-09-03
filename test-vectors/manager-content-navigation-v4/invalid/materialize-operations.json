@@ -1,0 +1,1 @@
+{"operations":[{"op":"set","path":"commands.0.operations","value":[{"op":"set","path":["shortcutPolicy"],"value":"enter"}]}]}

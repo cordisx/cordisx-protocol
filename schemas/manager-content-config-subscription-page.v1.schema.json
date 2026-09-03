@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-page.v1.schema.json",
+  "title": "CordisX Manager Content Config Subscription Page v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscription", "phase", "updates", "nextAfterSequence", "hasMore"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-page.v1.schema.json" },
+    "contract": { "const": "cordisx.manager-content-config-subscription-page/v1" },
+    "schemaVersion": { "const": 1 },
+    "subscription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subscriptionId", "binding", "afterSequence", "replayThrough"],
+      "properties": {
+        "subscriptionId": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/opaqueId" },
+        "binding": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/binding" },
+        "afterSequence": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/sequence" },
+        "replayThrough": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/sequence" }
+      }
+    },
+    "phase": { "enum": ["replay", "live"] },
+    "updates": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "oneOf": [
+          { "type": "object", "additionalProperties": false, "required": ["kind", "sequence", "body"], "properties": { "kind": { "const": "snapshot-replaced" }, "sequence": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/sequence" }, "body": { "$ref": "manager-content-projection.v3.schema.json#/$defs/pluginConfigFormProjection" } } },
+          { "type": "object", "additionalProperties": false, "required": ["kind", "sequence", "reason"], "properties": { "kind": { "const": "disposed" }, "sequence": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/sequence" }, "reason": { "enum": ["explicit", "declaration-replaced", "generation-replaced", "owner-disposed"] } } }
+        ]
+      }
+    },
+    "nextAfterSequence": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/sequence" },
+    "hasMore": { "type": "boolean" }
+  }
+}
