@@ -203,6 +203,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   Session/generation/approval identity; introductions carry Session/message
   correlation; and subscription closure is first-terminal and fenced. V3 and
   every AgentLoop schema remain unchanged and available;
+- `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v5.schema.json`,
+  `agent-conversation-shell-subscription-close.v5.schema.json`, the v5
+  Room-settings request/result schemas, and the v5 Room collection leading
+  visual schema: the additive composer-shortcut successor. The snapshot
+  composer requires the closed `enter | mod-enter` policy while retaining one
+  submit command; every v4 Room, item, action, settings, Session correlation,
+  and subscription lifecycle shape remains available. V4 public bytes remain
+  frozen;
 - `agent-loop-common.v1.schema.json`, the unchanged `agent-loop-*.v1` family,
   and `agent-definition.v1.schema.json`:
   room-neutral Agent identity, field-specific inheritance, structured prompt

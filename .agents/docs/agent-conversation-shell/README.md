@@ -1,4 +1,4 @@
-# Agent Conversation Shell v2, v3, and v4
+# Agent Conversation Shell v2, v3, v4, and v5
 
 This data-only source contract serves a Host-owned Agent Desktop conversation
 shell. The production Host renderer is independently implemented in the real
@@ -17,6 +17,11 @@ Room, settings, collection-leading-visual, and Host-owned presentation surface
 while replacing only the runtime correlations that previously required
 AgentLoop facts. V3 remains byte-for-byte available and a v4 producer never
 emits v4 fields under an earlier schema id.
+V5 is the additive composer-shortcut successor. It preserves the complete v4
+Room, settings, item, action, Session correlation, command, and subscription
+surface while adding one required closed `composer.shortcutPolicy` value. V4
+remains byte-for-byte available and a v5 producer never emits v5 fields under
+an earlier schema id.
 
 The v2 contract supports iterative chat-scene UX without prescribing layout. The
 Host owns route selection, chrome, no-room title, DOM, style, accessibility,
@@ -256,3 +261,28 @@ only when its source is backed by the formal Agent/Session/Approval services and
 can supply every required correlation. Otherwise it continues to expose v3.
 Host or plugin consumers must not fabricate a Session id, event sequence,
 detail reference, Agent generation, approval id, or message id from a v3 value.
+
+## v5 composer shortcut policy
+
+The v5 snapshot composer adds exactly one required presentation/input semantic:
+`shortcutPolicy: 'enter' | 'mod-enter'`. It does not add another command,
+callback, key listener, DOM handle, draft field, or attachment action. The
+existing `composer.submit` remains the only command reference for submission.
+
+For `enter`, Enter submits and Shift+Enter inserts a newline. For `mod-enter`,
+Enter inserts a newline and either Meta+Enter or Ctrl+Enter submits. A keyboard
+event observed while an input method editor is composing never submits under
+either policy. Unknown policy values and unknown v5 schema identities fail
+closed.
+
+The Host owns keyboard-event handling, IME state, text editing, selection,
+focus, accessibility, the message-send control, and dispatch of the existing
+submit command. Chatroom supplies only the policy value in its atomic Shell
+snapshot; it does not inspect or modify Host DOM. When a v4 source is explicitly
+migrated to v5, omission is normalized once to `shortcutPolicy: 'enter'` so the
+current Enter-submit behavior is preserved. Native v5 snapshots must include
+the field and never rely on an implicit runtime default.
+
+Attachment commands and attachment picker behavior remain outside v5. A Host
+may independently reserve disabled visual space, but no plugin-facing action or
+capability is created by this contract.
