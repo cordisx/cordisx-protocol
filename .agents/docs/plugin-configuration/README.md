@@ -40,6 +40,24 @@ from its serializable `meta.extra.cordisxForm` annotations, but that annotation
 is not a renderer grant and must normalize to this projection before
 cross-process transport.
 
+Form-presentation v2 is the additive localized-choice successor. A plugin may
+place the exact `plugin-config-common.v3#/$defs/formPresentation` value in the
+root Schemastery `meta.extra.cordisxForm` annotation. The Host validates that
+closed value, resolves every field path against the serialized schema, and
+projects the normalized value as `descriptor/v3.schema.form`; it does not pass
+arbitrary `extra` metadata to the renderer. A v1 annotation cannot carry v2
+choice metadata, and an unknown annotation version is ignored with a bounded
+diagnostic rather than reinterpreted.
+
+For each finite scalar `enum` or scalar-`const` `oneOf` field, v2 may provide a
+complete `choices` array whose entries separate the exact scalar `value` from
+one `LocalizedText` label with a required fallback. Values must be unique and
+cover the schema set exactly. The Host resolves label locale/fallback for
+display only; validation, defaults, drafts, mutations, and persistence retain
+the scalar values. Duplicate, missing, additional, non-scalar, or malformed
+entries fail closed. This remains one Host form and the existing configuration
+writer; it is not a choice-specific store or mutation API.
+
 ### Host Form Presenter Catalog v1
 
 Each field may carry one optional closed `presenter` object with explicit

@@ -29,6 +29,7 @@ const expectedExports = [
   './manager-content-navigation/v2',
   './manager-content-navigation/v3',
   './manager-content-navigation/v4',
+  './manager-content-navigation/v5',
   './navigation-collection-actions/v1',
 ].sort()
 const expectedFiles = [
@@ -61,6 +62,7 @@ const expectedFiles = [
   'types/manager-content-navigation.v2.d.ts',
   'types/manager-content-navigation.v3.d.ts',
   'types/manager-content-navigation.v4.d.ts',
+  'types/manager-content-navigation.v5.d.ts',
   'types/navigation-collection-actions.v1.d.ts',
 ].sort()
 const frozenAgentLoopFiles = [
@@ -134,6 +136,7 @@ import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
 import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
 import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 } from '@cordisx/protocol/manager-content-navigation/v3'
 import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, ManagerContentNavigationDeclarationV4, ManagerContentProjectionV3 } from '@cordisx/protocol/manager-content-navigation/v4'
+import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
@@ -175,14 +178,22 @@ declare const managerProjectionV2: ManagerContentProjectionV2
 declare const managerNavigationV4: ManagerContentNavigationDeclarationV4
 declare const managerProjectionV3: ManagerContentProjectionV3
 declare const managerConfigSource: ManagerContentConfigSourceV1
+declare const managerNavigationV5: ManagerContentNavigationDeclarationV5
+declare const managerProjectionV4: ManagerContentProjectionV4
+declare const managerConfigSourceV2: ManagerContentConfigSourceV2
 const entityFile = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-file.v1.schema.json', contract: 'cordisx.entity-file/v1', schemaVersion: 1, agentId: 'reviewer', inherit: { promptSections: 'append', rules: 'append', skills: 'append', tools: 'merge', mcpServers: 'merge', runtimeDefaults: 'merge' }, promptSections: [{ sectionId: 'role', kind: 'role', source: { kind: 'markdown', path: './prompts/role.md' } }] } satisfies EntityFile
 entities.get({ agentId: entityFile.agentId, revision: entityBoundEvent.data.resolution.digest })
 managerNavigationV3.subject?.kind satisfies 'agent-definition' | undefined
 managerProjectionV2.recordSummary?.leadingVisual.kind satisfies 'agent-avatar' | undefined
 managerNavigationV4.body?.kind satisfies 'plugin-config-form' | undefined
 managerProjectionV3.body?.configuration.revision satisfies number | undefined
+managerNavigationV5.body?.kind satisfies 'plugin-config-form' | undefined
+managerProjectionV4.body?.configuration.version satisfies 3 | undefined
+const localizedChoice = { value: 'mod-enter', label: { key: 'composer.shortcut.mod-enter', fallback: 'Command/Ctrl+Enter sends' } } satisfies ManagerContentPluginConfigLocalizedChoiceV2
+localizedChoice.value satisfies string | number | boolean | null
 declare const managerConfigCommand: ManagerContentConfigCommandV1
 managerConfigSource.execute(managerConfigCommand)
+managerConfigSourceV2.execute(managerConfigCommand)
 entityAgents.create({ definition: entityBoundEvent.data.resolution.identity, mutationId: 'create-entity-installed-consumer' })
 entityAgents.resume({ sessionId: entityBoundEvent.sessionId, definitionSource: 'session-persisted' })
 const shellRunV4 = { participantId: 'participant-v4', memberId: 'member-v4', runId: 'run-v4', sessionId: 'session-v4', lifecycle: { phase: 'running' }, details: { kind: 'host', ref: 'agent-detail-v4' } } satisfies AgentConversationActiveRunDescriptorV4

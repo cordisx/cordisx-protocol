@@ -70,6 +70,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `manager-content-navigation.v4.schema.json`: the additive v3 declaration
   successor with an optional Host-owned plugin configuration form body and
   bounded missing-only scalar default migration;
+- `manager-content-navigation.v5.schema.json`: the additive v4 declaration
+  successor for the localized finite-choice configuration projection;
 - `manager-content-projection.v1.schema.json`: a renderer-safe, Host-generated
   Manager header/breadcrumb/back/history/tab projection, including opaque
   dynamic-record titles;
@@ -77,6 +79,11 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   successor carrying the exact fixed record summary between header and tabs;
 - `manager-content-projection.v3.schema.json`: the additive projection-v2
   successor carrying a redacted Host-owned plugin configuration form body;
+- `manager-content-projection.v4.schema.json`,
+  `plugin-config-common.v3.schema.json`, and
+  `plugin-config-descriptor.v3.schema.json`: the additive Host-form projection
+  successor carrying exact scalar choice values with localized labels and a
+  mandatory fallback, without changing the value ledger;
 - `manager-content-config-common.v1.schema.json`,
   `manager-content-config-command.v1.schema.json`, and
   `manager-content-config-result.v1.schema.json`: exact owner/generation/CAS
@@ -84,6 +91,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `manager-content-config-subscription-page.v1.schema.json` and
   `manager-content-config-subscription-close.v1.schema.json`: replay/live
   config-form snapshots with terminal generation/declaration closure fences;
+- `manager-content-config-subscription-page.v2.schema.json`: projection-v4
+  snapshot pages that reuse the frozen v1 binding, command/result, and close
+  fences;
 - `manager-collection-common.v1.schema.json`,
   `manager-collection-registration.v1.schema.json`,
   `manager-collection-query.v1.schema.json`, and
