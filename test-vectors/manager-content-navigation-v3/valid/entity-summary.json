@@ -1,0 +1,53 @@
+{
+  "owners": [{ "id": "chatroom", "source": "file:///opt/cordisx/plugins/chatroom.mjs" }],
+  "routes": [
+    { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "team-architecture", "path": "/manager/team-architecture", "outlet": "manager.content", "page": "team-architecture", "title": { "key": "team.title", "fallback": "Team Architecture" }, "description": { "key": "team.description", "fallback": "Manage team entities." } } },
+    { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "entity-detail", "path": "/manager/team-architecture/:memberId", "outlet": "manager.content", "page": "entity-detail", "title": { "key": "entity.title", "fallback": "Entity" }, "description": { "key": "entity.description", "fallback": "Review this entity." } } },
+    { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route.v2.schema.json", "schemaVersion": 2, "id": "entity-settings", "path": "/manager/team-architecture/:memberId/settings", "outlet": "manager.content", "page": "entity-settings", "title": { "key": "entity.settings", "fallback": "Settings" }, "description": { "key": "entity.settings.description", "fallback": "Configure this entity." } } }
+  ],
+  "pages": [
+    { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "team-architecture", "title": { "key": "team.title", "fallback": "Team Architecture" }, "description": { "key": "team.description", "fallback": "Manage team entities." }, "chrome": "standard" } },
+    { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "entity-detail", "title": { "key": "entity.title", "fallback": "Entity" }, "description": { "key": "entity.description", "fallback": "Review this entity." }, "chrome": "standard" } },
+    { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v3.schema.json", "schemaVersion": 3, "id": "entity-settings", "title": { "key": "entity.settings", "fallback": "Settings" }, "description": { "key": "entity.settings.description", "fallback": "Configure this entity." }, "chrome": "standard" } }
+  ],
+  "declarations": [
+    { "owner": "chatroom", "document": { "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v2.schema.json", "schemaVersion": 2, "id": "team-architecture", "route": { "id": "team-architecture" }, "header": { "title": { "kind": "route" } } } },
+    { "owner": "chatroom", "document": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v3.schema.json",
+      "schemaVersion": 3,
+      "id": "entity-detail",
+      "route": { "id": "entity-detail", "params": { "memberId": "member-a" } },
+      "parentRoute": { "id": "team-architecture" },
+      "header": { "title": { "kind": "record", "recordIdParam": "memberId", "fallback": { "key": "entity.unknown", "fallback": "Entity" } } },
+      "subject": { "kind": "agent-definition", "identity": { "agentId": "architect", "revision": "sha256:revision-a" } },
+      "recordSummary": {
+        "leadingVisual": { "kind": "agent-avatar", "avatar": { "kind": "asset", "ref": "chatroom:avatar-a" } },
+        "title": { "key": "entity.architect", "fallback": "Architect" },
+        "description": { "key": "entity.architect.description", "fallback": "Plans the system." }
+      },
+      "tabs": [
+        { "id": "overview", "route": { "id": "entity-detail", "params": { "memberId": "member-a" } }, "label": { "key": "entity.overview", "fallback": "Overview" } },
+        { "id": "settings", "route": { "id": "entity-settings", "params": { "memberId": "member-a" } } }
+      ]
+    } }
+  ],
+  "activeDeclaration": "chatroom:entity-detail",
+  "projection": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v2.schema.json",
+    "schemaVersion": 2,
+    "route": { "id": "chatroom:entity-detail", "params": { "memberId": "member-a" } },
+    "header": { "title": { "kind": "record", "recordId": "member-a", "text": { "key": "entity.architect", "fallback": "Architect" } } },
+    "recordSummary": {
+      "leadingVisual": { "kind": "agent-avatar", "avatar": { "kind": "asset", "ref": "chatroom:avatar-a" } },
+      "title": { "key": "entity.architect", "fallback": "Architect" },
+      "description": { "key": "entity.architect.description", "fallback": "Plans the system." }
+    },
+    "breadcrumbs": [{ "route": { "id": "chatroom:team-architecture" }, "text": { "key": "team.title", "fallback": "Team Architecture" } }],
+    "back": { "available": true, "route": { "id": "chatroom:team-architecture" } },
+    "history": { "index": 1, "length": 2, "canGoBack": true, "canGoForward": false },
+    "tabs": [
+      { "id": "overview", "route": { "id": "chatroom:entity-detail", "params": { "memberId": "member-a" } }, "text": { "key": "entity.overview", "fallback": "Overview" }, "active": true, "disabled": false },
+      { "id": "settings", "route": { "id": "chatroom:entity-settings", "params": { "memberId": "member-a" } }, "text": { "key": "entity.settings", "fallback": "Settings" }, "active": false, "disabled": false }
+    ]
+  }
+}

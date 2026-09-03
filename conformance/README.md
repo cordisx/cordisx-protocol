@@ -70,6 +70,10 @@ declaration and Host-only renderer-safe projection: route parameters, parent
 hierarchy, dynamic record title redaction shape, exact tab route mapping, and
 Host-derived breadcrumb/back/history states. It rejects DOM, selectors,
 secrets, raw bridges, and plugin-controlled history.
+The v3 suite additionally freezes v1/v2 bytes, validates the fixed
+Agent-avatar record summary and projection-v2 equality, preserves the summary
+through tab selection, and rejects invalid visuals/text, status smuggling, and
+duplicate exact Agent-definition detail claims.
 Manager collection conformance covers generic Host-rendered body collections:
 stable views, exact title/summary search, Host-owned normalized queries,
 source snapshot fences, same-owner routes, unique rows/actions, predecessor

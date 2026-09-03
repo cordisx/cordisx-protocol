@@ -27,6 +27,7 @@ const expectedExports = [
   './manager-collection/v1',
   './manager-content-navigation/v1',
   './manager-content-navigation/v2',
+  './manager-content-navigation/v3',
   './navigation-collection-actions/v1',
 ].sort()
 const expectedFiles = [
@@ -57,6 +58,7 @@ const expectedFiles = [
   'types/manager-collection.v1.d.ts',
   'types/manager-content-navigation.v1.d.ts',
   'types/manager-content-navigation.v2.d.ts',
+  'types/manager-content-navigation.v3.d.ts',
   'types/navigation-collection-actions.v1.d.ts',
 ].sort()
 const frozenAgentLoopFiles = [
@@ -128,6 +130,7 @@ import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, 
 import type { AgentLoopApprovalDecisionResult as AgentLoopApprovalDecisionResultV4, AgentLoopApprovalDecisionUnavailableCode as AgentLoopApprovalDecisionUnavailableCodeV4, AgentLoopCancelMemberSelfIntroductionResult as AgentLoopCancelMemberSelfIntroductionResultV4, AgentLoopCommand as AgentLoopCommandV4, AgentLoopCreateOrBindResult as AgentLoopCreateOrBindResultV4, AgentLoopEvent as AgentLoopEventV4, AgentLoopMemberSelfIntroductionUnavailableCode as AgentLoopMemberSelfIntroductionUnavailableCodeV4, AgentLoopRequestMemberSelfIntroductionResult as AgentLoopRequestMemberSelfIntroductionResultV4, AgentLoopSendResult as AgentLoopSendResultV4, AgentLoopTaskBinding as AgentLoopTaskBindingV4, BoundAgentLoopClient as BoundAgentLoopClientV4 } from '@cordisx/protocol/agent-loop/v4'
 import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
 import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
+import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 } from '@cordisx/protocol/manager-content-navigation/v3'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
@@ -164,8 +167,12 @@ declare const agent: Agent
 declare const session: Session
 declare const userMessage: UserMessage
 declare const entityBoundEvent: EntityDefinitionBoundSessionEvent
+declare const managerNavigationV3: ManagerContentNavigationDeclarationV3
+declare const managerProjectionV2: ManagerContentProjectionV2
 const entityFile = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-file.v1.schema.json', contract: 'cordisx.entity-file/v1', schemaVersion: 1, agentId: 'reviewer', inherit: { promptSections: 'append', rules: 'append', skills: 'append', tools: 'merge', mcpServers: 'merge', runtimeDefaults: 'merge' }, promptSections: [{ sectionId: 'role', kind: 'role', source: { kind: 'markdown', path: './prompts/role.md' } }] } satisfies EntityFile
 entities.get({ agentId: entityFile.agentId, revision: entityBoundEvent.data.resolution.digest })
+managerNavigationV3.subject?.kind satisfies 'agent-definition' | undefined
+managerProjectionV2.recordSummary?.leadingVisual.kind satisfies 'agent-avatar' | undefined
 entityAgents.create({ definition: entityBoundEvent.data.resolution.identity, mutationId: 'create-entity-installed-consumer' })
 entityAgents.resume({ sessionId: entityBoundEvent.sessionId, definitionSource: 'session-persisted' })
 const shellRunV4 = { participantId: 'participant-v4', memberId: 'member-v4', runId: 'run-v4', sessionId: 'session-v4', lifecycle: { phase: 'running' }, details: { kind: 'host', ref: 'agent-detail-v4' } } satisfies AgentConversationActiveRunDescriptorV4

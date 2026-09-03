@@ -64,9 +64,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   source, and tab-to-route map;
 - `manager-content-navigation.v2.schema.json`: the frozen v1 declaration plus
   an optional localized tab label that can differ from its target route title;
+- `manager-content-navigation.v3.schema.json`: the additive v2 declaration
+  successor with an optional fixed Agent-avatar record summary and an optional
+  exact Agent-definition detail subject;
 - `manager-content-projection.v1.schema.json`: a renderer-safe, Host-generated
   Manager header/breadcrumb/back/history/tab projection, including opaque
   dynamic-record titles;
+- `manager-content-projection.v2.schema.json`: the additive projection-v1
+  successor carrying the exact fixed record summary between header and tabs;
 - `manager-collection-common.v1.schema.json`,
   `manager-collection-registration.v1.schema.json`,
   `manager-collection-query.v1.schema.json`, and
