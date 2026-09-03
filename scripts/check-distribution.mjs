@@ -13,6 +13,7 @@ const expectedExports = [
   './agent-conversation-shell/v2',
   './agent-conversation-shell/v3',
   './agent-conversation-shell/v4',
+  './agent-conversation-shell/v5',
   './agent-loop/v1',
   './agent-loop/v2',
   './agent-loop/v3',
@@ -42,6 +43,7 @@ const expectedFiles = [
   'types/agent-conversation-shell.v2.d.ts',
   'types/agent-conversation-shell.v3.d.ts',
   'types/agent-conversation-shell.v4.d.ts',
+  'types/agent-conversation-shell.v5.d.ts',
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
@@ -119,6 +121,7 @@ import type { AgentConversationParticipant as AgentConversationParticipantV1, Ag
 import type { AgentConversationActiveRunDescriptor, AgentConversationItem, AgentConversationMemberPresenceItem, AgentConversationParticipant, AgentConversationReaction, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v2'
 import type { AgentConversationApprovalAction, AgentConversationApprovalItem, AgentConversationMessageItem as AgentConversationMessageItemV3, AgentConversationMessageSemantic, AgentConversationParticipant as AgentConversationParticipantV3, AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef, AgentConversationRoomDescription, AgentConversationRoomSettingsUpdateRequest, AgentConversationRoomSettingsUpdateResult, AgentConversationSelection as AgentConversationSelectionV3, AgentConversationShellCommandContext as AgentConversationShellCommandContextV3, AgentConversationShellSource as AgentConversationShellSourceV3 } from '@cordisx/protocol/agent-conversation-shell/v3'
 import type { AgentConversationActiveRunDescriptor as AgentConversationActiveRunDescriptorV4, AgentConversationApprovalItem as AgentConversationApprovalItemV4, AgentConversationMessageItem as AgentConversationMessageItemV4, AgentConversationShellSubscriptionHandle as AgentConversationShellSubscriptionHandleV4 } from '@cordisx/protocol/agent-conversation-shell/v4'
+import type { AgentConversationComposerShortcutPolicy, AgentConversationShellSnapshot as AgentConversationShellSnapshotV5, AgentConversationShellSubscriptionHandle as AgentConversationShellSubscriptionHandleV5 } from '@cordisx/protocol/agent-conversation-shell/v5'
 import type { AgentLoopCommand as AgentLoopCommandV1, BoundAgentLoopClient as BoundAgentLoopClientV1 } from '@cordisx/protocol/agent-loop/v1'
 import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDelivery, AgentLoopDeliveryDisposition, AgentLoopEvent as AgentLoopEventV2, AgentLoopOperationId, AgentLoopOperationUnavailableCode, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v2'
 import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand as AgentLoopCommandV3, AgentLoopEvent as AgentLoopEventV3, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionIntent, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding as AgentLoopTaskBindingV3, BoundAgentLoopClient as BoundAgentLoopClientV3 } from '@cordisx/protocol/agent-loop/v3'
@@ -145,6 +148,7 @@ declare const shell: AgentConversationShellSource
 declare const legacyShell: AgentConversationShellSourceV1
 declare const shellV3: AgentConversationShellSourceV3
 declare const shellSubscriptionV4: AgentConversationShellSubscriptionHandleV4
+declare const shellSubscriptionV5: AgentConversationShellSubscriptionHandleV5
 declare const agentLoop: BoundAgentLoopClient
 declare const legacyAgentLoop: BoundAgentLoopClientV1
 declare const agentLoopV3: BoundAgentLoopClientV3
@@ -169,6 +173,12 @@ const shellApprovalV4 = { kind: 'approval', itemId: 'approval-item-v4', sequence
 declare const shellMessageV4: AgentConversationMessageItemV4
 shellMessageV4.source.kind satisfies 'session-event' | 'chatroom-acknowledgement'
 shellSubscriptionV4.closed.then(value => value.status satisfies 'closed')
+const shellShortcut = 'mod-enter' satisfies AgentConversationComposerShortcutPolicy
+declare const shellSnapshotV5: AgentConversationShellSnapshotV5
+shellSnapshotV5.composer.shortcutPolicy satisfies 'enter' | 'mod-enter'
+shellSnapshotV5.composer.submit.id satisfies string
+shellShortcut satisfies 'mod-enter'
+shellSubscriptionV5.closed.then(value => value.status satisfies 'closed')
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient

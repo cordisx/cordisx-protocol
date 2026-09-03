@@ -31,8 +31,9 @@ Specified areas:
   no-overwrite templates, scoped registries, deterministic revisions, file
   change fences, and exact AgentDefinition resolution version 1.
 - `agent-conversation-shell/`: Host-owned conversation data plane versions 2
-  through 4; v4 adds exact SessionEvent, Agent detail, approval, and
-  self-introduction correlations while preserving the v3 and AgentLoop paths.
+  through 5; v4 adds exact SessionEvent, Agent detail, approval, and
+  self-introduction correlations, while v5 adds a closed composer shortcut
+  policy without changing the submit command or earlier Shell paths.
 - `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
   structured contribution versions 2 through 7, availability, contextual
   invocation, DSH intent mapping, and explicit replacement refusals.

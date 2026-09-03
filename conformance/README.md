@@ -126,6 +126,11 @@ self-introduction Session/message correlation, structured-clone safety, and
 first-terminal subscription closure. It rejects legacy source strings,
 AgentLoop binding/turn/details fields, raw URLs, external project names, and any
 byte change to the complete public v3 Shell family.
+Agent Conversation Shell v5 conformance preserves the complete v4 public byte
+set and exercises the required closed composer shortcut policy. It verifies
+Enter versus Shift+Enter, Meta/Ctrl+Enter, IME composition suppression, the
+v4-to-v5 `enter` migration default, structured-clone safety, one submit command,
+unknown-value/schema rejection, and the inherited Session/subscription fences.
 Agent Loop v1 conformance preserves the formal catalog, task binding,
 per-client command idempotency, and ordered event behavior. Agent Loop v2
 conformance covers the bounded self-contained definition catalog,
