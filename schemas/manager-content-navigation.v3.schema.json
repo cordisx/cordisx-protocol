@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v3.schema.json",
+  "title": "CordisX Manager Content Navigation Declaration v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "route", "header"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v3.schema.json" },
+    "schemaVersion": { "const": 3 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "route": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/sameOwnerRouteReference" },
+    "parentRoute": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/sameOwnerRouteReference" },
+    "header": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/headerDescription" },
+    "subject": { "$ref": "#/$defs/subject" },
+    "recordSummary": { "$ref": "#/$defs/recordSummary" },
+    "tabs": { "type": "array", "maxItems": 12, "items": { "$ref": "#/$defs/tabDescription" } }
+  },
+  "$defs": {
+    "displayText": {
+      "allOf": [
+        { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        { "type": "object", "required": ["fallback"], "properties": { "fallback": true } }
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "identity"],
+      "properties": {
+        "kind": { "const": "agent-definition" },
+        "identity": { "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity" }
+      }
+    },
+    "leadingVisual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "avatar"],
+      "properties": {
+        "kind": { "const": "agent-avatar" },
+        "avatar": { "$ref": "agent-avatar.v1.schema.json" }
+      }
+    },
+    "recordSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["leadingVisual", "title"],
+      "properties": {
+        "leadingVisual": { "$ref": "#/$defs/leadingVisual" },
+        "title": { "$ref": "#/$defs/displayText" },
+        "description": { "$ref": "#/$defs/displayText" }
+      }
+    },
+    "tabDescription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "route"],
+      "properties": {
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "route": { "$ref": "manager-content-navigation.v1.schema.json#/$defs/sameOwnerRouteReference" },
+        "label": { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v2.schema.json",
+  "title": "CordisX Renderer-safe Manager Content Projection v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "route", "header", "breadcrumbs", "back", "history", "tabs"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v2.schema.json" },
+    "schemaVersion": { "const": 2 },
+    "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+    "header": { "$ref": "manager-content-projection.v1.schema.json#/$defs/headerProjection" },
+    "recordSummary": { "$ref": "#/$defs/recordSummary" },
+    "breadcrumbs": { "type": "array", "maxItems": 8, "items": { "$ref": "manager-content-projection.v1.schema.json#/$defs/breadcrumb" } },
+    "back": { "$ref": "manager-content-projection.v1.schema.json#/$defs/backProjection" },
+    "history": { "$ref": "manager-content-projection.v1.schema.json#/$defs/historyProjection" },
+    "tabs": { "type": "array", "maxItems": 12, "items": { "$ref": "manager-content-projection.v1.schema.json#/$defs/tabProjection" } }
+  },
+  "$defs": {
+    "displayText": {
+      "allOf": [
+        { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        { "type": "object", "required": ["fallback"], "properties": { "fallback": true } }
+      ]
+    },
+    "leadingVisual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "avatar"],
+      "properties": {
+        "kind": { "const": "agent-avatar" },
+        "avatar": { "$ref": "agent-avatar.v1.schema.json" }
+      }
+    },
+    "recordSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["leadingVisual", "title"],
+      "properties": {
+        "leadingVisual": { "$ref": "#/$defs/leadingVisual" },
+        "title": { "$ref": "#/$defs/displayText" },
+        "description": { "$ref": "#/$defs/displayText" }
+      }
+    }
+  }
+}
