@@ -67,11 +67,23 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `manager-content-navigation.v3.schema.json`: the additive v2 declaration
   successor with an optional fixed Agent-avatar record summary and an optional
   exact Agent-definition detail subject;
+- `manager-content-navigation.v4.schema.json`: the additive v3 declaration
+  successor with an optional Host-owned plugin configuration form body and
+  bounded missing-only scalar default migration;
 - `manager-content-projection.v1.schema.json`: a renderer-safe, Host-generated
   Manager header/breadcrumb/back/history/tab projection, including opaque
   dynamic-record titles;
 - `manager-content-projection.v2.schema.json`: the additive projection-v1
   successor carrying the exact fixed record summary between header and tabs;
+- `manager-content-projection.v3.schema.json`: the additive projection-v2
+  successor carrying a redacted Host-owned plugin configuration form body;
+- `manager-content-config-common.v1.schema.json`,
+  `manager-content-config-command.v1.schema.json`, and
+  `manager-content-config-result.v1.schema.json`: exact owner/generation/CAS
+  binding, draft validation/save, and same-ledger missing-default operations;
+- `manager-content-config-subscription-page.v1.schema.json` and
+  `manager-content-config-subscription-close.v1.schema.json`: replay/live
+  config-form snapshots with terminal generation/declaration closure fences;
 - `manager-collection-common.v1.schema.json`,
   `manager-collection-registration.v1.schema.json`,
   `manager-collection-query.v1.schema.json`, and

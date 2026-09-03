@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-close.v1.schema.json",
+  "title": "CordisX Manager Content Config Subscription Close v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscriptionId", "binding", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-close.v1.schema.json" },
+    "contract": { "const": "cordisx.manager-content-config-subscription-close/v1" },
+    "schemaVersion": { "const": 1 },
+    "subscriptionId": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/opaqueId" },
+    "binding": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/binding" },
+    "status": { "const": "closed" },
+    "code": { "enum": ["unsubscribed", "explicit", "declaration-replaced", "generation-replaced", "owner-disposed", "permission-revoked", "connection-replaced", "observer-failed"] }
+  }
+}

@@ -15,7 +15,7 @@ const schemaNames = [
 ]
 const schemas = new Map()
 for (const name of schemaNames) schemas.set(name, JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')))
-const ajv = new Ajv2020({ allErrors: true, strict: true })
+const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 for (const schema of schemas.values()) ajv.addSchema(schema)
 const validator = name => ajv.getSchema(schemas.get(name).$id)
 const schemaErrors = (validate, value) => validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)

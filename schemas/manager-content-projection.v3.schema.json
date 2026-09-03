@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v3.schema.json",
+  "title": "CordisX Renderer-safe Manager Content Projection v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "route", "header", "breadcrumbs", "back", "history", "tabs"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v3.schema.json" },
+    "schemaVersion": { "const": 3 },
+    "route": { "$ref": "ui-common.v1.schema.json#/$defs/routeReference" },
+    "header": { "$ref": "manager-content-projection.v1.schema.json#/$defs/headerProjection" },
+    "recordSummary": { "$ref": "manager-content-projection.v2.schema.json#/$defs/recordSummary" },
+    "breadcrumbs": { "type": "array", "maxItems": 8, "items": { "$ref": "manager-content-projection.v1.schema.json#/$defs/breadcrumb" } },
+    "back": { "$ref": "manager-content-projection.v1.schema.json#/$defs/backProjection" },
+    "history": { "$ref": "manager-content-projection.v1.schema.json#/$defs/historyProjection" },
+    "tabs": { "type": "array", "maxItems": 12, "items": { "$ref": "manager-content-projection.v1.schema.json#/$defs/tabProjection" } },
+    "body": { "$ref": "#/$defs/pluginConfigFormProjection" }
+  },
+  "$defs": {
+    "pluginConfigFormProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "binding", "sequence", "configuration", "draft"],
+      "properties": {
+        "kind": { "const": "plugin-config-form" },
+        "binding": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/binding" },
+        "sequence": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/sequence" },
+        "configuration": { "$ref": "plugin-config-descriptor.v2.schema.json" },
+        "draft": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["baseRevision", "dirty", "value", "validation"],
+          "properties": {
+            "baseRevision": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/revision" },
+            "dirty": { "type": "boolean" },
+            "value": { "$ref": "ui-common.v1.schema.json#/$defs/jsonValue" },
+            "validation": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/validation" }
+          }
+        }
+      }
+    }
+  }
+}

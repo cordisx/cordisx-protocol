@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json",
+  "title": "CordisX Manager Content Config Command v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "commandId", "binding", "expectedRevision", "operation"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json" },
+    "contract": { "const": "cordisx.manager-content-config-command/v1" },
+    "schemaVersion": { "const": 1 },
+    "commandId": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/opaqueId" },
+    "binding": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/binding" },
+    "expectedRevision": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/revision" },
+    "operation": { "enum": ["draft.validate", "draft.save", "defaults.materialize"] },
+    "mutationId": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/opaqueId" },
+    "materializationId": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/opaqueId" },
+    "operations": { "$ref": "manager-content-config-common.v1.schema.json#/$defs/operations" }
+  },
+  "allOf": [
+    { "if": { "properties": { "operation": { "const": "draft.validate" } }, "required": ["operation"] }, "then": { "required": ["operations"], "properties": { "operations": true, "mutationId": false, "materializationId": false } } },
+    { "if": { "properties": { "operation": { "const": "draft.save" } }, "required": ["operation"] }, "then": { "required": ["mutationId", "operations"], "properties": { "mutationId": true, "operations": true, "materializationId": false } } },
+    { "if": { "properties": { "operation": { "const": "defaults.materialize" } }, "required": ["operation"] }, "then": { "required": ["materializationId"], "properties": { "materializationId": true, "mutationId": false, "operations": false } } }
+  ]
+}
