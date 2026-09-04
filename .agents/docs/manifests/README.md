@@ -117,3 +117,10 @@ vocabulary and exact Session scope declarations. Package v6 preserves all
 package-v5 fields and adds runtime manifest v6 to the closed digest-pinned
 reference list. Dynamic route bindings are optional, same-owner, exact
 `:sessionId` authorities; see [`v6.md`](./v6.md).
+
+## Runtime and package manifest v7
+
+Runtime manifest v7 adds one closed execution declaration for the isolated
+`ui.transient-canvas/v1` Worker interface. It does not expose renderer globals
+or add a DOM capability. Package v7 is the first package contract allowed to
+reference manifest v7; older versions remain frozen.

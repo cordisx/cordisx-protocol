@@ -463,6 +463,16 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   unchanged;
 - `plugin-package.v6.schema.json`: package-v5 boundaries plus a closed runtime
   manifest-v6 reference for exact Agent Session route declarations;
+- `plugin-manifest.v7.schema.json`: manifest-v6 capability/service vocabulary
+  plus the isolated transient-canvas Worker execution declaration;
+- `plugin-package.v7.schema.json`: package-v6 boundaries plus a closed runtime
+  manifest-v7 reference;
+- `surface-contribution.v8.schema.json`: structured isolated transient-canvas
+  presentation metadata;
+- `host-extension-point-catalog.v8.schema.json`: catalog v7 plus the
+  experimental composer submit effects point;
+- `transient-canvas-registration.v1.schema.json`: bounded Worker-local canvas
+  program metadata; callbacks never cross the document;
 - `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or
   last-good activation record without filesystem paths;
 - `plugin-lifecycle-operation.v1.schema.json`: revision- and

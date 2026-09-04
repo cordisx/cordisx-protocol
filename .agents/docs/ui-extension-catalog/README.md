@@ -91,6 +91,13 @@ material/ambience tokens and bounded embedded PNG portraits; the Host owns
 decoding, responsive placement, contrast, motion, and cleanup. See
 [`session-backdrop-presentation`](../session-backdrop-presentation/README.md).
 
+Version 8 adds the experimental `composer.submit.effects` point with the
+separate `transient-canvas-presentation` family. A plugin contributes bounded
+presentation metadata and draws only through an OffscreenCanvas transferred
+to its isolated Worker. The Host retains the real canvas element, submit
+semantics, pointer inertness, timeout, reduced-motion policy, and cleanup. See
+[`transient-canvas`](../transient-canvas/README.md).
+
 Contribution options retain `group`, `order`, `when`, and disabled state. The
 host decides direct-action capacity, overflow, keyboard hints, focus,
 accessibility, error presentation, and native-menu integration. A contribution
@@ -210,3 +217,8 @@ Version 6 additionally fails closed on arbitrary visual code or assets,
 unknown variants, motion modes or material tokens, fewer than two or more than
 eight stages, and any attempt to select, hide, or mutate native DOM from the
 contribution.
+
+Version 8 additionally fails closed on DOM callbacks, raw script or style,
+unknown canvas kinds, out-of-range duration, and unknown reduced-motion
+behavior. Canvas program code exists only in the separately isolated Worker
+artifact; it is not surface contribution data.
