@@ -39,6 +39,8 @@ const expectedExports = [
   './manager-content-navigation/v5',
   './navigation-collection-actions/v1',
   './plugin-manifest/v6',
+  './plugin-manifest/v7',
+  './transient-canvas/v1',
 ].sort()
 const expectedFiles = [
   'LICENSE',
@@ -80,6 +82,8 @@ const expectedFiles = [
   'types/manager-content-navigation.v5.d.ts',
   'types/navigation-collection-actions.v1.d.ts',
   'types/plugin-manifest.v6.d.ts',
+  'types/plugin-manifest.v7.d.ts',
+  'types/transient-canvas.v1.d.ts',
 ].sort()
 const frozenAgentLoopFiles = [
   ...readdirSync(join(root, 'schemas'))
@@ -156,6 +160,8 @@ import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 
 import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, ManagerContentNavigationDeclarationV4, ManagerContentProjectionV3 } from '@cordisx/protocol/manager-content-navigation/v4'
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
 import type { PluginManifestHostRouteSessionScopeBindingV6, PluginRuntimeManifestV6 } from '@cordisx/protocol/plugin-manifest/v6'
+import type { PluginRuntimeManifestV7 } from '@cordisx/protocol/plugin-manifest/v7'
+import type { TransientCanvasPluginContextV1, TransientCanvasRegistrationV1 } from '@cordisx/protocol/transient-canvas/v1'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalServiceV2 } from '@cordisx/protocol/approval/v2'
 import type { ApprovalRequestRoutingResult, ApprovalService as ApprovalServiceV3 } from '@cordisx/protocol/approval/v3'
@@ -168,6 +174,9 @@ const effective = resolveAgentDefinitionAvatar({ agentId: 'reviewer', inherit: '
 avatar satisfies AgentAvatarRef
 declare const resolution: AgentAvatarResolutionResult
 declare const definition: AgentDefinition
+declare const canvasContext: TransientCanvasPluginContextV1
+declare const canvasRegistration: TransientCanvasRegistrationV1
+declare const manifestV7: PluginRuntimeManifestV7
 declare const participant: AgentConversationParticipant
 declare const activeRun: AgentConversationActiveRunDescriptor
 declare const item: AgentConversationItem

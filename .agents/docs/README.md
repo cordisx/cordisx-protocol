@@ -44,6 +44,8 @@ Specified areas:
   reasoning range with bounded semantic material stages and strict cleanup.
 - `session-backdrop-presentation/`: Host-owned session ambience and transparent
   portrait projection driven by native reasoning progress.
+- `transient-canvas/`: isolated, Host-bounded transparent Canvas presentations
+  at semantic extension points without renderer DOM authority.
 - `manager-settings-tabs/`: structured Manager settings content-tab surface
   versions 4/5, catalog versions 3/4, controlled body-only outlet,
   deterministic projection, authorization origin, and lifecycle.

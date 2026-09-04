@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v7.schema.json",
+  "title": "CordisX Runtime Plugin Manifest v7",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "capabilities", "services", "execution"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v7.schema.json" },
+    "schemaVersion": { "const": 7 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "name": { "$ref": "plugin-manifest.v6.schema.json#/properties/name" },
+    "capabilities": { "$ref": "plugin-manifest.v6.schema.json#/properties/capabilities" },
+    "services": { "$ref": "plugin-manifest.v6.schema.json#/properties/services" },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["realm", "interfaces"],
+      "properties": {
+        "realm": { "const": "isolated-worker" },
+        "interfaces": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "const": "ui.transient-canvas/v1" }
+        }
+      }
+    }
+  }
+}
