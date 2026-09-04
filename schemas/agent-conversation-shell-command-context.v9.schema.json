@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-command-context.v9.schema.json",
+  "title": "CordisX Host-generated Agent Conversation Shell Command Context v9",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "binding",
+    "generation",
+    "scope",
+    "command"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-command-context.v9.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.agent-conversation-shell-command-context/v9"
+    },
+    "schemaVersion": {
+      "const": 9
+    },
+    "binding": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/bindingRef"
+    },
+    "generation": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/generation"
+    },
+    "scope": {
+      "enum": [
+        "header",
+        "message",
+        "approval",
+        "composer-submit"
+      ]
+    },
+    "itemId": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId"
+    },
+    "command": {
+      "$ref": "ui-common.v1.schema.json#/$defs/commandReference"
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionId", "approvalId", "requester", "authority", "decision"],
+      "properties": {
+        "sessionId": { "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/sessionId" },
+        "approvalId": { "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId" },
+        "requester": { "$ref": "approval-common.v2.schema.json#/$defs/exactDefinitionIdentity" },
+        "authority": { "$ref": "approval-common.v2.schema.json#/$defs/agentBinding" },
+        "decision": { "enum": ["approve", "reject"] }
+      }
+    },
+    "submitPayload": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 65536
+    },
+    "origin": {
+      "oneOf": [
+        { "$ref": "agent-command-origin.v1.schema.json" },
+        { "$ref": "agent-bootstrap-command-origin.v1.schema.json" }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "message"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "itemId"
+        ],
+        "properties": {
+          "itemId": true,
+          "approval": false,
+          "submitPayload": false,
+          "origin": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "approval"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "itemId",
+          "approval"
+        ],
+        "properties": {
+          "itemId": true,
+          "approval": true,
+          "submitPayload": false,
+          "origin": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "header"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "then": {
+        "properties": {
+          "itemId": false,
+          "approval": false,
+          "submitPayload": false,
+          "origin": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "composer-submit"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "submitPayload",
+          "origin"
+        ],
+        "properties": {
+          "submitPayload": true,
+          "itemId": false,
+          "approval": false,
+          "origin": true
+        }
+      }
+    }
+  ]
+}

@@ -196,6 +196,8 @@ It renders durable state only from SessionEvent and observes
 - `@cordisx/protocol/approval/v2` -> `types/approval.v2.d.ts`;
 - `@cordisx/protocol/approval/v3` -> `types/approval.v3.d.ts`.
 - `@cordisx/protocol/agent-admission/v3` -> `types/agent-admission.v3.d.ts`.
+- `@cordisx/protocol/agent-admission/v4` -> `types/agent-admission.v4.d.ts`.
+- `@cordisx/protocol/agent-conversation-shell/v9` -> `types/agent-conversation-shell.v9.d.ts`.
 
 ### Target-scoped pre-submit admission
 
@@ -209,6 +211,18 @@ and admitted Agent/Session before it invokes the driver. A capability cannot be
 cross-used, reused, or retained after command completion, revocation, or
 replacement. A failed target has no fallback; ordinary no-origin Agent sends and
 the v1/v2 contracts retain their existing behavior.
+
+### Bootstrap target admission
+
+When a composer command starts before a Room has any run, Host supplies Shell
+v9 with `AgentBootstrapCommandOrigin`. It fences the command, binding, owner
+generation, connection, and execution but intentionally claims no target. In
+that same command the plugin may materialize a Room delivery, declare its exact
+`{ participantId, memberId, runId }` to the v4 bootstrap target service, then
+acquire the Agent, reserve the issued opaque target capability, and make the
+one-shot submit. Host rejects cross-target or duplicate use and every call after
+completion, revocation, or replacement. Bootstrap never grants a fallback send
+or creates another durable ledger.
 
 The matching version-1 JSON Schemas cover acquisition, admission, mutation,
 live Agent observations, Session snapshots/pages/subscriptions/events, and

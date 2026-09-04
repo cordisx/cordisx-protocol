@@ -48,7 +48,9 @@
     ,"types/agent-admission.v1.d.ts"
     ,"types/agent-admission.v2.d.ts"
     ,"types/agent-admission.v3.d.ts"
+    ,"types/agent-admission.v4.d.ts"
     ,"types/agent-conversation-shell.v8.d.ts"
+    ,"types/agent-conversation-shell.v9.d.ts"
   ],
   "exports": {
     "./agent-avatar/v1": {
@@ -89,7 +91,9 @@
     ,"./agent-admission/v1": "./types/agent-admission.v1.d.ts"
     ,"./agent-admission/v2": "./types/agent-admission.v2.d.ts"
     ,"./agent-admission/v3": "./types/agent-admission.v3.d.ts"
+    ,"./agent-admission/v4": "./types/agent-admission.v4.d.ts"
     ,"./agent-conversation-shell/v8": "./types/agent-conversation-shell.v8.d.ts"
+    ,"./agent-conversation-shell/v9": "./types/agent-conversation-shell.v9.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
