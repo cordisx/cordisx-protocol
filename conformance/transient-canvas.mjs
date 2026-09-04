@@ -91,6 +91,8 @@ for (const [label, value, validate] of [
   ['raw script in contribution', { ...validContribution, item: { ...validContribution.item, script: 'draw()' } }, contribution],
   ['main-realm execution', { ...validManifest, execution: { ...validManifest.execution, realm: 'renderer-main' } }, manifest],
   ['unknown isolated interface', { ...validManifest, execution: { ...validManifest.execution, interfaces: ['ui.dom/v1'] } }, manifest],
+  ['Host DOM read capability', { ...validManifest, capabilities: [{ name: 'ui.host-dom.read', required: false, scope: { rootIds: ['app.shell'], operations: ['read-text'] } }] }, manifest],
+  ['Host DOM modify capability', { ...validManifest, capabilities: [{ name: 'ui.host-dom.modify', required: false, scope: { rootIds: ['app.shell'], operations: ['set-text'] } }] }, manifest],
 ]) expect(label, validate, value, false)
 
 if (failures > 0) throw new Error(`${failures} transient canvas conformance case(s) failed`)
