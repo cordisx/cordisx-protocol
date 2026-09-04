@@ -67,6 +67,8 @@
     "agent-conversation-shell.v8.test.ts",
     "agent-admission.v1.d.ts",
     "agent-admission.v1.test.ts",
+    "agent-admission.v2.d.ts",
+    "agent-admission.v2.test.ts",
     "host-dom.v1.d.ts",
     "host-dom.v1.test.ts"
   ]
