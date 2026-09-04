@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-common.v2.schema.json",
+  "title": "CordisX Approval Common Types v2",
+  "$defs": {
+    "exactDefinitionIdentity": {
+      "allOf": [
+        { "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity" },
+        {
+          "type": "object",
+          "properties": {
+            "agentId": { "not": { "const": "*" } },
+            "revision": { "not": { "const": "*" } }
+          }
+        }
+      ]
+    },
+    "agentBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agentId", "sessionId", "agentGeneration", "definition"],
+      "properties": {
+        "agentId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "agentGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+        "definition": { "$ref": "#/$defs/exactDefinitionIdentity" }
+      }
+    },
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "text"],
+      "properties": {
+        "kind": { "const": "plain-text" },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000,
+          "pattern": "^[^\\u0000\\u000B\\u000C\\u000E-\\u001F\\u007F]*$"
+        }
+      }
+    }
+  }
+}

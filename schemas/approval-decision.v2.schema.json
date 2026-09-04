@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-decision.v2.schema.json",
+  "title": "CordisX Exact-authority Approval Decision v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "id", "requester", "authority", "outcome"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-decision.v2.schema.json" },
+    "contract": { "const": "cordisx.approval-decision/v2" },
+    "schemaVersion": { "const": 2 },
+    "id": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "requester": { "$ref": "approval-common.v2.schema.json#/$defs/agentBinding" },
+    "authority": { "$ref": "approval-common.v2.schema.json#/$defs/agentBinding" },
+    "outcome": { "$ref": "session-common.v1.schema.json#/$defs/approvalOutcome" }
+  }
+}

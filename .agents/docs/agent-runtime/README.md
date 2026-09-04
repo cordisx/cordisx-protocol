@@ -112,6 +112,33 @@ Session id. The service appends one `approval/asked` and exactly one terminal
 non-owning answerers resolve fail-closed as `unavailable`, and the first
 terminal decision wins.
 
+### V2 exact approval authority
+
+Approval v2 separates durable approval context from live authority. A request
+names one exact live requester Agent plus its definition identity and one exact
+live authority Agent plus its definition identity. The Host verifies both
+handles, definitions, owners, generations, connection state, and policy before
+admission. `registerAuthorityAnswerer()` is keyed by the authority Agent's exact
+binding. A replacement generation, foreign Session, missing permission, or
+stale connection cannot inherit or invoke the answerer.
+
+Before `approval/asked`, the Host appends the ignorable extension event
+`approval/authority-bound` to the requester's Session. Its data contains only
+the approval id, requester `AgentDefinitionIdentity`, authority
+`AgentDefinitionIdentity`, and `{ kind: 'plain-text', text }` reason. It never
+persists process-local Agent generation. The immediately following
+`approval/asked.reason` is exactly the same `text`; the later
+`approval/decided` remains the sole terminal outcome. These three facts use the
+existing SessionEvent ledger and must be unique, same-Session, same-approval,
+and ordered. No second approval ledger is introduced.
+
+The live v2 question and decision echo exact requester and authority Agent id,
+Session id, generation, and definition bindings. Those live fences must not be
+reconstructed from terminal facts. Cold replay retains the durable requester,
+authority, and reason while omitting expired live authority. Display names,
+Room user identity, current-Agent lookup, array order, and wildcard identities
+are never authority. Approval v1 remains byte-frozen and separately available.
+
 ## Minimum consumption
 
 Host adds three typed Cordis services to its public context and binds them to

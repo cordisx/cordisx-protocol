@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-authority-binding.v1.schema.json",
+  "title": "CordisX Session-persisted Approval Authority Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["approvalId", "requester", "authority", "reason"],
+  "properties": {
+    "approvalId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "requester": { "$ref": "approval-common.v2.schema.json#/$defs/exactDefinitionIdentity" },
+    "authority": { "$ref": "approval-common.v2.schema.json#/$defs/exactDefinitionIdentity" },
+    "reason": { "$ref": "approval-common.v2.schema.json#/$defs/reason" }
+  }
+}

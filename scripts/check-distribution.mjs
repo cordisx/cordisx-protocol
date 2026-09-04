@@ -15,6 +15,7 @@ const expectedExports = [
   './agent-conversation-shell/v4',
   './agent-conversation-shell/v5',
   './agent-conversation-shell/v6',
+  './agent-conversation-shell/v7',
   './agent-loop/v1',
   './agent-loop/v2',
   './agent-loop/v3',
@@ -23,6 +24,7 @@ const expectedExports = [
   './entities/v1',
   './sessions/v1',
   './approval/v1',
+  './approval/v2',
   './connector-service/v1',
   './host-dom/v1',
   './manager-collection/v1',
@@ -50,6 +52,7 @@ const expectedFiles = [
   'types/agent-conversation-shell.v4.d.ts',
   'types/agent-conversation-shell.v5.d.ts',
   'types/agent-conversation-shell.v6.d.ts',
+  'types/agent-conversation-shell.v7.d.ts',
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
@@ -58,6 +61,7 @@ const expectedFiles = [
   'types/entities.v1.d.ts',
   'types/sessions.v1.d.ts',
   'types/approval.v1.d.ts',
+  'types/approval.v2.d.ts',
   'types/connector-service.v1.d.ts',
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
@@ -133,6 +137,7 @@ import type { AgentConversationApprovalAction, AgentConversationApprovalItem, Ag
 import type { AgentConversationActiveRunDescriptor as AgentConversationActiveRunDescriptorV4, AgentConversationApprovalItem as AgentConversationApprovalItemV4, AgentConversationMessageItem as AgentConversationMessageItemV4, AgentConversationShellSubscriptionHandle as AgentConversationShellSubscriptionHandleV4 } from '@cordisx/protocol/agent-conversation-shell/v4'
 import type { AgentConversationComposerShortcutPolicy, AgentConversationShellSnapshot as AgentConversationShellSnapshotV5, AgentConversationShellSubscriptionHandle as AgentConversationShellSubscriptionHandleV5 } from '@cordisx/protocol/agent-conversation-shell/v5'
 import type { AgentConversationApprovalItem as AgentConversationApprovalItemV6, AgentConversationShellSubscriptionHandle as AgentConversationShellSubscriptionHandleV6 } from '@cordisx/protocol/agent-conversation-shell/v6'
+import type { AgentConversationApprovalItem as AgentConversationApprovalItemV7, AgentConversationShellCommandContext as AgentConversationShellCommandContextV7, AgentConversationShellSubscriptionHandle as AgentConversationShellSubscriptionHandleV7 } from '@cordisx/protocol/agent-conversation-shell/v7'
 import type { AgentLoopCommand as AgentLoopCommandV1, BoundAgentLoopClient as BoundAgentLoopClientV1 } from '@cordisx/protocol/agent-loop/v1'
 import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDelivery, AgentLoopDeliveryDisposition, AgentLoopEvent as AgentLoopEventV2, AgentLoopOperationId, AgentLoopOperationUnavailableCode, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v2'
 import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand as AgentLoopCommandV3, AgentLoopEvent as AgentLoopEventV3, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionIntent, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding as AgentLoopTaskBindingV3, BoundAgentLoopClient as BoundAgentLoopClientV3 } from '@cordisx/protocol/agent-loop/v3'
@@ -144,6 +149,7 @@ import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, Manag
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
 import type { PluginManifestHostRouteSessionScopeBindingV6, PluginRuntimeManifestV6 } from '@cordisx/protocol/plugin-manifest/v6'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
+import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalServiceV2 } from '@cordisx/protocol/approval/v2'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
 const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
@@ -165,6 +171,7 @@ declare const shellV3: AgentConversationShellSourceV3
 declare const shellSubscriptionV4: AgentConversationShellSubscriptionHandleV4
 declare const shellSubscriptionV5: AgentConversationShellSubscriptionHandleV5
 declare const shellSubscriptionV6: AgentConversationShellSubscriptionHandleV6
+declare const shellSubscriptionV7: AgentConversationShellSubscriptionHandleV7
 declare const agentLoop: BoundAgentLoopClient
 declare const legacyAgentLoop: BoundAgentLoopClientV1
 declare const agentLoopV3: BoundAgentLoopClientV3
@@ -176,7 +183,9 @@ declare const entityAgents: EntityBackedAgentRegistry
 declare const entities: EntityRegistry
 declare const sessions: SessionRegistry
 declare const approvals: ApprovalService
+declare const approvalsV2: ApprovalServiceV2
 declare const agent: Agent
+declare const leadAgent: Agent
 declare const session: Session
 declare const userMessage: UserMessage
 declare const entityBoundEvent: EntityDefinitionBoundSessionEvent
@@ -220,6 +229,11 @@ shellSubscriptionV5.closed.then(value => value.status satisfies 'closed')
 const replayedTerminalApproval = { kind: 'approval', itemId: 'approval-item-v6', sequence: 2, participantId: 'participant-v6', memberId: 'member-v6', runId: 'run-v6', sessionId: 'session-v6', approvalId: 'approval-v6', approvalKind: 'command', state: 'approved', actions: [] } satisfies AgentConversationApprovalItemV6
 replayedTerminalApproval.actions.length satisfies 0
 shellSubscriptionV6.closed.then(value => value.status satisfies 'closed')
+const leadBinding = { agentId: 'session-lead', sessionId: 'session-lead', agentGeneration: 2, definition: { agentId: 'lead', revision: 'lead-r1' } } as const
+const authorityApproval = { kind: 'approval', itemId: 'approval-item-v7', sequence: 3, participantId: 'participant-reviewer', memberId: 'member-reviewer', runId: 'run-reviewer', sessionId: 'session-reviewer', agentGeneration: 1, approvalId: 'approval-v7', approvalKind: 'command', requester: { agentId: 'reviewer', revision: 'reviewer-r1' }, authority: { participantId: 'participant-lead', memberId: 'member-lead', identity: leadBinding.definition }, authorityBinding: leadBinding, reason: { kind: 'plain-text', text: 'Review this change.' }, state: 'pending', actions: [{ decision: 'approve', command: { id: 'approval.approve' } }, { decision: 'reject', command: { id: 'approval.reject' } }] } satisfies AgentConversationApprovalItemV7
+const authorityCommandContext = { binding: { bindingId: 'binding-v7', ownerGeneration: 'owner-v7' }, generation: 'shell-v7', scope: 'approval', itemId: authorityApproval.itemId, command: authorityApproval.actions[0].command, approval: { sessionId: authorityApproval.sessionId, approvalId: authorityApproval.approvalId, requester: authorityApproval.requester, authority: authorityApproval.authorityBinding, decision: authorityApproval.actions[0].decision } } satisfies AgentConversationShellCommandContextV7
+authorityCommandContext.approval.authority.agentGeneration satisfies number
+shellSubscriptionV7.closed.then(value => value.status satisfies 'closed')
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient
@@ -236,6 +250,9 @@ agent.discard(userMessage.id)
 agent.cancel({ kind: 'user' })
 agent.whenIdle()
 approvals.request({ agent, toolName: 'shell' })
+approvalsV2.request({ requester: { agent, definition: authorityApproval.requester }, authority: { agent: leadAgent, definition: leadBinding.definition }, toolName: 'review', reason: authorityApproval.reason })
+declare const authorityEvent: ApprovalAuthorityBoundSessionEvent
+authorityEvent.data.authority.revision satisfies string
 const discovered = await connector.discover()
 if (discovered.status === 'accepted') discovered.snapshot.registrations satisfies readonly unknown[]
 if (resolution.status === 'unsupported') resolution.code satisfies 'unsupported-kind' | 'unsupported-provider' | 'reference-unavailable'
