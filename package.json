@@ -42,6 +42,7 @@
     "types/approval.v2.d.ts",
     "types/approval.v3.d.ts"
     ,"types/agent-admission.v1.d.ts"
+    ,"types/agent-admission.v2.d.ts"
     ,"types/agent-conversation-shell.v8.d.ts"
   ],
   "exports": {
@@ -77,6 +78,7 @@
     "./approval/v2": "./types/approval.v2.d.ts",
     "./approval/v3": "./types/approval.v3.d.ts"
     ,"./agent-admission/v1": "./types/agent-admission.v1.d.ts"
+    ,"./agent-admission/v2": "./types/agent-admission.v2.d.ts"
     ,"./agent-conversation-shell/v8": "./types/agent-conversation-shell.v8.d.ts"
   },
   "publishConfig": {
