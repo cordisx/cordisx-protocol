@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-request-routing-question.v1.schema.json",
+  "title": "CordisX Pre-persistence Approval Request Routing Question v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "routingId", "registration", "requester", "toolName", "reason"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-request-routing-question.v1.schema.json" },
+    "contract": { "const": "cordisx.approval-request-routing-question/v1" },
+    "schemaVersion": { "const": 1 },
+    "routingId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "registration": { "$ref": "approval-request-routing-registration.v1.schema.json" },
+    "requester": { "$ref": "approval-common.v2.schema.json#/$defs/agentBinding" },
+    "toolName": { "$ref": "session-common.v1.schema.json#/$defs/identifier" },
+    "callId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "reason": { "$ref": "approval-common.v2.schema.json#/$defs/reason" }
+  }
+}

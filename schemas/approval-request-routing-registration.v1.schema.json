@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-request-routing-registration.v1.schema.json",
+  "title": "CordisX Approval Request Routing Registration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "registrationId", "owner", "requester"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-request-routing-registration.v1.schema.json" },
+    "contract": { "const": "cordisx.approval-request-routing-registration/v1" },
+    "schemaVersion": { "const": 1 },
+    "registrationId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "owner": { "$ref": "session-common.v1.schema.json#/$defs/pluginOwner" },
+    "requester": { "$ref": "approval-common.v2.schema.json#/$defs/agentBinding" }
+  }
+}

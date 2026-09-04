@@ -264,6 +264,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   Approval bindings plus one generation-free, ignorable SessionEvent context
   containing durable definition identities and exact structured plain-text
   reason. Approval v1 and SessionEvent v1 bytes remain unchanged;
+- `approval-request-routing-registration.v1.schema.json`,
+  `approval-request-routing-question.v1.schema.json`,
+  `approval-request-routing-result.v1.schema.json`, and
+  `approval-request-resolver-close.v1.schema.json`: approval/v3's exact
+  requester-bound, owner/generation/connection-fenced pre-persistence resolver
+  lifecycle. Accepted results carry exact live requester and authority bindings
+  for Host verification before delegation to approval/v2; unavailable or stale
+  resolution fails closed without adding a second ledger;
 - `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v7.schema.json`,
   `agent-conversation-shell-subscription-close.v7.schema.json`, the v7
   Room-settings request/result schemas, and the v7 Room collection leading

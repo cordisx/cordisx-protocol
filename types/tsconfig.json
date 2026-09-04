@@ -45,6 +45,8 @@
     "approval.v1.test.ts",
     "approval.v2.d.ts",
     "approval.v2.test.ts",
+    "approval.v3.d.ts",
+    "approval.v3.test.ts",
     "agent-avatar.v1.d.ts",
     "agent-avatar.v1.test.ts",
     "agent-conversation-shell.v1.d.ts",

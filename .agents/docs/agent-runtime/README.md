@@ -139,6 +139,39 @@ authority, and reason while omitting expired live authority. Display names,
 Room user identity, current-Agent lookup, array order, and wildcard identities
 are never authority. Approval v1 remains byte-frozen and separately available.
 
+### V3 pre-persistence request routing
+
+Approval v3 lets one plugin owner register a resolver for one exact live
+requester Agent before a runtime-originated approval is persisted. Registration
+is keyed by requester Agent id/Session id, Agent generation, and definition;
+the Host stamps plugin owner/generation and privately binds the current
+connection. Admission requires ownership plus `approvals.request` permission
+for that exact requester Session. One registration is current per exact
+requester binding, and replacement atomically closes its predecessor.
+The handle's first terminal close aborts in-flight resolution, resolves
+`closed`, and prevents every later callback. Disposing a replaced handle cannot
+close its successor.
+
+The Host invokes the resolver with a versioned clone-safe question containing a
+Host-minted routing id, the registration, exact requester binding, tool/call
+identity, and a required structured plain-text reason. The resolver returns
+either unavailable or exact requester and authority live bindings. Host
+validates the result schema and exact registration/routing echoes, resolves both
+current handles, and verifies their owner, Session, generation, definition,
+connection, and permissions before constructing the existing approval/v2
+request. The resolver never appends a SessionEvent. Neither side may infer a
+route from display names, Room membership, current-Agent lookup, or wildcard
+identity.
+
+Once registration succeeds for a live requester binding, that binding is
+route-required until its Agent generation, plugin generation, or connection
+ends. A missing, disposed, stale, throwing, malformed, foreign, or unavailable
+resolver result fails closed and never downgrades to approval/v1. An owner that
+never registers the successor for a requester binding retains the frozen v1
+runtime behavior. A successful route still appends only the v2
+`approval/authority-bound`, `approval/asked`, and `approval/decided` sequence to
+the requester's single SessionEvent ledger.
+
 ## Minimum consumption
 
 Host adds three typed Cordis services to its public context and binds them to
@@ -159,7 +192,9 @@ It renders durable state only from SessionEvent and observes
 
 - `@cordisx/protocol/agents/v1` -> `types/agents.v1.d.ts`;
 - `@cordisx/protocol/sessions/v1` -> `types/sessions.v1.d.ts`;
-- `@cordisx/protocol/approval/v1` -> `types/approval.v1.d.ts`.
+- `@cordisx/protocol/approval/v1` -> `types/approval.v1.d.ts`;
+- `@cordisx/protocol/approval/v2` -> `types/approval.v2.d.ts`;
+- `@cordisx/protocol/approval/v3` -> `types/approval.v3.d.ts`.
 
 The matching version-1 JSON Schemas cover acquisition, admission, mutation,
 live Agent observations, Session snapshots/pages/subscriptions/events, and
