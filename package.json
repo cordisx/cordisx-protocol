@@ -50,6 +50,7 @@
     ,"types/agent-admission.v3.d.ts"
     ,"types/agent-admission.v4.d.ts"
     ,"types/agent-admission.v5.d.ts"
+    ,"types/agent-admission.v6.d.ts"
     ,"types/agent-conversation-shell.v8.d.ts"
     ,"types/agent-conversation-shell.v9.d.ts"
   ],
@@ -94,6 +95,7 @@
     ,"./agent-admission/v3": "./types/agent-admission.v3.d.ts"
     ,"./agent-admission/v4": "./types/agent-admission.v4.d.ts"
     ,"./agent-admission/v5": "./types/agent-admission.v5.d.ts"
+    ,"./agent-admission/v6": "./types/agent-admission.v6.d.ts"
     ,"./agent-conversation-shell/v8": "./types/agent-conversation-shell.v8.d.ts"
     ,"./agent-conversation-shell/v9": "./types/agent-conversation-shell.v9.d.ts"
   },

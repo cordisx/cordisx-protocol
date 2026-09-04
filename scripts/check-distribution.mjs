@@ -13,6 +13,7 @@ const expectedExports = [
   './agent-admission/v3',
   './agent-admission/v4',
   './agent-admission/v5',
+  './agent-admission/v6',
   './agent-avatar/v1',
   './agent-conversation-shell/v1',
   './agent-conversation-shell/v2',
@@ -72,6 +73,7 @@ const expectedFiles = [
   'types/agent-admission.v3.d.ts',
   'types/agent-admission.v4.d.ts',
   'types/agent-admission.v5.d.ts',
+  'types/agent-admission.v6.d.ts',
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
@@ -177,6 +179,7 @@ import type { TransientCanvasPluginContextV1, TransientCanvasRegistrationV1 } fr
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalServiceV2 } from '@cordisx/protocol/approval/v2'
 import type { ApprovalRequestRoutingResult, ApprovalService as ApprovalServiceV3 } from '@cordisx/protocol/approval/v3'
+import type { AgentAdmissionBootstrapRouteClaimRequest, AgentAdmissionBootstrapRouteClaimService, AgentAdmissionBootstrapRouteDeclarationRequest, AgentAdmissionBootstrapRouteDeclarationService, AgentAdmissionBootstrapRouteReservationRequest, AgentAdmissionBootstrapRouteReservationService, AgentAdmissionBootstrapRouteTarget } from '@cordisx/protocol/agent-admission/v6'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
 const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
@@ -215,6 +218,12 @@ declare const sessions: SessionRegistry
 declare const approvals: ApprovalService
 declare const approvalsV2: ApprovalServiceV2
 declare const approvalsV3: ApprovalServiceV3
+declare const bootstrapRouteDeclarations: AgentAdmissionBootstrapRouteDeclarationService
+declare const bootstrapRouteReservations: AgentAdmissionBootstrapRouteReservationService
+declare const bootstrapRouteClaims: AgentAdmissionBootstrapRouteClaimService
+declare const bootstrapRouteDeclaration: AgentAdmissionBootstrapRouteDeclarationRequest
+declare const bootstrapRouteReservation: AgentAdmissionBootstrapRouteReservationRequest
+declare const bootstrapRouteClaim: AgentAdmissionBootstrapRouteClaimRequest
 declare const agent: Agent
 declare const leadAgent: Agent
 declare const session: Session
@@ -265,6 +274,17 @@ const authorityApproval = { kind: 'approval', itemId: 'approval-item-v7', sequen
 const authorityCommandContext = { binding: { bindingId: 'binding-v7', ownerGeneration: 'owner-v7' }, generation: 'shell-v7', scope: 'approval', itemId: authorityApproval.itemId, command: authorityApproval.actions[0].command, approval: { sessionId: authorityApproval.sessionId, approvalId: authorityApproval.approvalId, requester: authorityApproval.requester, authority: authorityApproval.authorityBinding, decision: authorityApproval.actions[0].decision } } satisfies AgentConversationShellCommandContextV7
 authorityCommandContext.approval.authority.agentGeneration satisfies number
 shellSubscriptionV7.closed.then(value => value.status satisfies 'closed')
+const installedBootstrapRouteTarget = { roomId: 'room-installed', participantId: 'participant-installed', memberId: 'member-installed', runId: 'run-installed', route: { routeId: 'room', param: 'roomId', roomId: 'room-installed' } } satisfies AgentAdmissionBootstrapRouteTarget
+bootstrapRouteDeclarations.declare({ ...bootstrapRouteDeclaration, target: installedBootstrapRouteTarget }).then(result => {
+  if (result.status === 'declared') {
+    bootstrapRouteReservations.reserve({ ...bootstrapRouteReservation, continuation: result.continuation }).then(reservation => {
+      if (reservation.status === 'reserved') void reservation.reservation.submit()
+    })
+    bootstrapRouteClaims.claim({ ...bootstrapRouteClaim, continuation: result.continuation }).then(claim => {
+      if (claim.status === 'claimed') claim.receipt.target.route.roomId satisfies string
+    })
+  }
+})
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient
