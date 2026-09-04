@@ -48,6 +48,7 @@ const expectedExports = [
   './plugin-manifest/v7',
   './plugin-manifest/v8',
   './plugin-package/v8',
+  './raster-image/v1',
   './transient-canvas/v1',
 ].sort()
 const expectedFiles = [
@@ -100,6 +101,7 @@ const expectedFiles = [
   'types/plugin-manifest.v7.d.ts',
   'types/plugin-manifest.v8.d.ts',
   'types/plugin-package.v8.d.ts',
+  'types/raster-image.v1.d.ts',
   'types/transient-canvas.v1.d.ts',
 ].sort()
 const frozenAgentLoopFiles = [
@@ -180,6 +182,7 @@ import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV
 import type { PluginManifestHostRouteSessionScopeBindingV6, PluginRuntimeManifestV6 } from '@cordisx/protocol/plugin-manifest/v6'
 import type { PluginRuntimeManifestV7 } from '@cordisx/protocol/plugin-manifest/v7'
 import type { TransientCanvasPluginContextV1, TransientCanvasRegistrationV1 } from '@cordisx/protocol/transient-canvas/v1'
+import type { RasterImageSnapshotV1 } from '@cordisx/protocol/raster-image/v1'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalServiceV2 } from '@cordisx/protocol/approval/v2'
 import type { ApprovalRequestRoutingResult, ApprovalService as ApprovalServiceV3 } from '@cordisx/protocol/approval/v3'
@@ -241,6 +244,7 @@ declare const managerConfigSource: ManagerContentConfigSourceV1
 declare const managerNavigationV5: ManagerContentNavigationDeclarationV5
 declare const managerProjectionV4: ManagerContentProjectionV4
 declare const managerConfigSourceV2: ManagerContentConfigSourceV2
+declare const rasterImage: RasterImageSnapshotV1
 const entityFile = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-file.v1.schema.json', contract: 'cordisx.entity-file/v1', schemaVersion: 1, agentId: 'reviewer', inherit: { promptSections: 'append', rules: 'append', skills: 'append', tools: 'merge', mcpServers: 'merge', runtimeDefaults: 'merge' }, promptSections: [{ sectionId: 'role', kind: 'role', source: { kind: 'markdown', path: './prompts/role.md' } }] } satisfies EntityFile
 entities.get({ agentId: entityFile.agentId, revision: entityBoundEvent.data.resolution.digest })
 managerNavigationV3.subject?.kind satisfies 'agent-definition' | undefined
@@ -249,6 +253,7 @@ managerNavigationV4.body?.kind satisfies 'plugin-config-form' | undefined
 managerProjectionV3.body?.configuration.revision satisfies number | undefined
 managerNavigationV5.body?.kind satisfies 'plugin-config-form' | undefined
 managerProjectionV4.body?.configuration.version satisfies 3 | undefined
+rasterImage.mediaType satisfies 'image/png'
 const localizedChoice = { value: 'mod-enter', label: { key: 'composer.shortcut.mod-enter', fallback: 'Command/Ctrl+Enter sends' } } satisfies ManagerContentPluginConfigLocalizedChoiceV2
 localizedChoice.value satisfies string | number | boolean | null
 const installedApprovalRouteScope = { kind: 'host-route-param', routeId: 'room-session-detail', param: 'sessionId' } satisfies PluginManifestHostRouteSessionScopeBindingV6

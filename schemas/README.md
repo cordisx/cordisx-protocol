@@ -63,6 +63,9 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   action list for the versioned successor to Host-owned route-only dynamic
   navigation collection rows, with explicit command, enclosing-route copy,
   and bounded-text copy effects plus Host-owned confirmation and feedback;
+- `raster-image-snapshot.v1.schema.json`: one closed, base64-encoded PNG image
+  snapshot with bounded declared dimensions; consumers additionally validate
+  canonical encoding, PNG structure, dimensions, chunks, and decoded size;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `route.v2.schema.json`: route-v1 navigation fields plus required localized
   product title and description metadata;

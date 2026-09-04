@@ -31,6 +31,8 @@
     "plugin-package.v8.d.ts",
     "plugin-package.v8.test.ts",
     "transient-canvas.v1.d.ts",
+    "raster-image.v1.d.ts",
+    "raster-image.v1.test.ts",
     "icon-theme.v1.d.ts",
     "icon-theme.v1.test.ts",
     "connector-service.v1.d.ts",
