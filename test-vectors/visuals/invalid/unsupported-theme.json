@@ -1,0 +1,8 @@
+{
+  "case": "projection",
+  "providerId": "theme.badge",
+  "value": {
+    "theme": "contrast",
+    "data": { "label": "Sample" }
+  }
+}

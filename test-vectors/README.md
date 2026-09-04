@@ -2,6 +2,12 @@
 
 Deterministic manifest, package identity, signature, grant, activation, and compatibility vectors belong here.
 
+Visuals v1 vectors live in `visuals/valid` and `visuals/invalid`. Neutral status
+indicator, badge, and small-chart projections cover both themes, nested opaque
+data, owner-local provider ids, same-id isolation across owners, and rejection
+of duplicate ids within one owner, unsupported themes, and projection fields
+outside the closed data boundary.
+
 Marketplace v1 vectors live in `marketplace/valid`, `marketplace/invalid`, and
 `marketplace/feeds`.
 

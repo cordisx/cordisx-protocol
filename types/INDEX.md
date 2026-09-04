@@ -154,3 +154,8 @@ CAS saves, ordered file-change pages, first-terminal closure, typed sharing and
 quota authorization boundaries, and entity-backed Agent create/resume overloads
 are explicit. Existing inline `AgentSetup`, Agents/Sessions, and AgentLoop types
 remain independently importable.
+
+`visuals.v1.d.ts` exposes framework-neutral readonly JSON data, light/dark
+theme projection, a validated owner-local provider id, and runtime helpers for
+detached deep immutability. Registration callables and lifecycle authority
+remain implementation bindings outside Protocol.

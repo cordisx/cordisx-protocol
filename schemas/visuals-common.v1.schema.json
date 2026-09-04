@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/visuals-common.v1.schema.json",
+  "title": "CordisX Visuals Common Definitions v1",
+  "$defs": {
+    "providerId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$"
+    },
+    "theme": { "enum": ["light", "dark"] },
+    "visualData": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/visualData" }
+        },
+        {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/visualData" }
+        }
+      ]
+    }
+  }
+}

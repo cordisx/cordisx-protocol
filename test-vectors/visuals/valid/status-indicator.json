@@ -1,0 +1,8 @@
+{
+  "case": "projection",
+  "providerId": "status.indicator",
+  "value": {
+    "theme": "light",
+    "data": { "state": "ready", "pulse": false, "count": 3 }
+  }
+}

@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedExports = [
+  './visuals/v1',
   './agent-admission/v1',
   './agent-admission/v2',
   './agent-admission/v3',
@@ -52,11 +53,13 @@ const expectedFiles = [
   'README.md',
   'package.json',
   'runtime/agent-avatar.v1.js',
+  'runtime/visuals.v1.js',
   'schemas/README.md',
   ...readdirSync(join(root, 'schemas'), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
     .map((entry) => `schemas/${entry.name}`),
   'types/agent-avatar.v1.d.ts',
+  'types/visuals.v1.d.ts',
   'types/agent-conversation-shell.v1.d.ts',
   'types/agent-conversation-shell.v2.d.ts',
   'types/agent-conversation-shell.v3.d.ts',
@@ -151,7 +154,8 @@ try {
   const consumer = join(temp, 'consumer')
   run(process.execPath, [npmCli, 'install', '--ignore-scripts', '--no-package-lock', '--prefix', consumer, archive])
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
-  writeFileSync(join(consumer, 'consumer.ts'), `import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'
+  writeFileSync(join(consumer, 'consumer.ts'), `import { cloneVisualData, parseVisualProviderId, type VisualData, type VisualProjection, type VisualTheme } from '@cordisx/protocol/visuals/v1'
+import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'
 import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'
 import type { AgentConversationParticipant as AgentConversationParticipantV1, AgentConversationShellSource as AgentConversationShellSourceV1 } from '@cordisx/protocol/agent-conversation-shell/v1'
 import type { AgentConversationActiveRunDescriptor, AgentConversationItem, AgentConversationMemberPresenceItem, AgentConversationParticipant, AgentConversationReaction, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v2'

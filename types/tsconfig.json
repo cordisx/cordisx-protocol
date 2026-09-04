@@ -8,6 +8,8 @@
     "skipLibCheck": true
   },
   "files": [
+    "visuals.v1.d.ts",
+    "visuals.v1.test.ts",
     "navigation-collection-actions.v1.d.ts",
     "manager-collection.v1.d.ts",
     "manager-collection.v1.test.ts",

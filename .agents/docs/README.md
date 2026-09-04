@@ -4,6 +4,8 @@ This directory is the human-readable normative source for the CordisX plugin pro
 
 Specified areas:
 
+- `visuals/`: owner-local providers, immutable opaque data, theme projection,
+  generation-scoped cleanup, and contained rendering version 1.
 - `marketplace/`: discovery-only catalog feeds;
 - `ui-contributions/`: structured shell contributions, commands, routes,
   pages, outlets, compatibility, and lifecycle version 1.

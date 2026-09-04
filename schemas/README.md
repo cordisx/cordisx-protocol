@@ -2,6 +2,9 @@
 
 Machine-readable CordisX manifest and protocol schemas belong here.
 
+- `visuals-common.v1.schema.json` and `visual-projection.v1.schema.json`:
+  owner-local provider ids plus the framework-neutral opaque data and effective
+  theme projection supplied to one bounded visual seat;
 - `plugin-bundle.v1.schema.json`: one non-executable explicit-local bundle
   manifest with exact member versions and contained package directories;
 - `plugin-bundle-lifecycle-operation.v1.schema.json` and

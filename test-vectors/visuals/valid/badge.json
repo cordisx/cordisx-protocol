@@ -1,0 +1,8 @@
+{
+  "case": "projection",
+  "providerId": "quality.badge",
+  "value": {
+    "theme": "dark",
+    "data": { "label": "Verified", "tone": "positive" }
+  }
+}
