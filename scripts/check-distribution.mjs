@@ -41,6 +41,7 @@ const expectedExports = [
   './navigation-collection-actions/v1',
   './plugin-manifest/v6',
   './plugin-manifest/v7',
+  './plugin-manifest/v8',
   './transient-canvas/v1',
 ].sort()
 const expectedFiles = [
@@ -85,6 +86,7 @@ const expectedFiles = [
   'types/navigation-collection-actions.v1.d.ts',
   'types/plugin-manifest.v6.d.ts',
   'types/plugin-manifest.v7.d.ts',
+  'types/plugin-manifest.v8.d.ts',
   'types/transient-canvas.v1.d.ts',
 ].sort()
 const frozenAgentLoopFiles = [
