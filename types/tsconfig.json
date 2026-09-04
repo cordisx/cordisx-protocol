@@ -55,6 +55,8 @@
     "agent-conversation-shell.v4.test.ts",
     "agent-conversation-shell.v5.d.ts",
     "agent-conversation-shell.v5.test.ts",
+    "agent-conversation-shell.v6.d.ts",
+    "agent-conversation-shell.v6.test.ts",
     "host-dom.v1.d.ts",
     "host-dom.v1.test.ts"
   ]

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-request.v6.schema.json",
+  "title": "CordisX Agent Conversation Shell Room Settings Update Request v6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "requestId",
+    "binding",
+    "generation",
+    "roomId",
+    "expectedSnapshotSequence",
+    "patch"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-settings-request.v6.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.agent-conversation-shell-room-settings-request/v6"
+    },
+    "schemaVersion": {
+      "const": 6
+    },
+    "requestId": {
+      "$ref": "agent-conversation-shell-common.v6.schema.json#/$defs/opaqueId"
+    },
+    "binding": {
+      "$ref": "agent-conversation-shell-common.v6.schema.json#/$defs/bindingRef"
+    },
+    "generation": {
+      "$ref": "agent-conversation-shell-common.v6.schema.json#/$defs/generation"
+    },
+    "roomId": {
+      "$ref": "agent-conversation-shell-common.v6.schema.json#/$defs/opaqueId"
+    },
+    "expectedSnapshotSequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "patch": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "name": {
+          "$ref": "agent-conversation-shell-common.v6.schema.json#/$defs/roomName"
+        },
+        "description": {
+          "$ref": "agent-conversation-shell-common.v6.schema.json#/$defs/roomDescriptionPatch"
+        }
+      }
+    }
+  }
+}
