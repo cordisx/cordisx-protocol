@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v6.schema.json",
+  "title": "CordisX Runtime Plugin Manifest v6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "capabilities", "services"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v6.schema.json" },
+    "schemaVersion": { "const": 6 },
+    "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "name": { "$ref": "plugin-manifest.v5.schema.json#/properties/name" },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 36,
+      "items": { "$ref": "#/$defs/capabilityDeclaration" }
+    },
+    "services": { "$ref": "plugin-manifest.v5.schema.json#/properties/services" }
+  },
+  "$defs": {
+    "agentRuntimeCapability": { "$ref": "agents-common.v1.schema.json#/$defs/capability" },
+    "approvalCapability": { "enum": ["approvals.request", "approvals.answer"] },
+    "exactSessionIds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^*]+$" }
+    },
+    "hostRouteSessionScopeBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "routeId", "param"],
+      "properties": {
+        "kind": { "const": "host-route-param" },
+        "routeId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "param": { "const": "sessionId" }
+      }
+    },
+    "approvalScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionIds"],
+      "properties": {
+        "sessionIds": {
+          "oneOf": [
+            { "$ref": "#/$defs/exactSessionIds" },
+            { "$ref": "#/$defs/hostRouteSessionScopeBinding" }
+          ]
+        }
+      }
+    },
+    "agentRuntimeScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sessionIds": {
+          "oneOf": [
+            { "$ref": "#/$defs/exactSessionIds" },
+            { "$ref": "#/$defs/hostRouteSessionScopeBinding" }
+          ]
+        }
+      }
+    },
+    "agentRuntimeCapabilityDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "required", "scope"],
+      "properties": {
+        "name": { "$ref": "#/$defs/agentRuntimeCapability" },
+        "required": { "type": "boolean" },
+        "rationale": { "$ref": "plugin-manifest.v5.schema.json#/$defs/rationale" },
+        "security": { "$ref": "plugin-manifest.v5.schema.json#/$defs/securityDeclaration" },
+        "scope": { "$ref": "#/$defs/agentRuntimeScope" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "name": { "$ref": "#/$defs/approvalCapability" } }, "required": ["name"] },
+          "then": { "properties": { "scope": { "$ref": "#/$defs/approvalScope" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "scope": {
+                "type": "object",
+                "properties": { "sessionIds": { "type": "object" } },
+                "required": ["sessionIds"]
+              }
+            },
+            "required": ["scope"]
+          },
+          "then": { "properties": { "required": { "const": false } } }
+        }
+      ]
+    },
+    "capabilityDeclaration": {
+      "oneOf": [
+        { "$ref": "plugin-manifest.v5.schema.json#/$defs/capabilityDeclaration" },
+        { "$ref": "#/$defs/agentRuntimeCapabilityDeclaration" }
+      ]
+    }
+  }
+}
