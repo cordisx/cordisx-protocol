@@ -198,6 +198,7 @@ It renders durable state only from SessionEvent and observes
 - `@cordisx/protocol/agent-admission/v3` -> `types/agent-admission.v3.d.ts`.
 - `@cordisx/protocol/agent-admission/v4` -> `types/agent-admission.v4.d.ts`.
 - `@cordisx/protocol/agent-admission/v5` -> `types/agent-admission.v5.d.ts`.
+- `@cordisx/protocol/agent-admission/v6` -> `types/agent-admission.v6.d.ts`.
 - `@cordisx/protocol/agent-conversation-shell/v9` -> `types/agent-conversation-shell.v9.d.ts`.
 
 ### Target-scoped pre-submit admission
@@ -234,6 +235,37 @@ bootstrap command may bind many targets only for the same Room; cross-Room,
 duplicate, reused, stale, completed, or revoked bindings fail closed. The later
 reservation must match the retained Room-target receipt before its driver
 submit. V4 and Shell v9 remain unchanged.
+
+### Bootstrap Room route rebind
+
+V5 does **not** transfer a captured source when a fresh Room replaces the
+originating Shell binding. A Host and plugin that need that transition opt into
+v6. While the bootstrap command is live, the plugin declares one exact
+`{ roomId, participantId, memberId, runId, route: { routeId, param: 'roomId',
+roomId } }`, where both Room ids are equal. The Host validates the same owner,
+plugin generation, connection, command execution, target, and a registered
+same-owner route whose exact `:roomId` parameter is the declared Room. It must
+not require pre-command membership, infer a target, or accept a wildcard.
+
+The declaration returns only an opaque continuation. The plugin uses it for
+the target's one-shot v6 reservation and awaits accepted `submit()`. At that
+point the Host captures the exact admitted `{ sessionId, messageId }` and keeps
+only a pending continuation record, not the old binding or a second ledger.
+When the declared Room route activates, the Host itself (never the plugin)
+calls the Host-only v6 claim service with the Host-generated new binding and
+the captured source. It must do so atomically before resolving navigation or
+dispatching deferred scenario work. Claim succeeds exactly once only when the
+current binding, route id, room parameter, owner, generation, connection,
+execution, target, Session, and message all equal the stored declaration.
+The successful claim moves—not copies—the capture to that new binding.
+
+Any other replacement, foreign/cross-Room route, target or source mismatch,
+claim before accepted submit, duplicate/reused continuation, command
+completion, explicit revoke, owner or plugin-generation replacement,
+connection replacement, or disposal removes the pending record and fails
+closed. In particular, the Host must not keep the old binding alive, search for
+a Room/Session by name, or use a generic post-navigation lookup. V1–v5 and
+Shell v1–v9 remain unchanged.
 
 The matching version-1 JSON Schemas cover acquisition, admission, mutation,
 live Agent observations, Session snapshots/pages/subscriptions/events, and

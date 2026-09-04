@@ -328,6 +328,15 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   `agent-admission-target-reservation.v3.schema.json`: opaque, Host-issued,
   exact Room-delivery capabilities and one-shot pre-submit reservations for
   multi-target composer dispatch;
+- `agent-admission-bootstrap-{target-origin,reservation}.v4.schema.json` and
+  `agent-admission-bootstrap-room-{target-origin,reservation,target-receipt}.v5.schema.json`:
+  bootstrap command target admission and exact Room source capture without a
+  pre-existing Session;
+- `agent-admission-bootstrap-route-{continuation,reservation,claim-receipt}.v6.schema.json`:
+  exact declared Room-route continuation, one-shot pre-submit reservation, and
+  Host-stamped source-capture rebind evidence. The continuation moves only an
+  accepted captured source to its declared new Room binding; it is not a
+  generic post-navigation authority;
 - `session-common.v1.schema.json`, `session-snapshot.v1.schema.json`,
   `session-read-request.v1.schema.json`, `session-event.v1.schema.json`,
   `session-event-page.v1.schema.json`, `session-subscribe-request.v1.schema.json`,
