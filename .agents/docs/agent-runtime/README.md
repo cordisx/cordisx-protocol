@@ -195,6 +195,20 @@ It renders durable state only from SessionEvent and observes
 - `@cordisx/protocol/approval/v1` -> `types/approval.v1.d.ts`;
 - `@cordisx/protocol/approval/v2` -> `types/approval.v2.d.ts`;
 - `@cordisx/protocol/approval/v3` -> `types/approval.v3.d.ts`.
+- `@cordisx/protocol/agent-admission/v3` -> `types/agent-admission.v3.d.ts`.
+
+### Target-scoped pre-submit admission
+
+For one composer command that dispatches to multiple Room deliveries, Host issues
+one opaque v3 target origin for each exact `{ participantId, memberId, runId }`.
+The plugin obtains it with `AgentAdmissionTargetOriginService.issue`, then calls
+`AgentAdmissionTargetReservationService.reserve` with the exact acquired handle
+and calls that reservation's one-shot `submit`. Host validates the originating
+binding, owner/plugin generation, connection, command execution, Room target,
+and admitted Agent/Session before it invokes the driver. A capability cannot be
+cross-used, reused, or retained after command completion, revocation, or
+replacement. A failed target has no fallback; ordinary no-origin Agent sends and
+the v1/v2 contracts retain their existing behavior.
 
 The matching version-1 JSON Schemas cover acquisition, admission, mutation,
 live Agent observations, Session snapshots/pages/subscriptions/events, and
