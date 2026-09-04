@@ -26,6 +26,8 @@
     "plugin-manifest.v7.d.ts",
     "plugin-manifest.v8.d.ts",
     "plugin-manifest.v8.test.ts",
+    "plugin-package.v8.d.ts",
+    "plugin-package.v8.test.ts",
     "transient-canvas.v1.d.ts",
     "icon-theme.v1.d.ts",
     "icon-theme.v1.test.ts",
