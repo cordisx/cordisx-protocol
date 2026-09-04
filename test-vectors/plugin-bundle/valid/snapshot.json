@@ -1,0 +1,77 @@
+{
+  "case": "snapshot",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-bundle-manager-snapshot.v1.schema.json",
+    "schemaVersion": 1,
+    "profileId": "work",
+    "revision": 3,
+    "pluginRevision": 7,
+    "runtimeGeneration": "runtime-4",
+    "operationsAvailable": true,
+    "bundles": [
+      {
+        "id": "team-workflow",
+        "name": "Team workflow",
+        "description": "A coordinated set of workflow plugins.",
+        "version": "1.0.0",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authors": ["CordisX"],
+        "sourceLabel": "team-workflow.bundle",
+        "canonicalSource": "https://plugins.example/team-workflow",
+        "iconHandle": "bundle-icon:team-workflow",
+        "installedAt": "2026-09-02T01:00:00.000Z",
+        "updatedAt": "2026-09-02T01:00:00.000Z",
+        "status": "active",
+        "enabled": true,
+        "readme": "# Team workflow",
+        "availableOperations": ["update", "disable", "uninstall"],
+        "members": [
+          {
+            "pluginId": "notes",
+            "name": "Notes",
+            "requestedVersion": "1.2.0",
+            "installedVersion": "1.2.0",
+            "installedDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "required": true,
+            "enabledByDefault": true,
+            "enabled": true,
+            "state": "shared",
+            "installedViaBundle": true,
+            "bundleIds": ["team-workflow"],
+            "directClaim": true,
+            "runtimeDependentIds": []
+          }
+        ],
+        "permissions": [
+          {
+            "permissionId": "permission:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "pluginId": "notes",
+            "capability": "workspace.read",
+            "scopeLabel": "Current workspace",
+            "required": true,
+            "bundlePolicy": "allow",
+            "pluginOverride": "deny",
+            "effectivePolicy": "deny",
+            "effectiveSource": "plugin-override",
+            "affectedBundleIds": ["team-workflow"]
+          }
+        ],
+        "claims": [
+          { "pluginId": "notes", "kind": "bundle", "claimantId": "team-workflow" },
+          { "pluginId": "notes", "kind": "direct", "claimantId": "notes" }
+        ],
+        "dependencies": [],
+        "records": [
+          {
+            "recordId": "bundle-record-1",
+            "at": "2026-09-02T01:00:00.000Z",
+            "kind": "install",
+            "outcome": "applied",
+            "message": "Installed bundle and retained an existing direct member.",
+            "pluginIds": ["notes"]
+          }
+        ]
+      }
+    ]
+  }
+}

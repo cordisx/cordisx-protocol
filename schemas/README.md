@@ -2,6 +2,16 @@
 
 Machine-readable CordisX manifest and protocol schemas belong here.
 
+- `plugin-bundle.v1.schema.json`: one non-executable explicit-local bundle
+  manifest with exact member versions and contained package directories;
+- `plugin-bundle-lifecycle-operation.v1.schema.json` and
+  `plugin-bundle-lifecycle-result.v1.schema.json`: revision/runtime-fenced
+  bundle inspection, application, policy, optional-member, adoption, and
+  impact outcomes;
+- `plugin-bundle-manager-snapshot.v1.schema.json`: redacted Host Manager
+  projection for header metadata, README, members, effective permissions,
+  relations, claims, and bounded records;
+
 - `marketplace-plugin.v1.schema.json`: one discovery-only plugin entry;
 - `marketplace-feed.v1.schema.json`: one aggregate marketplace feed;
 - `marketplace-plugin.v4.schema.json` and `marketplace-feed.v4.schema.json`:

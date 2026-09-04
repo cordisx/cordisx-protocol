@@ -1,0 +1,17 @@
+{
+  "case": "bundle",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-bundle.v1.schema.json",
+    "schemaVersion": 1,
+    "id": "team-workflow",
+    "name": "Team workflow",
+    "version": "1.0.0",
+    "authors": ["CordisX"],
+    "readme": "./README.md",
+    "distribution": { "mode": "explicit-local-v1", "signature": "unsupported" },
+    "members": [
+      { "id": "notes", "version": "1.2.0", "path": "./plugins/notes", "required": true, "enabledByDefault": true },
+      { "id": "notes", "version": "1.2.0", "path": "./plugins/notes-copy", "required": false, "enabledByDefault": true }
+    ]
+  }
+}

@@ -85,6 +85,10 @@ Specified areas:
   minimum apply scopes, revision/generation/package-fenced staged lifecycle
   operations, atomic registry publication, immutable activation records,
   last-good rollback, and redacted manager snapshots.
+- `plugin-bundles/`: explicit-local bundle artifacts, exact member identity,
+  multi-source ownership claims, coordinated lifecycle compensation, shared
+  least-privilege policy, per-plugin overrides, and the Host-owned five-tab
+  Manager projection.
 - `publisher-grants.md`: external-publisher commerce descriptors, signed
   `grant`/`renew`/`revoke`/`transfer` statements, device-key binding, minimal
   activation-registry boundary, trusted-time/offline behavior, and conformance.
