@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-question.v2.schema.json",
+  "title": "CordisX Exact-authority Approval Question v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "id", "requester", "authority", "toolName", "reason"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-question.v2.schema.json" },
+    "contract": { "const": "cordisx.approval-question/v2" },
+    "schemaVersion": { "const": 2 },
+    "id": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "requester": { "$ref": "approval-common.v2.schema.json#/$defs/agentBinding" },
+    "authority": { "$ref": "approval-common.v2.schema.json#/$defs/agentBinding" },
+    "toolName": { "$ref": "session-common.v1.schema.json#/$defs/identifier" },
+    "callId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "reason": { "$ref": "approval-common.v2.schema.json#/$defs/reason" }
+  }
+}

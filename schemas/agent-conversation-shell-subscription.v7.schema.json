@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-subscription.v7.schema.json",
+  "title": "CordisX Agent Conversation Shell Subscription v7",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "subscriptionId",
+    "binding",
+    "generation",
+    "afterSequence",
+    "snapshotSequence"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-subscription.v7.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.agent-conversation-shell-subscription/v7"
+    },
+    "schemaVersion": {
+      "const": 7
+    },
+    "subscriptionId": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId"
+    },
+    "binding": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/bindingRef"
+    },
+    "generation": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/generation"
+    },
+    "afterSequence": {
+      "type": "integer",
+      "minimum": -1
+    },
+    "snapshotSequence": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

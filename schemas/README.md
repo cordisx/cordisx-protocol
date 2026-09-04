@@ -248,6 +248,18 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   terminal approvals are always actionless and may omit generation when exact
   same-Session asked/decided facts are the only persisted authority. V1-v5
   public bytes remain frozen;
+- `approval-common.v2.schema.json`, `approval-question.v2.schema.json`,
+  `approval-decision.v2.schema.json`, and
+  `approval-authority-binding.v1.schema.json`: exact live requester/authority
+  Approval bindings plus one generation-free, ignorable SessionEvent context
+  containing durable definition identities and exact structured plain-text
+  reason. Approval v1 and SessionEvent v1 bytes remain unchanged;
+- `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v7.schema.json`,
+  `agent-conversation-shell-subscription-close.v7.schema.json`, the v7
+  Room-settings request/result schemas, and the v7 Room collection leading
+  visual schema: exact requester-authority approval bubbles, approve/reject-only
+  live authority-fenced commands, exact plain-text reasons, and actionless
+  terminal history without reconstructed live authority. V1-v6 remain frozen;
 - `agent-loop-common.v1.schema.json`, the unchanged `agent-loop-*.v1` family,
   and `agent-definition.v1.schema.json`:
   room-neutral Agent identity, field-specific inheritance, structured prompt

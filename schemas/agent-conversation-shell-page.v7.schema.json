@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-page.v7.schema.json",
+  "title": "CordisX Agent Conversation Shell Ordered Page v7",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "subscription",
+    "afterSequence",
+    "phase",
+    "updates",
+    "nextAfterSequence",
+    "hasMore"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-page.v7.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.agent-conversation-shell-page/v7"
+    },
+    "schemaVersion": {
+      "const": 7
+    },
+    "subscription": {
+      "$ref": "agent-conversation-shell-subscription.v7.schema.json"
+    },
+    "afterSequence": {
+      "type": "integer",
+      "minimum": -1
+    },
+    "phase": {
+      "enum": [
+        "replay",
+        "live"
+      ]
+    },
+    "updates": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/update"
+      }
+    },
+    "nextAfterSequence": {
+      "type": "integer",
+      "minimum": -1
+    },
+    "hasMore": {
+      "type": "boolean"
+    }
+  },
+  "$defs": {
+    "update": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "sequence",
+            "snapshot"
+          ],
+          "properties": {
+            "kind": {
+              "const": "snapshot-replaced"
+            },
+            "sequence": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "snapshot": {
+              "$ref": "agent-conversation-shell-snapshot.v7.schema.json"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "sequence",
+            "item"
+          ],
+          "properties": {
+            "kind": {
+              "const": "item-appended"
+            },
+            "sequence": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "item": {
+              "$ref": "agent-conversation-shell-snapshot.v7.schema.json#/$defs/item"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "sequence",
+            "item"
+          ],
+          "properties": {
+            "kind": {
+              "const": "item-updated"
+            },
+            "sequence": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "item": {
+              "$ref": "agent-conversation-shell-snapshot.v7.schema.json#/$defs/item"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "sequence",
+            "reason"
+          ],
+          "properties": {
+            "kind": {
+              "const": "disposed"
+            },
+            "sequence": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "reason": {
+              "enum": [
+                "explicit",
+                "owner-disposed",
+                "generation-replaced"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

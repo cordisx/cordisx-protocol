@@ -319,3 +319,35 @@ command context for them. Chatroom may project old persisted ledgers by joining
 only exact `sessionId + approvalId` asked/decided facts and omitting generation.
 No SessionEvent migration or mutation is required. Shell v1 through v5 and all
 AgentLoop contracts remain byte-frozen and available.
+
+## v7 exact requester-to-authority approval bubble
+
+V7 approval items bind the existing outer `participantId`, `memberId`,
+`runId`, and `sessionId` to the requester definition identity. This outer
+association is the bubble author source. The item does not carry an author
+display name, and its reason contains only exact requester-authored plain text;
+producers do not prefix or repeat either entity name in the body.
+
+The separate `authority` value contains an exact Room `participantId`,
+`memberId`, and `AgentDefinitionIdentity`. Host validates both participant
+identities against the selected Room. It never treats display text, the Room
+user, member ordering, reports-to labels, or current Agent lookup as authority.
+The bounded `{ kind: 'plain-text', text }` reason comes exactly from the durable
+`approval/authority-bound` context and matches `approval/asked.reason`. Host
+renders it as literal text; it is neither raw HTML nor an inferred localized
+scenario label.
+
+A pending v7 item additionally requires the requester's live
+`agentGeneration`, the exact live authority Agent/Session/generation/definition
+binding, and exactly two ordered actions: `approve`, then `reject`. Cancel and
+all other decisions fail closed. The Host-generated approval command context
+echoes the item id, requester Session and definition, approval id, selected
+decision, and complete live authority binding. Dispatch occurs only when all
+values still match the item and current Host-owned authority fences.
+
+After a decision, the same item id is updated in place to an actionless
+terminal state. The durable requester identity, authority identity, Room member
+association, and reason remain; the live authority binding is prohibited and
+is never reconstructed during cold replay. Existing ledgers without an
+`approval/authority-bound` fact remain honestly representable through Shell
+v6 terminal items. V1-v6 public bytes remain frozen.
