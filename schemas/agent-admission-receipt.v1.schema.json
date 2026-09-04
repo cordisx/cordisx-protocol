@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-receipt.v1.schema.json",
+  "title": "CordisX Agent Admission Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "receiptId", "owner", "origin", "sessionId", "agentGeneration", "messageId"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-receipt.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-admission-receipt/v1" },
+    "schemaVersion": { "const": 1 },
+    "receiptId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "owner": { "$ref": "agents-common.v1.schema.json#/$defs/owner" },
+    "origin": { "$ref": "agent-command-origin.v1.schema.json" },
+    "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "agentGeneration": { "$ref": "session-common.v1.schema.json#/$defs/generation" },
+    "messageId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }
+  }
+}
