@@ -10,6 +10,7 @@ const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedExports = [
   './agent-admission/v1',
   './agent-admission/v2',
+  './agent-admission/v3',
   './agent-avatar/v1',
   './agent-conversation-shell/v1',
   './agent-conversation-shell/v2',
@@ -62,6 +63,7 @@ const expectedFiles = [
   'types/agent-conversation-shell.v8.d.ts',
   'types/agent-admission.v1.d.ts',
   'types/agent-admission.v2.d.ts',
+  'types/agent-admission.v3.d.ts',
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',

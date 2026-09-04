@@ -324,6 +324,10 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   `agent-live-event.v1.schema.json`: additive Agent Registry acquisition,
   MessageId-only admission, live handle state, cancellation, ownership, and
   non-durable coordination events with `AgentId = SessionId`;
+- `agent-admission-target-origin.v3.schema.json` and
+  `agent-admission-target-reservation.v3.schema.json`: opaque, Host-issued,
+  exact Room-delivery capabilities and one-shot pre-submit reservations for
+  multi-target composer dispatch;
 - `session-common.v1.schema.json`, `session-snapshot.v1.schema.json`,
   `session-read-request.v1.schema.json`, `session-event.v1.schema.json`,
   `session-event-page.v1.schema.json`, `session-subscribe-request.v1.schema.json`,
