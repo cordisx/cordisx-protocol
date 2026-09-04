@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-request-resolver-close.v1.schema.json",
+  "title": "CordisX Approval Request Resolver Close v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "registration", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-request-resolver-close.v1.schema.json" },
+    "contract": { "const": "cordisx.approval-request-resolver-close/v1" },
+    "schemaVersion": { "const": 1 },
+    "registration": { "$ref": "approval-request-routing-registration.v1.schema.json" },
+    "status": { "const": "closed" },
+    "code": { "enum": ["disposed", "requester-replaced", "plugin-generation-replaced", "permission-revoked", "connection-replaced"] }
+  }
+}

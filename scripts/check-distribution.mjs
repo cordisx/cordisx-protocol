@@ -25,6 +25,7 @@ const expectedExports = [
   './sessions/v1',
   './approval/v1',
   './approval/v2',
+  './approval/v3',
   './connector-service/v1',
   './host-dom/v1',
   './manager-collection/v1',
@@ -62,6 +63,7 @@ const expectedFiles = [
   'types/sessions.v1.d.ts',
   'types/approval.v1.d.ts',
   'types/approval.v2.d.ts',
+  'types/approval.v3.d.ts',
   'types/connector-service.v1.d.ts',
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
@@ -150,6 +152,7 @@ import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV
 import type { PluginManifestHostRouteSessionScopeBindingV6, PluginRuntimeManifestV6 } from '@cordisx/protocol/plugin-manifest/v6'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalServiceV2 } from '@cordisx/protocol/approval/v2'
+import type { ApprovalRequestRoutingResult, ApprovalService as ApprovalServiceV3 } from '@cordisx/protocol/approval/v3'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
 const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
@@ -184,6 +187,7 @@ declare const entities: EntityRegistry
 declare const sessions: SessionRegistry
 declare const approvals: ApprovalService
 declare const approvalsV2: ApprovalServiceV2
+declare const approvalsV3: ApprovalServiceV3
 declare const agent: Agent
 declare const leadAgent: Agent
 declare const session: Session
@@ -251,6 +255,7 @@ agent.cancel({ kind: 'user' })
 agent.whenIdle()
 approvals.request({ agent, toolName: 'shell' })
 approvalsV2.request({ requester: { agent, definition: authorityApproval.requester }, authority: { agent: leadAgent, definition: leadBinding.definition }, toolName: 'review', reason: authorityApproval.reason })
+approvalsV3.registerRequestResolver({ agent, definition: authorityApproval.requester }, async question => ({ $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/approval-request-routing-result.v1.schema.json', contract: 'cordisx.approval-request-routing-result/v1', schemaVersion: 1, routingId: question.routingId, registration: question.registration, status: 'accepted', code: 'routed', requester: question.requester, authority: leadBinding } satisfies ApprovalRequestRoutingResult))
 declare const authorityEvent: ApprovalAuthorityBoundSessionEvent
 authorityEvent.data.authority.revision satisfies string
 const discovered = await connector.discover()
