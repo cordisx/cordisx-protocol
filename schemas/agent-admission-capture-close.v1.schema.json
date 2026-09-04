@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-capture-close.v1.schema.json",
+  "title": "CordisX Agent Admission Capture Close v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "receiptId", "status", "code"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-capture-close.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-admission-capture-close/v1" },
+    "schemaVersion": { "const": 1 },
+    "receiptId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "status": { "const": "closed" },
+    "code": { "enum": ["command-complete", "command-replaced", "agent-replaced", "plugin-generation-replaced", "connection-replaced", "disposed"] }
+  }
+}

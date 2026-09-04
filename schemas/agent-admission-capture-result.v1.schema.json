@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-capture-result.v1.schema.json",
+  "title": "CordisX Agent Admission Capture Result v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "status", "code", "receipt"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-capture-result.v1.schema.json" },
+        "contract": { "const": "cordisx.agent-admission-capture-result/v1" },
+        "schemaVersion": { "const": 1 },
+        "status": { "const": "captured" },
+        "code": { "const": "captured" },
+        "receipt": { "$ref": "agent-admission-receipt.v1.schema.json" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "status", "code"],
+      "properties": {
+        "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-capture-result.v1.schema.json" },
+        "contract": { "const": "cordisx.agent-admission-capture-result/v1" },
+        "schemaVersion": { "const": 1 },
+        "status": { "enum": ["denied", "conflict", "unavailable"] },
+        "code": { "enum": ["permission-denied", "not-owner", "origin-denied", "message-not-admitted", "origin-conflict", "duplicate-capture", "command-complete", "command-replaced", "agent-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable", "unsupported"] }
+      }
+    }
+  ]
+}
