@@ -197,6 +197,7 @@ It renders durable state only from SessionEvent and observes
 - `@cordisx/protocol/approval/v3` -> `types/approval.v3.d.ts`.
 - `@cordisx/protocol/agent-admission/v3` -> `types/agent-admission.v3.d.ts`.
 - `@cordisx/protocol/agent-admission/v4` -> `types/agent-admission.v4.d.ts`.
+- `@cordisx/protocol/agent-admission/v5` -> `types/agent-admission.v5.d.ts`.
 - `@cordisx/protocol/agent-conversation-shell/v9` -> `types/agent-conversation-shell.v9.d.ts`.
 
 ### Target-scoped pre-submit admission
@@ -223,6 +224,16 @@ acquire the Agent, reserve the issued opaque target capability, and make the
 one-shot submit. Host rejects cross-target or duplicate use and every call after
 completion, revocation, or replacement. Bootstrap never grants a fallback send
 or creates another durable ledger.
+
+### Bootstrap Room source capture
+
+V5 additionally binds `roomId` with the exact bootstrap delivery before its
+first reservation. Host returns an opaque Room-target origin plus a clone-safe
+Room-target receipt, and retains that receipt for scenario/source capture. One
+bootstrap command may bind many targets only for the same Room; cross-Room,
+duplicate, reused, stale, completed, or revoked bindings fail closed. The later
+reservation must match the retained Room-target receipt before its driver
+submit. V4 and Shell v9 remain unchanged.
 
 The matching version-1 JSON Schemas cover acquisition, admission, mutation,
 live Agent observations, Session snapshots/pages/subscriptions/events, and

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const names = ['session-common.v1.schema.json','agents-common.v1.schema.json','ui-common.v1.schema.json','approval-common.v2.schema.json','agent-conversation-shell-common.v2.schema.json','agent-conversation-shell-common.v7.schema.json','agent-command-origin.v1.schema.json','agent-bootstrap-command-origin.v1.schema.json','agent-admission-receipt.v1.schema.json','agent-admission-capture-close.v1.schema.json','agent-admission-capture-result.v1.schema.json','agent-conversation-shell-command-context.v8.schema.json','agent-conversation-shell-command-context.v9.schema.json','agent-admission-target-origin.v3.schema.json','agent-admission-target-reservation.v3.schema.json','agent-admission-bootstrap-target-origin.v4.schema.json','agent-admission-bootstrap-reservation.v4.schema.json']
+const names = ['session-common.v1.schema.json','agents-common.v1.schema.json','ui-common.v1.schema.json','approval-common.v2.schema.json','agent-conversation-shell-common.v2.schema.json','agent-conversation-shell-common.v7.schema.json','agent-command-origin.v1.schema.json','agent-bootstrap-command-origin.v1.schema.json','agent-admission-receipt.v1.schema.json','agent-admission-capture-close.v1.schema.json','agent-admission-capture-result.v1.schema.json','agent-conversation-shell-command-context.v8.schema.json','agent-conversation-shell-command-context.v9.schema.json','agent-admission-target-origin.v3.schema.json','agent-admission-target-reservation.v3.schema.json','agent-admission-bootstrap-target-origin.v4.schema.json','agent-admission-bootstrap-reservation.v4.schema.json','agent-admission-bootstrap-room-target-origin.v5.schema.json','agent-admission-bootstrap-room-reservation.v5.schema.json','agent-admission-bootstrap-room-target-receipt.v5.schema.json']
 const ajv = new Ajv2020({ strict: true, allErrors: true, allowUnionTypes: true })
 for (const name of names) ajv.addSchema(JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')))
 const origin = {$schema:'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-command-origin.v1.schema.json',contract:'cordisx.agent-command-origin/v1',schemaVersion:1,originId:'origin-1',binding:{bindingId:'binding-1',ownerGeneration:'owner-1'},generation:'shell-1',executionId:'exec-1',commandId:'chatroom.message.submit',scope:'composer-submit',room:{roomId:'room-4',participantId:'participant-lead',memberId:'member-lead',runId:'run-4'}}
@@ -54,4 +54,27 @@ assert.equal(bootstrapOrigins.slice(0, 1).length, 1, 'N=1 bootstrap target is su
 assert.equal(bootstrapOrigins.slice(0, 2).length, 2, 'N=2 bootstrap targets are independently supported')
 assert.equal(consumeBootstrap(1, bootstrapOrigins[0]), 'reused', 'cross-target reuse fails closed')
 assert.equal(validate('agent-conversation-shell-command-context.v9.schema.json')({...bootstrapContext, origin: undefined}), false, 'predecessor no-origin path remains unavailable')
-console.log('agent admission v1-v4 and shell v8-v9 conformance passed')
+const roomTargets = [
+  { roomId: 'room-fresh', participantId: 'participant-lead', memberId: 'member-lead', runId: 'run-lead' },
+  { roomId: 'room-fresh', participantId: 'participant-reviewer', memberId: 'member-reviewer', runId: 'run-reviewer' },
+  { roomId: 'room-fresh', participantId: 'participant-integrator', memberId: 'member-integrator', runId: 'run-integrator' },
+]
+const roomOrigins = roomTargets.map((target, index) => ({ $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-bootstrap-room-target-origin.v5.schema.json', contract: 'cordisx.agent-admission-bootstrap-room-target-origin/v5', schemaVersion: 5, token: `room-fresh-${index}` }))
+for (const value of roomOrigins) assert.equal(validate('agent-admission-bootstrap-room-target-origin.v5.schema.json')(value), true)
+const roomReceipt = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-admission-bootstrap-room-target-receipt.v5.schema.json', contract: 'cordisx.agent-admission-bootstrap-room-target-receipt/v5', schemaVersion: 5, receiptId: 'room-receipt-1', target: roomTargets[0] }
+assert.equal(validate('agent-admission-bootstrap-room-target-receipt.v5.schema.json')(roomReceipt), true)
+assert.deepEqual(structuredClone(roomReceipt), roomReceipt, 'Host can carry exact Room receipt into source capture')
+const committedRoom = roomTargets[0].roomId
+const issuedRoomTargets = new Set()
+const issueRoom = (target, origin) => {
+  if (target.roomId !== committedRoom) return 'cross-room'
+  const key = [target.roomId, target.participantId, target.memberId, target.runId].join('\u0000')
+  if (issuedRoomTargets.has(key)) return 'duplicate-target'
+  issuedRoomTargets.add(key); return origin.token.startsWith('room-fresh-') ? 'issued' : 'target-denied'
+}
+assert.equal(issueRoom(roomTargets[0], roomOrigins[0]), 'issued', 'N=1 same-room target commits source Room authority')
+assert.equal(issueRoom(roomTargets[1], roomOrigins[1]), 'issued', 'N=2 same-room target commits separately')
+assert.equal(issueRoom(roomTargets[2], roomOrigins[2]), 'issued', 'N=3 same-room target commits separately')
+assert.equal(issueRoom(roomTargets[0], roomOrigins[0]), 'duplicate-target')
+assert.equal(issueRoom({ ...roomTargets[0], roomId: 'foreign-room' }, roomOrigins[0]), 'cross-room')
+console.log('agent admission v1-v5 and shell v8-v9 conformance passed')

@@ -81,6 +81,8 @@
     "agent-admission.v3.test.ts",
     "agent-admission.v4.d.ts",
     "agent-admission.v4.test.ts",
+    "agent-admission.v5.d.ts",
+    "agent-admission.v5.test.ts",
     "host-dom.v1.d.ts",
     "host-dom.v1.test.ts"
   ]
