@@ -286,3 +286,36 @@ the field and never rely on an implicit runtime default.
 Attachment commands and attachment picker behavior remain outside v5. A Host
 may independently reserve disabled visual space, but no plugin-facing action or
 capability is created by this contract.
+
+## v6 terminal approval replay
+
+V6 separates a live pending approval from its durable terminal presentation.
+A pending item still requires the exact live `agentGeneration` and one to three
+real command actions. It may be projected only while that generation-bound
+Approval question and its handlers remain live; it never degrades to an
+actionless pending card.
+
+An `approved`, `denied`, `cancelled`, or `failed` item is always actionless,
+read-only, and non-invokable. Its `agentGeneration` is optional. Omission means
+the projection has no durable authoritative Agent-generation fact; a producer
+must not substitute a Session generation, a current or replacement Agent's
+generation, a name lookup, or any locally synthesized value. A terminal item
+may carry `agentGeneration` only when the producer has a separately
+authoritative exact binding for that historical approval.
+
+For existing Session ledgers, a terminal item without `agentGeneration` is
+valid only when the same Session contains exactly one earlier
+`approval/asked` and exactly one later `approval/decided` with the same
+`ApprovalRequestId`. The decision outcome maps `allowed-once` to `approved`,
+`rejected` to `denied`, `cancelled` to `cancelled`, and `unavailable` to
+`failed`. A question without a decision remains pending evidence and is not a
+terminal card. Cross-Session ids, mismatched approval ids, duplicate facts,
+reversed ordering, unknown outcomes, actionable terminal items, and pending
+items without a live generation fail closed.
+
+The Host continues to own rendering and command dispatch. It validates v6,
+renders terminal cards without controls, and never constructs an approval
+command context for them. Chatroom may project old persisted ledgers by joining
+only exact `sessionId + approvalId` asked/decided facts and omitting generation.
+No SessionEvent migration or mutation is required. Shell v1 through v5 and all
+AgentLoop contracts remain byte-frozen and available.

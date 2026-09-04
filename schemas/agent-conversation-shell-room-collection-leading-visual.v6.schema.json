@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-room-collection-leading-visual.v6.schema.json",
+  "title": "CordisX Agent Conversation Shell Room Collection Leading Visual v6",
+  "$ref": "agent-conversation-shell-common.v6.schema.json#/$defs/roomCollectionLeadingVisual"
+}

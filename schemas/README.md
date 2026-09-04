@@ -240,6 +240,14 @@ Machine-readable CordisX manifest and protocol schemas belong here.
   submit command; every v4 Room, item, action, settings, Session correlation,
   and subscription lifecycle shape remains available. V4 public bytes remain
   frozen;
+- `agent-conversation-shell-{common,binding,snapshot,subscription,page,result,command-context}.v6.schema.json`,
+  `agent-conversation-shell-subscription-close.v6.schema.json`, the v6
+  Room-settings request/result schemas, and the v6 Room collection leading
+  visual schema: the additive terminal-approval replay successor. Pending
+  approvals retain exact live Agent generation and non-empty actions; durable
+  terminal approvals are always actionless and may omit generation when exact
+  same-Session asked/decided facts are the only persisted authority. V1-v5
+  public bytes remain frozen;
 - `agent-loop-common.v1.schema.json`, the unchanged `agent-loop-*.v1` family,
   and `agent-definition.v1.schema.json`:
   room-neutral Agent identity, field-specific inheritance, structured prompt

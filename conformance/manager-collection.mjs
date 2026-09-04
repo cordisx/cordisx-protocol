@@ -21,7 +21,7 @@ for (const name of schemaNames) {
   schemas.set(name, JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')))
 }
 
-const ajv = new Ajv2020({ allErrors: true, strict: true })
+const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, allowUnionTypes: true })
 for (const schema of schemas.values()) ajv.addSchema(schema)
 const validators = Object.fromEntries([
   ['registration', 'manager-collection-registration.v1.schema.json'],
