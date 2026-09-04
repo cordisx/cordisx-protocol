@@ -113,6 +113,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `plugin-manifest.v5.schema.json`: additive `ui.host-dom.read` and
   `ui.host-dom.modify` declarations with exact Host root and closed operation
   scopes; frozen manifest v1-v4 remain unchanged;
+- `plugin-manifest.v6.schema.json`: additive complete Agent-runtime capability
+  declarations with exact SessionId lists or same-owner Host route-param scope;
 - `permission-common.v4.schema.json`, `permission-policy.v4.schema.json`,
   `permission-authorization-plan.v4.schema.json`, and
   `permission-authorization-decision.v4.schema.json`: Host DOM root/operation
@@ -421,6 +423,8 @@ Machine-readable CordisX manifest and protocol schemas belong here.
 - `plugin-package.v5.schema.json`: package-v4 boundaries plus optional
   package-relative entities-v1 template declarations; package v1-v4 remain
   unchanged;
+- `plugin-package.v6.schema.json`: package-v5 boundaries plus a closed runtime
+  manifest-v6 reference for exact Agent Session route declarations;
 - `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or
   last-good activation record without filesystem paths;
 - `plugin-lifecycle-operation.v1.schema.json`: revision- and

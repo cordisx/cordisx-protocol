@@ -31,6 +31,7 @@ const expectedExports = [
   './manager-content-navigation/v4',
   './manager-content-navigation/v5',
   './navigation-collection-actions/v1',
+  './plugin-manifest/v6',
 ].sort()
 const expectedFiles = [
   'LICENSE',
@@ -64,6 +65,7 @@ const expectedFiles = [
   'types/manager-content-navigation.v4.d.ts',
   'types/manager-content-navigation.v5.d.ts',
   'types/navigation-collection-actions.v1.d.ts',
+  'types/plugin-manifest.v6.d.ts',
 ].sort()
 const frozenAgentLoopFiles = [
   ...readdirSync(join(root, 'schemas'))
@@ -137,6 +139,7 @@ import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, Enti
 import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 } from '@cordisx/protocol/manager-content-navigation/v3'
 import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, ManagerContentNavigationDeclarationV4, ManagerContentProjectionV3 } from '@cordisx/protocol/manager-content-navigation/v4'
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
+import type { PluginManifestHostRouteSessionScopeBindingV6, PluginRuntimeManifestV6 } from '@cordisx/protocol/plugin-manifest/v6'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
@@ -191,6 +194,9 @@ managerNavigationV5.body?.kind satisfies 'plugin-config-form' | undefined
 managerProjectionV4.body?.configuration.version satisfies 3 | undefined
 const localizedChoice = { value: 'mod-enter', label: { key: 'composer.shortcut.mod-enter', fallback: 'Command/Ctrl+Enter sends' } } satisfies ManagerContentPluginConfigLocalizedChoiceV2
 localizedChoice.value satisfies string | number | boolean | null
+const installedApprovalRouteScope = { kind: 'host-route-param', routeId: 'room-session-detail', param: 'sessionId' } satisfies PluginManifestHostRouteSessionScopeBindingV6
+const installedManifestV6 = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v6.schema.json', schemaVersion: 6, id: 'chatroom', capabilities: [{ name: 'approvals.request', required: false, scope: { sessionIds: installedApprovalRouteScope } }], services: [] } satisfies PluginRuntimeManifestV6
+installedManifestV6.schemaVersion satisfies 6
 declare const managerConfigCommand: ManagerContentConfigCommandV1
 managerConfigSource.execute(managerConfigCommand)
 managerConfigSourceV2.execute(managerConfigCommand)

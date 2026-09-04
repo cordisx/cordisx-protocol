@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v6.schema.json",
+  "title": "CordisX Explicit Local Plugin Package Manifest v6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "version", "entry", "distribution", "compatibility", "dependencies", "runtimeManifest"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v6.schema.json" },
+    "schemaVersion": { "const": 6 },
+    "id": { "$ref": "plugin-package.v5.schema.json#/properties/id" },
+    "version": { "$ref": "plugin-package.v5.schema.json#/properties/version" },
+    "entry": { "$ref": "plugin-package.v5.schema.json#/properties/entry" },
+    "readme": { "$ref": "plugin-package.v5.schema.json#/properties/readme" },
+    "canonicalSource": { "$ref": "plugin-package.v5.schema.json#/properties/canonicalSource" },
+    "distribution": { "$ref": "plugin-package.v5.schema.json#/properties/distribution" },
+    "compatibility": { "$ref": "plugin-package.v5.schema.json#/properties/compatibility" },
+    "dependencies": { "$ref": "plugin-package.v5.schema.json#/properties/dependencies" },
+    "runtimeManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema", "digest"],
+      "properties": {
+        "path": { "$ref": "plugin-package.v5.schema.json#/properties/runtimeManifest/properties/path" },
+        "schema": {
+          "enum": [
+            "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v1.schema.json",
+            "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v2.schema.json",
+            "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v3.schema.json",
+            "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v4.schema.json",
+            "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v5.schema.json",
+            "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v6.schema.json"
+          ]
+        },
+        "digest": { "$ref": "plugin-package.v5.schema.json#/properties/runtimeManifest/properties/digest" }
+      }
+    },
+    "entityTemplates": { "$ref": "plugin-package.v5.schema.json#/properties/entityTemplates" }
+  }
+}

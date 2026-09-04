@@ -109,3 +109,11 @@ directory is preserved byte-for-byte across package update, enable, reload, and
 rollback, including when its user-edited content is invalid. Package v1-v4 and
 runtime manifests v1-v5 remain unchanged and do not gain entity declarations by
 reinterpretation.
+
+## Runtime and package manifest v6
+
+Runtime manifest v6 adds the complete public Agent-runtime capability
+vocabulary and exact Session scope declarations. Package v6 preserves all
+package-v5 fields and adds runtime manifest v6 to the closed digest-pinned
+reference list. Dynamic route bindings are optional, same-owner, exact
+`:sessionId` authorities; see [`v6.md`](./v6.md).

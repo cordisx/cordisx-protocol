@@ -21,6 +21,8 @@
     "manager-content-navigation.v4.test.ts",
     "manager-content-navigation.v5.d.ts",
     "manager-content-navigation.v5.test.ts",
+    "plugin-manifest.v6.d.ts",
+    "plugin-manifest.v6.test.ts",
     "icon-theme.v1.d.ts",
     "icon-theme.v1.test.ts",
     "connector-service.v1.d.ts",
