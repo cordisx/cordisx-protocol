@@ -10,7 +10,23 @@
     "schemaVersion": { "const": 7 },
     "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
     "name": { "$ref": "plugin-manifest.v6.schema.json#/properties/name" },
-    "capabilities": { "$ref": "plugin-manifest.v6.schema.json#/properties/capabilities" },
+    "capabilities": {
+      "allOf": [
+        { "$ref": "plugin-manifest.v6.schema.json#/properties/capabilities" },
+        {
+          "not": {
+            "type": "array",
+            "contains": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": { "enum": ["ui.host-dom.read", "ui.host-dom.modify"] }
+              }
+            }
+          }
+        }
+      ]
+    },
     "services": { "$ref": "plugin-manifest.v6.schema.json#/properties/services" },
     "execution": {
       "type": "object",
