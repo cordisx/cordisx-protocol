@@ -48,15 +48,15 @@
     "types/sessions.v1.d.ts",
     "types/approval.v1.d.ts",
     "types/approval.v2.d.ts",
-    "types/approval.v3.d.ts"
-    ,"types/agent-admission.v1.d.ts"
-    ,"types/agent-admission.v2.d.ts"
-    ,"types/agent-admission.v3.d.ts"
-    ,"types/agent-admission.v4.d.ts"
-    ,"types/agent-admission.v5.d.ts"
-    ,"types/agent-admission.v6.d.ts"
-    ,"types/agent-conversation-shell.v8.d.ts"
-    ,"types/agent-conversation-shell.v9.d.ts"
+    "types/approval.v3.d.ts",
+    "types/agent-admission.v1.d.ts",
+    "types/agent-admission.v2.d.ts",
+    "types/agent-admission.v3.d.ts",
+    "types/agent-admission.v4.d.ts",
+    "types/agent-admission.v5.d.ts",
+    "types/agent-admission.v6.d.ts",
+    "types/agent-conversation-shell.v8.d.ts",
+    "types/agent-conversation-shell.v9.d.ts"
   ],
   "exports": {
     "./visuals/v1": {
@@ -99,15 +99,15 @@
     "./sessions/v1": "./types/sessions.v1.d.ts",
     "./approval/v1": "./types/approval.v1.d.ts",
     "./approval/v2": "./types/approval.v2.d.ts",
-    "./approval/v3": "./types/approval.v3.d.ts"
-    ,"./agent-admission/v1": "./types/agent-admission.v1.d.ts"
-    ,"./agent-admission/v2": "./types/agent-admission.v2.d.ts"
-    ,"./agent-admission/v3": "./types/agent-admission.v3.d.ts"
-    ,"./agent-admission/v4": "./types/agent-admission.v4.d.ts"
-    ,"./agent-admission/v5": "./types/agent-admission.v5.d.ts"
-    ,"./agent-admission/v6": "./types/agent-admission.v6.d.ts"
-    ,"./agent-conversation-shell/v8": "./types/agent-conversation-shell.v8.d.ts"
-    ,"./agent-conversation-shell/v9": "./types/agent-conversation-shell.v9.d.ts"
+    "./approval/v3": "./types/approval.v3.d.ts",
+    "./agent-admission/v1": "./types/agent-admission.v1.d.ts",
+    "./agent-admission/v2": "./types/agent-admission.v2.d.ts",
+    "./agent-admission/v3": "./types/agent-admission.v3.d.ts",
+    "./agent-admission/v4": "./types/agent-admission.v4.d.ts",
+    "./agent-admission/v5": "./types/agent-admission.v5.d.ts",
+    "./agent-admission/v6": "./types/agent-admission.v6.d.ts",
+    "./agent-conversation-shell/v8": "./types/agent-conversation-shell.v8.d.ts",
+    "./agent-conversation-shell/v9": "./types/agent-conversation-shell.v9.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
@@ -121,13 +121,18 @@
     "check:release-metadata": "node scripts/check-release-metadata.mjs",
     "check:release-workflow": "ruby scripts/check-release-workflow.rb",
     "check:distribution": "node scripts/check-distribution.mjs",
-    "verify:registry-beta": "node scripts/verify-registry-beta.mjs"
+    "verify:registry-beta": "node scripts/verify-registry-beta.mjs",
+    "format": "dprint fmt",
+    "format:check": "dprint check"
   },
   "devDependencies": {
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "intl-messageformat": "11.2.14",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "dprint": "0.57.1"
   },
-  "engines": { "node": ">=22.19" }
+  "engines": {
+    "node": ">=22.19"
+  }
 }

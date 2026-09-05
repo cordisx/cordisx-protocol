@@ -1,5 +1,6 @@
 # Protocol Maintenance Rules
 
+- Follow the [organization file-size rule](https://github.com/cordisx/cordisxmono/blob/main/.agents/rules/file-size.md) for dprint formatting and responsibility-based splitting guidance.
 - Specify contracts independently of any Codex version, DOM selector, framework, or distribution vendor.
 - Version every externally observable manifest, slot, lifecycle, capability, and package format.
 - Preserve documented compatibility guarantees and define downgrade behavior.
