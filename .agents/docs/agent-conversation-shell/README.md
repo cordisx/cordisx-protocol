@@ -1,4 +1,27 @@
-# Agent Conversation Shell v2, v3, v4, and v5
+# Agent Conversation Shell
+
+<a name="agent-conversation-shell-v2-v3-v4-and-v5"></a>
+
+## Version navigation
+
+The public TypeScript entrypoints and wire families are versioned separately.
+V1-v7 have snapshot families; v8 and v9 extend the composer command context and
+re-export predecessor types. They do not reissue the snapshot, page, settings,
+or subscription families under v8/v9 ids.
+
+| TypeScript entrypoint | Scope | Wire reference |
+| --- | --- | --- |
+| [v1](../../../types/agent-conversation-shell.v1.d.ts) | Frozen original text-only contract | [Snapshot v1](../../../schemas/agent-conversation-shell-snapshot.v1.schema.json) |
+| [v2](../../../types/agent-conversation-shell.v2.d.ts) | [Agent identity, active runs, presence, and reactions](#v2-closure) | [Snapshot v2](../../../schemas/agent-conversation-shell-snapshot.v2.schema.json) |
+| [v3](../../../types/agent-conversation-shell.v3.d.ts) | [Room description and settings](#v3-room-description-and-settings), collection visuals, and approval items | [Snapshot v3](../../../schemas/agent-conversation-shell-snapshot.v3.schema.json) |
+| [v4](../../../types/agent-conversation-shell.v4.d.ts) | [Session-compatible correlations](#v4-session-compatible-runtime-correlations) | [Snapshot v4](../../../schemas/agent-conversation-shell-snapshot.v4.schema.json) |
+| [v5](../../../types/agent-conversation-shell.v5.d.ts) | [Composer shortcut policy](#v5-composer-shortcut-policy) | [Snapshot v5](../../../schemas/agent-conversation-shell-snapshot.v5.schema.json) |
+| [v6](../../../types/agent-conversation-shell.v6.d.ts) | [Terminal approval replay](#v6-terminal-approval-replay) | [Snapshot v6](../../../schemas/agent-conversation-shell-snapshot.v6.schema.json) |
+| [v7](../../../types/agent-conversation-shell.v7.d.ts) | [Exact requester-to-authority approval bubbles](#v7-exact-requester-to-authority-approval-bubble) | [Snapshot v7](../../../schemas/agent-conversation-shell-snapshot.v7.schema.json) |
+| [v8](../../../types/agent-conversation-shell.v8.d.ts) | [Composer command-origin capability](#composer-command-context-successors) | [Command context v8](../../../schemas/agent-conversation-shell-command-context.v8.schema.json) |
+| [v9](../../../types/agent-conversation-shell.v9.d.ts) | [Bootstrap composer origin](#composer-command-context-successors) | [Command context v9](../../../schemas/agent-conversation-shell-command-context.v9.schema.json) |
+
+## Contract ownership and compatibility
 
 This frozen data-only source-contract family is retained for compatibility with
 existing producers. The current Chatroom product owns its conversation page,
@@ -352,3 +375,19 @@ association, and reason remain; the live authority binding is prohibited and
 is never reconstructed during cold replay. Existing ledgers without an
 `approval/authority-bound` fact remain honestly representable through Shell
 v6 terminal items. V1-v6 public bytes remain frozen.
+
+## Composer command-context successors
+
+The [v8 declaration](../../../types/agent-conversation-shell.v8.d.ts) re-exports
+v7 and adds the Host-generated `AgentCommandOrigin` only to `composer-submit`.
+Its other command-context branches retain the v7 shapes.
+
+The [v9 declaration](../../../types/agent-conversation-shell.v9.d.ts) re-exports
+v8 and permits the existing `AgentCommandOrigin` or an
+`AgentBootstrapCommandOrigin` on that composer branch. The latter represents a
+command issued before a Room target run exists. Its use is defined by
+[bootstrap admission](../agent-runtime/README.md#bootstrap-target-admission).
+
+These successors preserve the earlier wire families and do not grant plugins
+authority to manufacture origins. Their origin boundaries are checked by
+[admission conformance](../../../conformance/agent-admission.mjs).

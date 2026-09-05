@@ -1,6 +1,6 @@
 # Agent Loop v1, v2, v3, and v4
 
-Status: v4 local additive Protocol candidate. Versions 1, 2, and 3 remain
+Protocol maturity: v4 additive candidate. Versions 1, 2, and 3 remain
 immutable. Version 1 is the formal legacy Host-bound, room-neutral contract.
 Version 2 adds durable delivery, canonical task-details URLs, and operation
 causation without changing v1. All versions define data contracts only; none
@@ -15,6 +15,9 @@ Version 4 preserves the complete v3 surface except for corrected approval
 decision tokens, one approval binding-closure outcome, and required structured
 causation on accepted approval and request/cancel member-self-introduction
 results. It does not change the frozen v1, v2, or v3 schemas and declarations.
+
+Merge, publication, Host adoption, and live verification are recorded separately
+from protocol maturity. See the [dated adoption notes](../../maintainers/adoption-notes.md).
 
 ## Definition and inheritance
 
@@ -181,8 +184,7 @@ parts. An image reference contains only `ref`, an `image/*` media type, and
 optional alt text; it never contains a URL, path, base64 data, blob, callback,
 or raw bridge value.
 
-The current `agent-conversation-shell/v1` remains text-only. For this first
-checkpoint, Host/Chatroom may project text parts end to end. An `image-ref`
+The frozen `agent-conversation-shell/v1` contract is text-only. An `image-ref`
 that cannot be rendered must produce an explicit unsupported result or a clear
 attachment placeholder. It must not be discarded, converted to a local path or
 base64 payload, or reported as rendered.

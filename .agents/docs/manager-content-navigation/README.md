@@ -1,10 +1,16 @@
 # Manager Content navigation protocol v1
 
-This document remains normative for frozen v1. The additive successors are
-[`v2.md`](./v2.md), for optional localized tab labels, and [`v3.md`](./v3.md),
-for a fixed Host-rendered record summary and exact Manager detail subjects.
-[`v4.md`](./v4.md) adds a Host-owned plugin-configuration form body without
-changing the frozen earlier contracts.
+This document remains normative for frozen v1. Choose the required declaration
+version below; projection versions advance independently. Earlier contracts
+remain available unchanged.
+
+| Declaration | Scope | Projection | TypeScript | Conformance |
+| --- | --- | --- | --- | --- |
+| [v1](#contracts-and-compatibility) | Subroutes and Host-owned navigation chrome | [v1](../../../schemas/manager-content-projection.v1.schema.json) | [v1](../../../types/manager-content-navigation.v1.d.ts) | [v1](../../../conformance/manager-content-navigation.mjs) |
+| [v2](./v2.md) | Optional localized tab labels | [v1](../../../schemas/manager-content-projection.v1.schema.json) | [v2](../../../types/manager-content-navigation.v2.d.ts) | [v2](../../../conformance/manager-content-navigation-v2.mjs) |
+| [v3](./v3.md) | Fixed record summary and exact Agent-definition detail subject | [v2](../../../schemas/manager-content-projection.v2.schema.json) | [v3](../../../types/manager-content-navigation.v3.d.ts) | [v3](../../../conformance/manager-content-navigation-v3.mjs) |
+| [v4](./v4.md) | Host-owned plugin configuration form body | [v3](../../../schemas/manager-content-projection.v3.schema.json) | [v4](../../../types/manager-content-navigation.v4.d.ts) | [v4](../../../conformance/manager-content-navigation-v4.mjs) |
+| [v5](./v5.md) | Localized labels for finite scalar choices | [v4](../../../schemas/manager-content-projection.v4.schema.json) | [v5](../../../types/manager-content-navigation.v5.d.ts) | [v5](../../../conformance/manager-content-navigation-v5.mjs) |
 
 This specification defines a generic subroute declaration and a separate renderer-safe Host projection for standard pages in the CordisX Manager. It is not a Channel-specific API and it does not expose a renderer navigation controller. A Channel (or any other plugin) registers data; the Host owns the Manager header, breadcrumb trail, back action, history, tablist, accessibility, selection, route stack, and all lifecycle cleanup.
 

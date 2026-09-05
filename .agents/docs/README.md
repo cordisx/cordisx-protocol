@@ -1,104 +1,79 @@
 # Protocol Specifications
 
-This directory is the human-readable normative source for the CordisX plugin protocol.
+This directory is the human-readable normative source for the CordisX plugin
+protocol. Topic pages own version navigation; the [TypeScript index](../../types/INDEX.md)
+maps exact package entrypoints. [Schemas](../../schemas/README.md) describe wire
+shapes, while [conformance](../../conformance/README.md) checks behavior. Their
+roles and change requirements are defined in the [maintenance rules](../rules/README.md).
 
-Specified areas:
+## Packages, configuration, and trust
 
-- `visuals/`: owner-local providers, immutable opaque data, theme projection,
-  generation-scoped cleanup, and contained rendering version 1.
-- `marketplace/`: discovery-only catalog feeds;
-- `ui-contributions/`: structured shell contributions, commands, routes,
-  pages, outlets, compatibility, and lifecycle version 1.
-- `navigation-collection-actions/`: closed immutable command and Host-owned
-  copy actions for a versioned successor to dynamic navigation collection
-  rows, including confirmation, feedback, placement, tone, and ownership.
-- `platform-capabilities/`: adapter-neutral provider, model, session, turn,
-  permission, composite identity, current-connection, and external
-  provider-fleet contracts version 1, plus Host-owned risk, rationale,
-  decision-lifetime, install-review, and migration contracts version 2;
-  Certified structured rendering version 3; and bounded Host DOM read/modify,
-  opaque handles, root catalogs, isolation, and revocation version 4.
-- `extension-points/`: host descriptor catalogs, canonical point policy, and
-  surface/outlet authorization origin version 1.
-- `agent-events/`: adapter-neutral Session/Agent ledger, DSH-aligned delivery
-  handles, cancellation, pre-step/prompt lifecycle, permission, degradation,
-  and pagination contracts versions 1 and 2.
-- `agent-history/`: read-only, permission-scoped historical Agent projections,
-  opaque pagination/tail, payload policy, provenance, and privacy contract
-  version 1.
-- `agent-runtime/`: additive Agent Registry/live handles, read-only Session
-  registry, append-only SessionEvent truth, closed subscription fences, and
-  Agent-scoped approval version 1; existing AgentLoop contracts remain intact.
-- `entities/`: Host-managed profile-local Agent entity files, package-relative
-  no-overwrite templates, scoped registries, deterministic revisions, file
-  change fences, and exact AgentDefinition resolution version 1.
-- `agent-conversation-shell/`: frozen compatibility conversation data plane versions 2
-  through 5; v4 adds exact SessionEvent, Agent detail, approval, and
-  self-introduction correlations, while v5 adds a closed composer shortcut
-  policy without changing the submit command or earlier Shell paths.
-- `ui-extension-catalog/`: complete host-neutral UI point vocabulary,
-  structured contribution versions 2 through 7, availability, contextual
-  invocation, DSH intent mapping, and explicit replacement refusals.
-- `icon-theme/`: closed semantic icon keys, Reicon default/fallback, versioned
-  provider registration and selection, normalized vector resolution, exact
-  generation disposal/rollback, and strict Host rendering ownership.
-- `reasoning-intensity-presentation/`: Host-owned projection of the native
-  reasoning range with bounded semantic material stages and strict cleanup.
-- `session-backdrop-presentation/`: Host-owned session ambience and transparent
-  portrait projection driven by native reasoning progress.
-- `transient-canvas/`: isolated, Host-bounded transparent Canvas presentations
-  at semantic extension points without renderer DOM authority.
-- `raster-image/`: generic bounded PNG snapshots produced after product-specific
-  composition, with no URL, SVG, DOM, callback, or product semantics.
-- `manager-settings-tabs/`: structured Manager settings content-tab surface
-  versions 4/5, catalog versions 3/4, controlled body-only outlet,
-  deterministic projection, authorization origin, and lifecycle.
-- `manager-settings-navigation/`: top-level Manager settings-adjacent
-  navigation items in surface version 5/catalog version 4, standard page
-  shell, deterministic host/plugin merge, authorization, and lifecycle.
-- `manager-content-navigation/`: generic Manager subroute declarations plus
-  the separate Host-owned header/breadcrumb/back/history/tab projection,
-  including dynamic renderer-safe record titles, the v2 optional tab-label
-  override, v3 fixed record summaries plus exact Agent-definition detail
-  subjects, and v4 Host-owned plugin configuration form bodies.
-- `manager-collection/`: Host-rendered Manager body collections with stable
-  views, Host-owned title/summary search, query-fenced sources, structured
-  rows/actions, text-input commands, closed results, and strict lifecycle.
-- `channel-runtime/`: structured Channel identity, sourced user input,
-  persistent Platform session bindings, redacted runtime snapshots, scoped
-  permissions, and launcher-side service declarations.
-- `channel-task-gateway/`: launcher-private Channel workspace
-  resolution/authorization, Platform create/follow-up dispatch, durable task
-  lifecycle events, and Channel outbox correlation contract version 1.
-- `connector-service/`: room-neutral connector descriptor, registration,
-  command, message/event, generation, disposal, public consumer,
-  Host-bound authorization, and serialized subscription contracts version 1.
-- `agent-loop/`: Host-bound room-neutral Agent definitions, self-contained
-  inheritance catalogs, task bindings, create-or-bind/send operations, and
-  proactive message/approval/lifecycle events version 1.
-- `agent-avatar/`: stable generated, asset, definition, and reserved platform
-  Agent identity references with canonical seed and inheritance semantics.
-- `plugin-configuration/`: Standard Schema validation, Schemastery form
-  metadata, profile/plugin/generation scope, revision-fenced mutations,
-  live/restart application, last-good rollback, secret handling, and
-  lifecycle-owned custom field renderers.
-- `service-configuration/`: plugin-owned launcher service schemas projected
-  into the owning plugin detail through Host-owned forms, exact CAS and
-  generation fences, opaque secret references, and explicit service/app
-  restart planes.
-- `manifests/`, `lifecycle/`, and `distribution/`: explicit-local package
-  manifests and three-form local sources, exact dependency graphs, five
-  minimum apply scopes, revision/generation/package-fenced staged lifecycle
-  operations, atomic registry publication, immutable activation records,
-  last-good rollback, and redacted manager snapshots.
-- `plugin-bundles/`: explicit-local bundle artifacts, exact member identity,
-  multi-source ownership claims, coordinated lifecycle compensation, shared
-  least-privilege policy, per-plugin overrides, and the Host-owned five-tab
-  Manager projection.
-- `publisher-grants.md`: external-publisher commerce descriptors, signed
-  `grant`/`renew`/`revoke`/`transfer` statements, device-key binding, minimal
-  activation-registry boundary, trusted-time/offline behavior, and conformance.
+- [Marketplace](marketplace/README.md): discovery feeds and [trust](marketplace/trust.md).
+- [Manifests](manifests/README.md), [lifecycle](lifecycle/README.md), and
+  [distribution](distribution/README.md): versioned package/runtime documents,
+  explicit local sources, dependency graphs, activation, and rollback.
+- [Plugin bundles](plugin-bundles/README.md): explicit-local bundle artifacts,
+  member ownership, coordinated operations, and Host Manager projections.
+- [Plugin configuration](plugin-configuration/README.md) and
+  [service configuration](service-configuration/README.md): validation, Host forms,
+  revisions, secrets, and application/restart boundaries.
+- [Platform capabilities](platform-capabilities/README.md): portable provider,
+  model, Session, identity, and permission contracts, with versioned permission
+  successors and a separately authorized Host DOM bridge.
+- [Publisher grants](publisher-grants.md): external-publisher commerce descriptors,
+  signed statements, device binding, and activation-registry boundaries.
 
-Planned areas include isolated execution, remote distribution, publisher-key
-registration UX, activation-registry deployment, transparency, and public
-marketplace activation.
+## Agent, Session, and external services
+
+- [Agent and Session runtime](agent-runtime/README.md): Agent handles, persistent
+  SessionEvent facts, approvals, and the versioned admission entrypoints.
+- [Entities](entities/README.md): profile-local Agent source files, templates,
+  deterministic revisions, and AgentDefinition resolution.
+- [AgentLoop](agent-loop/README.md): independently versioned v1-v4 bindings,
+  commands, delivery, approvals, and operation causation.
+- [Agent events](agent-events/README.md) and [history](agent-history/README.md):
+  versioned event delivery and read-only historical projections.
+- [Agent avatars](agent-avatar/README.md): stable identity references and portable
+  canonicalization helpers.
+- [Channel runtime](channel-runtime/README.md) and
+  [task gateway](channel-task-gateway/README.md): sourced messages, complete
+  binding identities, redacted state, and launcher-side dispatch authorization.
+- [Connector service](connector-service/README.md): descriptors, bound public
+  clients, authorization, ordered subscriptions, and disposal.
+
+## UI contracts
+
+- [Structured UI](ui-contributions/README.md): contributions, commands, routes,
+  pages, outlets, and their compatibility boundaries.
+- [Extension points](extension-points/README.md),
+  [UI extension catalog](ui-extension-catalog/README.md), and
+  [slot control plane](slots/control-plane-v1.md): descriptors, authorization,
+  selection, structured contribution families, and lifecycle.
+- [Conversation Shell](agent-conversation-shell/README.md): frozen compatibility
+  wire families and their separate composer command-context successors. These
+  exports do not require a Host shell service; the topic records product ownership.
+- [Manager content navigation](manager-content-navigation/README.md): declaration
+  and projection version map, including localized finite-choice configuration.
+- [Manager collections](manager-collection/README.md) and
+  [navigation collection actions](navigation-collection-actions/README.md):
+  queries, structured rows, commands, copy, confirmation, and feedback.
+- [Manager settings tabs](manager-settings-tabs/README.md) and
+  [settings navigation](manager-settings-navigation/README.md): structured settings
+  surfaces and Host-owned page chrome.
+- [Visuals](visuals/README.md): owner-local providers, detached immutable data,
+  effective theme projection, generation-scoped cleanup, and contained rendering.
+- [Raster images](raster-image/README.md): bounded PNG snapshots after
+  product-specific composition, without URL, SVG, DOM, callback, or product semantics.
+- [Icon themes](icon-theme/README.md),
+  [reasoning presentation](reasoning-intensity-presentation/README.md),
+  [session backdrops](session-backdrop-presentation/README.md), and
+  [transient canvas](transient-canvas/README.md): bounded visual contracts.
+- [Plugin DevTools console](plugin-devtools-console.md): attributed, redacted,
+  generation-fenced Host diagnostics.
+
+## Maintainer material
+
+[Release operations](../maintainers/release.md) and
+[dated adoption notes](../maintainers/adoption-notes.md) are outside the normative
+specification layer. They record repository operations and historical handoffs;
+contract availability here does not establish deployment or consumer acceptance.

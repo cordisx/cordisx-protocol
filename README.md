@@ -1,76 +1,52 @@
 # CordisX Protocol
 
-Normative plugin contracts, schemas, test vectors, and conformance material for CordisX interoperability.
+Normative plugin contracts, schemas, test vectors, and conformance material for
+CordisX interoperability. Contracts specify portable behavior independently of
+the current Host implementation and Codex DOM adapter.
 
-This repository specifies portable behavior independently of the current CordisX implementation and Codex DOM adapter.
+## For consumers and implementers
 
-## Marketplace discovery
+| Start here | Purpose |
+| --- | --- |
+| [Specification topics](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/README.md) | Normative behavior, compatibility, and topic version navigation |
+| [TypeScript entrypoints](https://github.com/cordisx/cordisx-protocol/blob/main/types/INDEX.md) | Exact public imports and their declarations, including reused wire versions |
+| [Schemas](https://github.com/cordisx/cordisx-protocol/blob/main/schemas/README.md) | Machine-readable document formats |
+| [Conformance](https://github.com/cordisx/cordisx-protocol/blob/main/conformance/README.md) and [test vectors](https://github.com/cordisx/cordisx-protocol/blob/main/test-vectors/README.md) | Protocol validation and examples |
 
-Version 1 marketplace discovery contracts are defined by:
+These links also work for readers of the installed package README. They open
+repository `main`; select the tag or commit matching a pinned dependency when
+checking its exact contract. Package publication and Host support are separate
+from a contract's presence in this repository.
 
-- `schemas/marketplace-plugin.v1.schema.json`;
-- `schemas/marketplace-feed.v1.schema.json`;
-- `.agents/docs/marketplace/README.md`;
-- `test-vectors/marketplace` and `conformance/marketplace.mjs`.
+## For maintainers
 
-Structured UI version 1, the complete UI extension catalog and contribution
-version 2, Platform capabilities, Agent events, the additive Agent/Session
-runtime, and extension-point management
-contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
-conformance vectors in this repository.
+Read [AGENTS.md](https://github.com/cordisx/cordisx-protocol/blob/main/AGENTS.md)
+and the [maintenance rules](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/rules/README.md)
+for document ownership and synchronized protocol changes. Repository publishing
+steps live in the [release runbook](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/maintainers/release.md);
+[dated adoption notes](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/maintainers/adoption-notes.md)
+retain historical integration guidance separately from the specifications.
+
+Run `npm ci && npm run check` to validate types, schemas, and conformance vectors.
+The [release runbook](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/maintainers/release.md)
+links the separate distribution and registry checks.
+
+## Visual contracts
 
 Visuals v1 defines owner-local provider ids and a framework-neutral projection
 of detached, deeply immutable JSON data plus the effective light/dark theme.
 It participates in the existing plugin generation transaction and defines no
-second lifecycle or renderer wire format. See `.agents/docs/visuals/README.md`.
+second lifecycle or renderer wire format. See the
+[Visuals specification](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/visuals/README.md).
+The [raster-image specification](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/raster-image/README.md)
+defines bounded PNG snapshots after product-specific composition, without
+passing product semantics or renderer authority to the receiving surface.
 
-The additive Manager Content v1/v2 contracts separate plugin-declared subroute
-and tab route references from the Host-owned renderer-safe header, breadcrumb,
-back, and history projection. V2 adds only an optional localized tab label so
-tab chrome can differ from route/top-level navigation text. They support
-dynamic opaque record titles without granting DOM, raw bridge, router, or
-secret access. See
-`.agents/docs/manager-content-navigation/README.md`.
+## Marketplace discovery
 
-Manager collection v1 defines a Host-rendered searchable collection inside an
-authorized Manager page body: stable views, Host-owned query/search, fenced
-data sources, structured rows, predecessor navigation-collection actions, one
-Host text-input command action, and closed results. It exposes no private
-HostCollection, DOM, list, drawer, input, dialog, confirmation, feedback, or
-clipboard handle. See `.agents/docs/manager-collection/README.md`.
-
-Icon theme provider v1 makes Reicon the Host default and fallback while
-allowing future principal-bound theme providers to register partial semantic
-coverage. Providers return only bounded normalized vector data; the Host keeps
-DOM, styling, state, accessibility, fallback, and lifecycle ownership. See
-`.agents/docs/icon-theme/README.md`.
-Its closed 64-key catalog distinguishes certified third-party provenance from
-official first-party provenance and preserves distinct Manager action, content,
-and agent-turn-control meanings without carrying publisher identity or UI text.
-
-Navigation collection actions v1 defines the closed immutable action list for
-a Host's versioned successor to route-only dynamic navigation collection rows.
-Commands, enclosing-route deep-link copy, bounded plain-text copy, structured
-confirmation, and localized feedback are explicit data; the Host retains all
-DOM, menu, clipboard, confirmation, routing, accessibility, and lifecycle
-ownership. See `.agents/docs/navigation-collection-actions/README.md`.
-
-Dynamic local packages and plugin generations are defined by the frozen
-package/operation/result v1 schemas, the explicit-local source v1, separate
-package/operation/result v2 schemas, permission-aware package v3, Host DOM
-permission-aware package v4/manifest v5,
-activation/manager snapshot v1, the
-`manifests`, `lifecycle`, and `distribution` specifications, and the
-`plugin-lifecycle` conformance suite. This local integrity contract does not
-claim remote marketplace installation, publisher signing, or sandboxing.
-
-Permission v4 defines separately authorized `ui.host-dom.read` and
-`ui.host-dom.modify` capabilities through a Host root catalog and opaque,
-bounded bridge. It does not reinterpret structured extension-point rendering
-as DOM access and requires an isolated plugin execution boundary before a Host
-may report the DOM bridge as available.
-
-Run `npm ci && npm run check` to validate the schemas and conformance vectors.
+The [Marketplace specification](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/marketplace/README.md)
+indexes the versioned discovery contracts, compatible feed formats, trust
+extensions, and conformance material.
 
 ## Licensing and independent plugins
 
@@ -91,4 +67,5 @@ The CordisX-specific Exception is not a standard SPDX exception and has not
 been reviewed or approved by the Open Source Initiative or the Free Software
 Foundation. Legal review is recommended before the first stable release.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) before submitting protocol material.
+See [CONTRIBUTING.md](https://github.com/cordisx/cordisx-protocol/blob/main/CONTRIBUTING.md)
+before submitting protocol material.
