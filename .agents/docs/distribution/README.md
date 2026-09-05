@@ -46,7 +46,10 @@ mapping an archive to `inspect-local`.
 The Host validates the manifest and package boundary, builds the browser
 artifact, and computes a SHA-256 digest over the normalized manifest and built
 artifact. The resulting content-addressed artifact is immutable. This digest
-is local content integrity, not proof of publisher identity.
+is local content integrity, not proof of publisher identity. A Host may retain
+the compatible single-module representation or produce the versioned
+[browser ESM generation graph](../plugin-generation-artifact/README.md); both
+remain inside the same immutable activation and permission boundary.
 
 ## Activation records
 

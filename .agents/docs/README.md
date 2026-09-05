@@ -12,6 +12,9 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 - [Manifests](manifests/README.md), [lifecycle](lifecycle/README.md), and
   [distribution](distribution/README.md): versioned package/runtime documents,
   explicit local sources, dependency graphs, activation, and rollback.
+- [Plugin generation artifacts](plugin-generation-artifact/README.md): immutable
+  browser ESM graphs, confined relative resources, shared Host modules, demand,
+  and generation-owned style cleanup.
 - [Plugin bundles](plugin-bundles/README.md): explicit-local bundle artifacts,
   member ownership, coordinated operations, and Host Manager projections.
 - [Plugin configuration](plugin-configuration/README.md) and

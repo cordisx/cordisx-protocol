@@ -30,6 +30,8 @@
     "plugin-manifest.v8.test.ts",
     "plugin-package.v8.d.ts",
     "plugin-package.v8.test.ts",
+    "plugin-generation-artifact.v1.d.ts",
+    "plugin-generation-artifact.v1.test.ts",
     "transient-canvas.v1.d.ts",
     "raster-image.v1.d.ts",
     "raster-image.v1.test.ts",

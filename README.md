@@ -42,6 +42,13 @@ The [raster-image specification](https://github.com/cordisx/cordisx-protocol/blo
 defines bounded PNG snapshots after product-specific composition, without
 passing product semantics or renderer authority to the receiving surface.
 
+## Immutable module graphs
+
+The [plugin generation artifact specification](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/plugin-generation-artifact/README.md)
+defines a path-confined browser ESM graph with per-file integrity, relative
+chunks, styles and static assets, closed shared Host imports, demand-loading,
+and generation-owned cleanup while retaining the legacy single-module form.
+
 ## Marketplace discovery
 
 The [Marketplace specification](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/marketplace/README.md)

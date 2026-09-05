@@ -1,0 +1,21 @@
+{
+  "case": "artifact",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-generation-artifact.v1.schema.json",
+    "contract": "cordisx.plugin-generation-artifact/v1",
+    "schemaVersion": 1,
+    "format": "browser-esm-graph",
+    "entry": "./module.js",
+    "initialStyles": ["./styles/entry.css"],
+    "sharedImports": ["cordisx/contracts", "cordisx/react", "react-dom/client"],
+    "files": [
+      { "path": "./assets/body.woff2", "kind": "asset", "mediaType": "font/woff2", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "byteLength": 4096 },
+      { "path": "./assets/icon.png", "kind": "asset", "mediaType": "image/png", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "byteLength": 2048 },
+      { "path": "./chunks/lazy.js", "kind": "module", "mediaType": "text/javascript", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "byteLength": 1024, "imports": ["./chunks/shared.js"], "dynamicImports": [], "styles": ["./styles/lazy.css"], "assets": ["./assets/icon.png"] },
+      { "path": "./chunks/shared.js", "kind": "module", "mediaType": "text/javascript", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "byteLength": 512, "imports": [], "dynamicImports": [], "styles": [], "assets": [] },
+      { "path": "./module.js", "kind": "module", "mediaType": "text/javascript", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "byteLength": 768, "imports": ["./chunks/shared.js"], "dynamicImports": ["./chunks/lazy.js"], "styles": ["./styles/entry.css"], "assets": [] },
+      { "path": "./styles/entry.css", "kind": "stylesheet", "mediaType": "text/css", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byteLength": 128, "assets": [] },
+      { "path": "./styles/lazy.css", "kind": "stylesheet", "mediaType": "text/css", "digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", "byteLength": 256, "assets": ["./assets/body.woff2"] }
+    ]
+  }
+}

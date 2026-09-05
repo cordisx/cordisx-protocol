@@ -226,6 +226,13 @@ fake signature and remote source rejection, exact dependency graphs and
 cycles, activation ordering, permission plans, reload scope, redacted runtime
 snapshots, and canonical-only share availability.
 
+Plugin generation artifact suites live in
+`plugin-generation-artifact/valid` and
+`plugin-generation-artifact/invalid`. They cover a multi-module ESM graph and
+the compatible one-module form, initial-versus-dynamic styles, shared chunks,
+static assets, closed Host imports, missing references, unreachable files,
+case-fold collisions, external paths, and extension/media-type agreement.
+
 Plugin Console v1 suites live in `plugin-console/valid` and
 `plugin-console/invalid`. They cover zero-touch Host call instrumentation,
 permission correlation, dispatch-before-success, one terminal per correlation,
