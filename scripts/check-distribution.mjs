@@ -47,6 +47,7 @@ const expectedExports = [
   './plugin-manifest/v6',
   './plugin-manifest/v7',
   './plugin-manifest/v8',
+  './plugin-generation-artifact/v1',
   './plugin-package/v8',
   './raster-image/v1',
   './transient-canvas/v1',
@@ -100,6 +101,7 @@ const expectedFiles = [
   'types/plugin-manifest.v6.d.ts',
   'types/plugin-manifest.v7.d.ts',
   'types/plugin-manifest.v8.d.ts',
+  'types/plugin-generation-artifact.v1.d.ts',
   'types/plugin-package.v8.d.ts',
   'types/raster-image.v1.d.ts',
   'types/transient-canvas.v1.d.ts',
@@ -181,6 +183,7 @@ import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, Manag
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
 import type { PluginManifestHostRouteSessionScopeBindingV6, PluginRuntimeManifestV6 } from '@cordisx/protocol/plugin-manifest/v6'
 import type { PluginRuntimeManifestV7 } from '@cordisx/protocol/plugin-manifest/v7'
+import type { PluginGenerationArtifactV1 } from '@cordisx/protocol/plugin-generation-artifact/v1'
 import type { TransientCanvasPluginContextV1, TransientCanvasRegistrationV1 } from '@cordisx/protocol/transient-canvas/v1'
 import type { RasterImageSnapshotV1 } from '@cordisx/protocol/raster-image/v1'
 import type { ApprovalService } from '@cordisx/protocol/approval/v1'
@@ -199,6 +202,7 @@ declare const definition: AgentDefinition
 declare const canvasContext: TransientCanvasPluginContextV1
 declare const canvasRegistration: TransientCanvasRegistrationV1
 declare const manifestV7: PluginRuntimeManifestV7
+declare const generationArtifact: PluginGenerationArtifactV1
 declare const participant: AgentConversationParticipant
 declare const activeRun: AgentConversationActiveRunDescriptor
 declare const item: AgentConversationItem
@@ -254,6 +258,7 @@ managerProjectionV3.body?.configuration.revision satisfies number | undefined
 managerNavigationV5.body?.kind satisfies 'plugin-config-form' | undefined
 managerProjectionV4.body?.configuration.version satisfies 3 | undefined
 rasterImage.mediaType satisfies 'image/png'
+generationArtifact.format satisfies 'browser-esm-graph'
 const localizedChoice = { value: 'mod-enter', label: { key: 'composer.shortcut.mod-enter', fallback: 'Command/Ctrl+Enter sends' } } satisfies ManagerContentPluginConfigLocalizedChoiceV2
 localizedChoice.value satisfies string | number | boolean | null
 const installedApprovalRouteScope = { kind: 'host-route-param', routeId: 'room-session-detail', param: 'sessionId' } satisfies PluginManifestHostRouteSessionScopeBindingV6

@@ -124,3 +124,13 @@ Runtime manifest v7 adds one closed execution declaration for the isolated
 `ui.transient-canvas/v1` Worker interface. It does not expose renderer globals
 or add a DOM capability. Package v7 is the first package contract allowed to
 reference manifest v7; older versions remain frozen.
+
+## Built module graph is separately versioned
+
+Package manifests continue to name one source `entry`; they do not enumerate
+producer-generated chunks or grant resource-loading authority. A compatible
+Host may build that source into a
+[`plugin-generation-artifact/v1`](../plugin-generation-artifact/README.md)
+document containing one entry plus confined ESM chunks, styles, and static
+assets. The artifact format is independently versioned so frozen package
+manifests and runtime permission declarations are not reinterpreted.

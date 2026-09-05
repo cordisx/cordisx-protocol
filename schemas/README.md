@@ -492,6 +492,9 @@ its scope are described in [conformance](../conformance/README.md).
   plus the isolated transient-canvas Worker execution declaration;
 - `plugin-package.v7.schema.json`: package-v6 boundaries plus a closed runtime
   manifest-v7 reference;
+- `plugin-generation-artifact.v1.schema.json`: one immutable, path-confined
+  browser ESM module graph with exact module/style/asset inventory, per-file
+  integrity, closed shared Host imports, and initial-versus-lazy resource edges;
 - `surface-contribution.v8.schema.json`: structured isolated transient-canvas
   presentation metadata;
 - `host-extension-point-catalog.v8.schema.json`: catalog v7 plus the

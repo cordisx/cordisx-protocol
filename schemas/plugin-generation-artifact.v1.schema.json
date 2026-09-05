@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-generation-artifact.v1.schema.json",
+  "title": "CordisX immutable browser ESM plugin generation artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "format", "entry", "initialStyles", "sharedImports", "files"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-generation-artifact.v1.schema.json" },
+    "contract": { "const": "cordisx.plugin-generation-artifact/v1" },
+    "schemaVersion": { "const": 1 },
+    "format": { "const": "browser-esm-graph" },
+    "entry": { "$ref": "#/$defs/modulePath" },
+    "initialStyles": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/stylesheetPath" }
+    },
+    "sharedImports": {
+      "type": "array",
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/sharedImport" }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/moduleFile" },
+          { "$ref": "#/$defs/stylesheetFile" },
+          { "$ref": "#/$defs/assetFile" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "modulePath": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 512,
+      "pattern": "^\\./[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*){0,7}\\.(?:js|mjs)$"
+    },
+    "stylesheetPath": {
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 512,
+      "pattern": "^\\./[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*){0,7}\\.css$"
+    },
+    "assetPath": {
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 512,
+      "pattern": "^\\./[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*){0,7}\\.(?:avif|gif|jpeg|jpg|png|svg|webp|woff|woff2|wasm)$"
+    },
+    "sharedImport": {
+      "enum": [
+        "cordisx/contracts",
+        "cordisx/react",
+        "cordisx/react/jsx-dev-runtime",
+        "cordisx/react/jsx-runtime",
+        "cordisx/ui",
+        "react",
+        "react/jsx-dev-runtime",
+        "react/jsx-runtime",
+        "react-dom",
+        "react-dom/client"
+      ]
+    },
+    "moduleFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "mediaType", "digest", "byteLength", "imports", "dynamicImports", "styles", "assets"],
+      "properties": {
+        "path": { "$ref": "#/$defs/modulePath" },
+        "kind": { "const": "module" },
+        "mediaType": { "const": "text/javascript" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "byteLength": { "type": "integer", "minimum": 0, "maximum": 67108864 },
+        "imports": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/modulePath" }
+        },
+        "dynamicImports": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/modulePath" }
+        },
+        "styles": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stylesheetPath" }
+        },
+        "assets": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/assetPath" }
+        }
+      }
+    },
+    "stylesheetFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "mediaType", "digest", "byteLength", "assets"],
+      "properties": {
+        "path": { "$ref": "#/$defs/stylesheetPath" },
+        "kind": { "const": "stylesheet" },
+        "mediaType": { "const": "text/css" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "byteLength": { "type": "integer", "minimum": 0, "maximum": 67108864 },
+        "assets": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/assetPath" }
+        }
+      }
+    },
+    "assetFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "mediaType", "digest", "byteLength"],
+      "properties": {
+        "path": { "$ref": "#/$defs/assetPath" },
+        "kind": { "const": "asset" },
+        "mediaType": {
+          "enum": [
+            "application/wasm",
+            "font/woff",
+            "font/woff2",
+            "image/avif",
+            "image/gif",
+            "image/jpeg",
+            "image/png",
+            "image/svg+xml",
+            "image/webp"
+          ]
+        },
+        "digest": { "$ref": "#/$defs/digest" },
+        "byteLength": { "type": "integer", "minimum": 0, "maximum": 67108864 }
+      }
+    }
+  }
+}

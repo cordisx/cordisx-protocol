@@ -1,0 +1,13 @@
+{
+  "case": "artifact",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-generation-artifact.v1.schema.json",
+    "contract": "cordisx.plugin-generation-artifact/v1",
+    "schemaVersion": 1,
+    "format": "browser-esm-graph",
+    "entry": "https://example.test/module.js",
+    "initialStyles": [],
+    "sharedImports": [],
+    "files": []
+  }
+}

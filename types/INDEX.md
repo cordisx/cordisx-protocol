@@ -72,6 +72,7 @@ not require a Host shell service; see the topic's ownership statement.
 | `plugin-manifest/v7` | [plugin-manifest.v7.d.ts](plugin-manifest.v7.d.ts) | [Specification](../.agents/docs/manifests/README.md) |
 | `plugin-manifest/v8` | [plugin-manifest.v8.d.ts](plugin-manifest.v8.d.ts) | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-manifest.v8.schema.json) |
 | `plugin-package/v8` | [plugin-package.v8.d.ts](plugin-package.v8.d.ts) | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-package.v8.schema.json) |
+| `plugin-generation-artifact/v1` | [plugin-generation-artifact.v1.d.ts](plugin-generation-artifact.v1.d.ts) | [Immutable browser ESM graph](../.agents/docs/plugin-generation-artifact/README.md) |
 
 ## Repository-only declarations
 

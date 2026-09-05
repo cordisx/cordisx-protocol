@@ -191,6 +191,12 @@ matching permission decisions, minimum apply scope, safe share availability,
 and path/secret-free results and snapshots. Normative lifecycle text additionally
 fixes staged-registry readiness, whole-closure atomic publish, token-to-complete
 activation-tuple fencing, and last-good recovery without exposing private plans.
+Plugin generation artifact v1 conformance covers deterministic closed graph
+inventory, path and case-fold confinement, module/style/asset relationships,
+initial-versus-dynamic style separation, media types, byte/digest readback,
+the closed Host shared-module exception, relative specifier resolution, and
+late stylesheet completion after generation disposal. It is Protocol evidence,
+not proof of one Host build or network request trace.
 Plugin Console conformance covers owner/generation isolation, ordered immutable
 lines, issuance-bound principal/effective-owner attribution, capture coverage,
 variadic Console argument snapshots, zero-touch Host call phases, permission

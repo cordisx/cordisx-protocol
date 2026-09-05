@@ -1,0 +1,16 @@
+{
+  "case": "artifact",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-generation-artifact.v1.schema.json",
+    "contract": "cordisx.plugin-generation-artifact/v1",
+    "schemaVersion": 1,
+    "format": "browser-esm-graph",
+    "entry": "./module.js",
+    "initialStyles": [],
+    "sharedImports": [],
+    "files": [
+      { "path": "./assets/icon.png", "kind": "asset", "mediaType": "image/svg+xml", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "byteLength": 32 },
+      { "path": "./module.js", "kind": "module", "mediaType": "text/javascript", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "byteLength": 128, "imports": [], "dynamicImports": [], "styles": [], "assets": ["./assets/icon.png"] }
+    ]
+  }
+}

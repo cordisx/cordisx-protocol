@@ -66,6 +66,15 @@ and module generation. Disable, replacement, rollback, and uninstall fence new
 calls before disposal. A call or handle from a disposed generation is stale and
 must fail rather than reaching a replacement owner.
 
+An immutable [browser ESM graph](../plugin-generation-artifact/README.md), its
+base URL, pending imports, and applied styles have the same exact module-
+generation owner. Candidate styles remain staged until whole-closure
+publication. Retiring a generation fences it before cleanup, removes all of its
+styles, and makes late module, stylesheet, and asset completions inert. A late
+completion cannot attach a style, enter `apply()`, publish a registration, or
+make the retired generation current. Rollback creates a fresh generation and
+URL even when it reuses last-good package bytes.
+
 Module top-level execution is outside Cordis effect ownership. Package authors
 must keep it declarative and start effects only in `apply()`. This is a
 lifecycle requirement for trusted local code, not an isolation guarantee.
