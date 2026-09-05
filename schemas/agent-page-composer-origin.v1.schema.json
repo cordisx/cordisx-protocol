@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-origin.v1.schema.json",
+  "title": "CordisX Host-issued product-page composer origin v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "originId", "binding", "generation", "executionId", "commandId", "scope", "page"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-origin.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-page-composer-origin/v1" },
+    "schemaVersion": { "const": 1 },
+    "originId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "binding": { "$ref": "#/$defs/pageBinding" },
+    "generation": { "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/generation" },
+    "executionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "commandId": { "$ref": "ui-common.v1.schema.json#/$defs/reference" },
+    "scope": { "const": "page-composer-submit" },
+    "page": { "$ref": "#/$defs/pageRoute" }
+  },
+  "$defs": {
+    "pageBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bindingId", "ownerGeneration"],
+      "properties": {
+        "bindingId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "ownerGeneration": { "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/generation" }
+      }
+    },
+    "pageRoute": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["outlet", "routeDefinitionId"],
+          "properties": {
+            "outlet": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+            "routeDefinitionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["outlet", "routeDefinitionId", "roomId"],
+          "properties": {
+            "outlet": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+            "routeDefinitionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+            "roomId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }
+          }
+        }
+      ]
+    },
+    "roomRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outlet", "routeDefinitionId", "param", "roomId"],
+      "properties": {
+        "outlet": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "routeDefinitionId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "param": { "const": "roomId" },
+        "roomId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roomId", "participantId", "memberId", "runId"],
+      "properties": {
+        "roomId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "participantId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "memberId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "runId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }
+      }
+    }
+  }
+}

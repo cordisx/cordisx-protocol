@@ -29,6 +29,16 @@ const names = [
   'agent-admission-bootstrap-route-continuation.v6.schema.json',
   'agent-admission-bootstrap-route-reservation.v6.schema.json',
   'agent-admission-bootstrap-route-claim-receipt.v6.schema.json',
+  'agent-page-composer-origin.v1.schema.json',
+  'agent-page-composer-command-context.v1.schema.json',
+  'agent-page-composer-command-request.v1.schema.json',
+  'agent-page-composer-command-result.v1.schema.json',
+  'agent-page-admission-target-origin.v1.schema.json',
+  'agent-page-admission-target-receipt.v1.schema.json',
+  'agent-page-admission-reservation.v1.schema.json',
+  'agent-page-admission-route-continuation.v1.schema.json',
+  'agent-page-admission-route-reservation.v1.schema.json',
+  'agent-page-admission-route-claim-receipt.v1.schema.json',
 ]
 const ajv = new Ajv2020({ strict: true, allErrors: true, allowUnionTypes: true })
 for (const name of names) ajv.addSchema(JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')))
@@ -457,4 +467,209 @@ assert.equal(
   'route-denied',
   'the declared route Room id must equal the target Room id',
 )
-console.log('agent admission v1-v6 and shell v8-v9 conformance passed')
+const pageOrigin = {
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-origin.v1.schema.json',
+  contract: 'cordisx.agent-page-composer-origin/v1',
+  schemaVersion: 1,
+  originId: 'page-origin-new-room',
+  binding: { bindingId: 'page-binding-new-room', ownerGeneration: 'page-owner-1' },
+  generation: 'page-module-1',
+  executionId: 'page-execution-1',
+  commandId: 'chatroom.page.submit',
+  scope: 'page-composer-submit',
+  page: { outlet: 'main', routeDefinitionId: 'new-room' },
+}
+const pageContext = {
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-command-context.v1.schema.json',
+  contract: 'cordisx.agent-page-composer-command-context/v1',
+  schemaVersion: 1,
+  binding: pageOrigin.binding,
+  generation: pageOrigin.generation,
+  scope: pageOrigin.scope,
+  command: { id: pageOrigin.commandId },
+  submitPayload: 'page dispatch text',
+  origin: pageOrigin,
+}
+const pageCommandRequest = {
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-command-request.v1.schema.json',
+  contract: 'cordisx.agent-page-composer-command-request/v1',
+  schemaVersion: 1,
+  command: { id: pageOrigin.commandId },
+  submitPayload: 'page dispatch text',
+}
+const pageTargets = ['lead', 'reviewer', 'integrator'].map((member, index) => ({
+  roomId: 'room-page-fresh',
+  participantId: `participant-${member}`,
+  memberId: `member-${member}`,
+  runId: `run-${member}`,
+  targetOrigin: {
+    $schema:
+      'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-target-origin.v1.schema.json',
+    contract: 'cordisx.agent-page-admission-target-origin/v1',
+    schemaVersion: 1,
+    token: `page-target-${index}`,
+  },
+  continuation: {
+    $schema:
+      'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-continuation.v1.schema.json',
+    contract: 'cordisx.agent-page-admission-route-continuation/v1',
+    schemaVersion: 1,
+    token: `page-route-${index}`,
+  },
+}))
+const pageRoute = {
+  outlet: 'main',
+  routeDefinitionId: 'room',
+  param: 'roomId',
+  roomId: 'room-page-fresh',
+}
+const validatePage = name => validate(name)
+assert.equal(validatePage('agent-page-composer-origin.v1.schema.json')(pageOrigin), true)
+assert.equal(validatePage('agent-page-composer-command-context.v1.schema.json')(pageContext), true)
+assert.equal(validatePage('agent-page-composer-command-request.v1.schema.json')(pageCommandRequest), true)
+assert.equal(
+  validatePage('agent-page-composer-command-result.v1.schema.json')({ status: 'accepted', code: 'dispatched' }),
+  true,
+)
+assert.equal(
+  validatePage('agent-page-composer-command-result.v1.schema.json')({ status: 'unavailable', code: 'page-replaced' }),
+  true,
+)
+assert.equal(
+  validatePage('agent-page-composer-command-context.v1.schema.json')({ ...pageContext, submitPayload: undefined }),
+  false,
+  'Host context never omits its exact page submit payload',
+)
+assert.equal(
+  validatePage('agent-command-origin.v1.schema.json')(pageOrigin),
+  false,
+  'a page origin can never masquerade as a frozen Shell origin',
+)
+assert.equal(
+  validatePage('agent-page-composer-origin.v1.schema.json')({ ...pageOrigin, scope: 'composer-submit' }),
+  false,
+  'page origin scope is closed',
+)
+for (const count of [1, 2, 3]) {
+  const issued = new Set()
+  const consumed = new Set()
+  for (const target of pageTargets.slice(0, count)) {
+    assert.equal(validatePage('agent-page-admission-target-origin.v1.schema.json')(target.targetOrigin), true)
+    assert.equal(
+      validatePage('agent-page-admission-target-receipt.v1.schema.json')({
+        $schema:
+          'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-target-receipt.v1.schema.json',
+        contract: 'cordisx.agent-page-admission-target-receipt/v1',
+        schemaVersion: 1,
+        receiptId: `page-receipt-${target.runId}`,
+        target: {
+          roomId: target.roomId,
+          participantId: target.participantId,
+          memberId: target.memberId,
+          runId: target.runId,
+        },
+      }),
+      true,
+    )
+    const key = [target.roomId, target.participantId, target.memberId, target.runId].join('\u0000')
+    assert.equal(issued.has(key), false, `page target ${target.runId} is issued once`)
+    issued.add(key)
+    assert.equal(consumed.has(target.targetOrigin.token), false, `page target ${target.runId} is submitted once`)
+    consumed.add(target.targetOrigin.token)
+  }
+  assert.equal(issued.size, count, `page admission supports N=${count} exact same-Room targets`)
+}
+const pageReservation = {
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-reservation.v1.schema.json',
+  contract: 'cordisx.agent-page-admission-reservation/v1',
+  schemaVersion: 1,
+  reservationId: 'page-reservation-1',
+  origin: pageTargets[0].targetOrigin,
+  message: { text: 'dispatch page message' },
+}
+assert.equal(validatePage('agent-page-admission-reservation.v1.schema.json')(pageReservation), true)
+const freshClaims = new Set()
+for (const target of pageTargets) {
+  assert.equal(validatePage('agent-page-admission-route-continuation.v1.schema.json')(target.continuation), true)
+  assert.equal(
+    validatePage('agent-page-admission-route-reservation.v1.schema.json')({
+      $schema:
+        'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-reservation.v1.schema.json',
+      contract: 'cordisx.agent-page-admission-route-reservation/v1',
+      schemaVersion: 1,
+      reservationId: `page-route-reservation-${target.runId}`,
+      continuation: target.continuation,
+      message: { text: 'fresh page dispatch' },
+    }),
+    true,
+  )
+  const claim = {
+    $schema:
+      'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-claim-receipt.v1.schema.json',
+    contract: 'cordisx.agent-page-admission-route-claim-receipt/v1',
+    schemaVersion: 1,
+    receiptId: `page-claim-${target.runId}`,
+    owner: { pluginId: 'chatroom', generation: 1 },
+    origin: pageOrigin,
+    target: {
+      roomId: target.roomId,
+      participantId: target.participantId,
+      memberId: target.memberId,
+      runId: target.runId,
+      route: pageRoute,
+    },
+    binding: {
+      binding: { bindingId: 'page-binding-room', ownerGeneration: 'page-owner-1' },
+      generation: 'page-module-1',
+      route: pageRoute,
+    },
+    source: { sessionId: `session-${target.memberId}`, messageId: `message-${target.runId}` },
+  }
+  assert.equal(validatePage('agent-page-admission-route-claim-receipt.v1.schema.json')(claim), true)
+  assert.equal(freshClaims.has(target.continuation.token), false, 'fresh continuation is one-shot')
+  freshClaims.add(target.continuation.token)
+}
+assert.equal(
+  validatePage('agent-page-admission-route-claim-receipt.v1.schema.json')({
+    $schema:
+      'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-claim-receipt.v1.schema.json',
+    contract: 'cordisx.agent-page-admission-route-claim-receipt/v1',
+    schemaVersion: 1,
+    receiptId: 'page-cross-room',
+    owner: { pluginId: 'chatroom', generation: 1 },
+    origin: pageOrigin,
+    target: {
+      roomId: pageTargets[0].roomId,
+      participantId: pageTargets[0].participantId,
+      memberId: pageTargets[0].memberId,
+      runId: pageTargets[0].runId,
+      route: { ...pageRoute, roomId: 'foreign-room' },
+    },
+    binding: {
+      binding: { bindingId: 'page-binding-room', ownerGeneration: 'page-owner-1' },
+      generation: 'page-module-1',
+      route: pageRoute,
+    },
+    source: { sessionId: 'session-member-lead', messageId: 'message-run-lead' },
+  }),
+  true,
+  'schema preserves fields; Host conformance must reject a route whose room differs from target room',
+)
+assert.notEqual(pageRoute.roomId, 'foreign-room', 'cross-room route claim is forbidden by normative equality')
+const pageRouteTargetErrors = target =>
+  target.roomId === target.route.roomId ? [] : ['destination route Room must equal target Room']
+assert.deepEqual(
+  pageRouteTargetErrors({ ...pageTargets[0], route: pageRoute }),
+  [],
+  'fresh page target keeps its exact Room route',
+)
+assert.notDeepEqual(
+  pageRouteTargetErrors({ ...pageTargets[0], route: { ...pageRoute, roomId: 'foreign-room' } }),
+  [],
+  'cross-room page route claim fails closed',
+)
+console.log('agent admission v1-v6, page admission v1, and shell v8-v9 conformance passed')

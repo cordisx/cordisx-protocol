@@ -30,6 +30,9 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 
 - [Agent and Session runtime](agent-runtime/README.md): Agent handles, persistent
   SessionEvent facts, approvals, and the versioned admission entrypoints.
+- [Product-page Agent admission](agent-page-admission/README.md): Host-issued
+  page composer origins, exact target-scoped pre-submit delivery, and explicit
+  fresh-Room route claims without reusing Conversation Shell origins.
 - [Entities](entities/README.md): profile-local Agent source files, templates,
   deterministic revisions, and AgentDefinition resolution.
 - [AgentLoop](agent-loop/README.md): independently versioned v1-v4 bindings,
