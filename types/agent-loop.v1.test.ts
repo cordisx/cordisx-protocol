@@ -38,7 +38,8 @@ const definition = {
 } satisfies AgentDefinition
 
 const binding = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v1.schema.json',
   contract: 'cordisx.agent-loop-task-binding/v1',
   schemaVersion: 1,
   binding: { bindingId: 'binding-1', generation: 1 },
@@ -131,8 +132,11 @@ async function consume() {
 
 void consume
 
-// @ts-expect-error image content is reference-only and cannot carry a URL
-const invalidImage: AgentLoopCommand = { ...send, content: [{ kind: 'image-ref', ref: 'image-1', mediaType: 'image/png', url: 'https://example.com/a.png' }] }
+const invalidImage: AgentLoopCommand = {
+  ...send,
+  // @ts-expect-error image content is reference-only and cannot carry a URL
+  content: [{ kind: 'image-ref', ref: 'image-1', mediaType: 'image/png', url: 'https://example.com/a.png' }],
+}
 void invalidImage
 
 // @ts-expect-error room identity is not part of a task binding

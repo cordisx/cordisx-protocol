@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -174,15 +174,17 @@ if (!storedSchemas.includes('secretRef')) {
   console.error('CLIProxy launcher schema must retain an opaque secretRef')
   failures += 1
 }
-for (const forbidden of [
-  'secretRef',
-  'secretValue',
-  'apiKey',
-  'homeConfigPath',
-  'processHandle',
-  'electronBridge',
-  'rawBridge',
-]) {
+for (
+  const forbidden of [
+    'secretRef',
+    'secretValue',
+    'apiKey',
+    'homeConfigPath',
+    'processHandle',
+    'electronBridge',
+    'rawBridge',
+  ]
+) {
   if (rendererSafeSchemas.includes(forbidden)) {
     console.error(`Service configuration renderer-safe schemas must not expose ${forbidden}`)
     failures += 1

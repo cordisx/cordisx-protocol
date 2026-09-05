@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -57,9 +57,16 @@ const validPackage = {
   version: '1.0.0',
   entry: './src/index.js',
   distribution: { mode: 'explicit-local-v1', signature: 'unsupported' },
-  compatibility: { runtimeAbi: 1, protocolSchemas: [schema('plugin-manifest.v7.schema.json'), schema('surface-contribution.v8.schema.json')] },
+  compatibility: {
+    runtimeAbi: 1,
+    protocolSchemas: [schema('plugin-manifest.v7.schema.json'), schema('surface-contribution.v8.schema.json')],
+  },
   dependencies: [],
-  runtimeManifest: { path: './runtime/manifest.json', schema: schema('plugin-manifest.v7.schema.json'), digest: `sha256:${'a'.repeat(64)}` },
+  runtimeManifest: {
+    path: './runtime/manifest.json',
+    schema: schema('plugin-manifest.v7.schema.json'),
+    digest: `sha256:${'a'.repeat(64)}`,
+  },
 }
 
 let failures = 0
@@ -76,24 +83,56 @@ expect('transient canvas descriptor', catalog, {
   $schema: schema('host-extension-point-catalog.v8.schema.json'),
   schemaVersion: 8,
   points: [{
-    id: 'composer.submit.effects', kind: 'surface', title: text('submit-effects.title'),
-    description: text('submit-effects.description'), icon: 'host:layers',
-    payloadFamily: 'transient-canvas-presentation', maturity: 'experimental', adapterSupport: 'supported',
+    id: 'composer.submit.effects',
+    kind: 'surface',
+    title: text('submit-effects.title'),
+    description: text('submit-effects.description'),
+    icon: 'host:layers',
+    payloadFamily: 'transient-canvas-presentation',
+    maturity: 'experimental',
+    adapterSupport: 'supported',
   }],
 }, true)
 expect('isolated canvas manifest', manifest, validManifest, true)
 expect('isolated canvas package', packageManifest, validPackage, true)
 
-for (const [label, value, validate] of [
-  ['raw DOM callback', { ...validRegistration, element: 'document.body' }, registration],
-  ['unbounded duration', { ...validRegistration, durationMs: 6000 }, registration],
-  ['unknown reduced motion', { ...validRegistration, reducedMotion: 'animate' }, registration],
-  ['raw script in contribution', { ...validContribution, item: { ...validContribution.item, script: 'draw()' } }, contribution],
-  ['main-realm execution', { ...validManifest, execution: { ...validManifest.execution, realm: 'renderer-main' } }, manifest],
-  ['unknown isolated interface', { ...validManifest, execution: { ...validManifest.execution, interfaces: ['ui.dom/v1'] } }, manifest],
-  ['Host DOM read capability', { ...validManifest, capabilities: [{ name: 'ui.host-dom.read', required: false, scope: { rootIds: ['app.shell'], operations: ['read-text'] } }] }, manifest],
-  ['Host DOM modify capability', { ...validManifest, capabilities: [{ name: 'ui.host-dom.modify', required: false, scope: { rootIds: ['app.shell'], operations: ['set-text'] } }] }, manifest],
-]) expect(label, validate, value, false)
+for (
+  const [label, value, validate] of [
+    ['raw DOM callback', { ...validRegistration, element: 'document.body' }, registration],
+    ['unbounded duration', { ...validRegistration, durationMs: 6000 }, registration],
+    ['unknown reduced motion', { ...validRegistration, reducedMotion: 'animate' }, registration],
+    [
+      'raw script in contribution',
+      { ...validContribution, item: { ...validContribution.item, script: 'draw()' } },
+      contribution,
+    ],
+    [
+      'main-realm execution',
+      { ...validManifest, execution: { ...validManifest.execution, realm: 'renderer-main' } },
+      manifest,
+    ],
+    ['unknown isolated interface', {
+      ...validManifest,
+      execution: { ...validManifest.execution, interfaces: ['ui.dom/v1'] },
+    }, manifest],
+    ['Host DOM read capability', {
+      ...validManifest,
+      capabilities: [{
+        name: 'ui.host-dom.read',
+        required: false,
+        scope: { rootIds: ['app.shell'], operations: ['read-text'] },
+      }],
+    }, manifest],
+    ['Host DOM modify capability', {
+      ...validManifest,
+      capabilities: [{
+        name: 'ui.host-dom.modify',
+        required: false,
+        scope: { rootIds: ['app.shell'], operations: ['set-text'] },
+      }],
+    }, manifest],
+  ]
+) expect(label, validate, value, false)
 
 if (failures > 0) throw new Error(`${failures} transient canvas conformance case(s) failed`)
 console.log('Transient canvas conformance: all cases passed')

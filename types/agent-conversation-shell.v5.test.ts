@@ -1,7 +1,7 @@
 import type {
   AgentConversationActiveRunDescriptor,
-  AgentConversationComposerShortcutPolicy,
   AgentConversationApprovalItem,
+  AgentConversationComposerShortcutPolicy,
   AgentConversationMessageItem,
   AgentConversationParticipant,
   AgentConversationShellSnapshot,
@@ -37,7 +37,10 @@ const approval = {
   approvalId: 'approval-1',
   approvalKind: 'command',
   state: 'pending',
-  actions: [{ decision: 'approve', command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'approval-1' } } }],
+  actions: [{
+    decision: 'approve',
+    command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'approval-1' } },
+  }],
 } satisfies AgentConversationApprovalItem
 approval.agentGeneration satisfies number
 
@@ -87,11 +90,23 @@ composerSnapshot.composer.shortcutPolicy satisfies 'enter' | 'mod-enter'
 const unsupportedShortcut: AgentConversationComposerShortcutPolicy = 'shift-enter'
 
 declare const subscription: AgentConversationShellSubscriptionHandle
-subscription.closed.then(closed => closed.code satisfies 'unsubscribed' | 'explicit' | 'owner-disposed' | 'generation-replaced' | 'permission-revoked' | 'connection-replaced' | 'observer-failed')
+subscription.closed.then(closed =>
+  closed.code satisfies
+    | 'unsubscribed'
+    | 'explicit'
+    | 'owner-disposed'
+    | 'generation-replaced'
+    | 'permission-revoked'
+    | 'connection-replaced'
+    | 'observer-failed'
+)
 subscription.unsubscribe().then(closed => closed.status satisfies 'closed')
 
-// @ts-expect-error v4 active runs expose no URL-shaped navigation value
-const urlRun: AgentConversationActiveRunDescriptor = { ...activeRun, detailsUrl: { target: 'host', url: 'app://-/agent' } }
+const urlRun: AgentConversationActiveRunDescriptor = {
+  ...activeRun,
+  // @ts-expect-error v4 active runs expose no URL-shaped navigation value
+  detailsUrl: { target: 'host', url: 'app://-/agent' },
+}
 // @ts-expect-error v4 approvals expose no AgentLoop binding
 const boundApproval: AgentConversationApprovalItem = { ...approval, binding: { bindingId: 'binding-1', generation: 1 } }
 // @ts-expect-error v4 approvals expose no AgentLoop turn

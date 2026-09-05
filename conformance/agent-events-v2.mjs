@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -22,7 +22,9 @@ addFormats(ajv)
 for (const schema of schemas.values()) ajv.addSchema(schema)
 const pageValidator = ajv.getSchema(schemas.get('agent-event-page.v2.schema.json').$id)
 const snapshotValidator = ajv.getSchema(schemas.get('agent-delivery-snapshot.v1.schema.json').$id)
-if (pageValidator === undefined || snapshotValidator === undefined) throw new Error('Agent v2 schemas were not registered')
+if (pageValidator === undefined || snapshotValidator === undefined) {
+  throw new Error('Agent v2 schemas were not registered')
+}
 
 const terminalStages = new Set(['forwarded', 'failed', 'expired', 'cancelled'])
 const cancellableStages = new Set(['requested', 'permission', 'queued'])
@@ -53,7 +55,9 @@ function semanticErrors(page) {
   for (let index = 0; index < events.length; index += 1) {
     const event = events[index]
     const expectedSeq = page.afterSeq + index + 1
-    if (event.seq !== expectedSeq) errors.push(`event[${index}] seq ${event.seq} is not contiguous from ${page.afterSeq}`)
+    if (event.seq !== expectedSeq) {
+      errors.push(`event[${index}] seq ${event.seq} is not contiguous from ${page.afterSeq}`)
+    }
     if (event.sessionId !== page.sessionId) errors.push(`event[${index}] sessionId differs from page`)
     const expectedId = `cxevt:${encodeURIComponent(event.sessionId)}:${event.seq}`
     if (event.eventId !== expectedId) errors.push(`event[${index}] eventId is not the deterministic v2 id`)
@@ -71,7 +75,9 @@ function semanticErrors(page) {
 
     if (event.type === 'message.delivery') {
       const record = deliveries.get(event.deliveryId) ?? {
-        stages: [], owner: event.data.owner, messageId: event.messageId,
+        stages: [],
+        owner: event.data.owner,
+        messageId: event.messageId,
       }
       if (!sameOwner(record.owner, event.data.owner)) errors.push(`${event.deliveryId} changed owner`)
       if (record.messageId !== event.messageId) errors.push(`${event.deliveryId} changed messageId`)
@@ -95,10 +101,14 @@ function semanticErrors(page) {
       }
       if (event.data.evaluationId !== undefined) {
         const evaluation = evaluations.get(event.data.evaluationId) ?? {
-          stages: [], contributionId: event.contributionId, source: event.source,
+          stages: [],
+          contributionId: event.contributionId,
+          source: event.source,
           messageIds: event.data.messageIds,
         }
-        if (evaluation.contributionId !== event.contributionId) errors.push(`${event.data.evaluationId} changed contributionId`)
+        if (evaluation.contributionId !== event.contributionId) {
+          errors.push(`${event.data.evaluationId} changed contributionId`)
+        }
         if (!sameOwner(evaluation.source, event.source)) errors.push(`${event.data.evaluationId} changed source`)
         if (JSON.stringify(evaluation.messageIds) !== JSON.stringify(event.data.messageIds)) {
           errors.push(`${event.data.evaluationId} changed messageIds`)
@@ -106,9 +116,11 @@ function semanticErrors(page) {
         evaluation.stages.push(stage)
         evaluations.set(event.data.evaluationId, evaluation)
       }
-      if (event.data.kind !== 'pre-step.append'
+      if (
+        event.data.kind !== 'pre-step.append'
         && ['evaluated', 'projected', 'forwarded'].includes(stage)
-        && !registered.has(event.contributionId)) {
+        && !registered.has(event.contributionId)
+      ) {
         errors.push(`${event.contributionId} evaluated before registration`)
       }
     }
@@ -119,7 +131,9 @@ function semanticErrors(page) {
   } else if (page.fromSeq !== events[0].seq || page.toSeq !== events.at(-1).seq) {
     errors.push('page range does not match events')
   }
-  if (page.nextAfterSeq !== undefined && page.nextAfterSeq !== page.toSeq) errors.push('nextAfterSeq must equal the last returned seq')
+  if (page.nextAfterSeq !== undefined && page.nextAfterSeq !== page.toSeq) {
+    errors.push('nextAfterSeq must equal the last returned seq')
+  }
   if (page.toSeq !== undefined && page.toSeq < page.snapshotSeq && page.nextAfterSeq === undefined) {
     errors.push('page before snapshot tail must expose nextAfterSeq')
   }
@@ -144,7 +158,9 @@ function semanticErrors(page) {
     for (let index = 1; index < record.stages.length; index += 1) {
       const previous = record.stages[index - 1]
       const current = record.stages[index]
-      if (previous === 'forwarded' || previous === 'failed') errors.push(`${evaluationId} has stage after terminal ${previous}`)
+      if (previous === 'forwarded' || previous === 'failed') {
+        errors.push(`${evaluationId} has stage after terminal ${previous}`)
+      }
       if (current !== 'failed' && nextContributionStage.get(previous) !== current) {
         errors.push(`${evaluationId} invalid contribution transition ${previous} -> ${current}`)
       }
@@ -155,14 +171,18 @@ function semanticErrors(page) {
 
 function validatePage(page) {
   const errors = []
-  if (!pageValidator(page)) errors.push(...(pageValidator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`))
+  if (!pageValidator(page)) {
+    errors.push(...(pageValidator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`))
+  }
   if (errors.length === 0) errors.push(...semanticErrors(page))
   return errors
 }
 
 function validateSnapshot(snapshot) {
   const errors = []
-  if (!snapshotValidator(snapshot)) errors.push(...(snapshotValidator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`))
+  if (!snapshotValidator(snapshot)) {
+    errors.push(...(snapshotValidator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`))
+  }
   const terminal = terminalStages.has(snapshot.stage)
   const cancellable = snapshot.valid && cancellableStages.has(snapshot.stage)
   if (snapshot.terminal !== terminal) errors.push('terminal flag does not match stage')
@@ -178,10 +198,12 @@ async function jsonFiles(directory) {
 }
 
 let failures = 0
-for (const [suite, validate] of [
-  ['agent-events-v2', validatePage],
-  ['agent-delivery', validateSnapshot],
-]) {
+for (
+  const [suite, validate] of [
+    ['agent-events-v2', validatePage],
+    ['agent-delivery', validateSnapshot],
+  ]
+) {
   for (const file of await jsonFiles(path.join(root, 'test-vectors', suite, 'valid'))) {
     const input = JSON.parse(await readFile(file, 'utf8'))
     const errors = validate(input)
@@ -204,7 +226,17 @@ const publicSchema = JSON.stringify([
   schemas.get('agent-event-page.v2.schema.json'),
   schemas.get('agent-delivery-snapshot.v1.schema.json'),
 ])
-for (const forbidden of ['additionalContext', 'thread/start', 'turn/start', 'application', 'trusted', 'model-consumed', 'modelConsumed']) {
+for (
+  const forbidden of [
+    'additionalContext',
+    'thread/start',
+    'turn/start',
+    'application',
+    'trusted',
+    'model-consumed',
+    'modelConsumed',
+  ]
+) {
   if (publicSchema.includes(forbidden)) {
     console.error(`public Agent v2 schema leaks host-specific field or authority ${forbidden}`)
     failures += 1

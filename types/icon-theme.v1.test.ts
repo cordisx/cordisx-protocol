@@ -19,7 +19,8 @@ const reicon = {
 } as const
 
 const registration = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-provider-registration.v1.schema.json',
   schemaVersion: 1,
   authority: 'host',
   hostGeneration: 'host-12',
@@ -53,7 +54,8 @@ const registration = {
 } satisfies IconThemeProviderRegistration
 
 const selection = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-selection.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-selection.v1.schema.json',
   schemaVersion: 1,
   authority: 'host',
   profileId: 'work',
@@ -67,7 +69,8 @@ const selection = {
 } satisfies IconThemeSelection
 
 const request = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-request.v1.schema.json',
   schemaVersion: 1,
   requestId: 'resolve_request_0001',
   hostGeneration: 'host-12',
@@ -123,7 +126,8 @@ const descriptor = {
 } satisfies NormalizedVectorDescriptor
 
 const result = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-resolution-result.v1.schema.json',
   schemaVersion: 1,
   requestId: 'resolve_request_0001',
   providerGeneration: 'reicon-1',
@@ -132,7 +136,8 @@ const result = {
 } satisfies IconThemeResolutionResult
 
 const rollback = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-operation.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/icon-theme-lifecycle-operation.v1.schema.json',
   schemaVersion: 1,
   authority: 'host',
   requestId: 'lifecycle_rollback_01',

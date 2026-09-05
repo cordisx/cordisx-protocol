@@ -2,23 +2,24 @@ import type {
   AgentLoopApprovalDecisionConflictCode,
   AgentLoopApprovalDecisionResult,
   AgentLoopApprovalDecisionUnavailableCode,
+  AgentLoopCancelMemberSelfIntroductionResult,
   AgentLoopCommand,
   AgentLoopEvent,
   AgentLoopMemberSelfIntroductionUnavailableCode,
   AgentLoopRequestMemberSelfIntroductionResult,
-  AgentLoopCancelMemberSelfIntroductionResult,
   AgentLoopTaskBinding,
-  BoundAgentLoopClient
+  BoundAgentLoopClient,
 } from '@cordisx/protocol/agent-loop/v4'
 
 const binding = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v4.schema.json',
   contract: 'cordisx.agent-loop-task-binding/v4',
   schemaVersion: 4,
   binding: { bindingId: 'binding-1', generation: 4 },
   definition: { agentId: 'reviewer', revision: 'definition-1' },
   task: 'task-1',
-  state: 'active'
+  state: 'active',
 } satisfies AgentLoopTaskBinding
 
 const approvalCommand = {
@@ -30,7 +31,7 @@ const approvalCommand = {
   binding,
   turn: 'turn-1',
   approvalId: 'approval-1',
-  decision: 'approved'
+  decision: 'approved',
 } satisfies AgentLoopCommand
 
 const introductionCommand = {
@@ -43,7 +44,7 @@ const introductionCommand = {
   participantId: 'participant-1',
   memberId: 'member-1',
   runId: 'run-1',
-  intent: { kind: 'member-self-introduction', audience: 'room', output: 'assistant-message' }
+  intent: { kind: 'member-self-introduction', audience: 'room', output: 'assistant-message' },
 } satisfies AgentLoopCommand
 const cancelIntroductionCommand = {
   $schema: approvalCommand.$schema,
@@ -55,7 +56,7 @@ const cancelIntroductionCommand = {
   participantId: introductionCommand.participantId,
   memberId: introductionCommand.memberId,
   runId: introductionCommand.runId,
-  requestOperationId: introductionCommand.commandId
+  requestOperationId: introductionCommand.commandId,
 } satisfies AgentLoopCommand
 
 const accepted = {
@@ -71,7 +72,7 @@ const accepted = {
   approvalId: approvalCommand.approvalId,
   decision: approvalCommand.decision,
   causation: { operationId: approvalCommand.commandId },
-  delivery: { disposition: 'executed' }
+  delivery: { disposition: 'executed' },
 } satisfies AgentLoopApprovalDecisionResult
 
 const bindingConflictCode: AgentLoopApprovalDecisionConflictCode = 'binding-conflict'
@@ -88,9 +89,13 @@ const conflict = {
   type: 'approval-decision',
   status: 'conflict',
   authorization: { capability: 'approvals.decide', state: 'allowed', code: 'allowed' },
-  code: 'approval-conflict'
+  code: 'approval-conflict',
 } satisfies AgentLoopApprovalDecisionResult
-const unavailable = { ...conflict, status: 'unavailable', code: 'reconciliation-required' } satisfies AgentLoopApprovalDecisionResult
+const unavailable = {
+  ...conflict,
+  status: 'unavailable',
+  code: 'reconciliation-required',
+} satisfies AgentLoopApprovalDecisionResult
 const authorizationUnavailable = {
   $schema: accepted.$schema,
   contract: accepted.contract,
@@ -98,9 +103,13 @@ const authorizationUnavailable = {
   commandId: approvalCommand.commandId,
   type: 'approval-decision',
   status: 'unavailable',
-  authorization: { capability: 'approvals.decide', state: 'unavailable', code: 'host-unavailable' }
+  authorization: { capability: 'approvals.decide', state: 'unavailable', code: 'host-unavailable' },
 } satisfies AgentLoopApprovalDecisionResult
-const denied = { ...authorizationUnavailable, status: 'denied', authorization: { capability: 'approvals.decide', state: 'denied', code: 'user-denied' } } satisfies AgentLoopApprovalDecisionResult
+const denied = {
+  ...authorizationUnavailable,
+  status: 'denied',
+  authorization: { capability: 'approvals.decide', state: 'denied', code: 'user-denied' },
+} satisfies AgentLoopApprovalDecisionResult
 void accepted
 void conflict
 void unavailable
@@ -118,9 +127,14 @@ const resolvedApproval = {
   causation: { operationId: approvalCommand.commandId },
   type: 'approval',
   turn: approvalCommand.turn,
-  approval: { approvalId: approvalCommand.approvalId, kind: 'command', state: 'resolved', outcome: 'approved' }
+  approval: { approvalId: approvalCommand.approvalId, kind: 'command', state: 'resolved', outcome: 'approved' },
 } satisfies AgentLoopEvent
-const expiredApproval = { ...resolvedApproval, eventId: 'event-approval-expired', causation: undefined, approval: { ...resolvedApproval.approval, outcome: 'expired' } } satisfies AgentLoopEvent
+const expiredApproval = {
+  ...resolvedApproval,
+  eventId: 'event-approval-expired',
+  causation: undefined,
+  approval: { ...resolvedApproval.approval, outcome: 'expired' },
+} satisfies AgentLoopEvent
 void resolvedApproval
 void expiredApproval
 
@@ -139,7 +153,7 @@ const acceptedIntroduction = {
   turn: 'turn-introduction-1',
   messageId: 'message-introduction-1',
   causation: { operationId: introductionCommand.commandId },
-  delivery: { disposition: 'executed' }
+  delivery: { disposition: 'executed' },
 } satisfies AgentLoopRequestMemberSelfIntroductionResult
 const acceptedIntroductionCancel = {
   ...acceptedIntroduction,
@@ -147,7 +161,7 @@ const acceptedIntroductionCancel = {
   type: 'cancel-member-self-introduction',
   requestOperationId: cancelIntroductionCommand.requestOperationId,
   causation: { operationId: cancelIntroductionCommand.commandId },
-  delivery: { disposition: 'reconciled' }
+  delivery: { disposition: 'reconciled' },
 } satisfies AgentLoopCancelMemberSelfIntroductionResult
 const introductionBindingClosed = {
   $schema: accepted.$schema,
@@ -157,12 +171,12 @@ const introductionBindingClosed = {
   type: 'request-member-self-introduction',
   status: 'unavailable',
   authorization: { capability: 'turns.introduce', state: 'allowed', code: 'allowed' },
-  code: 'binding-closed'
+  code: 'binding-closed',
 } satisfies AgentLoopRequestMemberSelfIntroductionResult
 const introductionCancelBindingClosed = {
   ...introductionBindingClosed,
   commandId: cancelIntroductionCommand.commandId,
-  type: 'cancel-member-self-introduction'
+  type: 'cancel-member-self-introduction',
 } satisfies AgentLoopCancelMemberSelfIntroductionResult
 const introductionEvent = {
   $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v4.schema.json',
@@ -175,7 +189,12 @@ const introductionEvent = {
   causation: { operationId: introductionCommand.commandId },
   turn: acceptedIntroduction.turn,
   type: 'message',
-  message: { messageId: acceptedIntroduction.messageId, role: 'assistant', purpose: 'member-self-introduction', content: [{ kind: 'text', text: 'Hello, I am Reviewer.' }] }
+  message: {
+    messageId: acceptedIntroduction.messageId,
+    role: 'assistant',
+    purpose: 'member-self-introduction',
+    content: [{ kind: 'text', text: 'Hello, I am Reviewer.' }],
+  },
 } satisfies AgentLoopEvent
 void acceptedIntroduction
 void acceptedIntroductionCancel
@@ -185,8 +204,12 @@ void introductionEvent
 
 declare const client: BoundAgentLoopClient
 const decisionResult = await client.decideApproval(approvalCommand)
-if (decisionResult.status === 'accepted') decisionResult.delivery.disposition satisfies 'executed' | 'replayed' | 'reconciled'
-if (decisionResult.status === 'conflict') decisionResult.code satisfies 'operation-conflict' | 'binding-conflict' | 'approval-conflict'
+if (decisionResult.status === 'accepted') {
+  decisionResult.delivery.disposition satisfies 'executed' | 'replayed' | 'reconciled'
+}
+if (decisionResult.status === 'conflict') {
+  decisionResult.code satisfies 'operation-conflict' | 'binding-conflict' | 'approval-conflict'
+}
 const introductionResult = await client.requestMemberSelfIntroduction(introductionCommand)
 if (introductionResult.status === 'accepted') introductionResult.messageId satisfies string
 const introductionCancelResult = await client.cancelMemberSelfIntroduction(cancelIntroductionCommand)
@@ -207,8 +230,11 @@ void missingApprovalCausation
 // @ts-expect-error v4 approval decisions use terminal-state tokens
 const imperativeApprovalDecision: AgentLoopCommand = { ...approvalCommand, decision: 'approve' }
 void imperativeApprovalDecision
-// @ts-expect-error approval decisions use approvals.decide authorization
-const wrongApprovalAuthorization: AgentLoopApprovalDecisionResult = { ...accepted, authorization: { capability: 'turns.submit', state: 'allowed', code: 'allowed' } }
+const wrongApprovalAuthorization: AgentLoopApprovalDecisionResult = {
+  ...accepted,
+  // @ts-expect-error approval decisions use approvals.decide authorization
+  authorization: { capability: 'turns.submit', state: 'allowed', code: 'allowed' },
+}
 void wrongApprovalAuthorization
 // @ts-expect-error decision-resolved approval events require operation causation
 const uncorrelatedResolvedApproval: AgentLoopEvent = { ...resolvedApproval, causation: undefined }
@@ -216,8 +242,11 @@ void uncorrelatedResolvedApproval
 // @ts-expect-error self-introduction requests cannot carry a hidden prompt/body/model
 const promptedIntroduction: AgentLoopCommand = { ...introductionCommand, prompt: 'Introduce yourself' }
 void promptedIntroduction
-// @ts-expect-error self-introduction events must be assistant-authored
-const userIntroductionEvent: AgentLoopEvent = { ...introductionEvent, message: { ...introductionEvent.message, role: 'user' } }
+const userIntroductionEvent: AgentLoopEvent = {
+  ...introductionEvent,
+  // @ts-expect-error self-introduction events must be assistant-authored
+  message: { ...introductionEvent.message, role: 'user' },
+}
 void userIntroductionEvent
 // @ts-expect-error self-introduction events require the accepted turn
 const turnlessIntroductionEvent: AgentLoopEvent = { ...introductionEvent, turn: undefined }
@@ -225,11 +254,17 @@ void turnlessIntroductionEvent
 // @ts-expect-error self-introduction events require operation causation
 const uncorrelatedIntroductionEvent: AgentLoopEvent = { ...introductionEvent, causation: undefined }
 void uncorrelatedIntroductionEvent
-// @ts-expect-error accepted self-introduction requests require command causation
-const uncorrelatedAcceptedIntroduction: AgentLoopRequestMemberSelfIntroductionResult = { ...acceptedIntroduction, causation: undefined }
+const uncorrelatedAcceptedIntroduction: AgentLoopRequestMemberSelfIntroductionResult = {
+  ...acceptedIntroduction,
+  // @ts-expect-error accepted self-introduction requests require command causation
+  causation: undefined,
+}
 void uncorrelatedAcceptedIntroduction
-// @ts-expect-error accepted self-introduction cancellations require their own command causation
-const uncorrelatedAcceptedIntroductionCancel: AgentLoopCancelMemberSelfIntroductionResult = { ...acceptedIntroductionCancel, causation: undefined }
+const uncorrelatedAcceptedIntroductionCancel: AgentLoopCancelMemberSelfIntroductionResult = {
+  ...acceptedIntroductionCancel,
+  // @ts-expect-error accepted self-introduction cancellations require their own command causation
+  causation: undefined,
+}
 void uncorrelatedAcceptedIntroductionCancel
 // @ts-expect-error cancellation is data-only and cannot carry AbortSignal
 const abortableCancel: AgentLoopCommand = { ...cancelIntroductionCommand, signal: new AbortController().signal }

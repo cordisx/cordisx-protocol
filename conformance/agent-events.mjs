@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -38,7 +38,9 @@ function semanticErrors(page) {
   for (let index = 0; index < events.length; index += 1) {
     const event = events[index]
     const expectedSeq = page.afterSeq + index + 1
-    if (event.seq !== expectedSeq) errors.push(`event[${index}] seq ${event.seq} is not contiguous from ${page.afterSeq}`)
+    if (event.seq !== expectedSeq) {
+      errors.push(`event[${index}] seq ${event.seq} is not contiguous from ${page.afterSeq}`)
+    }
     if (event.sessionId !== page.sessionId) errors.push(`event[${index}] sessionId differs from page`)
     const expectedId = `cxevt:${encodeURIComponent(event.sessionId)}:${event.seq}`
     if (event.eventId !== expectedId) errors.push(`event[${index}] eventId is not the deterministic v1 id`)
@@ -62,9 +64,13 @@ function semanticErrors(page) {
   if (events.length === 0) {
     if (page.fromSeq !== undefined || page.toSeq !== undefined) errors.push('empty page cannot expose fromSeq/toSeq')
   } else {
-    if (page.fromSeq !== events[0].seq || page.toSeq !== events.at(-1).seq) errors.push('page range does not match events')
+    if (page.fromSeq !== events[0].seq || page.toSeq !== events.at(-1).seq) {
+      errors.push('page range does not match events')
+    }
   }
-  if (page.nextAfterSeq !== undefined && page.nextAfterSeq !== page.toSeq) errors.push('nextAfterSeq must equal the last returned seq')
+  if (page.nextAfterSeq !== undefined && page.nextAfterSeq !== page.toSeq) {
+    errors.push('nextAfterSeq must equal the last returned seq')
+  }
   if (page.toSeq !== undefined && page.toSeq < page.snapshotSeq && page.nextAfterSeq === undefined) {
     errors.push('page before snapshot tail must expose nextAfterSeq')
   }
@@ -84,7 +90,9 @@ function semanticErrors(page) {
 
 export function validateAgentEventPage(page) {
   const errors = []
-  if (!pageValidator(page)) errors.push(...(pageValidator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`))
+  if (!pageValidator(page)) {
+    errors.push(...(pageValidator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`))
+  }
   if (errors.length === 0) errors.push(...semanticErrors(page))
   return errors
 }

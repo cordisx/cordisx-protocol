@@ -1,9 +1,9 @@
 import type {
+  PluginApprovalAuthorityCapabilityDeclarationV8,
   PluginManifestAgentRuntimeCapabilityDeclarationV6,
   PluginManifestHostRouteSessionScopeBindingV6,
   PluginManifestSessionScopeDeclarationV6,
   PluginRuntimeManifestV8,
-  PluginApprovalAuthorityCapabilityDeclarationV8,
 } from './plugin-manifest.v8.js'
 
 const exactRouteScope = {
@@ -26,7 +26,11 @@ const manifest = {
   services: [],
 } satisfies PluginRuntimeManifestV8
 
-const authority = { name: 'approvals.answer', required: false, scope: { authorityRequester: { kind: 'approval-authority-requester-route', requester: exactRouteScope } } } satisfies PluginApprovalAuthorityCapabilityDeclarationV8
+const authority = {
+  name: 'approvals.answer',
+  required: false,
+  scope: { authorityRequester: { kind: 'approval-authority-requester-route', requester: exactRouteScope } },
+} satisfies PluginApprovalAuthorityCapabilityDeclarationV8
 authority.scope.authorityRequester.requester.param satisfies 'sessionId'
 
 manifest.capabilities[0].name satisfies string

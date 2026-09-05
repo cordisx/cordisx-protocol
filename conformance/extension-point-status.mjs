@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -16,7 +16,9 @@ const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true }
 for (const schema of schemas.values()) ajv.addSchema(schema)
 const catalogValidator = ajv.getSchema(schemas.get('host-extension-point-catalog.v5.schema.json').$id)
 const contextValidator = ajv.getSchema(schemas.get('extension-point-runtime-context.v1.schema.json').$id)
-if (catalogValidator === undefined || contextValidator === undefined) throw new Error('extension point status schemas were not registered')
+if (catalogValidator === undefined || contextValidator === undefined) {
+  throw new Error('extension point status schemas were not registered')
+}
 
 function schemaErrors(validator, value) {
   if (validator(value)) return []
@@ -36,8 +38,12 @@ function validateSuite(suite) {
   const points = Array.isArray(suite?.catalog?.points) ? suite.catalog.points : []
   const contexts = Array.isArray(suite?.context?.points) ? suite.context.points : []
   const byId = new Map(points.flatMap(point => typeof point?.id === 'string' ? [[point.id, point]] : []))
-  for (const id of duplicates(points.map(point => point?.id).filter(id => typeof id === 'string'))) errors.push(`duplicate catalog point: ${id}`)
-  for (const id of duplicates(contexts.map(point => point?.id).filter(id => typeof id === 'string'))) errors.push(`duplicate context point: ${id}`)
+  for (const id of duplicates(points.map(point => point?.id).filter(id => typeof id === 'string'))) {
+    errors.push(`duplicate catalog point: ${id}`)
+  }
+  for (const id of duplicates(contexts.map(point => point?.id).filter(id => typeof id === 'string'))) {
+    errors.push(`duplicate context point: ${id}`)
+  }
   for (const context of contexts) {
     const descriptor = byId.get(context?.id)
     if (descriptor === undefined) {
@@ -52,7 +58,9 @@ function validateSuite(suite) {
       const anchor = anchors.get(anchorContext.id)
       if (anchor === undefined) errors.push(`context references unknown anchor: ${context.id}/${anchorContext.id}`)
       else if (anchorContext.state === 'active' && anchor.adapterSupport !== 'supported') {
-        errors.push(`anchor ${context.id}/${anchorContext.id} cannot be active when adapter support is ${anchor.adapterSupport}`)
+        errors.push(
+          `anchor ${context.id}/${anchorContext.id} cannot be active when adapter support is ${anchor.adapterSupport}`,
+        )
       }
     }
   }

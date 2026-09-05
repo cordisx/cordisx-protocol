@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -21,11 +21,14 @@ addFormats(ajv)
 for (const schema of schemas.values()) ajv.addSchema(schema)
 
 const ids = {
-  catalog: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v1.schema.json',
-  decision: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v2.schema.json',
+  catalog:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v1.schema.json',
+  decision:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v2.schema.json',
   manifest: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v4.schema.json',
   package: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v3.schema.json',
-  plan: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v2.schema.json',
+  plan:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v2.schema.json',
   policy: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v2.schema.json',
 }
 const manifestSchema = schemas.get(ids.manifest)
@@ -44,10 +47,18 @@ function rationaleErrors(manifest) {
     for (const [field, text] of Object.entries(declaration.rationale ?? {})) {
       const fallback = text?.fallback
       if (typeof fallback !== 'string') continue
-      if (/[\u0000-\u001f\u007f]/u.test(fallback)) errors.push(`${declaration.name}.${field} contains control characters`)
+      if (/[\u0000-\u001f\u007f]/u.test(fallback)) {
+        errors.push(`${declaration.name}.${field} contains control characters`)
+      }
       if (/[<>]/u.test(fallback)) errors.push(`${declaration.name}.${field} contains markup`)
-      if (/(?:https?:\/\/|javascript:)/iu.test(fallback)) errors.push(`${declaration.name}.${field} contains a link or script scheme`)
-      if (/(?:cordisx|host).*(?:verified|approved|guaranteed|safe)|(?:CordisX|宿主).*(?:验证|批准|保证|安全)/iu.test(fallback)) {
+      if (/(?:https?:\/\/|javascript:)/iu.test(fallback)) {
+        errors.push(`${declaration.name}.${field} contains a link or script scheme`)
+      }
+      if (
+        /(?:cordisx|host).*(?:verified|approved|guaranteed|safe)|(?:CordisX|宿主).*(?:验证|批准|保证|安全)/iu.test(
+          fallback,
+        )
+      ) {
         errors.push(`${declaration.name}.${field} impersonates a Host security claim`)
       }
     }
@@ -63,8 +74,12 @@ function manifestErrors(manifest) {
     seen.add(declaration.name)
     const isAgent = declaration.name?.startsWith('agent.')
     const isChannel = declaration.name?.startsWith('channel.')
-    if (isAgent && declaration.scope?.sessions !== undefined) errors.push(`${declaration.name} cannot use Platform sessions`)
-    if (!isAgent && declaration.scope?.sessionIds !== undefined) errors.push(`${declaration.name} cannot use Agent session ids`)
+    if (isAgent && declaration.scope?.sessions !== undefined) {
+      errors.push(`${declaration.name} cannot use Platform sessions`)
+    }
+    if (!isAgent && declaration.scope?.sessionIds !== undefined) {
+      errors.push(`${declaration.name} cannot use Agent session ids`)
+    }
     if (!isChannel && Object.keys(declaration.scope ?? {}).some(key => key.startsWith('channel'))) {
       errors.push(`${declaration.name} cannot use Channel scope`)
     }
@@ -79,7 +94,9 @@ function catalogErrors(catalog) {
     if (seen.has(entry.capability)) errors.push(`duplicate catalog capability ${entry.capability}`)
     seen.add(entry.capability)
     if (entry.sensitivity === 'high-risk') {
-      if (entry.persistentAllow !== false) errors.push(`${entry.capability} high-risk persistent allow must be disabled`)
+      if (entry.persistentAllow !== false) {
+        errors.push(`${entry.capability} high-risk persistent allow must be disabled`)
+      }
       if (entry.recommendedPolicy !== 'ask') errors.push(`${entry.capability} high-risk policy must default to ask`)
       if (entry.installPrompt !== 'explicit' || entry.runtimePrompt !== 'always') {
         errors.push(`${entry.capability} high-risk prompts must remain explicit`)
@@ -90,7 +107,9 @@ function catalogErrors(catalog) {
     }
   }
   for (const capability of capabilityNames) if (!seen.has(capability)) errors.push(`catalog is missing ${capability}`)
-  for (const capability of seen) if (!capabilityNames.includes(capability)) errors.push(`catalog contains unknown ${capability}`)
+  for (const capability of seen) {
+    if (!capabilityNames.includes(capability)) errors.push(`catalog contains unknown ${capability}`)
+  }
   return errors
 }
 
@@ -124,19 +143,27 @@ function documentErrors(document) {
 }
 
 function normalized(value) {
-  if (Array.isArray(value)) return value.map(normalized).sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
+  if (Array.isArray(value)) {
+    return value.map(normalized).sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
+  }
   if (value === null || typeof value !== 'object') return value
-  return Object.fromEntries(Object.entries(value).sort(([left], [right]) => left.localeCompare(right)).map(([key, entry]) => [key, normalized(entry)]))
+  return Object.fromEntries(
+    Object.entries(value).sort(([left], [right]) => left.localeCompare(right)).map((
+      [key, entry],
+    ) => [key, normalized(entry)]),
+  )
 }
 
 function securityFingerprint(catalogVersion, declaration) {
-  return `sha256:${createHash('sha256').update(JSON.stringify(normalized({
-    catalogVersion,
-    capability: declaration.name,
-    rationale: declaration.rationale ?? null,
-    scope: declaration.scope,
-    security: declaration.security ?? null,
-  }))).digest('hex')}`
+  return `sha256:${
+    createHash('sha256').update(JSON.stringify(normalized({
+      catalogVersion,
+      capability: declaration.name,
+      rationale: declaration.rationale ?? null,
+      scope: declaration.scope,
+      security: declaration.security ?? null,
+    }))).digest('hex')
+  }`
 }
 
 async function documents(directory) {
@@ -171,7 +198,10 @@ const reordered = {
   ...declaration,
   scope: { cwdRoots: [...declaration.scope.cwdRoots], providers: [...declaration.scope.providers] },
 }
-const expanded = { ...declaration, scope: { ...declaration.scope, cwdRoots: [...declaration.scope.cwdRoots, '/other'] } }
+const expanded = {
+  ...declaration,
+  scope: { ...declaration.scope, cwdRoots: [...declaration.scope.cwdRoots, '/other'] },
+}
 const changedRationale = {
   ...declaration,
   rationale: { ...declaration.rationale, feature: { ...declaration.rationale.feature, fallback: 'Another feature' } },
@@ -182,7 +212,9 @@ if (fingerprint !== securityFingerprint('2026-08-24', reordered)) {
   console.error('equivalent normalized scope must keep the security fingerprint')
   failures += 1
 }
-for (const [label, candidate] of [['scope', expanded], ['rationale', changedRationale], ['security', changedSecurity]]) {
+for (
+  const [label, candidate] of [['scope', expanded], ['rationale', changedRationale], ['security', changedSecurity]]
+) {
   if (fingerprint === securityFingerprint('2026-08-24', candidate)) {
     console.error(`${label} change must change the security fingerprint`)
     failures += 1
@@ -195,14 +227,16 @@ if (fingerprint === securityFingerprint('2026-08-25', declaration)) {
 
 const planItem = plan.declarations[0]
 const decisionItem = decision.decisions[0]
-if (decision.planId !== plan.planId
+if (
+  decision.planId !== plan.planId
   || JSON.stringify(decision.binding) !== JSON.stringify(plan.binding)
   || decision.profileId !== plan.profileId
   || JSON.stringify(decision.identity) !== JSON.stringify(plan.identity)
   || decisionItem.capability !== planItem.capability
   || JSON.stringify(decisionItem.scope) !== JSON.stringify(planItem.scope)
   || decisionItem.securityFingerprint !== planItem.securityFingerprint
-  || !planItem.allowedDecisions.includes(decisionItem.decision)) {
+  || !planItem.allowedDecisions.includes(decisionItem.decision)
+) {
   console.error('valid decision must bind the exact current plan')
   failures += 1
 }
@@ -213,7 +247,9 @@ if (v1Migrations.size !== 3 || v1Migrations.get('allow-once') !== undefined) {
   failures += 1
 }
 
-const packageV2 = schemas.get('https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v2.schema.json')
+const packageV2 = schemas.get(
+  'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v2.schema.json',
+)
 if (packageV2.properties.runtimeManifest.properties.schema.enum.includes(ids.manifest)) {
   console.error('frozen package v2 must not accept manifest v4')
   failures += 1

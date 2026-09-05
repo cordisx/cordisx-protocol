@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { isDeepStrictEqual } from 'node:util'
@@ -53,9 +53,11 @@ function hashOneWorksRc8Seed(seed) {
   return hash >>> 0
 }
 function generatedAvatar(agentId) {
-  return createGeneratedAgentAvatarRef(agentId === null || agentId === undefined
-    ? { namespace: 'unknown' }
-    : { namespace: 'agent-definition', agentId })
+  return createGeneratedAgentAvatarRef(
+    agentId === null || agentId === undefined
+      ? { namespace: 'unknown' }
+      : { namespace: 'agent-definition', agentId },
+  )
 }
 
 function frozenErrors(value, label, errors) {
@@ -68,13 +70,19 @@ function frozenErrors(value, label, errors) {
 function resolveReference(avatar, supportedKinds) {
   const cloned = cloneAgentAvatarRef(avatar)
   const base = {
-    $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json',
+    $schema:
+      'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-avatar-resolution-result.v1.schema.json',
     contract: 'cordisx.agent-avatar-resolution-result/v1',
     schemaVersion: 1,
   }
   return supportedKinds.includes(avatar.kind)
     ? Object.freeze({ ...base, status: 'resolved', avatar: cloned })
-    : Object.freeze({ ...base, status: 'unsupported', avatar: cloned, code: avatar.kind === 'platform' ? 'unsupported-provider' : 'unsupported-kind' })
+    : Object.freeze({
+      ...base,
+      status: 'unsupported',
+      avatar: cloned,
+      code: avatar.kind === 'platform' ? 'unsupported-provider' : 'unsupported-kind',
+    })
 }
 
 function resolveDefinitionAvatars(definitions) {
@@ -125,14 +133,18 @@ function validateCanonicalCase(vector) {
   const errors = []
   let actualSeed
   try {
-    actualSeed = canonicalizeAgentAvatarSeed(vector.agentId === null || vector.agentId === undefined
-      ? { namespace: 'unknown' }
-      : { namespace: 'agent-definition', agentId: vector.agentId })
+    actualSeed = canonicalizeAgentAvatarSeed(
+      vector.agentId === null || vector.agentId === undefined
+        ? { namespace: 'unknown' }
+        : { namespace: 'agent-definition', agentId: vector.agentId },
+    )
   } catch (error) {
     errors.push(error.message)
   }
   if (actualSeed !== vector.expectedSeed) errors.push(`canonical seed mismatch: ${String(actualSeed)}`)
-  if (actualSeed !== undefined && !validateAvatar(generatedAvatar(vector.agentId))) errors.push(...errorsOf(validateAvatar))
+  if (actualSeed !== undefined && !validateAvatar(generatedAvatar(vector.agentId))) {
+    errors.push(...errorsOf(validateAvatar))
+  }
   return errors
 }
 
@@ -153,7 +165,9 @@ function validateStabilityCase(vector) {
 function validateDefinitionCase(vector) {
   const errors = []
   for (let index = 0; index < (vector.definitions?.length ?? 0); index += 1) {
-    if (!validateDefinition(vector.definitions[index])) errors.push(...errorsOf(validateDefinition).map(error => `definition[${index}] ${error}`))
+    if (!validateDefinition(vector.definitions[index])) {
+      errors.push(...errorsOf(validateDefinition).map(error => `definition[${index}] ${error}`))
+    }
   }
   if (errors.length > 0) return errors
   let resolved
@@ -165,7 +179,9 @@ function validateDefinitionCase(vector) {
   for (const assertion of vector.assertions ?? []) {
     const key = `${assertion.agentId}\u0000${assertion.revision}`
     const actual = resolved.get(key)
-    if (!isDeepStrictEqual(actual, assertion.expected)) errors.push(`${assertion.agentId}@${assertion.revision} avatar resolution drift`)
+    if (!isDeepStrictEqual(actual, assertion.expected)) {
+      errors.push(`${assertion.agentId}@${assertion.revision} avatar resolution drift`)
+    }
   }
   return errors
 }
@@ -180,7 +196,9 @@ function validateResolverCase(vector) {
     }
     const source = structuredClone(entry.value)
     const result = resolveReference(source, vector.supportedKinds)
-    if (!validateResolutionResult(result)) errors.push(...errorsOf(validateResolutionResult).map(error => `reference[${index}] result ${error}`))
+    if (!validateResolutionResult(result)) {
+      errors.push(...errorsOf(validateResolutionResult).map(error => `reference[${index}] result ${error}`))
+    }
     if (!isDeepStrictEqual(result, entry.expected)) errors.push(`reference[${index}] resolution drift`)
     if (result.avatar === source) errors.push(`reference[${index}] avatar was not cloned`)
     frozenErrors(result, `reference[${index}].result`, errors)
@@ -193,21 +211,46 @@ function validateResolverCase(vector) {
 
 function validateOneWorksRc8Case(vector) {
   const errors = []
-  if (vector.core?.spec !== '@oneworks/avatar@1.0.0-rc.8') errors.push('core package is not exact @oneworks/avatar rc.8')
-  if (vector.core?.integrity !== 'sha512-9vKWfiPUlEfVzcO+6Q2QsCmqlINZb2CpXjN4M/JO2+v0IwqsGIcWGaxW44lf3moSQj70lEmnF6F7bZofw7mcXQ==') errors.push('core package integrity drifted from @oneworks/avatar rc.8')
-  if (vector.core?.shasum !== 'd392232f850014c323f19a3a952c45d2d432b381') errors.push('core package shasum drifted from @oneworks/avatar rc.8')
-  if (vector.react?.spec !== '@oneworks/avatar-react@1.0.0-rc.8') errors.push('React package is not exact @oneworks/avatar-react rc.8')
-  if (vector.react?.integrity !== 'sha512-fJ+p2LLG5tb3YV5QAAm/3gnkEFuCfMSR/WttpvMv8xNp64Ou6TB4Tz5QE6LqOwgT7q67qrBluZMwDfQUjX++aw==') errors.push('React package integrity drifted from @oneworks/avatar-react rc.8')
-  if (vector.react?.shasum !== '6a62a452fe4a3f1ffa40c057f09b186d29ba84ca') errors.push('React package shasum drifted from @oneworks/avatar-react rc.8')
+  if (vector.core?.spec !== '@oneworks/avatar@1.0.0-rc.8') {
+    errors.push('core package is not exact @oneworks/avatar rc.8')
+  }
+  if (
+    vector.core?.integrity
+      !== 'sha512-9vKWfiPUlEfVzcO+6Q2QsCmqlINZb2CpXjN4M/JO2+v0IwqsGIcWGaxW44lf3moSQj70lEmnF6F7bZofw7mcXQ=='
+  ) errors.push('core package integrity drifted from @oneworks/avatar rc.8')
+  if (vector.core?.shasum !== 'd392232f850014c323f19a3a952c45d2d432b381') {
+    errors.push('core package shasum drifted from @oneworks/avatar rc.8')
+  }
+  if (vector.react?.spec !== '@oneworks/avatar-react@1.0.0-rc.8') {
+    errors.push('React package is not exact @oneworks/avatar-react rc.8')
+  }
+  if (
+    vector.react?.integrity
+      !== 'sha512-fJ+p2LLG5tb3YV5QAAm/3gnkEFuCfMSR/WttpvMv8xNp64Ou6TB4Tz5QE6LqOwgT7q67qrBluZMwDfQUjX++aw=='
+  ) errors.push('React package integrity drifted from @oneworks/avatar-react rc.8')
+  if (vector.react?.shasum !== '6a62a452fe4a3f1ffa40c057f09b186d29ba84ca') {
+    errors.push('React package shasum drifted from @oneworks/avatar-react rc.8')
+  }
   for (const packageName of ['@oneworks/avatar', '@oneworks/avatar-react']) {
-    if (packageManifest.dependencies?.[packageName] !== undefined) errors.push(`${packageName} must not be a Protocol production dependency`)
-    if (packageManifest.peerDependencies?.[packageName] !== undefined) errors.push(`${packageName} must not be a Protocol peer dependency`)
-    if (packageManifest.optionalDependencies?.[packageName] !== undefined) errors.push(`${packageName} must not be a Protocol optional dependency`)
+    if (packageManifest.dependencies?.[packageName] !== undefined) {
+      errors.push(`${packageName} must not be a Protocol production dependency`)
+    }
+    if (packageManifest.peerDependencies?.[packageName] !== undefined) {
+      errors.push(`${packageName} must not be a Protocol peer dependency`)
+    }
+    if (packageManifest.optionalDependencies?.[packageName] !== undefined) {
+      errors.push(`${packageName} must not be a Protocol optional dependency`)
+    }
   }
   for (let index = 0; index < (vector.golden?.length ?? 0); index += 1) {
     const entry = vector.golden[index]
     try {
-      cloneAgentAvatarRef({ kind: 'generated', algorithm: 'oneworks-avatar-seed', algorithmVersion: 1, seed: entry.canonicalSeed })
+      cloneAgentAvatarRef({
+        kind: 'generated',
+        algorithm: 'oneworks-avatar-seed',
+        algorithmVersion: 1,
+        seed: entry.canonicalSeed,
+      })
     } catch (error) {
       errors.push(`golden[${index}] ${error.message}`)
       continue
@@ -215,7 +258,9 @@ function validateOneWorksRc8Case(vector) {
     const normalized = normalizeOneWorksRc8Seed(entry.canonicalSeed)
     if (normalized !== entry.normalizedSeed) errors.push(`golden[${index}] rc.8 normalization drift`)
     if (hashOneWorksRc8Seed(entry.canonicalSeed) !== entry.rawHash) errors.push(`golden[${index}] rc.8 raw hash drift`)
-    if (hashOneWorksRc8Seed(normalized) !== entry.normalizedHash) errors.push(`golden[${index}] rc.8 normalized hash drift`)
+    if (hashOneWorksRc8Seed(normalized) !== entry.normalizedHash) {
+      errors.push(`golden[${index}] rc.8 normalized hash drift`)
+    }
   }
   return errors
 }

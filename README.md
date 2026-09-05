@@ -6,12 +6,12 @@ the current Host implementation and Codex DOM adapter.
 
 ## For consumers and implementers
 
-| Start here | Purpose |
-| --- | --- |
-| [Specification topics](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/README.md) | Normative behavior, compatibility, and topic version navigation |
-| [TypeScript entrypoints](https://github.com/cordisx/cordisx-protocol/blob/main/types/INDEX.md) | Exact public imports and their declarations, including reused wire versions |
-| [Schemas](https://github.com/cordisx/cordisx-protocol/blob/main/schemas/README.md) | Machine-readable document formats |
-| [Conformance](https://github.com/cordisx/cordisx-protocol/blob/main/conformance/README.md) and [test vectors](https://github.com/cordisx/cordisx-protocol/blob/main/test-vectors/README.md) | Protocol validation and examples |
+| Start here                                                                                                                                                                                  | Purpose                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [Specification topics](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/README.md)                                                                                        | Normative behavior, compatibility, and topic version navigation             |
+| [TypeScript entrypoints](https://github.com/cordisx/cordisx-protocol/blob/main/types/INDEX.md)                                                                                              | Exact public imports and their declarations, including reused wire versions |
+| [Schemas](https://github.com/cordisx/cordisx-protocol/blob/main/schemas/README.md)                                                                                                          | Machine-readable document formats                                           |
+| [Conformance](https://github.com/cordisx/cordisx-protocol/blob/main/conformance/README.md) and [test vectors](https://github.com/cordisx/cordisx-protocol/blob/main/test-vectors/README.md) | Protocol validation and examples                                            |
 
 These links also work for readers of the installed package README. They open
 repository `main`; select the tag or commit matching a pinned dependency when

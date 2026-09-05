@@ -7,7 +7,8 @@ import type {
 } from './manager-content-navigation.v5.js'
 
 const declaration = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v5.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v5.schema.json',
   schemaVersion: 5,
   id: 'chat-settings',
   route: { id: 'chat-settings' },
@@ -27,7 +28,8 @@ const enterChoice = {
 declare const projection: ManagerContentProjectionV4
 declare const source: ManagerContentConfigSourceV2
 const save = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json',
   contract: 'cordisx.manager-content-config-command/v1',
   schemaVersion: 1,
   commandId: 'save-1',

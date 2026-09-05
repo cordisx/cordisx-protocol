@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -18,8 +18,17 @@ const schemaNames = [
   'approval-common.v2.schema.json',
   'agent-conversation-shell-common.v2.schema.json',
   ...[
-    'common', 'binding', 'snapshot', 'subscription', 'subscription-close', 'page', 'result', 'command-context',
-    'room-settings-request', 'room-settings-result', 'room-collection-leading-visual',
+    'common',
+    'binding',
+    'snapshot',
+    'subscription',
+    'subscription-close',
+    'page',
+    'result',
+    'command-context',
+    'room-settings-request',
+    'room-settings-result',
+    'room-collection-leading-visual',
   ].map(name => `agent-conversation-shell-${name}.v7.schema.json`),
 ]
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
@@ -30,16 +39,46 @@ for (const name of schemaNames) {
   schemas.set(name, schema)
   ajv.addSchema(schema)
 }
-for (const name of schemaNames.filter(name => name.includes('.v7.'))) assert.ok(ajv.getSchema(schemas.get(name).$id), `${name} must compile under strict AJV`)
+for (const name of schemaNames.filter(name => name.includes('.v7.'))) {
+  assert.ok(ajv.getSchema(schemas.get(name).$id), `${name} must compile under strict AJV`)
+}
 const validateSnapshot = ajv.getSchema(schemas.get('agent-conversation-shell-snapshot.v7.schema.json').$id)
 const validateCommandContext = ajv.getSchema(schemas.get('agent-conversation-shell-command-context.v7.schema.json').$id)
-const errors = (validate, value) => validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
+const errors = (validate, value) =>
+  validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
 
-const reviewer = { participantId: 'participant-reviewer', role: 'agent', displayName: { key: 'agent.reviewer', fallback: 'Reviewer' }, agentIdentity: { agentId: 'reviewer', revision: 'reviewer-r4' } }
-const lead = { participantId: 'participant-lead', role: 'agent', displayName: { key: 'agent.lead', fallback: 'Lead' }, agentIdentity: { agentId: 'lead', revision: 'lead-r2' } }
-const reviewerRun = { participantId: reviewer.participantId, memberId: 'member-reviewer', runId: 'run-reviewer', sessionId: 'session-reviewer', lifecycle: { phase: 'waiting' } }
-const leadRun = { participantId: lead.participantId, memberId: 'member-lead', runId: 'run-lead', sessionId: 'session-lead', lifecycle: { phase: 'running' } }
-const authorityBinding = { agentId: leadRun.sessionId, sessionId: leadRun.sessionId, agentGeneration: 7, definition: lead.agentIdentity }
+const reviewer = {
+  participantId: 'participant-reviewer',
+  role: 'agent',
+  displayName: { key: 'agent.reviewer', fallback: 'Reviewer' },
+  agentIdentity: { agentId: 'reviewer', revision: 'reviewer-r4' },
+}
+const lead = {
+  participantId: 'participant-lead',
+  role: 'agent',
+  displayName: { key: 'agent.lead', fallback: 'Lead' },
+  agentIdentity: { agentId: 'lead', revision: 'lead-r2' },
+}
+const reviewerRun = {
+  participantId: reviewer.participantId,
+  memberId: 'member-reviewer',
+  runId: 'run-reviewer',
+  sessionId: 'session-reviewer',
+  lifecycle: { phase: 'waiting' },
+}
+const leadRun = {
+  participantId: lead.participantId,
+  memberId: 'member-lead',
+  runId: 'run-lead',
+  sessionId: 'session-lead',
+  lifecycle: { phase: 'running' },
+}
+const authorityBinding = {
+  agentId: leadRun.sessionId,
+  sessionId: leadRun.sessionId,
+  agentGeneration: 7,
+  definition: lead.agentIdentity,
+}
 const pending = {
   kind: 'approval',
   itemId: 'approval-item-1',
@@ -68,24 +107,48 @@ const snapshot = {
   binding: { bindingId: 'binding-1', ownerGeneration: 'owner-1' },
   generation: 'shell-1',
   snapshotSequence: 9,
-  selection: { kind: 'room', roomId: 'room-1', title: { key: 'room.title', fallback: 'Review room' }, multiParticipant: true, participantPresentation: 'host-initials', participants: [reviewer, lead], activeRuns: [reviewerRun, leadRun] },
+  selection: {
+    kind: 'room',
+    roomId: 'room-1',
+    title: { key: 'room.title', fallback: 'Review room' },
+    multiParticipant: true,
+    participantPresentation: 'host-initials',
+    participants: [reviewer, lead],
+    activeRuns: [reviewerRun, leadRun],
+  },
   items: [pending],
-  composer: { availability: 'available', placeholder: { key: 'composer.placeholder', fallback: 'Message the room' }, disabled: { value: false }, shortcutPolicy: 'enter', submit: { id: 'chatroom.message.submit' } },
+  composer: {
+    availability: 'available',
+    placeholder: { key: 'composer.placeholder', fallback: 'Message the room' },
+    disabled: { value: false },
+    shortcutPolicy: 'enter',
+    submit: { id: 'chatroom.message.submit' },
+  },
   headerActions: [],
 }
 
 export function approvalBubbleErrors(value) {
   const issues = []
   if (value.selection?.kind !== 'room') return issues
-  const participants = new Map(value.selection.participants.map(participant => [participant.participantId, participant]))
+  const participants = new Map(
+    value.selection.participants.map(participant => [participant.participantId, participant]),
+  )
   for (const item of value.items.filter(item => item.kind === 'approval')) {
     const requester = participants.get(item.participantId)
     const authority = participants.get(item.authority.participantId)
-    if (requester?.role !== 'agent' || JSON.stringify(requester.agentIdentity) !== JSON.stringify(item.requester)) issues.push('requester participant identity mismatch')
-    if (authority?.role !== 'agent' || JSON.stringify(authority.agentIdentity) !== JSON.stringify(item.authority.identity)) issues.push('authority participant identity mismatch')
+    if (requester?.role !== 'agent' || JSON.stringify(requester.agentIdentity) !== JSON.stringify(item.requester)) {
+      issues.push('requester participant identity mismatch')
+    }
+    if (
+      authority?.role !== 'agent' || JSON.stringify(authority.agentIdentity) !== JSON.stringify(item.authority.identity)
+    ) issues.push('authority participant identity mismatch')
     if (item.state === 'pending') {
-      if (item.authorityBinding.agentId !== item.authorityBinding.sessionId) issues.push('authority AgentId must equal SessionId')
-      if (JSON.stringify(item.authorityBinding.definition) !== JSON.stringify(item.authority.identity)) issues.push('live authority definition mismatch')
+      if (item.authorityBinding.agentId !== item.authorityBinding.sessionId) {
+        issues.push('authority AgentId must equal SessionId')
+      }
+      if (JSON.stringify(item.authorityBinding.definition) !== JSON.stringify(item.authority.identity)) {
+        issues.push('live authority definition mismatch')
+      }
     }
   }
   return issues
@@ -95,16 +158,34 @@ assert.deepEqual(errors(validateSnapshot, snapshot), [])
 assert.deepEqual(approvalBubbleErrors(snapshot), [])
 assert.deepEqual(structuredClone(snapshot), snapshot)
 
-for (const [label, mutate] of [
-  ['missing authority binding', value => { delete value.items[0].authorityBinding }],
-  ['missing requester generation', value => { delete value.items[0].agentGeneration }],
-  ['cancel action', value => { value.items[0].actions[1].decision = 'cancel' }],
-  ['reversed actions', value => { value.items[0].actions.reverse() }],
-  ['single action', value => { value.items[0].actions.pop() }],
-  ['localized rationale', value => { value.items[0].rationale = { key: 'scenario.label', fallback: 'Scenario' } }],
-  ['display-name authority', value => { value.items[0].authorityName = 'Lead' }],
-  ['wildcard authority', value => { value.items[0].authority.identity.revision = '*' }],
-]) {
+for (
+  const [label, mutate] of [
+    ['missing authority binding', value => {
+      delete value.items[0].authorityBinding
+    }],
+    ['missing requester generation', value => {
+      delete value.items[0].agentGeneration
+    }],
+    ['cancel action', value => {
+      value.items[0].actions[1].decision = 'cancel'
+    }],
+    ['reversed actions', value => {
+      value.items[0].actions.reverse()
+    }],
+    ['single action', value => {
+      value.items[0].actions.pop()
+    }],
+    ['localized rationale', value => {
+      value.items[0].rationale = { key: 'scenario.label', fallback: 'Scenario' }
+    }],
+    ['display-name authority', value => {
+      value.items[0].authorityName = 'Lead'
+    }],
+    ['wildcard authority', value => {
+      value.items[0].authority.identity.revision = '*'
+    }],
+  ]
+) {
   const invalid = structuredClone(snapshot)
   mutate(invalid)
   assert.notDeepEqual(errors(validateSnapshot, invalid), [], `${label} must fail closed`)
@@ -113,7 +194,11 @@ for (const [label, mutate] of [
 const mismatchedAuthority = structuredClone(snapshot)
 mismatchedAuthority.items[0].authorityBinding.definition = reviewer.agentIdentity
 assert.deepEqual(errors(validateSnapshot, mismatchedAuthority), [])
-assert.notDeepEqual(approvalBubbleErrors(mismatchedAuthority), [], 'live authority must equal the durable exact identity')
+assert.notDeepEqual(
+  approvalBubbleErrors(mismatchedAuthority),
+  [],
+  'live authority must equal the durable exact identity',
+)
 
 const terminal = { ...structuredClone(pending), state: 'approved', actions: [] }
 delete terminal.agentGeneration
@@ -139,28 +224,56 @@ const commandContext = {
   scope: 'approval',
   itemId: pending.itemId,
   command: pending.actions[0].command,
-  approval: { sessionId: pending.sessionId, approvalId: pending.approvalId, requester: pending.requester, authority: pending.authorityBinding, decision: 'approve' },
+  approval: {
+    sessionId: pending.sessionId,
+    approvalId: pending.approvalId,
+    requester: pending.requester,
+    authority: pending.authorityBinding,
+    decision: 'approve',
+  },
 }
 assert.deepEqual(errors(validateCommandContext, commandContext), [])
 export function commandContextErrors(item, context) {
   const issues = []
-  if (context.scope !== 'approval' || context.itemId !== item.itemId || context.approval.sessionId !== item.sessionId || context.approval.approvalId !== item.approvalId) issues.push('approval item identity mismatch')
-  if (JSON.stringify(context.approval.requester) !== JSON.stringify(item.requester)) issues.push('requester identity mismatch')
-  if (JSON.stringify(context.approval.authority) !== JSON.stringify(item.authorityBinding)) issues.push('live authority binding mismatch')
+  if (
+    context.scope !== 'approval' || context.itemId !== item.itemId || context.approval.sessionId !== item.sessionId
+    || context.approval.approvalId !== item.approvalId
+  ) issues.push('approval item identity mismatch')
+  if (JSON.stringify(context.approval.requester) !== JSON.stringify(item.requester)) {
+    issues.push('requester identity mismatch')
+  }
+  if (JSON.stringify(context.approval.authority) !== JSON.stringify(item.authorityBinding)) {
+    issues.push('live authority binding mismatch')
+  }
   const action = item.actions.find(value => value.decision === context.approval.decision)
-  if (!action || JSON.stringify(action.command) !== JSON.stringify(context.command)) issues.push('approval decision command mismatch')
+  if (!action || JSON.stringify(action.command) !== JSON.stringify(context.command)) {
+    issues.push('approval decision command mismatch')
+  }
   return issues
 }
 assert.deepEqual(commandContextErrors(pending, commandContext), [])
-for (const mutate of [
-  value => { delete value.approval },
-  value => { value.approval.authority.agentGeneration += 1 },
-  value => { value.approval.decision = 'cancel' },
-]) {
+for (
+  const mutate of [
+    value => {
+      delete value.approval
+    },
+    value => {
+      value.approval.authority.agentGeneration += 1
+    },
+    value => {
+      value.approval.decision = 'cancel'
+    },
+  ]
+) {
   const invalid = structuredClone(commandContext)
   mutate(invalid)
-  if (errors(validateCommandContext, invalid).length === 0) assert.notDeepEqual(commandContextErrors(pending, invalid), [], 'well-shaped but stale authority must fail semantic fencing')
-  else assert.notDeepEqual(errors(validateCommandContext, invalid), [])
+  if (errors(validateCommandContext, invalid).length === 0) {
+    assert.notDeepEqual(
+      commandContextErrors(pending, invalid),
+      [],
+      'well-shaped but stale authority must fail semantic fencing',
+    )
+  } else assert.notDeepEqual(errors(validateCommandContext, invalid), [])
 }
 
 const predecessorDigests = new Map([
@@ -172,9 +285,19 @@ const predecessorDigests = new Map([
   [6, '2f8838319a24440446b8e3e9b6ac1fc6749551b54210d472c24d9fb54cb531c8'],
 ])
 for (const [version, expected] of predecessorDigests) {
-  const files = [...(await readdir(path.join(root, 'schemas'))).filter(name => new RegExp(`^agent-conversation-shell-.*\\.v${version}\\.schema\\.json$`, 'u').test(name)).map(name => `schemas/${name}`), `types/agent-conversation-shell.v${version}.d.ts`].sort()
+  const files = [
+    ...(await readdir(path.join(root, 'schemas'))).filter(name =>
+      new RegExp(`^agent-conversation-shell-.*\\.v${version}\\.schema\\.json$`, 'u').test(name)
+    ).map(name => `schemas/${name}`),
+    `types/agent-conversation-shell.v${version}.d.ts`,
+  ].sort()
   const digest = createHash('sha256')
-  for (const file of files) { digest.update(file); digest.update('\0'); digest.update(await readFile(path.join(root, file))); digest.update('\0') }
+  for (const file of files) {
+    digest.update(file)
+    digest.update('\0')
+    digest.update(await readFile(path.join(root, file)))
+    digest.update('\0')
+  }
   assert.equal(digest.digest('hex'), expected, `Agent Conversation Shell v${version} public bytes drifted`)
 }
 
@@ -182,15 +305,26 @@ for (const v7Name of schemaNames.filter(name => name.includes('agent-conversatio
   if (v7Name.endsWith('snapshot.v7.schema.json') || v7Name.endsWith('command-context.v7.schema.json')) continue
   const v6Name = v7Name.replace('.v7.', '.v6.')
   const v6Schema = JSON.parse(await readFile(path.join(root, 'schemas', v6Name), 'utf8'))
-  const normalized = JSON.parse(JSON.stringify(schemas.get(v7Name)).replaceAll('.v7.schema.json', '.v6.schema.json').replaceAll('/v7', '/v6').replaceAll(' v7', ' v6'))
+  const normalized = JSON.parse(
+    JSON.stringify(schemas.get(v7Name)).replaceAll('.v7.schema.json', '.v6.schema.json').replaceAll('/v7', '/v6')
+      .replaceAll(' v7', ' v6'),
+  )
   if (normalized.properties?.schemaVersion) normalized.properties.schemaVersion.const = 6
   assert.deepEqual(normalized, v6Schema, `${v7Name} must preserve its complete v6 shape`)
 }
 
-const v7PublicFiles = [...(await readdir(path.join(root, 'schemas'))).filter(name => /^agent-conversation-shell-.*\.v7\.schema\.json$/u.test(name)).map(name => path.join(root, 'schemas', name)), path.join(root, 'types', 'agent-conversation-shell.v7.d.ts')]
+const v7PublicFiles = [
+  ...(await readdir(path.join(root, 'schemas'))).filter(name =>
+    /^agent-conversation-shell-.*\.v7\.schema\.json$/u.test(name)
+  ).map(name => path.join(root, 'schemas', name)),
+  path.join(root, 'types', 'agent-conversation-shell.v7.d.ts'),
+]
 for (const file of v7PublicFiles) {
   const source = await readFile(file, 'utf8')
-  assert.ok(!/DeepSeek|Harness|DSH|pi-agent/iu.test(source), `${path.basename(file)} leaked an external reference-project name`)
+  assert.ok(
+    !/DeepSeek|Harness|DSH|pi-agent/iu.test(source),
+    `${path.basename(file)} leaked an external reference-project name`,
+  )
 }
 
 console.log('Agent Conversation Shell v7 exact requester-authority approval bubble conformance passed')

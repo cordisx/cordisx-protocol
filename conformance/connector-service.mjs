@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -144,10 +144,22 @@ for (const outcome of ['valid', 'invalid']) {
 }
 
 const publicSchemas = JSON.stringify([...schemas.values()])
-for (const forbidden of [
-  'room', 'agentRoom', 'provider', 'workspace', 'secret', 'credential',
-  'electronBridge', 'rawBridge', 'callback', 'document', 'selector', 'path',
-]) {
+for (
+  const forbidden of [
+    'room',
+    'agentRoom',
+    'provider',
+    'workspace',
+    'secret',
+    'credential',
+    'electronBridge',
+    'rawBridge',
+    'callback',
+    'document',
+    'selector',
+    'path',
+  ]
+) {
   if (publicSchemas.toLowerCase().includes(forbidden.toLowerCase())) {
     console.error(`Connector schemas must not expose ${forbidden}`)
     failures += 1

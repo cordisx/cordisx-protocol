@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -120,7 +120,9 @@ export function validateArtifact(value) {
       .flatMap(logicalPath => byPath.get(logicalPath).styles)
       .filter((logicalPath, index, values) => values.indexOf(logicalPath) === index)
       .sort((left, right) => left.localeCompare(right, 'en'))
-    if (!sameValues(value.initialStyles, initialStyles)) errors.push('initialStyles differs from the entry static-import closure')
+    if (!sameValues(value.initialStyles, initialStyles)) {
+      errors.push('initialStyles differs from the entry static-import closure')
+    }
     const reached = reachablePaths(value.entry, byPath)
     for (const logicalPath of paths) {
       if (!reached.has(logicalPath)) errors.push(`unreachable artifact file: ${logicalPath}`)
@@ -173,22 +175,29 @@ const sampleFile = {
   byteLength: sampleBytes.byteLength,
   digest: `sha256:${createHash('sha256').update(sampleBytes).digest('hex')}`,
 }
-if (!verifyFileBytes(sampleFile, sampleBytes) || verifyFileBytes({ ...sampleFile, byteLength: sampleFile.byteLength + 1 }, sampleBytes)) {
+if (
+  !verifyFileBytes(sampleFile, sampleBytes)
+  || verifyFileBytes({ ...sampleFile, byteLength: sampleFile.byteLength + 1 }, sampleBytes)
+) {
   console.error('per-file digest and byte-length readback must be exact')
   failures += 1
 }
 
-const graphVector = JSON.parse(await readFile(path.join(root, 'test-vectors/plugin-generation-artifact/valid/esm-graph.json'), 'utf8')).value
-for (const [label, importer, specifier, valid] of [
-  ['relative static chunk', './module.js', './chunks/shared.js', true],
-  ['relative dynamic sibling', './chunks/lazy.js', './shared.js', true],
-  ['declared Host module', './module.js', 'cordisx/react', true],
-  ['declared ReactDOM peer', './module.js', 'react-dom/client', true],
-  ['undeclared Host module', './module.js', 'cordisx/ui', false],
-  ['arbitrary bare module', './module.js', 'example-library', false],
-  ['external URL', './module.js', 'https://example.test/code.js', false],
-  ['escaping module', './module.js', '../outside.js', false],
-]) {
+const graphVector =
+  JSON.parse(await readFile(path.join(root, 'test-vectors/plugin-generation-artifact/valid/esm-graph.json'), 'utf8'))
+    .value
+for (
+  const [label, importer, specifier, valid] of [
+    ['relative static chunk', './module.js', './chunks/shared.js', true],
+    ['relative dynamic sibling', './chunks/lazy.js', './shared.js', true],
+    ['declared Host module', './module.js', 'cordisx/react', true],
+    ['declared ReactDOM peer', './module.js', 'react-dom/client', true],
+    ['undeclared Host module', './module.js', 'cordisx/ui', false],
+    ['arbitrary bare module', './module.js', 'example-library', false],
+    ['external URL', './module.js', 'https://example.test/code.js', false],
+    ['escaping module', './module.js', '../outside.js', false],
+  ]
+) {
   if ((resolveEmittedReference(importer, specifier, graphVector) !== undefined) !== valid) {
     console.error(`${label}: emitted reference resolution differed`)
     failures += 1

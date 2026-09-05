@@ -1,6 +1,6 @@
 import { execFileSync, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -70,17 +70,33 @@ function fileDigest(directory, files) {
   return digest.digest('hex')
 }
 
-if (fileDigest(root, frozenAgentLoopFiles) !== frozenAgentLoopDigest) throw new Error('frozen AgentLoop v1/v2/v3 package bytes drifted')
-if (JSON.stringify(Object.keys(manifest.exports).sort()) !== JSON.stringify(expectedExports)) throw new Error('local public export inventory drifted')
-const arguments_ = process.argv.slice(2)
-if (arguments_.length !== 0 && (arguments_.length !== 2 || arguments_[0] !== '--version')) throw new Error('usage: verify-registry-beta.mjs [--version <exact-prerelease>]')
-const version = arguments_.length === 0 ? manifest.version : arguments_[1]
-const exactPrereleasePattern = /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)$/
-const versionMatch = exactPrereleasePattern.exec(version ?? '')
-if (versionMatch === null || versionMatch[1].split('.').some(identifier => /^[0-9]+$/.test(identifier) && identifier.length > 1 && identifier.startsWith('0'))) {
-  throw new Error('version must be one exact prerelease, not a range, tag, git/file/link/workspace selector, or stable version')
+if (fileDigest(root, frozenAgentLoopFiles) !== frozenAgentLoopDigest) {
+  throw new Error('frozen AgentLoop v1/v2/v3 package bytes drifted')
 }
-if (version !== manifest.version) throw new Error(`local package version ${manifest.version} does not match requested registry version ${version}`)
+if (JSON.stringify(Object.keys(manifest.exports).sort()) !== JSON.stringify(expectedExports)) {
+  throw new Error('local public export inventory drifted')
+}
+const arguments_ = process.argv.slice(2)
+if (arguments_.length !== 0 && (arguments_.length !== 2 || arguments_[0] !== '--version')) {
+  throw new Error('usage: verify-registry-beta.mjs [--version <exact-prerelease>]')
+}
+const version = arguments_.length === 0 ? manifest.version : arguments_[1]
+const exactPrereleasePattern =
+  /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)$/
+const versionMatch = exactPrereleasePattern.exec(version ?? '')
+if (
+  versionMatch === null
+  || versionMatch[1].split('.').some(identifier =>
+    /^[0-9]+$/.test(identifier) && identifier.length > 1 && identifier.startsWith('0')
+  )
+) {
+  throw new Error(
+    'version must be one exact prerelease, not a range, tag, git/file/link/workspace selector, or stable version',
+  )
+}
+if (version !== manifest.version) {
+  throw new Error(`local package version ${manifest.version} does not match requested registry version ${version}`)
+}
 const npm = [process.execPath, process.env.npm_execpath ?? 'node_modules/npm/bin/npm-cli.js']
 
 function run(arguments_, cwd = root) {
@@ -89,13 +105,29 @@ function run(arguments_, cwd = root) {
   return result.stdout
 }
 
-const published = JSON.parse(run(['view', `${manifest.name}@${version}`, 'version', 'dist', 'gitHead', 'repository', '--json', '--registry=https://registry.npmjs.org']))
-const beta = JSON.parse(run(['view', manifest.name, 'dist-tags.beta', '--json', '--registry=https://registry.npmjs.org']))
-const expectedGitHead = process.env.EXPECT_GIT_HEAD ?? execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
+const published = JSON.parse(
+  run([
+    'view',
+    `${manifest.name}@${version}`,
+    'version',
+    'dist',
+    'gitHead',
+    'repository',
+    '--json',
+    '--registry=https://registry.npmjs.org',
+  ]),
+)
+const beta = JSON.parse(
+  run(['view', manifest.name, 'dist-tags.beta', '--json', '--registry=https://registry.npmjs.org']),
+)
+const expectedGitHead = process.env.EXPECT_GIT_HEAD
+  ?? execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 if (published.version !== version || beta !== version) throw new Error('registry version or beta tag drift')
 if (!published.dist?.integrity || !published.dist?.shasum) throw new Error('registry omitted integrity or shasum')
 if (published.gitHead !== expectedGitHead) throw new Error(`registry gitHead mismatch: ${published.gitHead}`)
-if (!String(published.repository?.url ?? '').includes('github.com/cordisx/cordisx-protocol')) throw new Error('registry repository provenance mismatch')
+if (!String(published.repository?.url ?? '').includes('github.com/cordisx/cordisx-protocol')) {
+  throw new Error('registry repository provenance mismatch')
+}
 
 const temp = mkdtempSync(join(tmpdir(), 'cordisx-protocol-registry-'))
 try {
@@ -105,37 +137,175 @@ try {
   const local = packed[0]
   if (!local.integrity || !local.shasum) throw new Error('local npm pack omitted integrity or shasum')
   if (published.dist.integrity !== local.integrity || published.dist.shasum !== local.shasum) {
-    throw new Error(`registry archive differs from local npm pack: registry ${published.dist.integrity} ${published.dist.shasum}; local ${local.integrity} ${local.shasum}`)
+    throw new Error(
+      `registry archive differs from local npm pack: registry ${published.dist.integrity} ${published.dist.shasum}; local ${local.integrity} ${local.shasum}`,
+    )
   }
 
   const consumer = join(temp, 'consumer')
   mkdirSync(consumer)
-  writeFileSync(join(consumer, 'package.json'), JSON.stringify({ private: true, type: 'module', dependencies: { [manifest.name]: version } }) + '\n')
+  writeFileSync(
+    join(consumer, 'package.json'),
+    JSON.stringify({ private: true, type: 'module', dependencies: { [manifest.name]: version } }) + '\n',
+  )
   run(['install', '--ignore-scripts', '--no-package-lock', '--registry=https://registry.npmjs.org'], consumer)
-  writeFileSync(join(consumer, 'consumer.ts'), `import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'\nimport type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'\nimport type { AgentConversationParticipant, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v1'\nimport type { AgentConversationParticipant as AgentConversationParticipantV2, AgentConversationShellSource as AgentConversationShellSourceV2 } from '@cordisx/protocol/agent-conversation-shell/v2'\nimport type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'\nimport type { AgentDefinition, BoundAgentLoopClient as BoundAgentLoopClientV1 } from '@cordisx/protocol/agent-loop/v1'\nimport type { BoundAgentLoopClient as BoundAgentLoopClientV2 } from '@cordisx/protocol/agent-loop/v2'\nconst avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'registry-verifier' })\nconst canonical = canonicalizeAgentAvatarSeed({ namespace: 'agent-definition', agentId: ' registry-verifier ' })\nconst cloned = cloneAgentAvatarRef(avatar)\nconst effective = resolveAgentDefinitionAvatar({ agentId: 'registry-verifier', inherit: 'none' })\navatar satisfies AgentAvatarRef\ndeclare const resolution: AgentAvatarResolutionResult\ndeclare const connector: BoundConnectorClient\ndeclare const participant: AgentConversationParticipant\ndeclare const participantV2: AgentConversationParticipantV2\ndeclare const shell: AgentConversationShellSource\ndeclare const shellV2: AgentConversationShellSourceV2\ndeclare const hostDom: BoundHostDomClient\ndeclare const definition: AgentDefinition\ndeclare const agentLoopV1: BoundAgentLoopClientV1\ndeclare const agentLoopV2: BoundAgentLoopClientV2\nif (resolution.status === 'unsupported') resolution.code satisfies 'unsupported-kind' | 'unsupported-provider' | 'reference-unavailable'\ndefinition.avatar satisfies AgentAvatarRef | undefined\nparticipant.avatar satisfies AgentAvatarRef | undefined\nparticipantV2.avatar satisfies AgentAvatarRef | undefined\nvoid canonical\nvoid cloned\nvoid effective\nvoid connector\nvoid shell\nvoid shellV2\nvoid hostDom\nvoid agentLoopV1\nvoid agentLoopV2\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-v3.ts'), `import type { AgentConversationRoomDescription, AgentConversationRoomSettingsUpdateRequest, AgentConversationSelection, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v3'\ndeclare const shell: AgentConversationShellSource\nconst emptyDescription = { state: 'empty' } satisfies AgentConversationRoomDescription\nconst presentDescription = { state: 'present', text: { key: 'room.description', fallback: 'Registry verifier introduction' } } satisfies AgentConversationRoomDescription\nconst selection = { kind: 'room', roomId: 'registry-room', title: { key: 'room.title', fallback: 'Registry room' }, description: emptyDescription, multiParticipant: true, participantPresentation: 'host-initials', participants: [] } satisfies AgentConversationSelection\nselection.description.state satisfies 'empty'\npresentDescription.text.fallback satisfies string\nconst request = { requestId: 'registry-settings', binding: { bindingId: 'registry-binding', ownerGeneration: 'registry-owner' }, generation: 'registry-shell', roomId: selection.roomId, expectedSnapshotSequence: 4, patch: { description: { state: 'empty' } } } satisfies AgentConversationRoomSettingsUpdateRequest\nconst result = await shell.updateRoomSettings(request)\nif (result.status === 'applied') result.snapshotSequence satisfies number\nelse if (result.status === 'conflict') result.code satisfies 'request-conflict' | 'owner-conflict' | 'generation-conflict' | 'room-conflict' | 'snapshot-conflict'\nelse result.code satisfies 'owner-unavailable' | 'settings-unavailable' | 'disposed'\nvoid presentDescription\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-v3.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-v3-visual.ts'), `import type { AgentAvatarRef } from '@cordisx/protocol/agent-avatar/v1'\nimport type { AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst avatar = { kind: 'asset', ref: 'registry-avatar:participant' } satisfies AgentAvatarRef\nconst newRoom = { kind: 'semantic-icon', icon: 'host:action.add' } satisfies AgentConversationRoomCollectionLeadingVisual\nnewRoom.icon satisfies \`host:\${string}\`\nconst zeroParticipants = [] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nconst emptyRoom = { kind: 'room-composite-avatar', roomId: 'registry-empty-room', participants: zeroParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\nemptyRoom.roomId satisfies string\nemptyRoom.participants.length satisfies 0\nconst fiveParticipants = [\n  { participantId: 'registry-participant-1', avatar },\n  { participantId: 'registry-participant-2', avatar },\n  { participantId: 'registry-participant-3', avatar },\n  { participantId: 'registry-participant-4', avatar },\n  { participantId: 'registry-participant-5', avatar },\n] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nfiveParticipants.length satisfies 5\nconst populatedRoom = { kind: 'room-composite-avatar', roomId: 'registry-populated-room', participants: fiveParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\npopulatedRoom.roomId satisfies string\nfor (const participant of populatedRoom.participants) { participant.participantId satisfies string; participant.avatar satisfies AgentAvatarRef }\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-v3-visual.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-shell-approval-v3.ts'), `import type { AgentConversationApprovalAction, AgentConversationApprovalItem } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst action = { decision: 'approve', command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'registry-approval' } } } satisfies AgentConversationApprovalAction\nconst item = { kind: 'approval', itemId: 'registry-approval-item', sequence: 6, participantId: 'registry-participant', memberId: 'registry-member', runId: 'registry-run', binding: { bindingId: 'registry-binding', generation: 3 }, turn: 'registry-turn', approvalId: 'registry-approval', approvalKind: 'command', state: 'pending', actions: [action] } satisfies AgentConversationApprovalItem\naction.decision satisfies 'approve' | 'deny' | 'cancel'\naction.command.id satisfies string\nitem.participantId satisfies string\nitem.memberId satisfies string\nitem.runId satisfies string\nitem.binding.generation satisfies number\nitem.turn satisfies string\nitem.approvalId satisfies string\nitem.actions[0].command.id satisfies string\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-shell-approval-v3.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-shell-approval-context-v3.ts'), `import type { AgentConversationShellCommandContext } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst context = { binding: { bindingId: 'registry-shell-binding', ownerGeneration: 'registry-owner' }, generation: 'registry-shell', scope: 'approval', itemId: 'registry-approval-item', command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'registry-approval' } } } satisfies AgentConversationShellCommandContext\ncontext.scope satisfies 'approval'\ncontext.itemId satisfies string\ncontext.command.id satisfies string\n// @ts-expect-error approval command contexts expose no private callback\ncontext.callback\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-shell-approval-context-v3.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-shell-message-semantic-v3.ts'), `import type { AgentConversationMessageItem, AgentConversationMessageSemantic, AgentConversationParticipant } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst agent = { participantId: 'registry-participant', role: 'agent', displayName: { key: 'agent.registry', fallback: 'Registry Agent' }, agentIdentity: { agentId: 'registry-agent', revision: 'definition-1' } } satisfies AgentConversationParticipant\nconst conversation = { purpose: 'conversation', causation: { operationId: 'registry-conversation' } } satisfies AgentConversationMessageSemantic\nconst introduction = { purpose: 'member-self-introduction', causation: { operationId: 'registry-introduction-request' }, participantId: agent.participantId, memberId: 'registry-member', runId: 'registry-run', binding: { bindingId: 'registry-binding', generation: 3 }, turn: 'registry-turn' } satisfies AgentConversationMessageSemantic\nconst acknowledgement = { purpose: 'chatroom-acknowledgement' } satisfies AgentConversationMessageSemantic\nconst base = { kind: 'message', sequence: 12, body: [{ kind: 'text', text: { key: 'message.registry', fallback: 'Registry message' } }], reactions: [], timestamp: '2026-08-31T00:00:00.000Z', deliveryState: 'delivered', runState: 'idle', ariaLive: 'off', actions: [] } as const\nconst conversationMessage = { ...base, itemId: 'registry-conversation-item', messageId: 'registry-conversation-message', source: 'agent-loop', author: agent, semantic: conversation } satisfies AgentConversationMessageItem\nconst introductionMessage = { ...base, itemId: 'registry-introduction-item', messageId: 'registry-introduction-message', source: 'agent-loop', author: agent, semantic: introduction } satisfies AgentConversationMessageItem\nconst acknowledgementMessage = { ...base, itemId: 'registry-ack-item', messageId: 'registry-ack-message', source: 'chatroom-acknowledgement', author: agent, semantic: acknowledgement } satisfies AgentConversationMessageItem\nconversationMessage.semantic.purpose satisfies 'conversation'\nintroductionMessage.semantic.purpose satisfies 'member-self-introduction'\nintroductionMessage.semantic.causation.operationId satisfies string\nintroductionMessage.semantic.participantId satisfies typeof agent.participantId\nintroductionMessage.semantic.memberId satisfies string\nintroductionMessage.semantic.runId satisfies string\nintroductionMessage.semantic.binding.generation satisfies number\nintroductionMessage.semantic.turn satisfies string\nacknowledgementMessage.semantic.purpose satisfies 'chatroom-acknowledgement'\n// @ts-expect-error every Shell v3 message requires semantic metadata\nconst semanticless = { ...conversationMessage, semantic: undefined } satisfies AgentConversationMessageItem\n// @ts-expect-error acknowledgement source cannot impersonate an AgentLoop self-introduction\nconst forgedChatroomMessage = { ...introductionMessage, source: 'chatroom-acknowledgement' } satisfies AgentConversationMessageItem\nvoid semanticless\nvoid forgedChatroomMessage\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-shell-message-semantic-v3.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-agent-loop-v3.ts'), `import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCommand, AgentLoopTaskBinding, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v3'\ndeclare const client: BoundAgentLoopClient\ndeclare const binding: AgentLoopTaskBinding\nconst command = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v3.schema.json', contract: 'cordisx.agent-loop-command/v3', schemaVersion: 3, commandId: 'registry-approval', type: 'approval-decision', binding, turn: 'registry-turn', approvalId: 'registry-approval', decision: 'approve' } satisfies AgentLoopCommand\ncommand.decision satisfies AgentLoopApprovalDecision\nconst result = await client.decideApproval(command)\nresult.type satisfies 'approval-decision'\nif (result.status === 'accepted') { result.binding satisfies AgentLoopTaskBinding; result.approvalId satisfies string; result.decision satisfies AgentLoopApprovalDecision }\nelse if (result.status === 'conflict') result.code satisfies AgentLoopApprovalDecisionConflictCode\nelse if (result.status === 'denied') result.authorization.state satisfies 'denied'\nelse if ('code' in result) result.code satisfies AgentLoopApprovalDecisionUnavailableCode\nelse result.authorization.state satisfies 'unavailable'\nclient.schemaVersion satisfies 3\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-agent-loop-v3.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-agent-loop-self-introduction-v3.ts'), `import type { AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand, AgentLoopEvent, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v3'\ndeclare const client: BoundAgentLoopClient\ndeclare const binding: AgentLoopTaskBinding\nconst request = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v3.schema.json', contract: 'cordisx.agent-loop-command/v3', schemaVersion: 3, commandId: 'registry-introduction-request', type: 'request-member-self-introduction', binding, participantId: 'registry-participant', memberId: 'registry-member', runId: 'registry-run', intent: { kind: 'member-self-introduction', audience: 'room', output: 'assistant-message' } } satisfies AgentLoopCommand\nconst cancel = { $schema: request.$schema, contract: request.contract, schemaVersion: 3, commandId: 'registry-introduction-cancel', type: 'cancel-member-self-introduction', binding, participantId: request.participantId, memberId: request.memberId, runId: request.runId, requestOperationId: request.commandId } satisfies AgentLoopCommand\n// @ts-expect-error commands never accept consumer time\nconst withIssuedAt = { ...request, issuedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error commands never accept prompts\nconst withPrompt = { ...request, prompt: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error commands never accept bodies\nconst withBody = { ...request, body: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error commands never select models\nconst withModel = { ...request, model: 'provider/model' } satisfies AgentLoopCommand\ndeclare const declaredRequest: AgentLoopRequestMemberSelfIntroductionResult\ndeclare const declaredCancel: AgentLoopCancelMemberSelfIntroductionResult\nconst requested = await client.requestMemberSelfIntroduction(request)\nconst cancelled = await client.cancelMemberSelfIntroduction(cancel)\nfor (const result of [declaredRequest, declaredCancel, requested, cancelled]) {\n  result.authorization.capability satisfies 'turns.introduce'\n  if (result.status === 'accepted') { result.binding satisfies AgentLoopTaskBinding; result.participantId satisfies string; result.memberId satisfies string; result.runId satisfies string; result.turn satisfies string; result.messageId satisfies string }\n  else if (result.status === 'conflict') result.code satisfies AgentLoopMemberSelfIntroductionConflictCode\n  else if (result.status === 'denied') result.authorization.state satisfies 'denied'\n  else if ('code' in result) result.code satisfies AgentLoopMemberSelfIntroductionUnavailableCode\n  else result.authorization.state satisfies 'unavailable'\n}\nif (cancelled.status === 'accepted') cancelled.requestOperationId satisfies string\nconst event = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v3.schema.json', contract: 'cordisx.agent-loop-event/v3', schemaVersion: 3, eventId: 'registry-introduction-message', binding: binding.binding, sequence: 12, occurredAt: '2026-08-31T00:00:00.000Z', causation: { operationId: request.commandId }, type: 'message', message: { messageId: 'registry-introduction-message', role: 'assistant', purpose: 'member-self-introduction', content: [{ kind: 'text', text: 'Hello from the member.' }] } } satisfies AgentLoopEvent\nevent.message.purpose satisfies 'member-self-introduction'\nevent.causation.operationId satisfies string\nvoid withIssuedAt\nvoid withPrompt\nvoid withBody\nvoid withModel\n`)
+  writeFileSync(
+    join(consumer, 'consumer.ts'),
+    `import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'\nimport type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'\nimport type { AgentConversationParticipant, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v1'\nimport type { AgentConversationParticipant as AgentConversationParticipantV2, AgentConversationShellSource as AgentConversationShellSourceV2 } from '@cordisx/protocol/agent-conversation-shell/v2'\nimport type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'\nimport type { AgentDefinition, BoundAgentLoopClient as BoundAgentLoopClientV1 } from '@cordisx/protocol/agent-loop/v1'\nimport type { BoundAgentLoopClient as BoundAgentLoopClientV2 } from '@cordisx/protocol/agent-loop/v2'\nconst avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'registry-verifier' })\nconst canonical = canonicalizeAgentAvatarSeed({ namespace: 'agent-definition', agentId: ' registry-verifier ' })\nconst cloned = cloneAgentAvatarRef(avatar)\nconst effective = resolveAgentDefinitionAvatar({ agentId: 'registry-verifier', inherit: 'none' })\navatar satisfies AgentAvatarRef\ndeclare const resolution: AgentAvatarResolutionResult\ndeclare const connector: BoundConnectorClient\ndeclare const participant: AgentConversationParticipant\ndeclare const participantV2: AgentConversationParticipantV2\ndeclare const shell: AgentConversationShellSource\ndeclare const shellV2: AgentConversationShellSourceV2\ndeclare const hostDom: BoundHostDomClient\ndeclare const definition: AgentDefinition\ndeclare const agentLoopV1: BoundAgentLoopClientV1\ndeclare const agentLoopV2: BoundAgentLoopClientV2\nif (resolution.status === 'unsupported') resolution.code satisfies 'unsupported-kind' | 'unsupported-provider' | 'reference-unavailable'\ndefinition.avatar satisfies AgentAvatarRef | undefined\nparticipant.avatar satisfies AgentAvatarRef | undefined\nparticipantV2.avatar satisfies AgentAvatarRef | undefined\nvoid canonical\nvoid cloned\nvoid effective\nvoid connector\nvoid shell\nvoid shellV2\nvoid hostDom\nvoid agentLoopV1\nvoid agentLoopV2\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-v3.ts'),
+    `import type { AgentConversationRoomDescription, AgentConversationRoomSettingsUpdateRequest, AgentConversationSelection, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v3'\ndeclare const shell: AgentConversationShellSource\nconst emptyDescription = { state: 'empty' } satisfies AgentConversationRoomDescription\nconst presentDescription = { state: 'present', text: { key: 'room.description', fallback: 'Registry verifier introduction' } } satisfies AgentConversationRoomDescription\nconst selection = { kind: 'room', roomId: 'registry-room', title: { key: 'room.title', fallback: 'Registry room' }, description: emptyDescription, multiParticipant: true, participantPresentation: 'host-initials', participants: [] } satisfies AgentConversationSelection\nselection.description.state satisfies 'empty'\npresentDescription.text.fallback satisfies string\nconst request = { requestId: 'registry-settings', binding: { bindingId: 'registry-binding', ownerGeneration: 'registry-owner' }, generation: 'registry-shell', roomId: selection.roomId, expectedSnapshotSequence: 4, patch: { description: { state: 'empty' } } } satisfies AgentConversationRoomSettingsUpdateRequest\nconst result = await shell.updateRoomSettings(request)\nif (result.status === 'applied') result.snapshotSequence satisfies number\nelse if (result.status === 'conflict') result.code satisfies 'request-conflict' | 'owner-conflict' | 'generation-conflict' | 'room-conflict' | 'snapshot-conflict'\nelse result.code satisfies 'owner-unavailable' | 'settings-unavailable' | 'disposed'\nvoid presentDescription\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-v3.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-v3-visual.ts'),
+    `import type { AgentAvatarRef } from '@cordisx/protocol/agent-avatar/v1'\nimport type { AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst avatar = { kind: 'asset', ref: 'registry-avatar:participant' } satisfies AgentAvatarRef\nconst newRoom = { kind: 'semantic-icon', icon: 'host:action.add' } satisfies AgentConversationRoomCollectionLeadingVisual\nnewRoom.icon satisfies \`host:\${string}\`\nconst zeroParticipants = [] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nconst emptyRoom = { kind: 'room-composite-avatar', roomId: 'registry-empty-room', participants: zeroParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\nemptyRoom.roomId satisfies string\nemptyRoom.participants.length satisfies 0\nconst fiveParticipants = [\n  { participantId: 'registry-participant-1', avatar },\n  { participantId: 'registry-participant-2', avatar },\n  { participantId: 'registry-participant-3', avatar },\n  { participantId: 'registry-participant-4', avatar },\n  { participantId: 'registry-participant-5', avatar },\n] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nfiveParticipants.length satisfies 5\nconst populatedRoom = { kind: 'room-composite-avatar', roomId: 'registry-populated-room', participants: fiveParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\npopulatedRoom.roomId satisfies string\nfor (const participant of populatedRoom.participants) { participant.participantId satisfies string; participant.avatar satisfies AgentAvatarRef }\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-v3-visual.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-shell-approval-v3.ts'),
+    `import type { AgentConversationApprovalAction, AgentConversationApprovalItem } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst action = { decision: 'approve', command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'registry-approval' } } } satisfies AgentConversationApprovalAction\nconst item = { kind: 'approval', itemId: 'registry-approval-item', sequence: 6, participantId: 'registry-participant', memberId: 'registry-member', runId: 'registry-run', binding: { bindingId: 'registry-binding', generation: 3 }, turn: 'registry-turn', approvalId: 'registry-approval', approvalKind: 'command', state: 'pending', actions: [action] } satisfies AgentConversationApprovalItem\naction.decision satisfies 'approve' | 'deny' | 'cancel'\naction.command.id satisfies string\nitem.participantId satisfies string\nitem.memberId satisfies string\nitem.runId satisfies string\nitem.binding.generation satisfies number\nitem.turn satisfies string\nitem.approvalId satisfies string\nitem.actions[0].command.id satisfies string\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-shell-approval-v3.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-shell-approval-context-v3.ts'),
+    `import type { AgentConversationShellCommandContext } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst context = { binding: { bindingId: 'registry-shell-binding', ownerGeneration: 'registry-owner' }, generation: 'registry-shell', scope: 'approval', itemId: 'registry-approval-item', command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'registry-approval' } } } satisfies AgentConversationShellCommandContext\ncontext.scope satisfies 'approval'\ncontext.itemId satisfies string\ncontext.command.id satisfies string\n// @ts-expect-error approval command contexts expose no private callback\ncontext.callback\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-shell-approval-context-v3.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-shell-message-semantic-v3.ts'),
+    `import type { AgentConversationMessageItem, AgentConversationMessageSemantic, AgentConversationParticipant } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst agent = { participantId: 'registry-participant', role: 'agent', displayName: { key: 'agent.registry', fallback: 'Registry Agent' }, agentIdentity: { agentId: 'registry-agent', revision: 'definition-1' } } satisfies AgentConversationParticipant\nconst conversation = { purpose: 'conversation', causation: { operationId: 'registry-conversation' } } satisfies AgentConversationMessageSemantic\nconst introduction = { purpose: 'member-self-introduction', causation: { operationId: 'registry-introduction-request' }, participantId: agent.participantId, memberId: 'registry-member', runId: 'registry-run', binding: { bindingId: 'registry-binding', generation: 3 }, turn: 'registry-turn' } satisfies AgentConversationMessageSemantic\nconst acknowledgement = { purpose: 'chatroom-acknowledgement' } satisfies AgentConversationMessageSemantic\nconst base = { kind: 'message', sequence: 12, body: [{ kind: 'text', text: { key: 'message.registry', fallback: 'Registry message' } }], reactions: [], timestamp: '2026-08-31T00:00:00.000Z', deliveryState: 'delivered', runState: 'idle', ariaLive: 'off', actions: [] } as const\nconst conversationMessage = { ...base, itemId: 'registry-conversation-item', messageId: 'registry-conversation-message', source: 'agent-loop', author: agent, semantic: conversation } satisfies AgentConversationMessageItem\nconst introductionMessage = { ...base, itemId: 'registry-introduction-item', messageId: 'registry-introduction-message', source: 'agent-loop', author: agent, semantic: introduction } satisfies AgentConversationMessageItem\nconst acknowledgementMessage = { ...base, itemId: 'registry-ack-item', messageId: 'registry-ack-message', source: 'chatroom-acknowledgement', author: agent, semantic: acknowledgement } satisfies AgentConversationMessageItem\nconversationMessage.semantic.purpose satisfies 'conversation'\nintroductionMessage.semantic.purpose satisfies 'member-self-introduction'\nintroductionMessage.semantic.causation.operationId satisfies string\nintroductionMessage.semantic.participantId satisfies typeof agent.participantId\nintroductionMessage.semantic.memberId satisfies string\nintroductionMessage.semantic.runId satisfies string\nintroductionMessage.semantic.binding.generation satisfies number\nintroductionMessage.semantic.turn satisfies string\nacknowledgementMessage.semantic.purpose satisfies 'chatroom-acknowledgement'\n// @ts-expect-error every Shell v3 message requires semantic metadata\nconst semanticless = { ...conversationMessage, semantic: undefined } satisfies AgentConversationMessageItem\n// @ts-expect-error acknowledgement source cannot impersonate an AgentLoop self-introduction\nconst forgedChatroomMessage = { ...introductionMessage, source: 'chatroom-acknowledgement' } satisfies AgentConversationMessageItem\nvoid semanticless\nvoid forgedChatroomMessage\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-shell-message-semantic-v3.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-agent-loop-v3.ts'),
+    `import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCommand, AgentLoopTaskBinding, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v3'\ndeclare const client: BoundAgentLoopClient\ndeclare const binding: AgentLoopTaskBinding\nconst command = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v3.schema.json', contract: 'cordisx.agent-loop-command/v3', schemaVersion: 3, commandId: 'registry-approval', type: 'approval-decision', binding, turn: 'registry-turn', approvalId: 'registry-approval', decision: 'approve' } satisfies AgentLoopCommand\ncommand.decision satisfies AgentLoopApprovalDecision\nconst result = await client.decideApproval(command)\nresult.type satisfies 'approval-decision'\nif (result.status === 'accepted') { result.binding satisfies AgentLoopTaskBinding; result.approvalId satisfies string; result.decision satisfies AgentLoopApprovalDecision }\nelse if (result.status === 'conflict') result.code satisfies AgentLoopApprovalDecisionConflictCode\nelse if (result.status === 'denied') result.authorization.state satisfies 'denied'\nelse if ('code' in result) result.code satisfies AgentLoopApprovalDecisionUnavailableCode\nelse result.authorization.state satisfies 'unavailable'\nclient.schemaVersion satisfies 3\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-agent-loop-v3.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-agent-loop-self-introduction-v3.ts'),
+    `import type { AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand, AgentLoopEvent, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v3'\ndeclare const client: BoundAgentLoopClient\ndeclare const binding: AgentLoopTaskBinding\nconst request = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v3.schema.json', contract: 'cordisx.agent-loop-command/v3', schemaVersion: 3, commandId: 'registry-introduction-request', type: 'request-member-self-introduction', binding, participantId: 'registry-participant', memberId: 'registry-member', runId: 'registry-run', intent: { kind: 'member-self-introduction', audience: 'room', output: 'assistant-message' } } satisfies AgentLoopCommand\nconst cancel = { $schema: request.$schema, contract: request.contract, schemaVersion: 3, commandId: 'registry-introduction-cancel', type: 'cancel-member-self-introduction', binding, participantId: request.participantId, memberId: request.memberId, runId: request.runId, requestOperationId: request.commandId } satisfies AgentLoopCommand\n// @ts-expect-error commands never accept consumer time\nconst withIssuedAt = { ...request, issuedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error commands never accept prompts\nconst withPrompt = { ...request, prompt: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error commands never accept bodies\nconst withBody = { ...request, body: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error commands never select models\nconst withModel = { ...request, model: 'provider/model' } satisfies AgentLoopCommand\ndeclare const declaredRequest: AgentLoopRequestMemberSelfIntroductionResult\ndeclare const declaredCancel: AgentLoopCancelMemberSelfIntroductionResult\nconst requested = await client.requestMemberSelfIntroduction(request)\nconst cancelled = await client.cancelMemberSelfIntroduction(cancel)\nfor (const result of [declaredRequest, declaredCancel, requested, cancelled]) {\n  result.authorization.capability satisfies 'turns.introduce'\n  if (result.status === 'accepted') { result.binding satisfies AgentLoopTaskBinding; result.participantId satisfies string; result.memberId satisfies string; result.runId satisfies string; result.turn satisfies string; result.messageId satisfies string }\n  else if (result.status === 'conflict') result.code satisfies AgentLoopMemberSelfIntroductionConflictCode\n  else if (result.status === 'denied') result.authorization.state satisfies 'denied'\n  else if ('code' in result) result.code satisfies AgentLoopMemberSelfIntroductionUnavailableCode\n  else result.authorization.state satisfies 'unavailable'\n}\nif (cancelled.status === 'accepted') cancelled.requestOperationId satisfies string\nconst event = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-event.v3.schema.json', contract: 'cordisx.agent-loop-event/v3', schemaVersion: 3, eventId: 'registry-introduction-message', binding: binding.binding, sequence: 12, occurredAt: '2026-08-31T00:00:00.000Z', causation: { operationId: request.commandId }, type: 'message', message: { messageId: 'registry-introduction-message', role: 'assistant', purpose: 'member-self-introduction', content: [{ kind: 'text', text: 'Hello from the member.' }] } } satisfies AgentLoopEvent\nevent.message.purpose satisfies 'member-self-introduction'\nevent.causation.operationId satisfies string\nvoid withIssuedAt\nvoid withPrompt\nvoid withBody\nvoid withModel\n`,
+  )
   const introductionConsumerPath = join(consumer, 'consumer-agent-loop-self-introduction-v3.ts')
   const introductionConsumerSource = readFileSync(introductionConsumerPath, 'utf8')
-  const introductionConsumerWithTurn = introductionConsumerSource.replace("causation: { operationId: request.commandId }, type: 'message'", "causation: { operationId: request.commandId }, turn: 'registry-turn', type: 'message'")
-  if (introductionConsumerWithTurn === introductionConsumerSource) throw new Error('registry AgentLoop v3 consumer event fixture did not receive its required turn')
+  const introductionConsumerWithTurn = introductionConsumerSource.replace(
+    "causation: { operationId: request.commandId }, type: 'message'",
+    "causation: { operationId: request.commandId }, turn: 'registry-turn', type: 'message'",
+  )
+  if (introductionConsumerWithTurn === introductionConsumerSource) {
+    throw new Error('registry AgentLoop v3 consumer event fixture did not receive its required turn')
+  }
   writeFileSync(introductionConsumerPath, `${introductionConsumerWithTurn}\nevent.turn satisfies string\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-agent-loop-self-introduction-v3.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-agent-loop-private-fields-v3.ts'), `import type { AgentLoopCommand, AgentLoopTaskBinding } from '@cordisx/protocol/agent-loop/v3'\ndeclare const binding: AgentLoopTaskBinding\nconst request = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v3.schema.json', contract: 'cordisx.agent-loop-command/v3', schemaVersion: 3, commandId: 'registry-private-field-probe', type: 'request-member-self-introduction', binding, participantId: 'registry-participant', memberId: 'registry-member', runId: 'registry-run', intent: { kind: 'member-self-introduction', audience: 'room', output: 'assistant-message' } } satisfies AgentLoopCommand\n// @ts-expect-error consumer time is not public command data\nconst issuedAt = { ...request, issuedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error provider observation time is private\nconst firstObservedAt = { ...request, firstObservedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error provider closure time is private\nconst closedAt = { ...request, closedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error request carries semantic intent, not a prompt\nconst prompt = { ...request, prompt: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error hidden prompts are never public\nconst hiddenPrompt = { ...request, hiddenPrompt: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error canned body is forbidden\nconst body = { ...request, body: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error canned text is forbidden\nconst text = { ...request, text: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error canned content is forbidden\nconst content = { ...request, content: [{ kind: 'text', text: 'Introduce yourself' }] } satisfies AgentLoopCommand\n// @ts-expect-error model selection is provider-owned\nconst model = { ...request, model: 'provider/model' } satisfies AgentLoopCommand\n// @ts-expect-error canned response is forbidden\nconst response = { ...request, response: 'Hello from the member.' } satisfies AgentLoopCommand\nvoid issuedAt\nvoid firstObservedAt\nvoid closedAt\nvoid prompt\nvoid hiddenPrompt\nvoid body\nvoid text\nvoid content\nvoid model\nvoid response\n`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-agent-loop-private-fields-v3.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer-agent-loop-v4.ts'), `import type {
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-agent-loop-self-introduction-v3.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-agent-loop-private-fields-v3.ts'),
+    `import type { AgentLoopCommand, AgentLoopTaskBinding } from '@cordisx/protocol/agent-loop/v3'\ndeclare const binding: AgentLoopTaskBinding\nconst request = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-command.v3.schema.json', contract: 'cordisx.agent-loop-command/v3', schemaVersion: 3, commandId: 'registry-private-field-probe', type: 'request-member-self-introduction', binding, participantId: 'registry-participant', memberId: 'registry-member', runId: 'registry-run', intent: { kind: 'member-self-introduction', audience: 'room', output: 'assistant-message' } } satisfies AgentLoopCommand\n// @ts-expect-error consumer time is not public command data\nconst issuedAt = { ...request, issuedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error provider observation time is private\nconst firstObservedAt = { ...request, firstObservedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error provider closure time is private\nconst closedAt = { ...request, closedAt: '2026-08-31T00:00:00.000Z' } satisfies AgentLoopCommand\n// @ts-expect-error request carries semantic intent, not a prompt\nconst prompt = { ...request, prompt: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error hidden prompts are never public\nconst hiddenPrompt = { ...request, hiddenPrompt: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error canned body is forbidden\nconst body = { ...request, body: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error canned text is forbidden\nconst text = { ...request, text: 'Introduce yourself' } satisfies AgentLoopCommand\n// @ts-expect-error canned content is forbidden\nconst content = { ...request, content: [{ kind: 'text', text: 'Introduce yourself' }] } satisfies AgentLoopCommand\n// @ts-expect-error model selection is provider-owned\nconst model = { ...request, model: 'provider/model' } satisfies AgentLoopCommand\n// @ts-expect-error canned response is forbidden\nconst response = { ...request, response: 'Hello from the member.' } satisfies AgentLoopCommand\nvoid issuedAt\nvoid firstObservedAt\nvoid closedAt\nvoid prompt\nvoid hiddenPrompt\nvoid body\nvoid text\nvoid content\nvoid model\nvoid response\n`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-agent-loop-private-fields-v3.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer-agent-loop-v4.ts'),
+    `import type {
   AgentLoopApprovalDecisionUnavailableCode,
   AgentLoopApprovalDecisionResult,
   AgentLoopCancelMemberSelfIntroductionResult,
@@ -320,16 +490,37 @@ void response
 void identityOnlyRequest
 void introductionBindingClosed
 void bindingClosed
-`)
-  execFileSync(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2023', join(consumer, 'consumer-agent-loop-v4.ts')], { cwd: consumer, stdio: 'inherit' })
-  writeFileSync(join(consumer, 'consumer.mjs'), `import { AGENT_AVATAR_UNKNOWN_SEED, canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar } from '@cordisx/protocol/agent-avatar/v1'\nimport assert from 'node:assert/strict'\nconst generated = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'registry-verifier' })\nassert.equal(canonicalizeAgentAvatarSeed({ namespace: 'unknown' }), AGENT_AVATAR_UNKNOWN_SEED)\nassert.deepEqual(cloneAgentAvatarRef(generated), generated)\nassert.equal(resolveAgentDefinitionAvatar({ agentId: 'registry-verifier', inherit: 'none' }).seed, generated.seed)\n`)
+`,
+  )
+  execFileSync(process.execPath, [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--noEmit',
+    '--strict',
+    '--module',
+    'NodeNext',
+    '--moduleResolution',
+    'NodeNext',
+    '--target',
+    'ES2023',
+    join(consumer, 'consumer-agent-loop-v4.ts'),
+  ], { cwd: consumer, stdio: 'inherit' })
+  writeFileSync(
+    join(consumer, 'consumer.mjs'),
+    `import { AGENT_AVATAR_UNKNOWN_SEED, canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar } from '@cordisx/protocol/agent-avatar/v1'\nimport assert from 'node:assert/strict'\nconst generated = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'registry-verifier' })\nassert.equal(canonicalizeAgentAvatarSeed({ namespace: 'unknown' }), AGENT_AVATAR_UNKNOWN_SEED)\nassert.deepEqual(cloneAgentAvatarRef(generated), generated)\nassert.equal(resolveAgentDefinitionAvatar({ agentId: 'registry-verifier', inherit: 'none' }).seed, generated.seed)\n`,
+  )
   execFileSync(process.execPath, [join(consumer, 'consumer.mjs')], { cwd: consumer, stdio: 'inherit' })
 
   const installedRoot = join(consumer, 'node_modules', ...manifest.name.split('/'))
-  if (fileDigest(installedRoot, frozenAgentLoopFiles) !== frozenAgentLoopDigest) throw new Error('registry frozen AgentLoop v1/v2/v3 package bytes drifted')
+  if (fileDigest(installedRoot, frozenAgentLoopFiles) !== frozenAgentLoopDigest) {
+    throw new Error('registry frozen AgentLoop v1/v2/v3 package bytes drifted')
+  }
   const installed = JSON.parse(readFileSync(join(installedRoot, 'package.json'), 'utf8'))
-  if (installed.version !== version) throw new Error(`clean consumer installed ${installed.version} instead of ${version}`)
-  if (JSON.stringify(installed.exports) !== JSON.stringify(manifest.exports)) throw new Error('registry package public exports differ from the local manifest')
+  if (installed.version !== version) {
+    throw new Error(`clean consumer installed ${installed.version} instead of ${version}`)
+  }
+  if (JSON.stringify(installed.exports) !== JSON.stringify(manifest.exports)) {
+    throw new Error('registry package public exports differ from the local manifest')
+  }
   const localSchemaNames = readdirSync(join(root, 'schemas')).filter(name => name.endsWith('.json')).sort()
   const installedSchemaNames = readdirSync(join(installedRoot, 'schemas')).filter(name => name.endsWith('.json')).sort()
   for (const name of expectedV3Schemas) {
@@ -340,14 +531,21 @@ void bindingClosed
     if (!localSchemaNames.includes(name)) throw new Error(`local package omitted required v4 schema: ${name}`)
     if (!installedSchemaNames.includes(name)) throw new Error(`registry package omitted required v4 schema: ${name}`)
   }
-  if (JSON.stringify(installedSchemaNames) !== JSON.stringify(localSchemaNames)) throw new Error('registry package schema inventory differs from the local package')
-  if (readFileSync(join(installedRoot, 'schemas/README.md'), 'utf8') !== readFileSync(join(root, 'schemas/README.md'), 'utf8')) {
+  if (JSON.stringify(installedSchemaNames) !== JSON.stringify(localSchemaNames)) {
+    throw new Error('registry package schema inventory differs from the local package')
+  }
+  if (
+    readFileSync(join(installedRoot, 'schemas/README.md'), 'utf8')
+      !== readFileSync(join(root, 'schemas/README.md'), 'utf8')
+  ) {
     throw new Error('registry schemas/README.md differs from the local package')
   }
   for (const name of localSchemaNames) {
     const localSchema = JSON.parse(readFileSync(join(root, 'schemas', name), 'utf8'))
     const installedSchema = JSON.parse(readFileSync(join(installedRoot, 'schemas', name), 'utf8'))
-    if (JSON.stringify(installedSchema) !== JSON.stringify(localSchema)) throw new Error(`registry schema differs from local schema: ${name}`)
+    if (JSON.stringify(installedSchema) !== JSON.stringify(localSchema)) {
+      throw new Error(`registry schema differs from local schema: ${name}`)
+    }
   }
   for (const name of ['agent-loop.v1.d.ts', 'agent-loop.v2.d.ts', 'agent-loop.v3.d.ts', 'agent-loop.v4.d.ts']) {
     if (readFileSync(join(installedRoot, 'types', name), 'utf8') !== readFileSync(join(root, 'types', name), 'utf8')) {
@@ -355,10 +553,25 @@ void bindingClosed
     }
   }
 
-  const audit = JSON.parse(run(['audit', 'signatures', '--json', '--include-attestations', '--registry=https://registry.npmjs.org'], consumer))
+  const audit = JSON.parse(
+    run(['audit', 'signatures', '--json', '--include-attestations', '--registry=https://registry.npmjs.org'], consumer),
+  )
   const verified = audit.verified ?? []
-  if (!verified.some((entry) => String(entry.name ?? entry.package ?? '').includes(manifest.name))) throw new Error('signature/provenance verification omitted the Protocol package')
-  console.log(JSON.stringify({ version, beta, integrity: published.dist.integrity, shasum: published.dist.shasum, gitHead: published.gitHead, exports: Object.keys(installed.exports), schemas: installedSchemaNames.length, verified }))
+  if (!verified.some((entry) => String(entry.name ?? entry.package ?? '').includes(manifest.name))) {
+    throw new Error('signature/provenance verification omitted the Protocol package')
+  }
+  console.log(
+    JSON.stringify({
+      version,
+      beta,
+      integrity: published.dist.integrity,
+      shasum: published.dist.shasum,
+      gitHead: published.gitHead,
+      exports: Object.keys(installed.exports),
+      schemas: installedSchemaNames.length,
+      verified,
+    }),
+  )
 } finally {
   rmSync(temp, { recursive: true, force: true })
 }

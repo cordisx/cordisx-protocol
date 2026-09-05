@@ -7,15 +7,26 @@ import type {
 } from './manager-collection.v1.js'
 
 const registration = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-registration.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-registration.v1.schema.json',
   contract: 'cordisx.manager-collection-registration/v1',
   schemaVersion: 1,
   id: 'rooms',
   label: { key: 'manager.rooms.label', fallback: 'Rooms' },
   description: { key: 'manager.rooms.description', fallback: 'Manage rooms.' },
   views: [
-    { id: 'active', label: { key: 'manager.rooms.active', fallback: 'Active' }, emptyTitle: { key: 'manager.rooms.active.empty', fallback: 'No active rooms' }, emptyDescription: { key: 'manager.rooms.active.empty-description', fallback: 'Active rooms appear here.' } },
-    { id: 'archived', label: { key: 'manager.rooms.archived', fallback: 'Archived' }, emptyTitle: { key: 'manager.rooms.archived.empty', fallback: 'No archived rooms' }, emptyDescription: { key: 'manager.rooms.archived.empty-description', fallback: 'Archived rooms appear here.' } },
+    {
+      id: 'active',
+      label: { key: 'manager.rooms.active', fallback: 'Active' },
+      emptyTitle: { key: 'manager.rooms.active.empty', fallback: 'No active rooms' },
+      emptyDescription: { key: 'manager.rooms.active.empty-description', fallback: 'Active rooms appear here.' },
+    },
+    {
+      id: 'archived',
+      label: { key: 'manager.rooms.archived', fallback: 'Archived' },
+      emptyTitle: { key: 'manager.rooms.archived.empty', fallback: 'No archived rooms' },
+      emptyDescription: { key: 'manager.rooms.archived.empty-description', fallback: 'Archived rooms appear here.' },
+    },
   ],
   defaultView: 'active',
   search: {
@@ -29,7 +40,8 @@ const registration = {
 } as const satisfies ManagerCollectionRegistrationV1
 
 const query = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-query.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-query.v1.schema.json',
   contract: 'cordisx.manager-collection-query/v1',
   schemaVersion: 1,
   collectionId: 'rooms',
@@ -39,7 +51,8 @@ const query = {
 } as const satisfies ManagerCollectionQueryV1
 
 const snapshot = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-snapshot.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-snapshot.v1.schema.json',
   contract: 'cordisx.manager-collection-snapshot/v1',
   schemaVersion: 1,
   collectionId: 'rooms',
@@ -50,7 +63,11 @@ const snapshot = {
   items: [{
     id: 'room-1',
     title: { key: 'manager.rooms.dynamic-title', params: { title: 'Project room' }, fallback: 'Project room' },
-    summary: { key: 'manager.rooms.dynamic-summary', params: { summary: 'Product planning' }, fallback: 'Product planning' },
+    summary: {
+      key: 'manager.rooms.dynamic-summary',
+      params: { summary: 'Product planning' },
+      fallback: 'Product planning',
+    },
     leadingVisual: { kind: 'semantic-icon', icon: 'host:layers' },
     route: { id: 'room-detail', params: { roomId: 'room-1' } },
     order: 100,
@@ -88,7 +105,8 @@ const source: ManagerCollectionSourceV1 = {
 }
 
 const result = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-action-result.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-action-result.v1.schema.json',
   contract: 'cordisx.manager-collection-action-result/v1',
   schemaVersion: 1,
   collectionId: 'rooms',

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -52,31 +52,53 @@ function validateSuite(suite) {
   if (!viewIds.includes(registration.defaultView)) errors.push('default view must resolve')
   if (!viewIds.includes(query.view)) errors.push('query view must resolve')
 
-  if (query.collectionId !== registration.id || snapshot.collectionId !== registration.id) errors.push('collection identity drift')
-  if (snapshot.queryRevision !== query.queryRevision || snapshot.view !== query.view || snapshot.normalizedSearch !== query.search.normalized) errors.push('snapshot query fence mismatch')
+  if (query.collectionId !== registration.id || snapshot.collectionId !== registration.id) {
+    errors.push('collection identity drift')
+  }
+  if (
+    snapshot.queryRevision !== query.queryRevision || snapshot.view !== query.view
+    || snapshot.normalizedSearch !== query.search.normalized
+  ) errors.push('snapshot query fence mismatch')
 
   const itemIds = snapshot.items.map(item => item.id)
   if (duplicates(itemIds).length > 0) errors.push('item ids must be unique')
   for (const item of snapshot.items) {
     const actionIds = item.actions.map(action => action.id)
     if (duplicates(actionIds).length > 0) errors.push(`item ${item.id} action ids must be unique`)
-    if (item.leadingVisual.kind === 'avatar-stack' && duplicates(item.leadingVisual.entries.map(entry => entry.id)).length > 0) errors.push(`item ${item.id} avatar ids must be unique`)
+    if (
+      item.leadingVisual.kind === 'avatar-stack'
+      && duplicates(item.leadingVisual.entries.map(entry => entry.id)).length > 0
+    ) errors.push(`item ${item.id} avatar ids must be unique`)
     for (const action of item.actions) {
-      if (action.kind === 'command' && action.tone === 'danger' && action.confirmation === undefined) errors.push(`item ${item.id} danger command requires confirmation`)
+      if (action.kind === 'command' && action.tone === 'danger' && action.confirmation === undefined) {
+        errors.push(`item ${item.id} danger command requires confirmation`)
+      }
       if (action.kind === 'text-input-command') {
-        if (action.input.minLength > action.input.maxLength) errors.push(`item ${item.id} text input bounds are inverted`)
-        if (Object.hasOwn(action.command.arguments ?? {}, action.input.argument)) errors.push(`item ${item.id} text input argument already exists`)
+        if (action.input.minLength > action.input.maxLength) {
+          errors.push(`item ${item.id} text input bounds are inverted`)
+        }
+        if (Object.hasOwn(action.command.arguments ?? {}, action.input.argument)) {
+          errors.push(`item ${item.id} text input argument already exists`)
+        }
         const initial = action.input.trim === 'both' ? action.input.initialValue?.trim() : action.input.initialValue
-        if (initial !== undefined && (initial.length < action.input.minLength || initial.length > action.input.maxLength)) errors.push(`item ${item.id} initial text is outside bounds`)
+        if (
+          initial !== undefined && (initial.length < action.input.minLength || initial.length > action.input.maxLength)
+        ) errors.push(`item ${item.id} initial text is outside bounds`)
       }
     }
   }
 
   const resultItem = snapshot.items.find(item => item.id === result.itemId)
   const resultAction = resultItem?.actions.find(action => action.id === result.actionId)
-  if (result.collectionId !== registration.id || resultItem === undefined || resultAction === undefined) errors.push('result identity does not resolve')
-  if (resultAction?.kind === 'copy-route-link' || resultAction?.kind === 'copy-text') errors.push('Host copy effects do not accept plugin action results')
-  if (result.status === 'applied' && result.revision <= snapshot.revision) errors.push('applied result revision must advance the source')
+  if (result.collectionId !== registration.id || resultItem === undefined || resultAction === undefined) {
+    errors.push('result identity does not resolve')
+  }
+  if (resultAction?.kind === 'copy-route-link' || resultAction?.kind === 'copy-text') {
+    errors.push('Host copy effects do not accept plugin action results')
+  }
+  if (result.status === 'applied' && result.revision <= snapshot.revision) {
+    errors.push('applied result revision must advance the source')
+  }
   return errors
 }
 
@@ -96,7 +118,9 @@ function applyMutation(base, mutation) {
   return value
 }
 
-const complete = JSON.parse(await readFile(path.join(root, 'test-vectors/manager-collection/valid/complete.json'), 'utf8'))
+const complete = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/manager-collection/valid/complete.json'), 'utf8'),
+)
 assert.deepEqual(validateSuite(complete), [])
 
 const invalidDir = path.join(root, 'test-vectors/manager-collection/invalid')

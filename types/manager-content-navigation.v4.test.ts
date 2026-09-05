@@ -7,7 +7,8 @@ import type {
 } from './manager-content-navigation.v4.js'
 
 const declaration = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v4.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v4.schema.json',
   schemaVersion: 4,
   id: 'chat-settings',
   route: { id: 'chat-settings' },
@@ -22,7 +23,8 @@ const declaration = {
 declare const projection: ManagerContentProjectionV3
 declare const source: ManagerContentConfigSourceV1
 const save = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-command.v1.schema.json',
   contract: 'cordisx.manager-content-config-command/v1',
   schemaVersion: 1,
   commandId: 'save-1',
@@ -35,6 +37,11 @@ const save = {
 
 declare const result: ManagerContentConfigResultV1
 declaration.body.defaultMaterialization.fields[0].value satisfies string | number | boolean | null
-projection.body?.configuration.applies satisfies 'live' | 'plugin-restart' | 'service-restart' | 'app-restart' | undefined
+projection.body?.configuration.applies satisfies
+  | 'live'
+  | 'plugin-restart'
+  | 'service-restart'
+  | 'app-restart'
+  | undefined
 source.execute(save)
 if (result.status === 'conflict') result.currentRevision satisfies number

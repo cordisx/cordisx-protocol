@@ -15,7 +15,10 @@ export function validateAgentLoopTaskDetailsUrl(detailsUrl, schemaValidator) {
   for (const match of url.matchAll(/%([0-9A-F]{2})/gu)) {
     const byte = Number.parseInt(match[1], 16)
     if (byte <= 0x1f || byte === 0x7f) errors.push('details URL contains a percent-encoded ASCII control')
-    if ((byte >= 0x41 && byte <= 0x5a) || (byte >= 0x61 && byte <= 0x7a) || (byte >= 0x30 && byte <= 0x39) || [0x2d, 0x2e, 0x5f, 0x7e].includes(byte)) {
+    if (
+      (byte >= 0x41 && byte <= 0x5a) || (byte >= 0x61 && byte <= 0x7a) || (byte >= 0x30 && byte <= 0x39)
+      || [0x2d, 0x2e, 0x5f, 0x7e].includes(byte)
+    ) {
       errors.push('details URL percent-encodes an unreserved character')
     }
   }

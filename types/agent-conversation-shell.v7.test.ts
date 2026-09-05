@@ -1,11 +1,11 @@
 import type {
   AgentConversationActiveRunDescriptor,
-  AgentConversationComposerShortcutPolicy,
   AgentConversationApprovalItem,
+  AgentConversationComposerShortcutPolicy,
   AgentConversationMessageItem,
   AgentConversationParticipant,
-  AgentConversationShellSnapshot,
   AgentConversationShellCommandContext,
+  AgentConversationShellSnapshot,
   AgentConversationShellSubscriptionHandle,
 } from './agent-conversation-shell.v7.js'
 
@@ -145,11 +145,23 @@ composerSnapshot.composer.shortcutPolicy satisfies 'enter' | 'mod-enter'
 const unsupportedShortcut: AgentConversationComposerShortcutPolicy = 'shift-enter'
 
 declare const subscription: AgentConversationShellSubscriptionHandle
-subscription.closed.then(closed => closed.code satisfies 'unsubscribed' | 'explicit' | 'owner-disposed' | 'generation-replaced' | 'permission-revoked' | 'connection-replaced' | 'observer-failed')
+subscription.closed.then(closed =>
+  closed.code satisfies
+    | 'unsubscribed'
+    | 'explicit'
+    | 'owner-disposed'
+    | 'generation-replaced'
+    | 'permission-revoked'
+    | 'connection-replaced'
+    | 'observer-failed'
+)
 subscription.unsubscribe().then(closed => closed.status satisfies 'closed')
 
-// @ts-expect-error v4 active runs expose no URL-shaped navigation value
-const urlRun: AgentConversationActiveRunDescriptor = { ...activeRun, detailsUrl: { target: 'host', url: 'app://-/agent' } }
+const urlRun: AgentConversationActiveRunDescriptor = {
+  ...activeRun,
+  // @ts-expect-error v4 active runs expose no URL-shaped navigation value
+  detailsUrl: { target: 'host', url: 'app://-/agent' },
+}
 // @ts-expect-error v4 approvals expose no AgentLoop binding
 const boundApproval: AgentConversationApprovalItem = { ...approval, binding: { bindingId: 'binding-1', generation: 1 } }
 // @ts-expect-error v4 approvals expose no AgentLoop turn
@@ -158,4 +170,11 @@ const turnedApproval: AgentConversationApprovalItem = { ...approval, turn: 'turn
 const legacySource: AgentConversationMessageItem = { ...introduction, source: 'agent-loop' }
 void [urlRun, boundApproval, turnedApproval, legacySource]
 
-void [composerSnapshot, unsupportedShortcut, terminalApproval, unboundPendingApproval, actionableTerminalApproval, approvalCommandContext]
+void [
+  composerSnapshot,
+  unsupportedShortcut,
+  terminalApproval,
+  unboundPendingApproval,
+  actionableTerminalApproval,
+  approvalCommandContext,
+]

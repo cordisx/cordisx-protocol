@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { isDeepStrictEqual } from 'node:util'
@@ -60,7 +60,9 @@ function validateDefinition(definition) {
   const errors = []
   if (!validators.definition(definition)) return errorsOf(validators.definition)
   const ownKey = identityKey(definition.identity)
-  if ((definition.extends ?? []).some(parent => identityKey(parent) === ownKey)) errors.push('definition cannot extend itself')
+  if ((definition.extends ?? []).some(parent => identityKey(parent) === ownKey)) {
+    errors.push('definition cannot extend itself')
+  }
   const sectionIds = new Set()
   for (const section of definition.promptSections ?? []) {
     if (sectionIds.has(section.sectionId)) errors.push(`duplicate prompt section ${section.sectionId}`)
@@ -154,7 +156,12 @@ function mergeRuntime(parent, local, mode) {
 }
 
 function mergeEffective(parent, local, modes) {
-  const promptSections = mergeOrdered(parent?.promptSections, local.promptSections, modes.promptSections, value => value.sectionId)
+  const promptSections = mergeOrdered(
+    parent?.promptSections,
+    local.promptSections,
+    modes.promptSections,
+    value => value.sectionId,
+  )
   const rules = mergeOrdered(parent?.rules, local.rules, modes.rules, value => value)
   const skills = mergeOrdered(parent?.skills, local.skills, modes.skills, value => value)
   const tools = mergeFilter(parent?.tools, local.tools, modes.tools)
@@ -219,15 +226,25 @@ function validateExchange(command, result) {
   const errors = [...validateCommand(command)]
   if (!validators.result(result)) errors.push(...errorsOf(validators.result))
   if (errors.length > 0) return errors
-  if (result.commandId !== command.commandId || result.type !== command.type) errors.push('result does not correlate to command')
-  if (result.authorization.capability !== expectedCapability(command)) errors.push('authorization capability does not match operation')
+  if (result.commandId !== command.commandId || result.type !== command.type) {
+    errors.push('result does not correlate to command')
+  }
+  if (result.authorization.capability !== expectedCapability(command)) {
+    errors.push('authorization capability does not match operation')
+  }
   if (result.status === 'accepted' && command.type === 'create-or-bind') {
-    if (identityKey(result.binding.definition) !== identityKey(command.definition)) errors.push('accepted binding definition does not match leaf definition')
-    if (command.target.mode === 'bind' && result.binding.task !== command.target.task) errors.push('accepted binding task does not match bind target')
+    if (identityKey(result.binding.definition) !== identityKey(command.definition)) {
+      errors.push('accepted binding definition does not match leaf definition')
+    }
+    if (command.target.mode === 'bind' && result.binding.task !== command.target.task) {
+      errors.push('accepted binding task does not match bind target')
+    }
     errors.push(...detailsUrlErrors(result.detailsUrl))
   }
   if (result.status === 'accepted' && command.type === 'send') {
-    if (!sameBinding(result.binding.binding, command.binding.binding) || result.binding.task !== command.binding.task) errors.push('send result binding does not match command binding')
+    if (!sameBinding(result.binding.binding, command.binding.binding) || result.binding.task !== command.binding.task) {
+      errors.push('send result binding does not match command binding')
+    }
   }
   return errors
 }
@@ -247,7 +264,9 @@ function validateEvents(events, expectedBinding) {
     }
     binding ??= event.binding
     if (!sameBinding(event.binding, expectedBinding ?? binding)) errors.push(`event[${index}] binding drift`)
-    if (previousSequence !== undefined && event.sequence !== previousSequence + 1) errors.push(`event[${index}] sequence is not contiguous`)
+    if (previousSequence !== undefined && event.sequence !== previousSequence + 1) {
+      errors.push(`event[${index}] sequence is not contiguous`)
+    }
     previousSequence = event.sequence
     if (eventIds.has(event.eventId)) errors.push(`duplicate event id ${event.eventId}`)
     eventIds.add(event.eventId)
@@ -259,11 +278,15 @@ function validateEvents(events, expectedBinding) {
         pendingApprovals.set(event.approval.approvalId, { kind: event.approval.kind, turn: event.turn })
       } else {
         if (pending === undefined) errors.push(`approval ${event.approval.approvalId} resolved without pending`)
-        else if (pending.kind !== event.approval.kind || pending.turn !== event.turn) errors.push(`approval ${event.approval.approvalId} identity drift`)
+        else if (pending.kind !== event.approval.kind || pending.turn !== event.turn) {
+          errors.push(`approval ${event.approval.approvalId} identity drift`)
+        }
         pendingApprovals.delete(event.approval.approvalId)
       }
     }
-    if (event.type === 'lifecycle' && event.lifecycle.phase.startsWith('turn.') && event.turn === undefined) errors.push(`event[${index}] turn lifecycle requires turn`)
+    if (event.type === 'lifecycle' && event.lifecycle.phase.startsWith('turn.') && event.turn === undefined) {
+      errors.push(`event[${index}] turn lifecycle requires turn`)
+    }
     if (event.type === 'lifecycle' && event.lifecycle.phase === 'binding.closed') closed = true
   }
   return errors
@@ -282,13 +305,18 @@ function validatePages(pages) {
       continue
     }
     subscription ??= page.subscription
-    if (page.subscription.subscriptionId !== subscription.subscriptionId || !sameBinding(page.subscription.binding, subscription.binding)) errors.push(`page[${index}] subscription drift`)
+    if (
+      page.subscription.subscriptionId !== subscription.subscriptionId
+      || !sameBinding(page.subscription.binding, subscription.binding)
+    ) errors.push(`page[${index}] subscription drift`)
     cursor ??= page.subscription.afterSequence
     if (page.afterSequence !== cursor) errors.push(`page[${index}] afterSequence does not match cursor`)
     if (live && page.phase !== 'live') errors.push(`page[${index}] replay follows live phase`)
     if (page.phase === 'live') {
       live = true
-      if (cursor < subscription.snapshotSequence) errors.push(`page[${index}] live phase begins before snapshot replay completes`)
+      if (cursor < subscription.snapshotSequence) {
+        errors.push(`page[${index}] live phase begins before snapshot replay completes`)
+      }
     }
     for (const event of page.events) {
       if (event.sequence !== cursor + 1) errors.push(`page[${index}] event sequence does not advance cursor`)
@@ -310,7 +338,10 @@ function validateComplete(vector) {
     ...validateExchange(vector.sendCommand, vector.sendResult),
     ...validatePages(vector.pages),
   ]
-  if (errors.length === 0 && JSON.stringify(resolveCatalog(vector.createCommand)) !== JSON.stringify(vector.resolvedDefinition)) {
+  if (
+    errors.length === 0
+    && JSON.stringify(resolveCatalog(vector.createCommand)) !== JSON.stringify(vector.resolvedDefinition)
+  ) {
     errors.push('resolved definition does not match deterministic field inheritance')
   }
   return errors
@@ -331,13 +362,21 @@ function validateIdempotency(vector) {
     const first = firstByCommandId.get(exchange.command?.commandId)
     if (first === undefined) {
       firstByCommandId.set(exchange.command?.commandId, exchange)
-      if (exchange.result?.status === 'accepted' && exchange.result.delivery?.disposition !== 'executed') errors.push(`exchange[${index}] first accepted delivery is not executed`)
+      if (exchange.result?.status === 'accepted' && exchange.result.delivery?.disposition !== 'executed') {
+        errors.push(`exchange[${index}] first accepted delivery is not executed`)
+      }
       continue
     }
     replays += 1
-    if (!isDeepStrictEqual(exchange.command, first.command)) errors.push(`exchange[${index}] reuses commandId for a different command`)
-    if (!isDeepStrictEqual(semanticResult(exchange.result), semanticResult(first.result))) errors.push(`exchange[${index}] idempotent replay changes semantic result`)
-    if (exchange.result?.status === 'accepted' && exchange.result.delivery?.disposition !== 'replayed') errors.push(`exchange[${index}] duplicate accepted delivery is not replayed`)
+    if (!isDeepStrictEqual(exchange.command, first.command)) {
+      errors.push(`exchange[${index}] reuses commandId for a different command`)
+    }
+    if (!isDeepStrictEqual(semanticResult(exchange.result), semanticResult(first.result))) {
+      errors.push(`exchange[${index}] idempotent replay changes semantic result`)
+    }
+    if (exchange.result?.status === 'accepted' && exchange.result.delivery?.disposition !== 'replayed') {
+      errors.push(`exchange[${index}] duplicate accepted delivery is not replayed`)
+    }
   }
   if (replays === 0) errors.push('idempotency case requires at least one replay')
   return errors
@@ -367,11 +406,15 @@ function validateFanOut(vector) {
     if (!bindingKeys.has(key)) errors.push(`stream[${index}] does not match a fan-out binding`)
     if (streamBindings.has(key)) errors.push(`stream[${index}] duplicates a binding stream`)
     streamBindings.add(key)
-    if (subscriptionIds.has(subscription?.subscriptionId)) errors.push(`stream[${index}] subscriptionId is not distinct`)
+    if (subscriptionIds.has(subscription?.subscriptionId)) {
+      errors.push(`stream[${index}] subscriptionId is not distinct`)
+    }
     subscriptionIds.add(subscription?.subscriptionId)
   }
   if (bindingKeys.size < 2) errors.push('fan-out case requires at least two bindings')
-  if (streamBindings.size !== bindingKeys.size) errors.push('fan-out bindings and subscription streams are not one-to-one')
+  if (streamBindings.size !== bindingKeys.size) {
+    errors.push('fan-out bindings and subscription streams are not one-to-one')
+  }
   return errors
 }
 
@@ -388,7 +431,9 @@ function validateTaskDetailsUrls(vector) {
     if (urlErrors.length > 0) errors.push(`accepted[${index}] rejected: ${urlErrors.join('; ')}`)
   }
   for (let index = 0; index < (vector.rejected ?? []).length; index += 1) {
-    if (detailsUrlErrors(materializeDetailsUrl(vector.rejected[index])).length === 0) errors.push(`rejected[${index}] was accepted`)
+    if (detailsUrlErrors(materializeDetailsUrl(vector.rejected[index])).length === 0) {
+      errors.push(`rejected[${index}] was accepted`)
+    }
   }
   return errors
 }
@@ -411,7 +456,8 @@ function lifecycleResult(step) {
     ...(detailsUnavailable ? { code: 'details-unavailable' } : {}),
     ...(step.status !== 'accepted' ? {} : {
       binding: {
-        $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json',
+        $schema:
+          'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json',
         contract: 'cordisx.agent-loop-task-binding/v2',
         schemaVersion: 2,
         binding: step.binding,
@@ -444,46 +490,83 @@ function validateTaskDetailsLifecycle(vector) {
       const result = lifecycleResult(step)
       if (!validators.result(result)) errors.push(...errorsOf(validators.result).map(error => `${prefix} ${error}`))
       const operationCapability = step.operation === 'create' ? 'tasks.create' : 'tasks.content.read'
-      if (step.status === 'accepted' && step.capability !== operationCapability) errors.push(`${prefix} accepted result has a forged capability`)
+      if (step.status === 'accepted' && step.capability !== operationCapability) {
+        errors.push(`${prefix} accepted result has a forged capability`)
+      }
       if (step.status === 'accepted') {
         const urlErrors = detailsUrlErrors(step.detailsUrl)
         errors.push(...urlErrors.map(error => `${prefix} ${error}`))
         const key = keyOf(step.clientId, step.binding)
         const previous = activeAssociations.get(key)
-        if (previous !== undefined && step.binding.generation <= previous.binding.generation) errors.push(`${prefix} accepted generation is not newer`)
-        activeAssociations.set(key, { clientId: step.clientId, providerId: step.providerId, providerGeneration: step.providerGeneration, binding: step.binding, task: step.task, detailsUrl: step.detailsUrl })
+        if (previous !== undefined && step.binding.generation <= previous.binding.generation) {
+          errors.push(`${prefix} accepted generation is not newer`)
+        }
+        activeAssociations.set(key, {
+          clientId: step.clientId,
+          providerId: step.providerId,
+          providerGeneration: step.providerGeneration,
+          binding: step.binding,
+          task: step.task,
+          detailsUrl: step.detailsUrl,
+        })
       } else if (step.reason === 'stale') {
         const current = activeAssociations.get(keyOf(step.clientId, step.targetBinding))
-        if (current === undefined || step.targetBinding.generation > current.binding.generation) errors.push(`${prefix} stale attempt is not fenced by a current generation`)
+        if (current === undefined || step.targetBinding.generation > current.binding.generation) {
+          errors.push(`${prefix} stale attempt is not fenced by a current generation`)
+        }
       } else if (step.reason === 'cross-client') {
         const own = activeAssociations.get(keyOf(step.clientId, step.targetBinding))
-        const foreign = [...activeAssociations.values()].find(value => value.clientId !== step.clientId && value.binding.bindingId === step.targetBinding.bindingId)
+        const foreign = [...activeAssociations.values()].find(value =>
+          value.clientId !== step.clientId && value.binding.bindingId === step.targetBinding.bindingId
+        )
         if (own !== undefined || foreign === undefined) errors.push(`${prefix} cross-client attempt is not isolated`)
       } else if (step.reason === 'cross-binding') {
         const target = activeAssociations.get(keyOf(step.clientId, step.targetBinding))
         const claimed = activeAssociations.get(keyOf(step.clientId, step.claimedBinding))
-        if (target === undefined || claimed === undefined || target.binding.bindingId === claimed.binding.bindingId) errors.push(`${prefix} cross-binding attempt is not isolated`)
+        if (target === undefined || claimed === undefined || target.binding.bindingId === claimed.binding.bindingId) {
+          errors.push(`${prefix} cross-binding attempt is not isolated`)
+        }
       } else if (step.reason === 'forged-capability') {
-        if (step.capability === operationCapability) errors.push(`${prefix} forged capability attempt is not mismatched`)
+        if (step.capability === operationCapability) {
+          errors.push(`${prefix} forged capability attempt is not mismatched`)
+        }
       } else if (step.reason === 'closed') {
-        if (activeAssociations.has(keyOf(step.clientId, step.targetBinding))) errors.push(`${prefix} closed binding retained active provider authority`)
+        if (activeAssociations.has(keyOf(step.clientId, step.targetBinding))) {
+          errors.push(`${prefix} closed binding retained active provider authority`)
+        }
       }
     } else if (step.action === 'provider-replaced') {
-      for (const [key, value] of activeAssociations) if (value.providerId === step.providerId && value.providerGeneration < step.providerGeneration) activeAssociations.delete(key)
+      for (const [key, value] of activeAssociations) {
+        if (value.providerId === step.providerId && value.providerGeneration < step.providerGeneration) {
+          activeAssociations.delete(key)
+        }
+      }
     } else if (step.action === 'provider-disabled' || step.action === 'provider-uninstalled') {
-      for (const [key, value] of activeAssociations) if (value.providerId === step.providerId) activeAssociations.delete(key)
+      for (const [key, value] of activeAssociations) {
+        if (value.providerId === step.providerId) activeAssociations.delete(key)
+      }
     } else if (step.action === 'binding-closed') {
       activeAssociations.delete(keyOf(step.clientId, step.binding))
     } else if (step.action === 'client-disposed') {
-      for (const [key, value] of activeAssociations) if (value.clientId === step.clientId) activeAssociations.delete(key)
+      for (const [key, value] of activeAssociations) {
+        if (value.clientId === step.clientId) activeAssociations.delete(key)
+      }
     } else {
       errors.push(`${prefix} unknown lifecycle action`)
     }
-    const actual = [...activeAssociations.values()].sort((left, right) => keyOf(left.clientId, left.binding).localeCompare(keyOf(right.clientId, right.binding)))
+    const actual = [...activeAssociations.values()].sort((left, right) =>
+      keyOf(left.clientId, left.binding).localeCompare(keyOf(right.clientId, right.binding))
+    )
     const expected = (step.expectedActiveAssociations ?? []).map(name => vector.presentations?.[name])
-    if (expected.some(value => value === undefined)) errors.push(`${prefix} expectedActiveAssociations references an unknown presentation`)
-    const sortedExpected = expected.filter(value => value !== undefined).sort((left, right) => keyOf(left.clientId, left.binding).localeCompare(keyOf(right.clientId, right.binding)))
-    if (!isDeepStrictEqual(actual, sortedExpected)) errors.push(`${prefix} active provider association does not match expected atomic transition`)
+    if (expected.some(value => value === undefined)) {
+      errors.push(`${prefix} expectedActiveAssociations references an unknown presentation`)
+    }
+    const sortedExpected = expected.filter(value => value !== undefined).sort((left, right) =>
+      keyOf(left.clientId, left.binding).localeCompare(keyOf(right.clientId, right.binding))
+    )
+    if (!isDeepStrictEqual(actual, sortedExpected)) {
+      errors.push(`${prefix} active provider association does not match expected atomic transition`)
+    }
   }
   return errors
 }
@@ -497,11 +580,13 @@ function durableCommand(vector, name) {
     commandId: source.commandId,
     type: source.type,
   }
-  if (source.type === 'create-or-bind') return {
-    ...base,
-    definition: vector.definition.identity,
-    definitions: [vector.definition],
-    target: source.target,
+  if (source.type === 'create-or-bind') {
+    return {
+      ...base,
+      definition: vector.definition.identity,
+      definitions: [vector.definition],
+      target: source.target,
+    }
   }
   return {
     ...base,
@@ -511,7 +596,11 @@ function durableCommand(vector, name) {
 }
 
 function durableResult(vector, command, expected) {
-  const capability = command.type === 'send' ? 'turns.submit' : command.target.mode === 'create' ? 'tasks.create' : 'tasks.content.read'
+  const capability = command.type === 'send'
+    ? 'turns.submit'
+    : command.target.mode === 'create'
+    ? 'tasks.create'
+    : 'tasks.content.read'
   const base = {
     $schema: schemas.get('agent-loop-result.v2.schema.json').$id,
     contract: 'cordisx.agent-loop-result/v2',
@@ -522,11 +611,13 @@ function durableResult(vector, command, expected) {
     authorization: { capability, state: 'allowed', code: 'allowed' },
   }
   if (expected.status === 'unavailable') return { ...base, code: expected.code }
-  if (command.type === 'create-or-bind') return {
-    ...base,
-    binding: vector.bindings[expected.binding],
-    detailsUrl: expected.detailsUrl,
-    delivery: { disposition: expected.disposition },
+  if (command.type === 'create-or-bind') {
+    return {
+      ...base,
+      binding: vector.bindings[expected.binding],
+      detailsUrl: expected.detailsUrl,
+      delivery: { disposition: expected.disposition },
+    }
   }
   return {
     ...base,
@@ -557,7 +648,9 @@ function validateDurableDelivery(vector) {
 
   errors.push(...validateDefinition(vector.definition).map(error => `definition ${error}`))
   for (const [name, binding] of Object.entries(vector.bindings ?? {})) {
-    if (!validators.binding(binding)) errors.push(...errorsOf(validators.binding).map(error => `binding ${name} ${error}`))
+    if (!validators.binding(binding)) {
+      errors.push(...errorsOf(validators.binding).map(error => `binding ${name} ${error}`))
+    }
   }
 
   for (let index = 0; index < (vector.steps ?? []).length; index += 1) {
@@ -568,9 +661,11 @@ function validateDurableDelivery(vector) {
       continue
     }
     if (step.action === 'close-task') {
-      for (const record of ledger.values()) if (record.logicalTaskId === step.logicalTaskId) {
-        record.logicalTaskState = 'closed'
-        record.closedAt = step.now
+      for (const record of ledger.values()) {
+        if (record.logicalTaskId === step.logicalTaskId) {
+          record.logicalTaskState = 'closed'
+          record.closedAt = step.now
+        }
       }
       continue
     }
@@ -587,7 +682,9 @@ function validateDurableDelivery(vector) {
       const affinity = affinityKey(step, command)
       if (ledger.has(key) || expiryMarkers.has(key)) errors.push(`${label} duplicate private retention record`)
       const markerLifetime = Date.parse(step.markerExpiresAt) - Date.parse(step.now)
-      if (markerLifetime <= 30 * day || markerLifetime > 32 * day) errors.push(`${label} compact expiry marker must be bounded to more than 30 and at most 32 days`)
+      if (markerLifetime <= 30 * day || markerLifetime > 32 * day) {
+        errors.push(`${label} compact expiry marker must be bounded to more than 30 and at most 32 days`)
+      }
       expiryMarkers.set(key, { firstObservedAt: step.now, markerExpiresAt: step.markerExpiresAt })
       providerAffinity.set(affinity, step.providerId)
       if (!providerGenerations.has(step.providerId)) providerGenerations.set(step.providerId, step.providerGeneration)
@@ -613,51 +710,102 @@ function validateDurableDelivery(vector) {
     const expiredWithoutBinding = record === undefined && expiryMarker !== undefined
       && now - Date.parse(expiryMarker.firstObservedAt) > 30 * day
       && now <= Date.parse(expiryMarker.markerExpiresAt)
-    const expiredRecovery = record !== undefined && record.logicalTaskState !== 'active' && record.closedAt !== undefined && now - Date.parse(record.closedAt) > 30 * day
+    const expiredRecovery = record !== undefined && record.logicalTaskState !== 'active'
+      && record.closedAt !== undefined && now - Date.parse(record.closedAt) > 30 * day
     let expectedCode
     let expectedDisposition
 
     if (affinity !== undefined && affinity !== step.providerId) expectedCode = 'provider-replaced'
-    else if (record !== undefined && record.providerGeneration !== step.providerGeneration && step.reconcileAvailable === true && isDeepStrictEqual(record.command, command) && !expiredRecovery) expectedDisposition = 'reconciled'
-    else if (activeGeneration !== step.providerGeneration || (record !== undefined && record.providerGeneration !== step.providerGeneration)) expectedCode = 'provider-replaced'
+    else if (
+      record !== undefined && record.providerGeneration !== step.providerGeneration && step.reconcileAvailable === true
+      && isDeepStrictEqual(record.command, command) && !expiredRecovery
+    ) expectedDisposition = 'reconciled'
+    else if (
+      activeGeneration !== step.providerGeneration
+      || (record !== undefined && record.providerGeneration !== step.providerGeneration)
+    ) expectedCode = 'provider-replaced'
     else if (expiredWithoutBinding || expiredRecovery) expectedCode = 'operation-expired'
     else if (record !== undefined && !isDeepStrictEqual(record.command, command)) expectedCode = 'operation-conflict'
-    else if (record !== undefined && record.clientId !== step.clientId && command.type === 'create-or-bind') expectedDisposition = 'reconciled'
-    else if (record !== undefined) expectedDisposition = 'replayed'
-    else if (step.crashWindow === 'after-execution-before-result-persisted' && step.reconcileAvailable === false) expectedCode = 'reconciliation-required'
-    else expectedDisposition = step.crashWindow === 'after-execution-before-result-persisted' ? 'reconciled' : 'executed'
+    else if (record !== undefined && record.clientId !== step.clientId && command.type === 'create-or-bind') {
+      expectedDisposition = 'reconciled'
+    } else if (record !== undefined) expectedDisposition = 'replayed'
+    else if (step.crashWindow === 'after-execution-before-result-persisted' && step.reconcileAvailable === false) {
+      expectedCode = 'reconciliation-required'
+    } else {expectedDisposition = step.crashWindow === 'after-execution-before-result-persisted'
+        ? 'reconciled'
+        : 'executed'}
 
     if (expectedCode !== undefined) {
-      if (result.status !== 'unavailable' || result.code !== expectedCode) errors.push(`${label} must fail closed with ${expectedCode}`)
+      if (result.status !== 'unavailable' || result.code !== expectedCode) {
+        errors.push(`${label} must fail closed with ${expectedCode}`)
+      }
       if (step.newExecutionCount !== 0) errors.push(`${label} fenced or expired operation executed`)
-      if (expectedCode === 'reconciliation-required' && step.priorExecutionCount !== 'unknown') errors.push(`${label} unknown delivery did not preserve an unknown prior execution count`)
+      if (expectedCode === 'reconciliation-required' && step.priorExecutionCount !== 'unknown') {
+        errors.push(`${label} unknown delivery did not preserve an unknown prior execution count`)
+      }
     } else {
-      if (result.status !== 'accepted' || result.delivery.disposition !== expectedDisposition) errors.push(`${label} delivery disposition is not ${expectedDisposition}`)
+      if (result.status !== 'accepted' || result.delivery.disposition !== expectedDisposition) {
+        errors.push(`${label} delivery disposition is not ${expectedDisposition}`)
+      }
       if (record === undefined) {
-        const logicalTaskId = step.logicalTaskId ?? (command.type === 'send' ? command.binding.task : result.binding.task)
-        const stored = { command, result: resultWithoutDelivery(result), providerGeneration: step.providerGeneration, clientId: step.clientId, logicalTaskId, logicalTaskState: step.logicalTaskState ?? 'active', firstObservedAt: step.now, closedAt: step.closedAt }
+        const logicalTaskId = step.logicalTaskId
+          ?? (command.type === 'send' ? command.binding.task : result.binding.task)
+        const stored = {
+          command,
+          result: resultWithoutDelivery(result),
+          providerGeneration: step.providerGeneration,
+          clientId: step.clientId,
+          logicalTaskId,
+          logicalTaskState: step.logicalTaskState ?? 'active',
+          firstObservedAt: step.now,
+          closedAt: step.closedAt,
+        }
         ledger.set(key, stored)
         const expectedNewExecutions = result.delivery.disposition === 'reconciled' ? 0 : 1
-        if (step.newExecutionCount !== expectedNewExecutions) errors.push(`${label} first delivery new execution count is not ${expectedNewExecutions}`)
+        if (step.newExecutionCount !== expectedNewExecutions) {
+          errors.push(`${label} first delivery new execution count is not ${expectedNewExecutions}`)
+        }
         if (result.delivery.disposition === 'reconciled') {
-          if (command.type !== 'create-or-bind' || step.crashWindow !== 'after-execution-before-result-persisted') errors.push(`${label} reconciliation does not correspond to the execution-before-persist crash window`)
-          if (step.priorExecutionCount !== 1) errors.push(`${label} reconciliation does not account for the prior crash-window execution`)
-          if (!sameBinding(result.binding.binding, vector.bindings[step.currentBinding]?.binding) || !isDeepStrictEqual(result.detailsUrl, step.currentDetailsUrl) || result.binding.task !== logicalTaskId) errors.push(`${label} reconciliation did not recover the current logical task binding and details URL`)
+          if (command.type !== 'create-or-bind' || step.crashWindow !== 'after-execution-before-result-persisted') {
+            errors.push(`${label} reconciliation does not correspond to the execution-before-persist crash window`)
+          }
+          if (step.priorExecutionCount !== 1) {
+            errors.push(`${label} reconciliation does not account for the prior crash-window execution`)
+          }
+          if (
+            !sameBinding(result.binding.binding, vector.bindings[step.currentBinding]?.binding)
+            || !isDeepStrictEqual(result.detailsUrl, step.currentDetailsUrl) || result.binding.task !== logicalTaskId
+          ) errors.push(`${label} reconciliation did not recover the current logical task binding and details URL`)
         }
       } else {
         if (expectedDisposition === 'reconciled' && command.type === 'create-or-bind') {
-          if (!sameBinding(result.binding.binding, vector.bindings[step.currentBinding]?.binding) || !isDeepStrictEqual(result.detailsUrl, step.currentDetailsUrl) || result.binding.task !== record.logicalTaskId) errors.push(`${label} cross-client reconciliation did not return the current logical task binding and details URL`)
+          if (
+            !sameBinding(result.binding.binding, vector.bindings[step.currentBinding]?.binding)
+            || !isDeepStrictEqual(result.detailsUrl, step.currentDetailsUrl)
+            || result.binding.task !== record.logicalTaskId
+          ) {
+            errors.push(
+              `${label} cross-client reconciliation did not return the current logical task binding and details URL`,
+            )
+          }
           record.result = resultWithoutDelivery(result)
         } else if (expectedDisposition === 'reconciled' && command.type === 'send') {
-          if (result.messageId !== record.result.messageId || result.turn !== record.result.turn) errors.push(`${label} send reconciliation changed messageId or turn`)
-        } else if (!isDeepStrictEqual(resultWithoutDelivery(result), record.result)) errors.push(`${label} replay changed the durable semantic result`)
+          if (result.messageId !== record.result.messageId || result.turn !== record.result.turn) {
+            errors.push(`${label} send reconciliation changed messageId or turn`)
+          }
+        } else if (!isDeepStrictEqual(resultWithoutDelivery(result), record.result)) {
+          errors.push(`${label} replay changed the durable semantic result`)
+        }
         if (expectedDisposition === 'reconciled') record.providerGeneration = step.providerGeneration
         record.clientId = step.clientId
         if (step.newExecutionCount !== 0) errors.push(`${label} replay re-executed the provider operation`)
       }
     }
 
-    if (step.crashWindow === 'after-result-persisted-before-response' && (result.status !== 'accepted' || step.responseDelivered !== false)) errors.push(`${label} result-persist crash window is not represented exactly`)
+    if (
+      step.crashWindow === 'after-result-persisted-before-response'
+      && (result.status !== 'accepted' || step.responseDelivered !== false)
+    ) errors.push(`${label} result-persist crash window is not represented exactly`)
     if (step.concurrentGroup !== undefined) {
       const group = concurrent.get(step.concurrentGroup) ?? []
       group.push({ command, result, newExecutionCount: step.newExecutionCount })
@@ -665,19 +813,35 @@ function validateDurableDelivery(vector) {
     }
     for (let eventIndex = 0; eventIndex < (step.events ?? []).length; eventIndex += 1) {
       const event = step.events[eventIndex]
-      if (!validators.event(event)) errors.push(...errorsOf(validators.event).map(error => `${label} event[${eventIndex}] ${error}`))
-      if (event.causation?.operationId !== command.commandId) errors.push(`${label} event[${eventIndex}] causation does not equal commandId`)
-      if (command.type === 'send' && event.type === 'message' && (event.message.messageId !== result.messageId || event.turn !== result.turn)) errors.push(`${label} send event does not preserve accepted messageId and turn`)
+      if (!validators.event(event)) {
+        errors.push(...errorsOf(validators.event).map(error => `${label} event[${eventIndex}] ${error}`))
+      }
+      if (event.causation?.operationId !== command.commandId) {
+        errors.push(`${label} event[${eventIndex}] causation does not equal commandId`)
+      }
+      if (
+        command.type === 'send' && event.type === 'message'
+        && (event.message.messageId !== result.messageId || event.turn !== result.turn)
+      ) errors.push(`${label} send event does not preserve accepted messageId and turn`)
     }
-    if (record !== undefined && expectedDisposition !== undefined && expectedDisposition !== 'executed' && (step.events?.length ?? 0) !== 0) errors.push(`${label} replay or reconciliation emitted duplicate events`)
+    if (
+      record !== undefined && expectedDisposition !== undefined && expectedDisposition !== 'executed'
+      && (step.events?.length ?? 0) !== 0
+    ) errors.push(`${label} replay or reconciliation emitted duplicate events`)
   }
 
   for (const [name, attempts] of concurrent) {
     if (attempts.length < 2) errors.push(`concurrent group ${name} needs at least two attempts`)
-    if (attempts.reduce((sum, value) => sum + value.newExecutionCount, 0) !== 1) errors.push(`concurrent group ${name} executed more than once`)
-    if (!attempts.every(value => isDeepStrictEqual(value.command, attempts[0].command))) errors.push(`concurrent group ${name} payloads are not structural-exact`)
+    if (attempts.reduce((sum, value) => sum + value.newExecutionCount, 0) !== 1) {
+      errors.push(`concurrent group ${name} executed more than once`)
+    }
+    if (!attempts.every(value => isDeepStrictEqual(value.command, attempts[0].command))) {
+      errors.push(`concurrent group ${name} payloads are not structural-exact`)
+    }
     const dispositions = attempts.map(value => value.result.delivery?.disposition).sort()
-    if (!isDeepStrictEqual(dispositions, ['executed', 'replayed'])) errors.push(`concurrent group ${name} does not contain executed plus replayed delivery`)
+    if (!isDeepStrictEqual(dispositions, ['executed', 'replayed'])) {
+      errors.push(`concurrent group ${name} does not contain executed plus replayed delivery`)
+    }
   }
   return errors
 }
@@ -717,16 +881,38 @@ for (const outcome of ['valid', 'invalid']) {
 }
 
 function collectKeys(value, keys = new Set()) {
-  if (Array.isArray(value)) for (const item of value) collectKeys(item, keys)
-  else if (value !== null && typeof value === 'object') for (const [key, child] of Object.entries(value)) {
-    keys.add(key.toLowerCase())
-    collectKeys(child, keys)
+  if (Array.isArray(value)) { for (const item of value) collectKeys(item, keys) }
+  else if (value !== null && typeof value === 'object') {
+    for (const [key, child] of Object.entries(value)) {
+      keys.add(key.toLowerCase())
+      collectKeys(child, keys)
+    }
   }
   return keys
 }
 
-const publicKeys = collectKeys([...schemas.entries()].filter(([name]) => (name.startsWith('agent-loop-') && name.endsWith('.v2.schema.json') && name !== 'agent-loop-task-details-common.v2.schema.json') || name === 'agent-definition.v1.schema.json').map(([, schema]) => schema))
-for (const forbidden of ['room', 'roomid', 'cwd', 'path', 'url', 'base64', 'rawbridge', 'callback', 'dom', 'html', 'secret', 'credential']) {
+const publicKeys = collectKeys(
+  [...schemas.entries()].filter(([name]) =>
+    (name.startsWith('agent-loop-') && name.endsWith('.v2.schema.json')
+      && name !== 'agent-loop-task-details-common.v2.schema.json') || name === 'agent-definition.v1.schema.json'
+  ).map(([, schema]) => schema),
+)
+for (
+  const forbidden of [
+    'room',
+    'roomid',
+    'cwd',
+    'path',
+    'url',
+    'base64',
+    'rawbridge',
+    'callback',
+    'dom',
+    'html',
+    'secret',
+    'credential',
+  ]
+) {
   if (publicKeys.has(forbidden)) {
     console.error(`Agent Loop contracts must not expose ${forbidden}`)
     failures += 1
@@ -734,7 +920,39 @@ for (const forbidden of ['room', 'roomid', 'cwd', 'path', 'url', 'base64', 'rawb
 }
 
 const taskDetailsKeys = collectKeys(schemas.get('agent-loop-task-details-common.v2.schema.json'))
-for (const forbidden of ['room', 'roomid', 'clientid', 'provider', 'providerid', 'providergeneration', 'task', 'taskid', 'run', 'runid', 'binding', 'bindingid', 'generation', 'reference', 'summary', 'presentation', 'capability', 'body', 'content', 'prompt', 'cli', 'trace', 'route', 'path', 'token', 'navigate', 'navigation', 'history', 'open']) {
+for (
+  const forbidden of [
+    'room',
+    'roomid',
+    'clientid',
+    'provider',
+    'providerid',
+    'providergeneration',
+    'task',
+    'taskid',
+    'run',
+    'runid',
+    'binding',
+    'bindingid',
+    'generation',
+    'reference',
+    'summary',
+    'presentation',
+    'capability',
+    'body',
+    'content',
+    'prompt',
+    'cli',
+    'trace',
+    'route',
+    'path',
+    'token',
+    'navigate',
+    'navigation',
+    'history',
+    'open',
+  ]
+) {
   if (taskDetailsKeys.has(forbidden)) {
     console.error(`Agent Loop task details contracts must not expose ${forbidden}`)
     failures += 1

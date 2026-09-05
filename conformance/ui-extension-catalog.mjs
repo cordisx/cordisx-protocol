@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -76,7 +76,13 @@ const pointFamilies = new Map([
   ['panel.bottom.content', 'outlet'],
 ])
 
-const legacyFreeDom = new Set(['header.actions', 'composer.before', 'composer.after', 'sidebar.footer', 'shell.overlay'])
+const legacyFreeDom = new Set([
+  'header.actions',
+  'composer.before',
+  'composer.after',
+  'sidebar.footer',
+  'shell.overlay',
+])
 
 function schemaErrors(validator, value) {
   if (validator(value)) return []
@@ -98,9 +104,11 @@ function referenceId(contribution, key) {
 }
 
 function requiredKind(operation) {
-  return operation?.startsWith('surface.') ? 'surface'
-    : operation?.startsWith('outlet.') ? 'outlet'
-      : undefined
+  return operation?.startsWith('surface.')
+    ? 'surface'
+    : operation?.startsWith('outlet.')
+    ? 'outlet'
+    : undefined
 }
 
 export function validateCatalogSuite(suite) {
@@ -126,7 +134,9 @@ export function validateCatalogSuite(suite) {
   const contributions = Array.isArray(suite.contributions) ? suite.contributions : []
   const contributionsById = new Map()
   for (const [index, contribution] of contributions.entries()) {
-    errors.push(...schemaErrors(validators.contribution, contribution).map(error => `contributions[${index}] schema: ${error}`))
+    errors.push(
+      ...schemaErrors(validators.contribution, contribution).map(error => `contributions[${index}] schema: ${error}`),
+    )
     const key = `${contribution?.surface}\0${contribution?.id}`
     if (contributionsById.has(key)) errors.push(`duplicate contribution identity: ${key}`)
     contributionsById.set(key, contribution)

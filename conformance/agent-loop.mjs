@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { isDeepStrictEqual } from 'node:util'
@@ -54,7 +54,9 @@ function validateDefinition(definition) {
   const errors = []
   if (!validators.definition(definition)) return errorsOf(validators.definition)
   const ownKey = identityKey(definition.identity)
-  if ((definition.extends ?? []).some(parent => identityKey(parent) === ownKey)) errors.push('definition cannot extend itself')
+  if ((definition.extends ?? []).some(parent => identityKey(parent) === ownKey)) {
+    errors.push('definition cannot extend itself')
+  }
   const sectionIds = new Set()
   for (const section of definition.promptSections ?? []) {
     if (sectionIds.has(section.sectionId)) errors.push(`duplicate prompt section ${section.sectionId}`)
@@ -148,7 +150,12 @@ function mergeRuntime(parent, local, mode) {
 }
 
 function mergeEffective(parent, local, modes) {
-  const promptSections = mergeOrdered(parent?.promptSections, local.promptSections, modes.promptSections, value => value.sectionId)
+  const promptSections = mergeOrdered(
+    parent?.promptSections,
+    local.promptSections,
+    modes.promptSections,
+    value => value.sectionId,
+  )
   const rules = mergeOrdered(parent?.rules, local.rules, modes.rules, value => value)
   const skills = mergeOrdered(parent?.skills, local.skills, modes.skills, value => value)
   const tools = mergeFilter(parent?.tools, local.tools, modes.tools)
@@ -209,14 +216,24 @@ function validateExchange(command, result) {
   const errors = [...validateCommand(command)]
   if (!validators.result(result)) errors.push(...errorsOf(validators.result))
   if (errors.length > 0) return errors
-  if (result.commandId !== command.commandId || result.type !== command.type) errors.push('result does not correlate to command')
-  if (result.authorization.capability !== expectedCapability(command)) errors.push('authorization capability does not match operation')
+  if (result.commandId !== command.commandId || result.type !== command.type) {
+    errors.push('result does not correlate to command')
+  }
+  if (result.authorization.capability !== expectedCapability(command)) {
+    errors.push('authorization capability does not match operation')
+  }
   if (result.status === 'accepted' && command.type === 'create-or-bind') {
-    if (identityKey(result.binding.definition) !== identityKey(command.definition)) errors.push('accepted binding definition does not match leaf definition')
-    if (command.target.mode === 'bind' && result.binding.task !== command.target.task) errors.push('accepted binding task does not match bind target')
+    if (identityKey(result.binding.definition) !== identityKey(command.definition)) {
+      errors.push('accepted binding definition does not match leaf definition')
+    }
+    if (command.target.mode === 'bind' && result.binding.task !== command.target.task) {
+      errors.push('accepted binding task does not match bind target')
+    }
   }
   if (result.status === 'accepted' && command.type === 'send') {
-    if (!sameBinding(result.binding.binding, command.binding.binding) || result.binding.task !== command.binding.task) errors.push('send result binding does not match command binding')
+    if (!sameBinding(result.binding.binding, command.binding.binding) || result.binding.task !== command.binding.task) {
+      errors.push('send result binding does not match command binding')
+    }
   }
   return errors
 }
@@ -236,7 +253,9 @@ function validateEvents(events, expectedBinding) {
     }
     binding ??= event.binding
     if (!sameBinding(event.binding, expectedBinding ?? binding)) errors.push(`event[${index}] binding drift`)
-    if (previousSequence !== undefined && event.sequence !== previousSequence + 1) errors.push(`event[${index}] sequence is not contiguous`)
+    if (previousSequence !== undefined && event.sequence !== previousSequence + 1) {
+      errors.push(`event[${index}] sequence is not contiguous`)
+    }
     previousSequence = event.sequence
     if (eventIds.has(event.eventId)) errors.push(`duplicate event id ${event.eventId}`)
     eventIds.add(event.eventId)
@@ -248,11 +267,15 @@ function validateEvents(events, expectedBinding) {
         pendingApprovals.set(event.approval.approvalId, { kind: event.approval.kind, turn: event.turn })
       } else {
         if (pending === undefined) errors.push(`approval ${event.approval.approvalId} resolved without pending`)
-        else if (pending.kind !== event.approval.kind || pending.turn !== event.turn) errors.push(`approval ${event.approval.approvalId} identity drift`)
+        else if (pending.kind !== event.approval.kind || pending.turn !== event.turn) {
+          errors.push(`approval ${event.approval.approvalId} identity drift`)
+        }
         pendingApprovals.delete(event.approval.approvalId)
       }
     }
-    if (event.type === 'lifecycle' && event.lifecycle.phase.startsWith('turn.') && event.turn === undefined) errors.push(`event[${index}] turn lifecycle requires turn`)
+    if (event.type === 'lifecycle' && event.lifecycle.phase.startsWith('turn.') && event.turn === undefined) {
+      errors.push(`event[${index}] turn lifecycle requires turn`)
+    }
     if (event.type === 'lifecycle' && event.lifecycle.phase === 'binding.closed') closed = true
   }
   return errors
@@ -271,13 +294,18 @@ function validatePages(pages) {
       continue
     }
     subscription ??= page.subscription
-    if (page.subscription.subscriptionId !== subscription.subscriptionId || !sameBinding(page.subscription.binding, subscription.binding)) errors.push(`page[${index}] subscription drift`)
+    if (
+      page.subscription.subscriptionId !== subscription.subscriptionId
+      || !sameBinding(page.subscription.binding, subscription.binding)
+    ) errors.push(`page[${index}] subscription drift`)
     cursor ??= page.subscription.afterSequence
     if (page.afterSequence !== cursor) errors.push(`page[${index}] afterSequence does not match cursor`)
     if (live && page.phase !== 'live') errors.push(`page[${index}] replay follows live phase`)
     if (page.phase === 'live') {
       live = true
-      if (cursor < subscription.snapshotSequence) errors.push(`page[${index}] live phase begins before snapshot replay completes`)
+      if (cursor < subscription.snapshotSequence) {
+        errors.push(`page[${index}] live phase begins before snapshot replay completes`)
+      }
     }
     for (const event of page.events) {
       if (event.sequence !== cursor + 1) errors.push(`page[${index}] event sequence does not advance cursor`)
@@ -299,7 +327,10 @@ function validateComplete(vector) {
     ...validateExchange(vector.sendCommand, vector.sendResult),
     ...validatePages(vector.pages),
   ]
-  if (errors.length === 0 && JSON.stringify(resolveCatalog(vector.createCommand)) !== JSON.stringify(vector.resolvedDefinition)) {
+  if (
+    errors.length === 0
+    && JSON.stringify(resolveCatalog(vector.createCommand)) !== JSON.stringify(vector.resolvedDefinition)
+  ) {
     errors.push('resolved definition does not match deterministic field inheritance')
   }
   return errors
@@ -318,8 +349,12 @@ function validateIdempotency(vector) {
       continue
     }
     replays += 1
-    if (!isDeepStrictEqual(exchange.command, first.command)) errors.push(`exchange[${index}] reuses commandId for a different command`)
-    if (!isDeepStrictEqual(exchange.result, first.result)) errors.push(`exchange[${index}] idempotent replay changes result`)
+    if (!isDeepStrictEqual(exchange.command, first.command)) {
+      errors.push(`exchange[${index}] reuses commandId for a different command`)
+    }
+    if (!isDeepStrictEqual(exchange.result, first.result)) {
+      errors.push(`exchange[${index}] idempotent replay changes result`)
+    }
   }
   if (replays === 0) errors.push('idempotency case requires at least one replay')
   return errors
@@ -349,11 +384,15 @@ function validateFanOut(vector) {
     if (!bindingKeys.has(key)) errors.push(`stream[${index}] does not match a fan-out binding`)
     if (streamBindings.has(key)) errors.push(`stream[${index}] duplicates a binding stream`)
     streamBindings.add(key)
-    if (subscriptionIds.has(subscription?.subscriptionId)) errors.push(`stream[${index}] subscriptionId is not distinct`)
+    if (subscriptionIds.has(subscription?.subscriptionId)) {
+      errors.push(`stream[${index}] subscriptionId is not distinct`)
+    }
     subscriptionIds.add(subscription?.subscriptionId)
   }
   if (bindingKeys.size < 2) errors.push('fan-out case requires at least two bindings')
-  if (streamBindings.size !== bindingKeys.size) errors.push('fan-out bindings and subscription streams are not one-to-one')
+  if (streamBindings.size !== bindingKeys.size) {
+    errors.push('fan-out bindings and subscription streams are not one-to-one')
+  }
   return errors
 }
 
@@ -389,16 +428,36 @@ for (const outcome of ['valid', 'invalid']) {
 }
 
 function collectKeys(value, keys = new Set()) {
-  if (Array.isArray(value)) for (const item of value) collectKeys(item, keys)
-  else if (value !== null && typeof value === 'object') for (const [key, child] of Object.entries(value)) {
-    keys.add(key.toLowerCase())
-    collectKeys(child, keys)
+  if (Array.isArray(value)) { for (const item of value) collectKeys(item, keys) }
+  else if (value !== null && typeof value === 'object') {
+    for (const [key, child] of Object.entries(value)) {
+      keys.add(key.toLowerCase())
+      collectKeys(child, keys)
+    }
   }
   return keys
 }
 
-const publicKeys = collectKeys([...schemas.entries()].filter(([name]) => name.startsWith('agent-loop') || name === 'agent-definition.v1.schema.json').map(([, schema]) => schema))
-for (const forbidden of ['room', 'roomid', 'cwd', 'path', 'url', 'base64', 'rawbridge', 'callback', 'dom', 'html', 'secret', 'credential']) {
+const publicKeys = collectKeys(
+  [...schemas.entries()].filter(([name]) => name.startsWith('agent-loop') || name === 'agent-definition.v1.schema.json')
+    .map(([, schema]) => schema),
+)
+for (
+  const forbidden of [
+    'room',
+    'roomid',
+    'cwd',
+    'path',
+    'url',
+    'base64',
+    'rawbridge',
+    'callback',
+    'dom',
+    'html',
+    'secret',
+    'credential',
+  ]
+) {
   if (publicKeys.has(forbidden)) {
     console.error(`Agent Loop contracts must not expose ${forbidden}`)
     failures += 1

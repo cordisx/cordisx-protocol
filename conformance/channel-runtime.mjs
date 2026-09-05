@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -257,10 +257,16 @@ export function validateSnapshotV2(snapshot) {
 function validateManagerContext(context) {
   const errors = []
   if (context === null || typeof context !== 'object' || Array.isArray(context)) {
-    return { errors: ['Channel Manager request requires a Host-issued token context'], tokens: new Map(), snapshot: undefined }
+    return {
+      errors: ['Channel Manager request requires a Host-issued token context'],
+      tokens: new Map(),
+      snapshot: undefined,
+    }
   }
   const hasSnapshot = context.snapshot !== undefined
-  if (!hasSnapshot) errors.push('Channel Manager token context requires the current v2 snapshot for operation authorization')
+  if (!hasSnapshot) {
+    errors.push('Channel Manager token context requires the current v2 snapshot for operation authorization')
+  }
   if (typeof context.authorizedAt !== 'string' || Number.isNaN(Date.parse(context.authorizedAt))) {
     errors.push('Channel Manager token context requires Host-authoritative authorizedAt')
   }
@@ -295,28 +301,47 @@ function validateManagerContext(context) {
     tokens.set(token, { kind, profileId, hostGeneration, bindingRevision, target, expiresAt })
   }
   for (const issued of context.issuedTokens) {
-    if (issued === null || typeof issued !== 'object' || Array.isArray(issued)
+    if (
+      issued === null || typeof issued !== 'object' || Array.isArray(issued)
       || !['connection', 'binding', 'credential-capture', 'connection-draft', 'credential-draft'].includes(issued.kind)
       || typeof issued.token !== 'string'
       || typeof issued.profileId !== 'string'
       || typeof issued.hostGeneration !== 'string'
       || issued.target === null || typeof issued.target !== 'object' || Array.isArray(issued.target)
-      || typeof issued.expiresAt !== 'string' || Number.isNaN(Date.parse(issued.expiresAt))) {
+      || typeof issued.expiresAt !== 'string' || Number.isNaN(Date.parse(issued.expiresAt))
+    ) {
       errors.push('Channel Manager token context has an invalid issued token record')
       continue
     }
     const [targetKind, targetField] = tokenTarget[issued.kind]
-    if (Object.keys(issued.target).some(key => !['kind', targetField, ...(issued.kind === 'binding' ? ['bindingRevision'] : [])].includes(key))
+    if (
+      Object.keys(issued.target).some(key =>
+        !['kind', targetField, ...(issued.kind === 'binding' ? ['bindingRevision'] : [])].includes(key)
+      )
       || issued.target.kind !== targetKind || issued.target[targetField] !== issued.token
-      || (issued.kind === 'binding' && (!Number.isInteger(issued.bindingRevision) || issued.bindingRevision < 1 || issued.target.bindingRevision !== issued.bindingRevision))) {
+      || (issued.kind === 'binding'
+        && (!Number.isInteger(issued.bindingRevision) || issued.bindingRevision < 1
+          || issued.target.bindingRevision !== issued.bindingRevision))
+    ) {
       errors.push('Channel Manager token context target identity does not match issued token')
       continue
     }
-    if (!Number.isNaN(Date.parse(context.authorizedAt)) && Date.parse(issued.expiresAt) <= Date.parse(context.authorizedAt)) {
+    if (
+      !Number.isNaN(Date.parse(context.authorizedAt))
+      && Date.parse(issued.expiresAt) <= Date.parse(context.authorizedAt)
+    ) {
       errors.push('Channel Manager token context issued token is expired at Host authorization time')
       continue
     }
-    add(issued.token, issued.kind, issued.profileId, issued.hostGeneration, issued.bindingRevision, issued.target, issued.expiresAt)
+    add(
+      issued.token,
+      issued.kind,
+      issued.profileId,
+      issued.hostGeneration,
+      issued.bindingRevision,
+      issued.target,
+      issued.expiresAt,
+    )
   }
   return { errors, tokens, snapshot: hasSnapshot ? context.snapshot : { profileId, hostGeneration } }
 }
@@ -338,7 +363,9 @@ function validateKnownManagerToken(token, kind, request, context, errors, label)
     'connection-draft': 'connectionDraftToken',
     'credential-draft': 'credentialDraftToken',
   }[kind]
-  if (known.target?.[targetField] !== token) errors.push(`${label} target identity does not match the Host-issued token`)
+  if (known.target?.[targetField] !== token) {
+    errors.push(`${label} target identity does not match the Host-issued token`)
+  }
 }
 
 function validateSnapshotOperation(request, context, errors) {
@@ -348,9 +375,11 @@ function validateSnapshotOperation(request, context, errors) {
   if (['credential.capture', 'connection.create'].includes(request.operation)) {
     operations = snapshot.availableOperations
   } else if (request.operation.startsWith('connection.') || request.operation.startsWith('logs.')) {
-    operations = snapshot.accounts.find(account => account.connectionToken === request.target.connectionToken)?.availableOperations
+    operations = snapshot.accounts.find(account => account.connectionToken === request.target.connectionToken)
+      ?.availableOperations
   } else if (request.operation.startsWith('binding.')) {
-    operations = snapshot.bindings.find(binding => binding.bindingToken === request.target.bindingToken)?.availableOperations
+    operations = snapshot.bindings.find(binding => binding.bindingToken === request.target.bindingToken)
+      ?.availableOperations
   }
   if (!Array.isArray(operations) || !operations.includes(request.operation)) {
     errors.push(`Channel Manager operation is not authorized by the current snapshot: ${request.operation}`)
@@ -362,10 +391,15 @@ export function validateManagerRequest(request, context) {
   if (errors.length > 0 || request === null || typeof request !== 'object') return errors
   const validatedContext = validateManagerContext(context)
   errors.push(...validatedContext.errors)
-  if (validatedContext.snapshot.profileId !== request.profileId || validatedContext.snapshot.hostGeneration !== request.hostGeneration) {
+  if (
+    validatedContext.snapshot.profileId !== request.profileId
+    || validatedContext.snapshot.hostGeneration !== request.hostGeneration
+  ) {
     errors.push('Channel Manager request does not match the token context profile or Host generation')
   }
-  if (validatedContext.snapshot.revision !== undefined && validatedContext.snapshot.revision !== request.expectedRevision) {
+  if (
+    validatedContext.snapshot.revision !== undefined && validatedContext.snapshot.revision !== request.expectedRevision
+  ) {
     errors.push('Channel Manager request expectedRevision does not match the token context snapshot')
   }
   const tokenByTarget = {
@@ -377,14 +411,30 @@ export function validateManagerRequest(request, context) {
   }
   const targetToken = tokenByTarget[request.target.kind]
   if (targetToken !== undefined) {
-    validateKnownManagerToken(request.target[targetToken[0]], targetToken[1], request, validatedContext, errors, `Channel Manager ${request.target.kind} token`)
+    validateKnownManagerToken(
+      request.target[targetToken[0]],
+      targetToken[1],
+      request,
+      validatedContext,
+      errors,
+      `Channel Manager ${request.target.kind} token`,
+    )
   }
   if (['connection.create', 'connection.rotate-credential'].includes(request?.operation)) {
-    validateKnownManagerToken(request.draft?.credentialDraftToken, 'credential-draft', request, validatedContext, errors, 'Channel Manager credential draft token')
+    validateKnownManagerToken(
+      request.draft?.credentialDraftToken,
+      'credential-draft',
+      request,
+      validatedContext,
+      errors,
+      'Channel Manager credential draft token',
+    )
   }
   if (request.operation.startsWith('binding.')) {
     const known = validatedContext.tokens.get(request.target.bindingToken)
-    if (known?.bindingRevision !== request.target.bindingRevision) errors.push('Channel Manager binding revision is stale')
+    if (known?.bindingRevision !== request.target.bindingRevision) {
+      errors.push('Channel Manager binding revision is stale')
+    }
   }
   validateSnapshotOperation(request, validatedContext, errors)
   return errors
@@ -403,13 +453,17 @@ export function validateLogPage(page, request, context) {
   for (const field of ['requestId', 'expectedRevision', 'profileId', 'hostGeneration']) {
     if (page[field] !== request?.[field]) errors.push(`safe log page ${field} does not match query request`)
   }
-  if (page.target?.kind !== request?.target?.kind || page.target?.connectionToken !== request?.target?.connectionToken) {
+  if (
+    page.target?.kind !== request?.target?.kind || page.target?.connectionToken !== request?.target?.connectionToken
+  ) {
     errors.push('safe log page target does not match query request')
   }
   if (page.snapshotRevision !== request?.expectedRevision) {
     errors.push('safe log page snapshotRevision does not match query request')
   }
-  if (validatedContext.snapshot?.revision !== undefined && page.snapshotRevision !== validatedContext.snapshot.revision) {
+  if (
+    validatedContext.snapshot?.revision !== undefined && page.snapshotRevision !== validatedContext.snapshot.revision
+  ) {
     errors.push('safe log page snapshotRevision does not match the token context snapshot')
   }
   const entries = new Set()
@@ -539,31 +593,40 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/channel-runtime
       console.error(`${path.relative(root, file)} requires an exact expectedErrors array`)
       failures += 1
     } else if (JSON.stringify([...errors].sort()) !== JSON.stringify([...vector.expectedErrors].sort())) {
-      console.error(`${path.relative(root, file)} errors differ from expectedErrors`, { expected: vector.expectedErrors, actual: errors })
+      console.error(`${path.relative(root, file)} errors differ from expectedErrors`, {
+        expected: vector.expectedErrors,
+        actual: errors,
+      })
       failures += 1
     }
   }
 }
 
 const hostConfigSchema = JSON.stringify(schemas.get('channel-service-config.v1.schema.json'))
-const rendererSafeSchemas = JSON.stringify(schemaNames
-  .filter(name => ![
-    'channel-service-config.v1.schema.json',
-    'channel-inbound-message-intent.v1.schema.json',
-    'channel-sourced-gateway-request.v1.schema.json',
-  ].includes(name))
-  .map(name => schemas.get(name)))
-for (const forbidden of [
-  'additionalContext',
-  'secretValue',
-  'rawBody',
-  'rawEvent',
-  'messageText',
-  'localPath',
-  'externalUrl',
-  'electronBridge',
-  'rawBridge',
-]) {
+const rendererSafeSchemas = JSON.stringify(
+  schemaNames
+    .filter(name =>
+      ![
+        'channel-service-config.v1.schema.json',
+        'channel-inbound-message-intent.v1.schema.json',
+        'channel-sourced-gateway-request.v1.schema.json',
+      ].includes(name)
+    )
+    .map(name => schemas.get(name)),
+)
+for (
+  const forbidden of [
+    'additionalContext',
+    'secretValue',
+    'rawBody',
+    'rawEvent',
+    'messageText',
+    'localPath',
+    'externalUrl',
+    'electronBridge',
+    'rawBridge',
+  ]
+) {
   if (hostConfigSchema.includes(forbidden) || rendererSafeSchemas.includes(forbidden)) {
     console.error(`Channel schemas must not expose ${forbidden}`)
     failures += 1
@@ -586,7 +649,29 @@ const managerSafeSchemas = JSON.stringify([
   'channel-manager-log-page.v1.schema.json',
   'channel-manager-log-export-result.v1.schema.json',
 ].map(name => schemas.get(name)))
-for (const forbidden of ['secretRef', 'secretValue', 'credentialValue', 'rawPayload', 'rawBody', 'localPath', 'callbackBody', 'appId', 'tenantId', 'accountId', 'adapterId', 'eventId', 'routeId', 'providerId', 'remoteSessionId', 'conversationId', 'sessionId', 'userId', 'threadId']) {
+for (
+  const forbidden of [
+    'secretRef',
+    'secretValue',
+    'credentialValue',
+    'rawPayload',
+    'rawBody',
+    'localPath',
+    'callbackBody',
+    'appId',
+    'tenantId',
+    'accountId',
+    'adapterId',
+    'eventId',
+    'routeId',
+    'providerId',
+    'remoteSessionId',
+    'conversationId',
+    'sessionId',
+    'userId',
+    'threadId',
+  ]
+) {
   if (managerSafeSchemas.includes(forbidden)) {
     console.error(`Channel Manager schemas must not expose ${forbidden}`)
     failures += 1

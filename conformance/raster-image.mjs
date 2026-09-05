@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -47,15 +47,31 @@ function hasMatchingPngHeader(value) {
 }
 
 expect('bounded PNG', valid, true)
-for (const [label, mutate] of [
-  ['network URL', value => { value.url = 'https://example.test/avatar.png' }],
-  ['data URL', value => { value.data = `data:image/png;base64,${value.data}` }],
-  ['SVG media type', value => { value.mediaType = 'image/svg+xml' }],
-  ['unknown encoding', value => { value.encoding = 'base64url' }],
-  ['zero width', value => { value.width = 0 }],
-  ['oversized height', value => { value.height = 257 }],
-  ['unknown field', value => { value.avatar = { kind: 'generated' } }],
-]) {
+for (
+  const [label, mutate] of [
+    ['network URL', value => {
+      value.url = 'https://example.test/avatar.png'
+    }],
+    ['data URL', value => {
+      value.data = `data:image/png;base64,${value.data}`
+    }],
+    ['SVG media type', value => {
+      value.mediaType = 'image/svg+xml'
+    }],
+    ['unknown encoding', value => {
+      value.encoding = 'base64url'
+    }],
+    ['zero width', value => {
+      value.width = 0
+    }],
+    ['oversized height', value => {
+      value.height = 257
+    }],
+    ['unknown field', value => {
+      value.avatar = { kind: 'generated' }
+    }],
+  ]
+) {
   const candidate = structuredClone(valid)
   mutate(candidate)
   expect(label, candidate, false)

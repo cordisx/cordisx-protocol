@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -85,7 +85,10 @@ function conditionMatches(condition, context) {
 function canonicalSource(value) {
   try {
     const url = new URL(value)
-    if (!['file:', 'https:'].includes(url.protocol) || url.username !== '' || url.password !== '' || url.search !== '' || url.hash !== '') return undefined
+    if (
+      !['file:', 'https:'].includes(url.protocol) || url.username !== '' || url.password !== '' || url.search !== ''
+      || url.hash !== ''
+    ) return undefined
     if (url.protocol === 'file:' && url.host !== '') return undefined
     if (url.protocol === 'https:' && url.pathname !== '/') url.pathname = url.pathname.replace(/\/+$/, '')
     return url.href
@@ -105,17 +108,31 @@ function descriptorErrors(catalog) {
   const surface = byId.get(SETTINGS_SURFACE)
   if (surface === undefined) errors.push(`catalog is missing ${SETTINGS_SURFACE}`)
   else {
-    if (surface.kind !== 'surface' || surface.payloadFamily !== 'manager-settings-tab') errors.push(`${SETTINGS_SURFACE} has an incompatible kind or payload family`)
-    if (surface.stability !== 'stable' || surface.availability !== 'available') errors.push(`${SETTINGS_SURFACE} must be stable and available`)
+    if (surface.kind !== 'surface' || surface.payloadFamily !== 'manager-settings-tab') {
+      errors.push(`${SETTINGS_SURFACE} has an incompatible kind or payload family`)
+    }
+    if (surface.stability !== 'stable' || surface.availability !== 'available') {
+      errors.push(`${SETTINGS_SURFACE} must be stable and available`)
+    }
   }
   const outlet = byId.get(SETTINGS_OUTLET)
   if (outlet === undefined) errors.push(`catalog is missing ${SETTINGS_OUTLET}`)
   else {
-    if (outlet.kind !== 'outlet' || outlet.payloadFamily !== 'outlet') errors.push(`${SETTINGS_OUTLET} has an incompatible kind or payload family`)
-    if (outlet.stability !== 'stable' || outlet.availability !== 'available') errors.push(`${SETTINGS_OUTLET} must be stable and available`)
-    if (outlet.pageChrome?.length !== 1 || outlet.pageChrome[0] !== 'body-only') errors.push(`${SETTINGS_OUTLET} must accept only body-only page chrome`)
-    if (outlet.presentationGroup !== 'manager.settings') errors.push(`${SETTINGS_OUTLET} must use the manager.settings presentation group`)
-    if (outlet.routePathFamily !== 'manager-settings') errors.push(`${SETTINGS_OUTLET} must use the manager-settings path family`)
+    if (outlet.kind !== 'outlet' || outlet.payloadFamily !== 'outlet') {
+      errors.push(`${SETTINGS_OUTLET} has an incompatible kind or payload family`)
+    }
+    if (outlet.stability !== 'stable' || outlet.availability !== 'available') {
+      errors.push(`${SETTINGS_OUTLET} must be stable and available`)
+    }
+    if (outlet.pageChrome?.length !== 1 || outlet.pageChrome[0] !== 'body-only') {
+      errors.push(`${SETTINGS_OUTLET} must accept only body-only page chrome`)
+    }
+    if (outlet.presentationGroup !== 'manager.settings') {
+      errors.push(`${SETTINGS_OUTLET} must use the manager.settings presentation group`)
+    }
+    if (outlet.routePathFamily !== 'manager-settings') {
+      errors.push(`${SETTINGS_OUTLET} must use the manager-settings path family`)
+    }
   }
   return errors
 }
@@ -182,9 +199,15 @@ function lifecycleErrors(steps) {
       default:
         errors.push(`lifecycle[${index}] has unknown action ${step?.action ?? '<missing>'}`)
     }
-    if (step?.expectActive !== active) errors.push(`lifecycle[${index}] expected active ${step?.expectActive}, received ${active}`)
+    if (step?.expectActive !== active) {
+      errors.push(`lifecycle[${index}] expected active ${step?.expectActive}, received ${active}`)
+    }
     if (JSON.stringify(step?.expectCleanup ?? []) !== JSON.stringify(cleanup)) {
-      errors.push(`lifecycle[${index}] expected cleanup ${JSON.stringify(step?.expectCleanup ?? [])}, received ${JSON.stringify(cleanup)}`)
+      errors.push(
+        `lifecycle[${index}] expected cleanup ${JSON.stringify(step?.expectCleanup ?? [])}, received ${
+          JSON.stringify(cleanup)
+        }`,
+      )
     }
   }
   return errors
@@ -212,12 +235,16 @@ export function validateManagerSettingsSuite(suite) {
   if (suite === null || typeof suite !== 'object' || Array.isArray(suite)) return ['suite must be an object']
   errors.push(...schemaErrors(validators.catalog, suite.catalog).map(error => `catalog schema: ${error}`))
   errors.push(...descriptorErrors(suite.catalog))
-  if (typeof suite.generation !== 'string' || suite.generation.length === 0) errors.push('generation must be a non-empty string')
+  if (typeof suite.generation !== 'string' || suite.generation.length === 0) {
+    errors.push('generation must be a non-empty string')
+  }
 
   const owners = new Map()
   if (!Array.isArray(suite.owners)) errors.push('owners must be an array')
   for (const [index, owner] of (Array.isArray(suite.owners) ? suite.owners : []).entries()) {
-    if (typeof owner?.id !== 'string' || !LOCAL_ID.test(owner.id) || isReservedOwner(owner.id)) errors.push(`owners[${index}] uses a reserved or invalid owner id`)
+    if (typeof owner?.id !== 'string' || !LOCAL_ID.test(owner.id) || isReservedOwner(owner.id)) {
+      errors.push(`owners[${index}] uses a reserved or invalid owner id`)
+    }
     if (owners.has(owner?.id)) errors.push(`duplicate owner id: ${owner?.id}`)
     const canonical = typeof owner?.source === 'string' ? canonicalSource(owner.source) : undefined
     if (canonical === undefined || canonical !== owner.source) errors.push(`owners[${index}] source must be canonical`)
@@ -227,18 +254,25 @@ export function validateManagerSettingsSuite(suite) {
   const contributions = new Map()
   recordDocuments(errors, 'contributions', suite.contributions, validators.contribution, owners, contributions)
   for (const [key, contribution] of contributions) {
-    if (contribution.surface !== SETTINGS_SURFACE) errors.push(`contribution ${key} does not target ${SETTINGS_SURFACE}`)
+    if (contribution.surface !== SETTINGS_SURFACE) {
+      errors.push(`contribution ${key} does not target ${SETTINGS_SURFACE}`)
+    }
   }
 
   if (!Array.isArray(suite.updates)) errors.push('updates must be an array')
   for (const [index, update] of (Array.isArray(suite.updates) ? suite.updates : []).entries()) {
-    errors.push(...schemaErrors(validators.contribution, update?.document).map(error => `updates[${index}] schema: ${error}`))
+    errors.push(
+      ...schemaErrors(validators.contribution, update?.document).map(error => `updates[${index}] schema: ${error}`),
+    )
     const key = qualified(update?.owner, update?.document?.id)
     const existing = contributions.get(key)
     if (existing === undefined) errors.push(`updates[${index}] references unknown contribution ${key}`)
-    else if (update.document.surface !== existing.surface) errors.push(`updates[${index}] cannot change the contribution surface`)
-    else contributions.set(key, update.document)
-    if (update?.generation !== undefined && update.generation !== suite.generation) errors.push(`updates[${index}] generation is stale or unknown`)
+    else if (update.document.surface !== existing.surface) {
+      errors.push(`updates[${index}] cannot change the contribution surface`)
+    } else contributions.set(key, update.document)
+    if (update?.generation !== undefined && update.generation !== suite.generation) {
+      errors.push(`updates[${index}] generation is stale or unknown`)
+    }
   }
 
   const routes = new Map()
@@ -256,9 +290,15 @@ export function validateManagerSettingsSuite(suite) {
       pending.set(key, 'route')
       continue
     }
-    if (route.path === '/manager/settings' || !route.path.startsWith('/manager/settings/')) errors.push(`route ${qualified(owner, route.id)} must be strictly below /manager/settings/`)
-    if (route.outlet !== SETTINGS_OUTLET) errors.push(`route ${qualified(owner, route.id)} targets incompatible outlet ${route.outlet}`)
-    if (route.page?.includes(':')) errors.push(`route ${qualified(owner, route.id)} must reference a same-owner local page`)
+    if (route.path === '/manager/settings' || !route.path.startsWith('/manager/settings/')) {
+      errors.push(`route ${qualified(owner, route.id)} must be strictly below /manager/settings/`)
+    }
+    if (route.outlet !== SETTINGS_OUTLET) {
+      errors.push(`route ${qualified(owner, route.id)} targets incompatible outlet ${route.outlet}`)
+    }
+    if (route.page?.includes(':')) {
+      errors.push(`route ${qualified(owner, route.id)} must reference a same-owner local page`)
+    }
     if (!resolvedOutlets.has(route.outlet)) {
       pending.set(key, 'outlet')
       continue
@@ -273,7 +313,9 @@ export function validateManagerSettingsSuite(suite) {
 
   const expectedPending = new Map((suite.expectedPending ?? []).map(record => [record.id, record.reason]))
   if (JSON.stringify([...expectedPending].sort()) !== JSON.stringify([...pending].sort())) {
-    errors.push(`pending mismatch: expected ${JSON.stringify([...expectedPending])}, received ${JSON.stringify([...pending])}`)
+    errors.push(
+      `pending mismatch: expected ${JSON.stringify([...expectedPending])}, received ${JSON.stringify([...pending])}`,
+    )
   }
 
   const projection = [...BUILT_INS]
@@ -289,7 +331,11 @@ export function validateManagerSettingsSuite(suite) {
   projection.sort(compareManagerSettingsTabs)
   const projected = projection.map(({ id, disabled }) => ({ id, disabled }))
   if (JSON.stringify(projected) !== JSON.stringify(suite.expectedProjection ?? [])) {
-    errors.push(`projection mismatch: expected ${JSON.stringify(suite.expectedProjection ?? [])}, received ${JSON.stringify(projected)}`)
+    errors.push(
+      `projection mismatch: expected ${JSON.stringify(suite.expectedProjection ?? [])}, received ${
+        JSON.stringify(projected)
+      }`,
+    )
   }
 
   if (!Array.isArray(suite.accesses)) errors.push('accesses must be an array')
@@ -300,8 +346,13 @@ export function validateManagerSettingsSuite(suite) {
     const owner = String(access?.operation).startsWith('surface.')
       ? String(access?.contributionId ?? '').split(':')[0]
       : String(access?.routeId ?? '').split(':')[0]
-    if (access?.identity?.pluginId !== owner || access?.identity?.source !== owners.get(owner)) errors.push(`accesses[${index}] identity does not match the launcher-bound owner`)
-    if (access?.identity?.pointId !== (String(access?.operation).startsWith('surface.') ? SETTINGS_SURFACE : SETTINGS_OUTLET)) {
+    if (access?.identity?.pluginId !== owner || access?.identity?.source !== owners.get(owner)) {
+      errors.push(`accesses[${index}] identity does not match the launcher-bound owner`)
+    }
+    if (
+      access?.identity?.pointId
+        !== (String(access?.operation).startsWith('surface.') ? SETTINGS_SURFACE : SETTINGS_OUTLET)
+    ) {
       errors.push(`accesses[${index}] point origin does not match its operation`)
     }
     accessByOperation.set(access?.operation, access)
@@ -315,9 +366,15 @@ export function validateManagerSettingsSuite(suite) {
     const surfaceAccess = accessByOperation.get('surface.route.navigate')
     const outletRouteAccess = accessByOperation.get('outlet.route.navigate')
     const outletPageAccess = accessByOperation.get('outlet.page.mount')
-    if (surfaceAccess?.contributionId !== suite.activated || surfaceAccess?.routeId !== qualified(owner, route?.id)) errors.push('activated tab requires a matching surface.route.navigate origin')
-    if (outletRouteAccess?.routeId !== qualified(owner, route?.id) || outletRouteAccess?.pageId !== pageId) errors.push('activated tab requires a matching outlet.route.navigate origin')
-    if (outletPageAccess?.routeId !== qualified(owner, route?.id) || outletPageAccess?.pageId !== pageId) errors.push('activated tab requires a matching outlet.page.mount origin')
+    if (surfaceAccess?.contributionId !== suite.activated || surfaceAccess?.routeId !== qualified(owner, route?.id)) {
+      errors.push('activated tab requires a matching surface.route.navigate origin')
+    }
+    if (outletRouteAccess?.routeId !== qualified(owner, route?.id) || outletRouteAccess?.pageId !== pageId) {
+      errors.push('activated tab requires a matching outlet.route.navigate origin')
+    }
+    if (outletPageAccess?.routeId !== qualified(owner, route?.id) || outletPageAccess?.pageId !== pageId) {
+      errors.push('activated tab requires a matching outlet.page.mount origin')
+    }
   }
 
   errors.push(...lifecycleErrors(suite.lifecycle))
@@ -358,12 +415,19 @@ if (JSON.stringify(tied) !== JSON.stringify(['alpha:a', 'alpha:z', 'zeta:b'])) {
   failures += 1
 }
 
-const completeSuite = JSON.parse(await readFile(path.join(root, 'test-vectors/manager-settings-tabs/valid/complete.json'), 'utf8'))
+const completeSuite = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/manager-settings-tabs/valid/complete.json'), 'utf8'),
+)
 if (validators.legacyCatalog(completeSuite.catalog)) {
   console.error('catalog v2 must reject the explicit catalog v3 document')
   failures += 1
 }
-const oldVersionSuite = JSON.parse(await readFile(path.join(root, 'test-vectors/manager-settings-tabs/invalid/old-version-manager-surface.json'), 'utf8'))
+const oldVersionSuite = JSON.parse(
+  await readFile(
+    path.join(root, 'test-vectors/manager-settings-tabs/invalid/old-version-manager-surface.json'),
+    'utf8',
+  ),
+)
 if (validators.legacyContribution(oldVersionSuite.contributions[0].document)) {
   console.error('surface contribution v3 must reject manager.settings.tabs')
   failures += 1

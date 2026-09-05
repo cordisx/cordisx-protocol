@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -106,8 +106,11 @@ function graphErrors(plugins) {
     for (const dependency of plugin.dependencies) {
       const installed = byId.get(dependency.id)
       if (installed === undefined) errors.push(`missing dependency ${dependency.id} for ${plugin.id}`)
-      else if (installed.version !== dependency.version) errors.push(`dependency version mismatch ${dependency.id} for ${plugin.id}`)
-      else if (plugin.enabled && !installed.enabled) errors.push(`enabled plugin ${plugin.id} depends on disabled ${dependency.id}`)
+      else if (installed.version !== dependency.version) {
+        errors.push(`dependency version mismatch ${dependency.id} for ${plugin.id}`)
+      } else if (plugin.enabled && !installed.enabled) {
+        errors.push(`enabled plugin ${plugin.id} depends on disabled ${dependency.id}`)
+      }
     }
   }
   const visiting = new Set()
@@ -145,8 +148,12 @@ export function validateOperation(value) {
   }
   const decision = value.operation.authorizationDecision
   if (decision !== undefined) {
-    if (decision.profileId !== value.profileId) errors.push('authorization decision profile differs from operation profile')
-    if (decision.operation !== value.operation.kind) errors.push('authorization decision operation differs from lifecycle operation')
+    if (decision.profileId !== value.profileId) {
+      errors.push('authorization decision profile differs from operation profile')
+    }
+    if (decision.operation !== value.operation.kind) {
+      errors.push('authorization decision operation differs from lifecycle operation')
+    }
   }
   return errors
 }
@@ -156,8 +163,12 @@ export function validateOperationV2(value) {
   const errors = []
   const decision = value.operation.authorizationDecision
   if (decision !== undefined) {
-    if (decision.profileId !== value.profileId) errors.push('authorization decision profile differs from operation profile')
-    if (decision.operation !== value.operation.kind) errors.push('authorization decision operation differs from lifecycle operation')
+    if (decision.profileId !== value.profileId) {
+      errors.push('authorization decision profile differs from operation profile')
+    }
+    if (decision.operation !== value.operation.kind) {
+      errors.push('authorization decision operation differs from lifecycle operation')
+    }
   }
   return errors
 }
@@ -166,14 +177,23 @@ export function validateResult(value) {
   if (!validators.result(value)) return validatorErrors(validators.result)
   const errors = []
   for (const id of duplicates(value.affectedPluginIds)) errors.push(`duplicate affected plugin: ${id}`)
-  if (value.operation === 'reload' && value.scope !== 'plugin-restart') errors.push('reload must use plugin-restart scope')
-  if (['install', 'update', 'enable', 'disable', 'uninstall'].includes(value.operation) && value.scope !== 'plugin-generation') {
+  if (value.operation === 'reload' && value.scope !== 'plugin-restart') {
+    errors.push('reload must use plugin-restart scope')
+  }
+  if (
+    ['install', 'update', 'enable', 'disable', 'uninstall'].includes(value.operation)
+    && value.scope !== 'plugin-generation'
+  ) {
     errors.push(`${value.operation} must use plugin-generation scope`)
   }
   if (value.authorizationPlan !== undefined) {
-    if (value.authorizationPlan.profileId !== value.profileId) errors.push('authorization plan profile differs from result profile')
+    if (value.authorizationPlan.profileId !== value.profileId) {
+      errors.push('authorization plan profile differs from result profile')
+    }
     const expected = value.operation === 'inspect-local' ? 'install' : value.operation
-    if (value.authorizationPlan.operation !== expected) errors.push('authorization plan operation differs from lifecycle result')
+    if (value.authorizationPlan.operation !== expected) {
+      errors.push('authorization plan operation differs from lifecycle result')
+    }
   }
   return errors
 }
@@ -182,14 +202,23 @@ export function validateResultV2(value) {
   if (!validators.resultV2(value)) return validatorErrors(validators.resultV2)
   const errors = []
   for (const id of duplicates(value.affectedPluginIds)) errors.push(`duplicate affected plugin: ${id}`)
-  if (value.operation === 'reload' && value.scope !== 'plugin-restart') errors.push('reload must use plugin-restart scope')
-  if (['install', 'update', 'enable', 'disable', 'uninstall'].includes(value.operation) && value.scope !== 'plugin-generation') {
+  if (value.operation === 'reload' && value.scope !== 'plugin-restart') {
+    errors.push('reload must use plugin-restart scope')
+  }
+  if (
+    ['install', 'update', 'enable', 'disable', 'uninstall'].includes(value.operation)
+    && value.scope !== 'plugin-generation'
+  ) {
     errors.push(`${value.operation} must use plugin-generation scope`)
   }
   if (value.authorizationPlan !== undefined) {
-    if (value.authorizationPlan.profileId !== value.profileId) errors.push('authorization plan profile differs from result profile')
+    if (value.authorizationPlan.profileId !== value.profileId) {
+      errors.push('authorization plan profile differs from result profile')
+    }
     const expected = value.operation === 'inspect-source' ? 'install' : value.operation
-    if (value.authorizationPlan.operation !== expected) errors.push('authorization plan operation differs from lifecycle result')
+    if (value.authorizationPlan.operation !== expected) {
+      errors.push('authorization plan operation differs from lifecycle result')
+    }
   }
   return errors
 }
@@ -209,8 +238,12 @@ export function validateSnapshot(value) {
     if (plugin.availableOperations.includes('share') && plugin.canonicalSource === undefined) {
       errors.push(`snapshot ${plugin.id} exposes share without a canonical public source`)
     }
-    if (plugin.enabled && plugin.availableOperations.includes('enable')) errors.push(`enabled plugin ${plugin.id} exposes enable`)
-    if (!plugin.enabled && plugin.availableOperations.includes('disable')) errors.push(`disabled plugin ${plugin.id} exposes disable`)
+    if (plugin.enabled && plugin.availableOperations.includes('enable')) {
+      errors.push(`enabled plugin ${plugin.id} exposes enable`)
+    }
+    if (!plugin.enabled && plugin.availableOperations.includes('disable')) {
+      errors.push(`disabled plugin ${plugin.id} exposes disable`)
+    }
   }
   return errors
 }
@@ -262,16 +295,18 @@ const publicSnapshots = JSON.stringify([
   schemas.get('plugin-lifecycle-result.v2.schema.json'),
   schemas.get('plugin-runtime-snapshot.v1.schema.json'),
 ])
-for (const forbidden of [
-  'sourceDirectory',
-  'localPath',
-  'storePath',
-  'configValue',
-  'secretValue',
-  'credential',
-  'rendererCallback',
-  'electronBridge',
-]) {
+for (
+  const forbidden of [
+    'sourceDirectory',
+    'localPath',
+    'storePath',
+    'configValue',
+    'secretValue',
+    'credential',
+    'rendererCallback',
+    'electronBridge',
+  ]
+) {
   if (publicSnapshots.includes(forbidden)) {
     console.error(`Plugin lifecycle public output schemas must not expose ${forbidden}`)
     failures += 1

@@ -27,7 +27,11 @@ const schemaNames = [
   'agent-conversation-shell-room-settings-result.v3.schema.json',
   'agent-conversation-shell-room-collection-leading-visual.v3.schema.json',
 ]
-const schemas = new Map(await Promise.all(schemaNames.map(async name => [name, JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8'))])))
+const schemas = new Map(
+  await Promise.all(
+    schemaNames.map(async name => [name, JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8'))]),
+  ),
+)
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv)
 for (const schema of schemas.values()) ajv.addSchema(schema)
@@ -37,7 +41,9 @@ const validator = name => {
   return value
 }
 const validateSnapshotSchema = validator('agent-conversation-shell-snapshot.v3.schema.json')
-const validateItemSchema = ajv.getSchema(`${schemas.get('agent-conversation-shell-snapshot.v3.schema.json').$id}#/$defs/item`)
+const validateItemSchema = ajv.getSchema(
+  `${schemas.get('agent-conversation-shell-snapshot.v3.schema.json').$id}#/$defs/item`,
+)
 if (validateItemSchema === undefined) throw new Error('Agent conversation shell v3 item schema was not registered')
 const validatePageSchema = validator('agent-conversation-shell-page.v3.schema.json')
 const validateCommandContextSchema = validator('agent-conversation-shell-command-context.v3.schema.json')
@@ -59,7 +65,9 @@ function textErrors(value, kind) {
   const max = kind === 'name' ? 256 : 4000
   if (scalarLength < 1 || scalarLength > max) errors.push(`${kind} scalar length is out of bounds`)
   if (kind === 'name' && /[\u0000-\u001f\u007f]/u.test(value)) errors.push('name contains a control character')
-  if (kind === 'description' && /[\u0000-\u0009\u000b-\u001f\u007f]/u.test(value)) errors.push('description contains a forbidden control character')
+  if (kind === 'description' && /[\u0000-\u0009\u000b-\u001f\u007f]/u.test(value)) {
+    errors.push('description contains a forbidden control character')
+  }
   return errors
 }
 
@@ -67,14 +75,18 @@ function requestErrors(request) {
   const errors = []
   if (!validateRequestSchema(request)) return schemaErrors(validateRequestSchema)
   if (request.patch.name !== undefined) errors.push(...textErrors(request.patch.name, 'name'))
-  if (request.patch.description?.state === 'present') errors.push(...textErrors(request.patch.description.text, 'description'))
+  if (request.patch.description?.state === 'present') {
+    errors.push(...textErrors(request.patch.description.text, 'description'))
+  }
   return errors
 }
 
 function resultErrors(result) {
   const errors = []
   if (!validateResultSchema(result)) return schemaErrors(validateResultSchema)
-  if (result.status === 'applied' && result.snapshotSequence !== result.expectedSnapshotSequence + 1) errors.push('applied result did not advance snapshotSequence exactly once')
+  if (result.status === 'applied' && result.snapshotSequence !== result.expectedSnapshotSequence + 1) {
+    errors.push('applied result did not advance snapshotSequence exactly once')
+  }
   return errors
 }
 
@@ -100,14 +112,20 @@ function snapshotErrors(snapshot) {
 function approvalSnapshotErrors(snapshot) {
   const errors = snapshotErrors(snapshot)
   if (errors.length > 0 || snapshot.selection.kind !== 'room') return errors
-  const participants = new Map(snapshot.selection.participants.map(participant => [participant.participantId, participant]))
-  const activeRuns = new Set((snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.runId}`))
+  const participants = new Map(
+    snapshot.selection.participants.map(participant => [participant.participantId, participant]),
+  )
+  const activeRuns = new Set(
+    (snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.runId}`),
+  )
   const approvalTuples = new Set()
   for (const item of snapshot.items) {
     if (item.kind !== 'approval') continue
     const participant = participants.get(item.participantId)
     if (participant === undefined) errors.push('approval participant is not current')
-    else if (participant.role !== 'agent' || participant.agentIdentity === undefined) errors.push('approval participant lacks exact Agent Definition identity')
+    else if (participant.role !== 'agent' || participant.agentIdentity === undefined) {
+      errors.push('approval participant lacks exact Agent Definition identity')
+    }
     const runKey = `${item.participantId}\u0000${item.memberId}\u0000${item.runId}`
     if (!activeRuns.has(runKey)) errors.push('approval lacks exact active participant/member/run association')
     const tuple = `${item.binding.bindingId}\u0000${item.binding.generation}\u0000${item.turn}\u0000${item.approvalId}`
@@ -129,21 +147,35 @@ function approvalTransitionErrors(previous, next) {
   if (previous.kind !== next.kind) errors.push('approval update changed item kind')
   if (previous.sequence !== next.sequence) errors.push('approval update moved timeline position')
   if (errors.length > 0 || previous.kind !== 'approval' || next.kind !== 'approval') return errors
-  if (previous.participantId !== next.participantId || previous.memberId !== next.memberId || previous.runId !== next.runId) errors.push('approval participant/member/run relation drift')
+  if (
+    previous.participantId !== next.participantId || previous.memberId !== next.memberId
+    || previous.runId !== next.runId
+  ) errors.push('approval participant/member/run relation drift')
   if (!isDeepStrictEqual(previous.binding, next.binding)) errors.push('approval binding drift')
-  if (previous.turn !== next.turn || previous.approvalId !== next.approvalId || previous.approvalKind !== next.approvalKind) errors.push('approval turn/id/kind drift')
+  if (
+    previous.turn !== next.turn || previous.approvalId !== next.approvalId
+    || previous.approvalKind !== next.approvalKind
+  ) errors.push('approval turn/id/kind drift')
   if (!isDeepStrictEqual(previous.rationale, next.rationale)) errors.push('approval rationale drift')
   if (previous.state === 'pending') {
-    if (!['pending', 'approved', 'denied', 'cancelled', 'failed'].includes(next.state)) errors.push('approval transition is invalid')
-    if (next.state === 'pending' && !isDeepStrictEqual(previous, next)) errors.push('same-state approval update is not idempotent')
-  } else if (previous.state !== next.state || !isDeepStrictEqual(previous, next)) errors.push('terminal approval changed or regressed')
+    if (!['pending', 'approved', 'denied', 'cancelled', 'failed'].includes(next.state)) {
+      errors.push('approval transition is invalid')
+    }
+    if (next.state === 'pending' && !isDeepStrictEqual(previous, next)) {
+      errors.push('same-state approval update is not idempotent')
+    }
+  } else if (previous.state !== next.state || !isDeepStrictEqual(previous, next)) {
+    errors.push('terminal approval changed or regressed')
+  }
   return errors
 }
 
 function applyApprovalUpdate(snapshot, update) {
   const current = structuredClone(snapshot)
   if (update.kind !== 'item-updated') return { snapshot: current, errors: ['approval lifecycle requires item-updated'] }
-  if (update.sequence !== current.snapshotSequence + 1) return { snapshot: current, errors: ['approval update sequence is stale or non-contiguous'] }
+  if (update.sequence !== current.snapshotSequence + 1) {
+    return { snapshot: current, errors: ['approval update sequence is stale or non-contiguous'] }
+  }
   const index = current.items.findIndex(item => item.itemId === update.item.itemId)
   if (index < 0) return { snapshot: current, errors: ['approval update references unknown or stale item'] }
   const errors = approvalTransitionErrors(current.items[index], update.item)
@@ -162,28 +194,45 @@ function approvalCommandContextErrors(context, snapshot) {
   const item = snapshot.items.find(candidate => candidate.itemId === context.itemId)
   if (item === undefined || item.kind !== 'approval') errors.push('approval command context references unknown item')
   else if (item.state !== 'pending') errors.push('approval command context references terminal or stale item')
-  else if (!item.actions.some(action => isDeepStrictEqual(action.command, context.command))) errors.push('approval command context command does not match a pending decision')
+  else if (!item.actions.some(action => isDeepStrictEqual(action.command, context.command))) {
+    errors.push('approval command context command does not match a pending decision')
+  }
   return errors
 }
 
 function messageSnapshotErrors(snapshot) {
   const errors = snapshotErrors(snapshot)
   if (errors.length > 0 || snapshot.selection.kind !== 'room') return errors
-  const participants = new Map(snapshot.selection.participants.map(participant => [participant.participantId, participant]))
-  const activeRuns = new Set((snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.runId}`))
+  const participants = new Map(
+    snapshot.selection.participants.map(participant => [participant.participantId, participant]),
+  )
+  const activeRuns = new Set(
+    (snapshot.selection.activeRuns ?? []).map(run => `${run.participantId}\u0000${run.memberId}\u0000${run.runId}`),
+  )
   const selfIntroductionTuples = new Set()
   for (const item of snapshot.items) {
     if (item.kind !== 'message') continue
     const participant = participants.get(item.author.participantId)
-    if (participant === undefined || !isDeepStrictEqual(participant, item.author)) errors.push('message author is not the exact current participant')
-    if (item.semantic.purpose === 'conversation' && item.source !== 'agent-loop') errors.push('conversation message source drift')
-    if (item.semantic.purpose === 'chatroom-acknowledgement' && item.source !== 'chatroom-acknowledgement') errors.push('acknowledgement message source drift')
+    if (participant === undefined || !isDeepStrictEqual(participant, item.author)) {
+      errors.push('message author is not the exact current participant')
+    }
+    if (item.semantic.purpose === 'conversation' && item.source !== 'agent-loop') {
+      errors.push('conversation message source drift')
+    }
+    if (item.semantic.purpose === 'chatroom-acknowledgement' && item.source !== 'chatroom-acknowledgement') {
+      errors.push('acknowledgement message source drift')
+    }
     if (item.semantic.purpose !== 'member-self-introduction') continue
-    if (item.source !== 'agent-loop' || item.author.role !== 'agent' || item.author.agentIdentity === undefined) errors.push('self-introduction is not an AgentLoop-authored Agent message')
-    if (item.semantic.participantId !== item.author.participantId) errors.push('self-introduction semantic participant does not match author')
+    if (item.source !== 'agent-loop' || item.author.role !== 'agent' || item.author.agentIdentity === undefined) {
+      errors.push('self-introduction is not an AgentLoop-authored Agent message')
+    }
+    if (item.semantic.participantId !== item.author.participantId) {
+      errors.push('self-introduction semantic participant does not match author')
+    }
     const runKey = `${item.semantic.participantId}\u0000${item.semantic.memberId}\u0000${item.semantic.runId}`
     if (!activeRuns.has(runKey)) errors.push('self-introduction lacks exact active participant/member/run association')
-    const tuple = `${item.semantic.binding.bindingId}\u0000${item.semantic.binding.generation}\u0000${item.semantic.turn}\u0000${item.messageId}\u0000${item.semantic.causation.operationId}`
+    const tuple =
+      `${item.semantic.binding.bindingId}\u0000${item.semantic.binding.generation}\u0000${item.semantic.turn}\u0000${item.messageId}\u0000${item.semantic.causation.operationId}`
     if (selfIntroductionTuples.has(tuple)) errors.push('self-introduction operation/message association is duplicated')
     selfIntroductionTuples.add(tuple)
   }
@@ -207,7 +256,9 @@ function messageTransitionErrors(previous, next) {
 function applyMessageUpdate(snapshot, update) {
   const current = structuredClone(snapshot)
   if (update.kind !== 'item-updated') return { snapshot: current, errors: ['message lifecycle requires item-updated'] }
-  if (update.sequence !== current.snapshotSequence + 1) return { snapshot: current, errors: ['message update sequence is stale or non-contiguous'] }
+  if (update.sequence !== current.snapshotSequence + 1) {
+    return { snapshot: current, errors: ['message update sequence is stale or non-contiguous'] }
+  }
   const index = current.items.findIndex(item => item.itemId === update.item.itemId)
   if (index < 0) return { snapshot: current, errors: ['message update references unknown or stale item'] }
   const errors = messageTransitionErrors(current.items[index], update.item)
@@ -237,7 +288,9 @@ function leadingVisualErrors(visual) {
 
 function collectionErrors(collection) {
   const errors = []
-  if (!Number.isSafeInteger(collection?.revision) || collection.revision < 0) errors.push('collection revision is invalid')
+  if (!Number.isSafeInteger(collection?.revision) || collection.revision < 0) {
+    errors.push('collection revision is invalid')
+  }
   if (!Array.isArray(collection?.rows)) return [...errors, 'collection rows are absent']
   const rowIds = new Set()
   for (const row of collection.rows) {
@@ -247,9 +300,13 @@ function collectionErrors(collection) {
     errors.push(...leadingVisualErrors(row.leadingVisual))
     if (row.kind === 'room') {
       if (row.leadingVisual.kind !== 'room-composite-avatar') errors.push('Room row does not use a composite avatar')
-      else if (row.leadingVisual.roomId !== row.route?.params?.roomId) errors.push('Room visual roomId does not match the row route association')
+      else if (row.leadingVisual.roomId !== row.route?.params?.roomId) {
+        errors.push('Room visual roomId does not match the row route association')
+      }
     } else if (row.kind === 'create-room') {
-      if (!isDeepStrictEqual(row.leadingVisual, { kind: 'semantic-icon', icon: 'host:action.add' })) errors.push('New Room row does not use the fixed semantic add icon')
+      if (!isDeepStrictEqual(row.leadingVisual, { kind: 'semantic-icon', icon: 'host:action.add' })) {
+        errors.push('New Room row does not use the fixed semantic add icon')
+      }
     } else errors.push('collection row kind is unknown')
   }
   return errors
@@ -260,13 +317,29 @@ function createCollectionOwner(initial) {
   return {
     read: () => structuredClone(current),
     replace(next) {
-      if (next.revision < current.revision) return { accepted: false, code: 'stale-revision', errors: ['collection revision regressed'], collection: structuredClone(current) }
+      if (next.revision < current.revision) {
+        return {
+          accepted: false,
+          code: 'stale-revision',
+          errors: ['collection revision regressed'],
+          collection: structuredClone(current),
+        }
+      }
       if (next.revision === current.revision) {
-        if (isDeepStrictEqual(next, current)) return { accepted: true, replayed: true, collection: structuredClone(current), errors: [] }
-        return { accepted: false, code: 'same-revision-divergent', errors: ['same collection revision has divergent data'], collection: structuredClone(current) }
+        if (isDeepStrictEqual(next, current)) {
+          return { accepted: true, replayed: true, collection: structuredClone(current), errors: [] }
+        }
+        return {
+          accepted: false,
+          code: 'same-revision-divergent',
+          errors: ['same collection revision has divergent data'],
+          collection: structuredClone(current),
+        }
       }
       const errors = collectionErrors(next)
-      if (errors.length > 0) return { accepted: false, code: 'invalid-replacement', errors, collection: structuredClone(current) }
+      if (errors.length > 0) {
+        return { accepted: false, code: 'invalid-replacement', errors, collection: structuredClone(current) }
+      }
       current = structuredClone(next)
       return { accepted: true, replayed: false, collection: structuredClone(current), errors: [] }
     },
@@ -312,29 +385,49 @@ function createOwner(initialSnapshot) {
   const ledger = new Map()
   return {
     snapshot: () => structuredClone(current),
-    setAvailability: value => { availability = value },
+    setAvailability: value => {
+      availability = value
+    },
     update(request) {
       const errors = requestErrors(request)
       if (errors.length > 0) return { errors, snapshot: structuredClone(current) }
       const remembered = ledger.get(request.requestId)
       if (remembered !== undefined) {
         if (!isDeepStrictEqual(remembered.request, request)) {
-          const result = responseEnvelope(request, 'conflict', 'request-conflict', { currentSnapshotSequence: current.snapshotSequence })
+          const result = responseEnvelope(request, 'conflict', 'request-conflict', {
+            currentSnapshotSequence: current.snapshotSequence,
+          })
           return { errors: resultErrors(result), result, snapshot: structuredClone(current) }
         }
-        return { errors: resultErrors(remembered.result), result: structuredClone(remembered.result), snapshot: structuredClone(current), replayed: true }
+        return {
+          errors: resultErrors(remembered.result),
+          result: structuredClone(remembered.result),
+          snapshot: structuredClone(current),
+          replayed: true,
+        }
       }
       let result
       if (availability !== 'available') {
         result = responseEnvelope(request, 'unavailable', availability)
-      } else if (request.binding.bindingId !== current.binding.bindingId || request.binding.ownerGeneration !== current.binding.ownerGeneration) {
-        result = responseEnvelope(request, 'conflict', 'owner-conflict', { currentSnapshotSequence: current.snapshotSequence })
+      } else if (
+        request.binding.bindingId !== current.binding.bindingId
+        || request.binding.ownerGeneration !== current.binding.ownerGeneration
+      ) {
+        result = responseEnvelope(request, 'conflict', 'owner-conflict', {
+          currentSnapshotSequence: current.snapshotSequence,
+        })
       } else if (request.generation !== current.generation) {
-        result = responseEnvelope(request, 'conflict', 'generation-conflict', { currentSnapshotSequence: current.snapshotSequence })
+        result = responseEnvelope(request, 'conflict', 'generation-conflict', {
+          currentSnapshotSequence: current.snapshotSequence,
+        })
       } else if (current.selection.kind !== 'room' || request.roomId !== current.selection.roomId) {
-        result = responseEnvelope(request, 'conflict', 'room-conflict', { currentSnapshotSequence: current.snapshotSequence })
+        result = responseEnvelope(request, 'conflict', 'room-conflict', {
+          currentSnapshotSequence: current.snapshotSequence,
+        })
       } else if (request.expectedSnapshotSequence !== current.snapshotSequence) {
-        result = responseEnvelope(request, 'conflict', 'snapshot-conflict', { currentSnapshotSequence: current.snapshotSequence })
+        result = responseEnvelope(request, 'conflict', 'snapshot-conflict', {
+          currentSnapshotSequence: current.snapshotSequence,
+        })
       } else if (request.patch.description !== undefined && current.selection.description === undefined) {
         result = responseEnvelope(request, 'unavailable', 'settings-unavailable')
       } else {
@@ -393,7 +486,11 @@ assert.equal(cleared.snapshot.snapshotSequence, 43)
 const absentDescription = structuredClone(scenario.initialSnapshot)
 delete absentDescription.selection.description
 assert.deepEqual(snapshotErrors(absentDescription), [])
-assert.notDeepEqual(absentDescription.selection, scenario.initialSnapshot.selection, 'absent means undeclared while empty is an explicit presentation state')
+assert.notDeepEqual(
+  absentDescription.selection,
+  scenario.initialSnapshot.selection,
+  'absent means undeclared while empty is an explicit presentation state',
+)
 assert.equal('description' in absentDescription.selection, false)
 const absentCapability = await vector('valid/description-capability.json')
 const absentOwner = createOwner(absentDescription)
@@ -405,7 +502,11 @@ const absentOutcome = absentOwner.update(absentRequest)
 assert.equal(absentOutcome.result.status, absentCapability.expectedStatus)
 assert.equal(absentOutcome.result.code, absentCapability.expectedCode)
 assert.deepEqual(absentOutcome.snapshot, absentBefore)
-assert.equal(absentOutcome.snapshot.selection.title.fallback, scenario.initialSnapshot.selection.title.fallback, 'mixed patch must not partially apply name')
+assert.equal(
+  absentOutcome.snapshot.selection.title.fallback,
+  scenario.initialSnapshot.selection.title.fallback,
+  'mixed patch must not partially apply name',
+)
 assert.equal('description' in absentOutcome.snapshot.selection, false)
 const descriptionUnavailableOwner = createOwner(absentDescription)
 const descriptionUnavailableRequest = structuredClone(scenario.request)
@@ -413,7 +514,11 @@ descriptionUnavailableRequest.requestId = 'description-capability-absent'
 const descriptionUnavailable = descriptionUnavailableOwner.update(descriptionUnavailableRequest)
 assert.equal(descriptionUnavailable.result.status, 'unavailable')
 assert.equal(descriptionUnavailable.result.code, 'settings-unavailable')
-assert.deepEqual(descriptionUnavailable.snapshot, absentDescription, 'mixed patch must not rename when description capability is absent')
+assert.deepEqual(
+  descriptionUnavailable.snapshot,
+  absentDescription,
+  'mixed patch must not rename when description capability is absent',
+)
 const nameOnlyOwner = createOwner(absentDescription)
 const nameOnlyRequest = structuredClone(scenario.request)
 nameOnlyRequest.requestId = 'name-only-without-description-capability'
@@ -424,13 +529,25 @@ assert.equal(nameOnlyApplied.snapshot.selection.title.fallback, nameOnlyRequest.
 assert.equal('description' in nameOnlyApplied.snapshot.selection, false)
 
 // Exact owner, generation, room, and snapshot fences fail closed without mutating state.
-for (const [field, mutate, expectedCode] of [
-  ['binding', request => { request.binding.bindingId = 'other-binding' }, 'owner-conflict'],
-  ['owner', request => { request.binding.ownerGeneration = 'other-owner' }, 'owner-conflict'],
-  ['generation', request => { request.generation = 'other-generation' }, 'generation-conflict'],
-  ['room', request => { request.roomId = 'other-room' }, 'room-conflict'],
-  ['snapshot', request => { request.expectedSnapshotSequence -= 1 }, 'snapshot-conflict'],
-]) {
+for (
+  const [field, mutate, expectedCode] of [
+    ['binding', request => {
+      request.binding.bindingId = 'other-binding'
+    }, 'owner-conflict'],
+    ['owner', request => {
+      request.binding.ownerGeneration = 'other-owner'
+    }, 'owner-conflict'],
+    ['generation', request => {
+      request.generation = 'other-generation'
+    }, 'generation-conflict'],
+    ['room', request => {
+      request.roomId = 'other-room'
+    }, 'room-conflict'],
+    ['snapshot', request => {
+      request.expectedSnapshotSequence -= 1
+    }, 'snapshot-conflict'],
+  ]
+) {
   const isolated = createOwner(scenario.initialSnapshot)
   const request = structuredClone(scenario.request)
   request.requestId = `conflict-${field}`
@@ -502,24 +619,52 @@ const invalidText = await vector('invalid/text-normalization.json')
 for (const name of invalidText.names) assert.notDeepEqual(textErrors(name, 'name'), [])
 for (const description of invalidText.descriptions) assert.notDeepEqual(textErrors(description, 'description'), [])
 
-for (const mutate of [
-  request => { request.patch = {} },
-  request => { request.patch.description = { state: 'present', text: '' }; delete request.patch.name },
-  request => { request.patch.description = { state: 'empty', text: 'must-not-exist' }; delete request.patch.name },
-  request => { request.patch.html = '<input>'; delete request.patch.name; delete request.patch.description },
-  request => { request.callback = 'save' },
-  request => { delete request.expectedSnapshotSequence },
-]) {
+for (
+  const mutate of [
+    request => {
+      request.patch = {}
+    },
+    request => {
+      request.patch.description = { state: 'present', text: '' }
+      delete request.patch.name
+    },
+    request => {
+      request.patch.description = { state: 'empty', text: 'must-not-exist' }
+      delete request.patch.name
+    },
+    request => {
+      request.patch.html = '<input>'
+      delete request.patch.name
+      delete request.patch.description
+    },
+    request => {
+      request.callback = 'save'
+    },
+    request => {
+      delete request.expectedSnapshotSequence
+    },
+  ]
+) {
   const invalid = structuredClone(scenario.request)
   mutate(invalid)
   assert.notDeepEqual(requestErrors(invalid), [], 'invalid settings request must fail closed')
 }
 
-for (const mutate of [
-  result => { result.snapshotSequence = result.expectedSnapshotSequence },
-  result => { result.status = 'conflict'; result.code = 'snapshot-conflict' },
-  result => { result.status = 'unavailable'; result.code = 'disposed' },
-]) {
+for (
+  const mutate of [
+    result => {
+      result.snapshotSequence = result.expectedSnapshotSequence
+    },
+    result => {
+      result.status = 'conflict'
+      result.code = 'snapshot-conflict'
+    },
+    result => {
+      result.status = 'unavailable'
+      result.code = 'disposed'
+    },
+  ]
+) {
   const invalid = structuredClone(scenario.appliedResult)
   mutate(invalid)
   assert.notDeepEqual(resultErrors(invalid), [], 'invalid settings result must fail closed')
@@ -541,18 +686,38 @@ const approvalCommandContext = {
   command: structuredClone(approvalVector.pending.actions[0].command),
 }
 assert.deepEqual(approvalCommandContextErrors(approvalCommandContext, approvalBase), [])
-for (const mutate of [
-  context => { context.binding.bindingId = 'other-binding' },
-  context => { context.binding.ownerGeneration = 'other-owner' },
-  context => { context.generation = 'other-generation' },
-  context => { context.itemId = 'unknown-item' },
-  context => { context.command = { id: 'chatroom:unknown-approval-command' } },
-  context => { context.submitPayload = 'approve' },
-  context => { context.callback = 'approve' },
-]) {
+for (
+  const mutate of [
+    context => {
+      context.binding.bindingId = 'other-binding'
+    },
+    context => {
+      context.binding.ownerGeneration = 'other-owner'
+    },
+    context => {
+      context.generation = 'other-generation'
+    },
+    context => {
+      context.itemId = 'unknown-item'
+    },
+    context => {
+      context.command = { id: 'chatroom:unknown-approval-command' }
+    },
+    context => {
+      context.submitPayload = 'approve'
+    },
+    context => {
+      context.callback = 'approve'
+    },
+  ]
+) {
   const invalid = structuredClone(approvalCommandContext)
   mutate(invalid)
-  assert.notDeepEqual(approvalCommandContextErrors(invalid, approvalBase), [], 'invalid approval command context must fail closed')
+  assert.notDeepEqual(
+    approvalCommandContextErrors(invalid, approvalBase),
+    [],
+    'invalid approval command context must fail closed',
+  )
 }
 
 function terminalApproval(state) {
@@ -573,19 +738,31 @@ for (const state of approvalVector.terminalStates) {
   assert.equal(outcome.snapshot.items[1].state, state)
   assert.deepEqual(outcome.snapshot.items[1].actions, [])
 }
-const failedApproval = applyApprovalUpdate(approvalBase, { kind: 'item-updated', sequence: 42, item: terminalApproval('failed') })
+const failedApproval = applyApprovalUpdate(approvalBase, {
+  kind: 'item-updated',
+  sequence: 42,
+  item: terminalApproval('failed'),
+})
 assert.deepEqual(failedApproval.errors, [])
 assert.deepEqual(failedApproval.snapshot.items[1].diagnostic, approvalVector.failedDiagnostic)
 
 const approvedUpdate = { kind: 'item-updated', sequence: 42, item: terminalApproval('approved') }
 const approvedIncremental = applyApprovalUpdate(approvalBase, approvedUpdate)
 assert.deepEqual(approvedIncremental.errors, [])
-assert.notDeepEqual(approvalCommandContextErrors(approvalCommandContext, approvedIncremental.snapshot), [], 'terminal approval command context must be stale')
+assert.notDeepEqual(
+  approvalCommandContextErrors(approvalCommandContext, approvedIncremental.snapshot),
+  [],
+  'terminal approval command context must be stale',
+)
 const approvedReplacement = structuredClone(approvedIncremental.snapshot)
 approvedReplacement.snapshotSequence = 43
 assert.deepEqual(approvalSnapshotErrors(approvedReplacement), [])
 const normalizeApprovalWatermark = snapshot => ({ ...snapshot, snapshotSequence: 0 })
-assert.deepEqual(normalizeApprovalWatermark(approvedIncremental.snapshot), normalizeApprovalWatermark(approvedReplacement), 'approval incremental and snapshot replacement must converge')
+assert.deepEqual(
+  normalizeApprovalWatermark(approvedIncremental.snapshot),
+  normalizeApprovalWatermark(approvedReplacement),
+  'approval incremental and snapshot replacement must converge',
+)
 const approvalSubscription = {
   $schema: schemas.get('agent-conversation-shell-subscription.v3.schema.json').$id,
   contract: 'cordisx.agent-conversation-shell-subscription/v3',
@@ -615,33 +792,103 @@ function expectInvalidApproval(mutation, mutate) {
   assert.equal(invalidApprovalMutations.has(mutation), true)
   const item = structuredClone(approvalVector.pending)
   mutate(item)
-  assert.notDeepEqual(approvalTransitionErrors(approvalVector.pending, item), [], `${mutation} approval update must fail closed`)
+  assert.notDeepEqual(
+    approvalTransitionErrors(approvalVector.pending, item),
+    [],
+    `${mutation} approval update must fail closed`,
+  )
 }
-expectInvalidApproval('cross-kind', item => { Object.assign(item, { kind: 'status', label: { key: 'status', fallback: 'Status' }, state: 'info', ariaLive: 'polite' }); delete item.participantId; delete item.memberId; delete item.runId; delete item.binding; delete item.turn; delete item.approvalId; delete item.approvalKind; delete item.rationale; delete item.actions })
-expectInvalidApproval('participant', item => { item.participantId = 'participant-owner' })
-expectInvalidApproval('member', item => { item.memberId = 'other-member' })
-expectInvalidApproval('run', item => { item.runId = 'other-run' })
-expectInvalidApproval('binding-id', item => { item.binding.bindingId = 'other-binding' })
-expectInvalidApproval('binding-generation', item => { item.binding.generation += 1 })
-expectInvalidApproval('turn', item => { item.turn = 'other-turn' })
-expectInvalidApproval('approval-id', item => { item.approvalId = 'other-approval' })
-expectInvalidApproval('approval-kind', item => { item.approvalKind = 'file-change' })
-expectInvalidApproval('timeline-order', item => { item.sequence += 1 })
-expectInvalidApproval('duplicate-decision', item => { item.actions[1].decision = 'approve' })
-expectInvalidApproval('terminal-actions', item => { item.state = 'approved' })
-expectInvalidApproval('failed-without-diagnostic', item => { item.state = 'failed'; item.actions = [] })
-expectInvalidApproval('callback', item => { item.actions[0].command.callback = 'approve' })
-expectInvalidApproval('dom', item => { item.dom = '#approval' })
-expectInvalidApproval('html', item => { item.html = '<button>Approve</button>' })
-expectInvalidApproval('raw-task', item => { item.task = 'task-private' })
+expectInvalidApproval('cross-kind', item => {
+  Object.assign(item, {
+    kind: 'status',
+    label: { key: 'status', fallback: 'Status' },
+    state: 'info',
+    ariaLive: 'polite',
+  })
+  delete item.participantId
+  delete item.memberId
+  delete item.runId
+  delete item.binding
+  delete item.turn
+  delete item.approvalId
+  delete item.approvalKind
+  delete item.rationale
+  delete item.actions
+})
+expectInvalidApproval('participant', item => {
+  item.participantId = 'participant-owner'
+})
+expectInvalidApproval('member', item => {
+  item.memberId = 'other-member'
+})
+expectInvalidApproval('run', item => {
+  item.runId = 'other-run'
+})
+expectInvalidApproval('binding-id', item => {
+  item.binding.bindingId = 'other-binding'
+})
+expectInvalidApproval('binding-generation', item => {
+  item.binding.generation += 1
+})
+expectInvalidApproval('turn', item => {
+  item.turn = 'other-turn'
+})
+expectInvalidApproval('approval-id', item => {
+  item.approvalId = 'other-approval'
+})
+expectInvalidApproval('approval-kind', item => {
+  item.approvalKind = 'file-change'
+})
+expectInvalidApproval('timeline-order', item => {
+  item.sequence += 1
+})
+expectInvalidApproval('duplicate-decision', item => {
+  item.actions[1].decision = 'approve'
+})
+expectInvalidApproval('terminal-actions', item => {
+  item.state = 'approved'
+})
+expectInvalidApproval('failed-without-diagnostic', item => {
+  item.state = 'failed'
+  item.actions = []
+})
+expectInvalidApproval('callback', item => {
+  item.actions[0].command.callback = 'approve'
+})
+expectInvalidApproval('dom', item => {
+  item.dom = '#approval'
+})
+expectInvalidApproval('html', item => {
+  item.html = '<button>Approve</button>'
+})
+expectInvalidApproval('raw-task', item => {
+  item.task = 'task-private'
+})
 
 const unknownApproval = structuredClone(approvalVector.pending)
 unknownApproval.itemId = 'unknown-approval-item'
-assert.notDeepEqual(applyApprovalUpdate(approvalBase, { kind: 'item-updated', sequence: 42, item: unknownApproval }).errors, [])
-const staleTerminal = applyApprovalUpdate(approvedIncremental.snapshot, { kind: 'item-updated', sequence: 43, item: terminalApproval('denied') })
+assert.notDeepEqual(
+  applyApprovalUpdate(approvalBase, { kind: 'item-updated', sequence: 42, item: unknownApproval }).errors,
+  [],
+)
+const staleTerminal = applyApprovalUpdate(approvedIncremental.snapshot, {
+  kind: 'item-updated',
+  sequence: 43,
+  item: terminalApproval('denied'),
+})
 assert.notDeepEqual(staleTerminal.errors, [], 'terminal approval update must fail closed')
-for (const sequence of [approvalBase.snapshotSequence, approvalBase.snapshotSequence - 1, approvalBase.snapshotSequence + 2]) {
-  const outcome = applyApprovalUpdate(approvalBase, { kind: 'item-updated', sequence, item: terminalApproval('approved') })
+for (
+  const sequence of [
+    approvalBase.snapshotSequence,
+    approvalBase.snapshotSequence - 1,
+    approvalBase.snapshotSequence + 2,
+  ]
+) {
+  const outcome = applyApprovalUpdate(approvalBase, {
+    kind: 'item-updated',
+    sequence,
+    item: terminalApproval('approved'),
+  })
   assert.notDeepEqual(outcome.errors, [], 'stale or skipped approval update sequence must fail closed')
   assert.deepEqual(outcome.snapshot, approvalBase)
 }
@@ -655,7 +902,11 @@ const messageVector = await vector('valid/message-semantics.json')
 const messageBase = structuredClone(scenario.initialSnapshot)
 const initialSelfIntroduction = structuredClone(messageVector.selfIntroduction)
 initialSelfIntroduction.deliveryState = 'sent'
-messageBase.items.push(structuredClone(messageVector.conversation), initialSelfIntroduction, structuredClone(messageVector.acknowledgement))
+messageBase.items.push(
+  structuredClone(messageVector.conversation),
+  initialSelfIntroduction,
+  structuredClone(messageVector.acknowledgement),
+)
 assert.deepEqual(messageSnapshotErrors(messageBase), [])
 assert.deepEqual(messageVector.selfIntroduction.semantic, {
   purpose: 'member-self-introduction',
@@ -676,17 +927,28 @@ assert.equal(messageVector.selfIntroduction.body[0].kind, 'text')
 // A self-introduction is updated as the same ordinary message bubble. Its
 // durable operation, Agent/Run association, identity, and timeline position
 // cannot be rewritten while delivery state converges.
-const selfIntroductionUpdate = { kind: 'item-updated', sequence: 42, item: structuredClone(messageVector.selfIntroduction) }
+const selfIntroductionUpdate = {
+  kind: 'item-updated',
+  sequence: 42,
+  item: structuredClone(messageVector.selfIntroduction),
+}
 const selfIntroductionIncremental = applyMessageUpdate(messageBase, selfIntroductionUpdate)
 assert.deepEqual(selfIntroductionIncremental.errors, [])
 assert.equal(selfIntroductionIncremental.snapshot.items.length, messageBase.items.length)
-assert.deepEqual(selfIntroductionIncremental.snapshot.items.map(item => item.itemId), messageBase.items.map(item => item.itemId))
+assert.deepEqual(
+  selfIntroductionIncremental.snapshot.items.map(item => item.itemId),
+  messageBase.items.map(item => item.itemId),
+)
 assert.equal(selfIntroductionIncremental.snapshot.items[2].deliveryState, 'delivered')
 const selfIntroductionReplacement = structuredClone(selfIntroductionIncremental.snapshot)
 selfIntroductionReplacement.snapshotSequence = 43
 assert.deepEqual(messageSnapshotErrors(selfIntroductionReplacement), [])
 const normalizeMessageWatermark = snapshot => ({ ...snapshot, snapshotSequence: 0 })
-assert.deepEqual(normalizeMessageWatermark(selfIntroductionIncremental.snapshot), normalizeMessageWatermark(selfIntroductionReplacement), 'self-introduction incremental and snapshot replacement must converge')
+assert.deepEqual(
+  normalizeMessageWatermark(selfIntroductionIncremental.snapshot),
+  normalizeMessageWatermark(selfIntroductionReplacement),
+  'self-introduction incremental and snapshot replacement must converge',
+)
 const messageSubscription = {
   $schema: schemas.get('agent-conversation-shell-subscription.v3.schema.json').$id,
   contract: 'cordisx.agent-conversation-shell-subscription/v3',
@@ -710,55 +972,138 @@ const messagePage = {
 }
 assert.equal(validatePageSchema(messagePage), true, ajv.errorsText(validatePageSchema.errors))
 
-for (const [label, mutate] of [
-  ['itemId', item => { item.itemId = 'other-item' }],
-  ['kind', item => { Object.assign(item, { kind: 'status', label: { key: 'status', fallback: 'Status' }, state: 'info' }); delete item.messageId; delete item.source; delete item.semantic; delete item.author; delete item.body; delete item.reactions; delete item.timestamp; delete item.deliveryState; delete item.runState; delete item.actions }],
-  ['timeline', item => { item.sequence += 1 }],
-  ['messageId', item => { item.messageId = 'other-message' }],
-  ['source', item => { item.source = 'chatroom-acknowledgement' }],
-  ['author', item => { item.author.participantId = 'participant-owner'; item.author.role = 'human'; delete item.author.agentIdentity }],
-  ['participant', item => { item.semantic.participantId = 'participant-owner' }],
-  ['member', item => { item.semantic.memberId = 'other-member' }],
-  ['run', item => { item.semantic.runId = 'other-run' }],
-  ['binding-id', item => { item.semantic.binding.bindingId = 'other-binding' }],
-  ['binding-generation', item => { item.semantic.binding.generation += 1 }],
-  ['turn', item => { item.semantic.turn = 'other-turn' }],
-  ['operation', item => { item.semantic.causation.operationId = 'other-operation' }],
-  ['purpose', item => { item.semantic = { purpose: 'conversation' } }],
-]) {
+for (
+  const [label, mutate] of [
+    ['itemId', item => {
+      item.itemId = 'other-item'
+    }],
+    ['kind', item => {
+      Object.assign(item, { kind: 'status', label: { key: 'status', fallback: 'Status' }, state: 'info' })
+      delete item.messageId
+      delete item.source
+      delete item.semantic
+      delete item.author
+      delete item.body
+      delete item.reactions
+      delete item.timestamp
+      delete item.deliveryState
+      delete item.runState
+      delete item.actions
+    }],
+    ['timeline', item => {
+      item.sequence += 1
+    }],
+    ['messageId', item => {
+      item.messageId = 'other-message'
+    }],
+    ['source', item => {
+      item.source = 'chatroom-acknowledgement'
+    }],
+    ['author', item => {
+      item.author.participantId = 'participant-owner'
+      item.author.role = 'human'
+      delete item.author.agentIdentity
+    }],
+    ['participant', item => {
+      item.semantic.participantId = 'participant-owner'
+    }],
+    ['member', item => {
+      item.semantic.memberId = 'other-member'
+    }],
+    ['run', item => {
+      item.semantic.runId = 'other-run'
+    }],
+    ['binding-id', item => {
+      item.semantic.binding.bindingId = 'other-binding'
+    }],
+    ['binding-generation', item => {
+      item.semantic.binding.generation += 1
+    }],
+    ['turn', item => {
+      item.semantic.turn = 'other-turn'
+    }],
+    ['operation', item => {
+      item.semantic.causation.operationId = 'other-operation'
+    }],
+    ['purpose', item => {
+      item.semantic = { purpose: 'conversation' }
+    }],
+  ]
+) {
   const invalid = structuredClone(messageVector.selfIntroduction)
   mutate(invalid)
-  assert.notDeepEqual(messageTransitionErrors(initialSelfIntroduction, invalid), [], `${label} self-introduction update must fail closed`)
+  assert.notDeepEqual(
+    messageTransitionErrors(initialSelfIntroduction, invalid),
+    [],
+    `${label} self-introduction update must fail closed`,
+  )
 }
 
 const unknownSelfIntroduction = structuredClone(messageVector.selfIntroduction)
 unknownSelfIntroduction.itemId = 'unknown-self-introduction'
-assert.notDeepEqual(applyMessageUpdate(messageBase, { kind: 'item-updated', sequence: 42, item: unknownSelfIntroduction }).errors, [])
-for (const sequence of [messageBase.snapshotSequence, messageBase.snapshotSequence - 1, messageBase.snapshotSequence + 2]) {
-  const outcome = applyMessageUpdate(messageBase, { kind: 'item-updated', sequence, item: structuredClone(messageVector.selfIntroduction) })
+assert.notDeepEqual(
+  applyMessageUpdate(messageBase, { kind: 'item-updated', sequence: 42, item: unknownSelfIntroduction }).errors,
+  [],
+)
+for (
+  const sequence of [messageBase.snapshotSequence, messageBase.snapshotSequence - 1, messageBase.snapshotSequence + 2]
+) {
+  const outcome = applyMessageUpdate(messageBase, {
+    kind: 'item-updated',
+    sequence,
+    item: structuredClone(messageVector.selfIntroduction),
+  })
   assert.notDeepEqual(outcome.errors, [], 'stale or skipped self-introduction update sequence must fail closed')
   assert.deepEqual(outcome.snapshot, messageBase)
 }
 
-for (const mutate of [
-  item => { item.callback = 'render' },
-  item => { item.dom = '#message' },
-  item => { item.html = '<article>introduction</article>' },
-  item => { item.task = 'task-private' },
-  item => { item.prompt = 'hidden provider prompt' },
-  item => { item.debug = 'self-introduction' },
-]) {
+for (
+  const mutate of [
+    item => {
+      item.callback = 'render'
+    },
+    item => {
+      item.dom = '#message'
+    },
+    item => {
+      item.html = '<article>introduction</article>'
+    },
+    item => {
+      item.task = 'task-private'
+    },
+    item => {
+      item.prompt = 'hidden provider prompt'
+    },
+    item => {
+      item.debug = 'self-introduction'
+    },
+  ]
+) {
   const invalid = structuredClone(messageVector.selfIntroduction)
   mutate(invalid)
-  assert.equal(validateItemSchema(invalid), false, 'self-introduction message must reject callback/DOM/HTML/raw task/provider-private fields')
+  assert.equal(
+    validateItemSchema(invalid),
+    false,
+    'self-introduction message must reject callback/DOM/HTML/raw task/provider-private fields',
+  )
 }
 
-for (const mutate of [
-  snapshot => { snapshot.items[2].semantic.participantId = 'participant-owner' },
-  snapshot => { snapshot.items[2].semantic.memberId = 'other-member' },
-  snapshot => { snapshot.items[2].semantic.runId = 'other-run' },
-  snapshot => { snapshot.items[2].author.displayName.fallback = 'Guessed author' },
-]) {
+for (
+  const mutate of [
+    snapshot => {
+      snapshot.items[2].semantic.participantId = 'participant-owner'
+    },
+    snapshot => {
+      snapshot.items[2].semantic.memberId = 'other-member'
+    },
+    snapshot => {
+      snapshot.items[2].semantic.runId = 'other-run'
+    },
+    snapshot => {
+      snapshot.items[2].author.displayName.fallback = 'Guessed author'
+    },
+  ]
+) {
   const invalid = structuredClone(messageBase)
   mutate(invalid)
   assert.notDeepEqual(messageSnapshotErrors(invalid), [], 'self-introduction snapshot association must fail closed')
@@ -768,7 +1113,10 @@ const visualVector = await vector('valid/room-collection-leading-visual.json')
 assert.deepEqual(visualVector.countVectors.map(value => value.participants.length), [0, 1, 2, 3, 5])
 for (const visual of visualVector.countVectors) {
   assert.deepEqual(leadingVisualErrors(visual), [])
-  assert.deepEqual(visual.participants.map(value => value.participantId), Array.from({ length: visual.participants.length }, (_, index) => `participant-${index + 1}`))
+  assert.deepEqual(
+    visual.participants.map(value => value.participantId),
+    Array.from({ length: visual.participants.length }, (_, index) => `participant-${index + 1}`),
+  )
 }
 assert.deepEqual(collectionErrors(visualVector.initialCollection), [])
 assert.deepEqual(collectionErrors(visualVector.visualCollection), [])
@@ -780,8 +1128,14 @@ assert.deepEqual(visualReplacement.errors, [])
 // Adding visuals does not rewrite generic Host-owned row identity, label, route, params, or order.
 const withoutVisual = collection => collection.rows.map(({ leadingVisual: ignored, ...row }) => row)
 assert.deepEqual(withoutVisual(visualReplacement.collection), withoutVisual(visualVector.initialCollection))
-assert.deepEqual(visualReplacement.collection.rows.map(row => row.rowId), visualVector.initialCollection.rows.map(row => row.rowId))
-assert.deepEqual(visualReplacement.collection.rows.at(-1).leadingVisual, { kind: 'semantic-icon', icon: 'host:action.add' })
+assert.deepEqual(
+  visualReplacement.collection.rows.map(row => row.rowId),
+  visualVector.initialCollection.rows.map(row => row.rowId),
+)
+assert.deepEqual(visualReplacement.collection.rows.at(-1).leadingVisual, {
+  kind: 'semantic-icon',
+  icon: 'host:action.add',
+})
 
 // Each Room row resolves only its own embedded data, independent of ambient selection.
 const alphaAtAlphaSelection = rowVisual(visualReplacement.collection, 'row-alpha')
@@ -823,41 +1177,93 @@ assert.equal(invalidWholeListOutcome.code, 'invalid-replacement')
 assert.deepEqual(collectionOwner.read(), beforeRejectedRevision)
 
 const validComposite = visualVector.countVectors[1]
-for (const mutate of [
-  visual => { visual.participants.push(structuredClone(visual.participants[0])) },
-  visual => { visual.participants = Array.from({ length: 65 }, (_, index) => ({ participantId: `participant-${index}`, avatar: { kind: 'asset', ref: `asset:avatar-${index}` } })) },
-  visual => { visual.participants[0].avatar = { kind: 'asset', ref: 'https://example.test/avatar.png' } },
-  visual => { visual.participants[0].avatar = { kind: 'asset', ref: 'file:/tmp/avatar.png' } },
-  visual => { visual.participants[0].avatar = { kind: 'asset', ref: 'data:image/png;base64,AAAA' } },
-  visual => { visual.participants[0].avatar = { kind: 'asset', ref: 'base64:AAAA' } },
-  visual => { visual.participants[0].avatar.url = 'https://example.test/avatar.png' },
-  visual => { visual.participants[0].avatar = { kind: 'remote', ref: 'asset:avatar-1' } },
-  visual => { visual.callback = 'render' },
-  visual => { visual.dom = '#avatar' },
-  visual => { visual.css = '.avatar{}' },
-  visual => { visual.currentSelection = 'room-count-1' },
-  visual => { visual.title = 'inferred title' },
-]) {
+for (
+  const mutate of [
+    visual => {
+      visual.participants.push(structuredClone(visual.participants[0]))
+    },
+    visual => {
+      visual.participants = Array.from(
+        { length: 65 },
+        (_, index) => ({
+          participantId: `participant-${index}`,
+          avatar: { kind: 'asset', ref: `asset:avatar-${index}` },
+        }),
+      )
+    },
+    visual => {
+      visual.participants[0].avatar = { kind: 'asset', ref: 'https://example.test/avatar.png' }
+    },
+    visual => {
+      visual.participants[0].avatar = { kind: 'asset', ref: 'file:/tmp/avatar.png' }
+    },
+    visual => {
+      visual.participants[0].avatar = { kind: 'asset', ref: 'data:image/png;base64,AAAA' }
+    },
+    visual => {
+      visual.participants[0].avatar = { kind: 'asset', ref: 'base64:AAAA' }
+    },
+    visual => {
+      visual.participants[0].avatar.url = 'https://example.test/avatar.png'
+    },
+    visual => {
+      visual.participants[0].avatar = { kind: 'remote', ref: 'asset:avatar-1' }
+    },
+    visual => {
+      visual.callback = 'render'
+    },
+    visual => {
+      visual.dom = '#avatar'
+    },
+    visual => {
+      visual.css = '.avatar{}'
+    },
+    visual => {
+      visual.currentSelection = 'room-count-1'
+    },
+    visual => {
+      visual.title = 'inferred title'
+    },
+  ]
+) {
   const invalid = structuredClone(validComposite)
   mutate(invalid)
   assert.notDeepEqual(leadingVisualErrors(invalid), [], 'unsafe or ambiguous leading visual must fail closed')
 }
 
-for (const mutate of [
-  collection => { collection.rows[0].leadingVisual.roomId = 'room-beta' },
-  collection => { collection.rows.at(-1).leadingVisual.icon = 'host:action.edit' },
-]) {
+for (
+  const mutate of [
+    collection => {
+      collection.rows[0].leadingVisual.roomId = 'room-beta'
+    },
+    collection => {
+      collection.rows.at(-1).leadingVisual.icon = 'host:action.edit'
+    },
+  ]
+) {
   const invalid = structuredClone(visualVector.visualCollection)
   mutate(invalid)
   assert.notDeepEqual(collectionErrors(invalid), [], 'row/visual association must fail closed')
 }
 
 // v2 has no settings or description seam and remains closed to v3 fields.
-const v2SnapshotSchema = JSON.parse(await readFile(path.join(root, 'schemas', 'agent-conversation-shell-snapshot.v2.schema.json'), 'utf8'))
-const v2CommonSchema = JSON.parse(await readFile(path.join(root, 'schemas', 'agent-conversation-shell-common.v2.schema.json'), 'utf8'))
+const v2SnapshotSchema = JSON.parse(
+  await readFile(path.join(root, 'schemas', 'agent-conversation-shell-snapshot.v2.schema.json'), 'utf8'),
+)
+const v2CommonSchema = JSON.parse(
+  await readFile(path.join(root, 'schemas', 'agent-conversation-shell-common.v2.schema.json'), 'utf8'),
+)
 const v2Ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(v2Ajv)
-for (const name of ['ui-common.v1.schema.json', 'agent-avatar.v1.schema.json', 'agent-loop-common.v1.schema.json', 'agent-loop-common.v2.schema.json', 'agent-loop-task-details-common.v2.schema.json']) v2Ajv.addSchema(schemas.get(name))
+for (
+  const name of [
+    'ui-common.v1.schema.json',
+    'agent-avatar.v1.schema.json',
+    'agent-loop-common.v1.schema.json',
+    'agent-loop-common.v2.schema.json',
+    'agent-loop-task-details-common.v2.schema.json',
+  ]
+) v2Ajv.addSchema(schemas.get(name))
 v2Ajv.addSchema(v2CommonSchema)
 v2Ajv.addSchema(v2SnapshotSchema)
 const validateV2Snapshot = v2Ajv.getSchema(v2SnapshotSchema.$id)
@@ -878,8 +1284,14 @@ migratedMessageWire.contract = 'cordisx.agent-conversation-shell-snapshot/v3'
 migratedMessageWire.schemaVersion = 3
 migratedMessageWire.items.find(item => item.kind === 'message').semantic = { purpose: 'conversation' }
 assert.deepEqual(messageSnapshotErrors(migratedMessageWire), [])
-assert.equal('semantic' in v2MessageWire.items.find(item => item.kind === 'message'), false, 'v2 source must remain byte-closed while v3 migration adds conversation purpose')
+assert.equal(
+  'semantic' in v2MessageWire.items.find(item => item.kind === 'message'),
+  false,
+  'v2 source must remain byte-closed while v3 migration adds conversation purpose',
+)
 v2Wire.selection.description = { state: 'empty' }
 assert.equal(validateV2Snapshot(v2Wire), false, 'Shell v2 must reject the v3 description field')
 
-console.log('Agent conversation shell v3 conformance: Room settings, approvals, message semantics/self-introduction, atomic convergence, v2 message migration, and collection visual checks passed')
+console.log(
+  'Agent conversation shell v3 conformance: Room settings, approvals, message semantics/self-introduction, atomic convergence, v2 message migration, and collection visual checks passed',
+)

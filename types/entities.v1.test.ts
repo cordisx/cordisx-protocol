@@ -51,12 +51,23 @@ registry.save(save)
 registry.subscribe(0).then(result => {
   if (result.status === 'subscribed') {
     result.subscription.closed.then(closed => closed.status satisfies 'closed')
-    result.subscription.unsubscribe().then(closed => closed.code satisfies 'unsubscribed' | 'registry-disposed' | 'plugin-generation-replaced' | 'permission-revoked' | 'connection-replaced' | 'observer-failed')
+    result.subscription.unsubscribe().then(closed =>
+      closed.code satisfies
+        | 'unsubscribed'
+        | 'registry-disposed'
+        | 'plugin-generation-replaced'
+        | 'permission-revoked'
+        | 'connection-replaced'
+        | 'observer-failed'
+    )
   }
 })
 
 declare const agents: EntityBackedAgentRegistry
-const entityCreate = { definition: { agentId: entity.agentId, revision: digest }, mutationId: 'create-reviewer-1' } satisfies EntityAgentCreateOptions
+const entityCreate = {
+  definition: { agentId: entity.agentId, revision: digest },
+  mutationId: 'create-reviewer-1',
+} satisfies EntityAgentCreateOptions
 agents.create(entityCreate).then(result => {
   if (result.status === 'accepted') {
     result.definitionResolution.digest satisfies `sha256:${string}`
@@ -76,11 +87,19 @@ const inline: AgentCreateOptions = {
   setup: {
     definition: { agentId: 'inline', revision: '1' },
     definitions: [{
-      $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json',
+      $schema:
+        'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-definition.v1.schema.json',
       contract: 'cordisx.agent-definition/v1',
       schemaVersion: 1,
       identity: { agentId: 'inline', revision: '1' },
-      inherit: { promptSections: 'append', rules: 'append', skills: 'append', tools: 'merge', mcpServers: 'merge', runtimeDefaults: 'merge' },
+      inherit: {
+        promptSections: 'append',
+        rules: 'append',
+        skills: 'append',
+        tools: 'merge',
+        mcpServers: 'merge',
+        runtimeDefaults: 'merge',
+      },
     }],
   },
 }
@@ -90,10 +109,19 @@ agents.create(inline).then(result => result satisfies Awaited<ReturnType<AgentRe
 const selfReferentialIdentity: EntityFile = { ...entity, identity: { agentId: 'reviewer', revision: digest } }
 // @ts-expect-error editable entity files never contain a computed revision
 const selfReferentialRevision: EntityFile = { ...entity, revision: digest }
-// @ts-expect-error registry-backed create and inline setup are mutually exclusive
-const mixedAcquire: EntityAgentCreateOptions = { definition: { agentId: 'reviewer', revision: digest }, setup: inline.setup }
+const mixedAcquire: EntityAgentCreateOptions = {
+  definition: { agentId: 'reviewer', revision: digest },
+  // @ts-expect-error registry-backed create and inline setup are mutually exclusive
+  setup: inline.setup,
+}
 // @ts-expect-error entity-backed resume is explicit and cannot capture a legacy no-setup resume
-agents.resume({ sessionId: 'session-reviewer-a', definition: { agentId: 'reviewer', revision: digest } } satisfies Omit<import('./agents.v1.js').AgentResumeOptions, 'setup'>)
+agents.resume(
+  // @ts-expect-error legacy no-setup resume options cannot carry an entity definition
+  { sessionId: 'session-reviewer-a', definition: { agentId: 'reviewer', revision: digest } } satisfies Omit<
+    import('./agents.v1.js').AgentResumeOptions,
+    'setup'
+  >,
+)
 // @ts-expect-error public Registry methods do not accept an arbitrary root/path
 registry.get({ agentId: 'reviewer', revision: digest }, '/tmp/entities')
 declare const acquire: EntityAgentAcquireResult

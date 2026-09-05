@@ -35,6 +35,9 @@ declarations.declare({ ...declaration, target }).then(result => {
   }
 })
 
-// @ts-expect-error a Room-route declaration cannot claim an arbitrary route parameter
-const invalidTarget = { ...target, route: { ...target.route, param: 'sessionId' } } satisfies AgentAdmissionBootstrapRouteTarget
+const invalidTarget = {
+  ...target,
+  // @ts-expect-error a Room-route declaration cannot claim an arbitrary route parameter
+  route: { ...target.route, param: 'sessionId' },
+} satisfies AgentAdmissionBootstrapRouteTarget
 void invalidTarget

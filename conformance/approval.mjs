@@ -55,7 +55,10 @@ export function validateApprovalIdentity(question, decision) {
   const issues = []
   if (question.agentId !== question.sessionId) issues.push('question AgentId must equal SessionId')
   if (decision.agentId !== decision.sessionId) issues.push('decision AgentId must equal SessionId')
-  if (question.id !== decision.id || question.agentId !== decision.agentId || question.sessionId !== decision.sessionId || question.agentGeneration !== decision.agentGeneration) {
+  if (
+    question.id !== decision.id || question.agentId !== decision.agentId || question.sessionId !== decision.sessionId
+    || question.agentGeneration !== decision.agentGeneration
+  ) {
     issues.push('decision must match the exact question identity')
   }
   return issues
@@ -63,11 +66,26 @@ export function validateApprovalIdentity(question, decision) {
 assert.deepEqual(validateApprovalIdentity(question, decision), [])
 assert.ok(validateApprovalIdentity(question, { ...decision, sessionId: 'other-session' }).length > 0)
 
-const eventSchema = 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/session-event.v1.schema.json'
-const event = (seq, type, data) => ({ $schema: eventSchema, contract: 'cordisx.session-event/v1', schemaVersion: 1, sessionId: 'session-1', seq, time: 1000 + seq, type, data })
+const eventSchema =
+  'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/session-event.v1.schema.json'
+const event = (seq, type, data) => ({
+  $schema: eventSchema,
+  contract: 'cordisx.session-event/v1',
+  schemaVersion: 1,
+  sessionId: 'session-1',
+  seq,
+  time: 1000 + seq,
+  type,
+  data,
+})
 const paired = [
   event(0, 'turn/start', { turn: 1 }),
-  event(1, 'approval/asked', { id: question.id, toolName: question.toolName, callId: question.callId, reason: question.reason }),
+  event(1, 'approval/asked', {
+    id: question.id,
+    toolName: question.toolName,
+    callId: question.callId,
+    reason: question.reason,
+  }),
   event(2, 'approval/decided', { id: decision.id, outcome: decision.outcome }),
   event(3, 'turn/end', { turn: 1, reason: { kind: 'completed' } }),
 ]

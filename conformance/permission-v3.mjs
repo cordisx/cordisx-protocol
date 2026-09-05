@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -18,13 +18,18 @@ addFormats(ajv)
 for (const schema of schemas.values()) ajv.addSchema(schema)
 
 const ids = Object.freeze({
-  catalog: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v2.schema.json',
-  decision: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v3.schema.json',
+  catalog:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-capability-catalog.v2.schema.json',
+  decision:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v3.schema.json',
   manifest: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v4.schema.json',
-  plan: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v3.schema.json',
+  plan:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v3.schema.json',
   policy: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-policy.v3.schema.json',
 })
-function digest(value) { return `sha256:${createHash('sha256').update(JSON.stringify(value)).digest('hex')}` }
+function digest(value) {
+  return `sha256:${createHash('sha256').update(JSON.stringify(value)).digest('hex')}`
+}
 
 function errors(value) {
   const validate = ajv.getSchema(value?.$schema)
@@ -63,12 +68,23 @@ function expectInvalid(value, message) {
   expect(errors(value).length > 0, message)
 }
 
-const catalogV1 = JSON.parse(await readFile(path.join(root, 'test-vectors/platform/permissions-v2/valid/catalog.json'), 'utf8'))
+const catalogV1 = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/platform/permissions-v2/valid/catalog.json'), 'utf8'),
+)
 const presentation = Object.freeze({
   name: { key: 'ui.extension-points.render.name', fallback: 'Render controlled interface contributions' },
-  description: { key: 'ui.extension-points.render.description', fallback: 'Render structured contributions at allowed Host extension points.' },
-  risk: { key: 'ui.extension-points.render.risk', fallback: 'The contribution changes visible Host interface content.' },
-  limitation: { key: 'ui.extension-points.render.limitation', fallback: 'Raw DOM selectors, nodes, scripts, styles, and bridges remain unavailable.' },
+  description: {
+    key: 'ui.extension-points.render.description',
+    fallback: 'Render structured contributions at allowed Host extension points.',
+  },
+  risk: {
+    key: 'ui.extension-points.render.risk',
+    fallback: 'The contribution changes visible Host interface content.',
+  },
+  limitation: {
+    key: 'ui.extension-points.render.limitation',
+    fallback: 'Raw DOM selectors, nodes, scripts, styles, and bridges remain unavailable.',
+  },
 })
 const catalog = {
   $schema: ids.catalog,
@@ -94,8 +110,15 @@ const catalog = {
   ],
 }
 expectValid(catalog, 'v3 catalog must be schema-valid')
-expect(catalog.entries.length === 23, 'v3 catalog must retain 22 non-DOM entries and add exactly one controlled DOM entry')
-expect(catalog.entries.filter(entry => entry.certifiedImplicitApproval).map(entry => entry.capability).join(',') === 'ui.extension-points.render', 'only controlled DOM rendering may be certification-eligible')
+expect(
+  catalog.entries.length === 23,
+  'v3 catalog must retain 22 non-DOM entries and add exactly one controlled DOM entry',
+)
+expect(
+  catalog.entries.filter(entry => entry.certifiedImplicitApproval).map(entry => entry.capability).join(',')
+    === 'ui.extension-points.render',
+  'only controlled DOM rendering may be certification-eligible',
+)
 
 const identity = Object.freeze({ source: 'https://plugins.example.test/example-plugin', pluginId: 'example-plugin' })
 const artifact = Object.freeze({ ...identity, version: '1.2.3', integrity: `sha256:${'1'.repeat(64)}` })
@@ -112,7 +135,8 @@ const certificationPayload = Object.freeze({
   },
 })
 const certification = Object.freeze({
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v1.schema.json',
   schemaVersion: 1,
   kind: 'cordisx-certified-permission-eligibility',
   status: 'active',
@@ -120,7 +144,12 @@ const certification = Object.freeze({
   fingerprint: digest(certificationPayload),
   revision: certificationPayload.feed.generatedAt,
 })
-const binding = Object.freeze({ operationId: 'render-request-1', runtimeGeneration: 'runtime-9', moduleGeneration: 'module-4', requestId: 'render-request-1' })
+const binding = Object.freeze({
+  operationId: 'render-request-1',
+  runtimeGeneration: 'runtime-9',
+  moduleGeneration: 'module-4',
+  requestId: 'render-request-1',
+})
 const domDeclaration = Object.freeze({
   capability: 'ui.extension-points.render',
   required: false,
@@ -151,7 +180,10 @@ const certifiedPlan = Object.freeze({
   declarations: [domDeclaration],
 })
 expectValid(certifiedPlan, 'exact Certified DOM plan must be valid')
-expectInvalid({ ...certifiedPlan, identity: { ...identity, pluginId: 'other-plugin' } }, 'certification projection must bind the exact plan plugin identity')
+expectInvalid(
+  { ...certifiedPlan, identity: { ...identity, pluginId: 'other-plugin' } },
+  'certification projection must bind the exact plan plugin identity',
+)
 
 const explicitPlan = {
   ...certifiedPlan,
@@ -182,7 +214,10 @@ const explicitDecision = Object.freeze({
   }],
 })
 expectValid(explicitDecision, 'explicit DOM decision must be valid')
-expectInvalid({ ...explicitDecision, origin: 'certified-implicit', certification }, 'a serialized decision must not forge certified implicit authority')
+expectInvalid(
+  { ...explicitDecision, origin: 'certified-implicit', certification },
+  'a serialized decision must not forge certified implicit authority',
+)
 expectInvalid({ ...certifiedPlan, official: true }, 'Official must not enter a permission plan')
 
 const nonDomDeclaration = {
@@ -195,16 +230,31 @@ const nonDomDeclaration = {
   certifiedImplicitApproval: false,
 }
 delete nonDomDeclaration.certification
-expectValid({ ...explicitPlan, declarations: [nonDomDeclaration] }, 'Certified and Official non-DOM permissions must still use explicit review')
-expectInvalid({ ...certifiedPlan, declarations: [{ ...domDeclaration, capability: 'tasks.content.read', resourceClass: 'non-dom' }] }, 'non-DOM permissions must not use certified implicit mode')
-expectInvalid({ ...certifiedPlan, declarations: [{ ...domDeclaration, scope: { extensionPoints: ['workspace.toolbar.items'], providers: ['codex'] } }] }, 'controlled DOM scope must not gain non-DOM dimensions')
+expectValid(
+  { ...explicitPlan, declarations: [nonDomDeclaration] },
+  'Certified and Official non-DOM permissions must still use explicit review',
+)
+expectInvalid({
+  ...certifiedPlan,
+  declarations: [{ ...domDeclaration, capability: 'tasks.content.read', resourceClass: 'non-dom' }],
+}, 'non-DOM permissions must not use certified implicit mode')
+expectInvalid({
+  ...certifiedPlan,
+  declarations: [{ ...domDeclaration, scope: { extensionPoints: ['workspace.toolbar.items'], providers: ['codex'] } }],
+}, 'controlled DOM scope must not gain non-DOM dimensions')
 
-const manifest = JSON.parse(await readFile(path.join(root, 'test-vectors/platform/permissions-v2/valid/manifest-v4.json'), 'utf8'))
+const manifest = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/platform/permissions-v2/valid/manifest-v4.json'), 'utf8'),
+)
 expectInvalid({ ...manifest, official: true }, 'plugin manifest self-reported Official must be rejected')
 expectInvalid({ ...manifest, certified: true }, 'plugin manifest self-reported Certified must be rejected')
 expectInvalid({
   ...manifest,
-  capabilities: [...manifest.capabilities, { name: 'ui.extension-points.render', required: false, scope: { extensionPoints: ['workspace.toolbar.items'] } }],
+  capabilities: [...manifest.capabilities, {
+    name: 'ui.extension-points.render',
+    required: false,
+    scope: { extensionPoints: ['workspace.toolbar.items'] },
+  }],
 }, 'manifest v4 must not self-declare the runtime-only controlled DOM capability')
 
 function exactCertification(projection, subject, now) {
@@ -216,52 +266,111 @@ function exactCertification(projection, subject, now) {
     && Date.parse(projection.reviewedAt) <= now
     && now < Date.parse(projection.expiresAt)
 }
-function mode({ official: _official, projection, capability, policy = 'ask', subject = artifact, now = Date.parse('2026-08-30T12:00:00Z') }) {
+function mode(
+  {
+    official: _official,
+    projection,
+    capability,
+    policy = 'ask',
+    subject = artifact,
+    now = Date.parse('2026-08-30T12:00:00Z'),
+  },
+) {
   if (policy !== 'ask') return 'persistent-policy'
   const entry = catalog.entries.find(candidate => candidate.capability === capability)
   return entry?.resourceClass === 'dom-rendering'
-    && entry.certifiedImplicitApproval
-    && exactCertification(projection, subject, now)
+      && entry.certifiedImplicitApproval
+      && exactCertification(projection, subject, now)
     ? 'certified-implicit'
     : 'explicit-user'
 }
 
-const matrix = JSON.parse(await readFile(path.join(root, 'test-vectors/platform/permissions-v3/authorization-matrix.json'), 'utf8'))
+const matrix = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/platform/permissions-v3/authorization-matrix.json'), 'utf8'),
+)
 for (const state of matrix.trustStates) {
-  expect(mode({
-    official: state.official,
-    projection: state.certified ? certification : undefined,
-    capability: state.capability,
-  }) === state.expectedMode, `${state.label} authorization mode is incorrect`)
+  expect(
+    mode({
+      official: state.official,
+      projection: state.certified ? certification : undefined,
+      capability: state.capability,
+    }) === state.expectedMode,
+    `${state.label} authorization mode is incorrect`,
+  )
 }
-expect(mode({ official: false, projection: certification, capability: 'ui.extension-points.render', policy: 'deny-persistent' }) === 'persistent-policy', 'explicit persistent denial must win over certification')
-expect(mode({ official: true, projection: undefined, capability: 'ui.extension-points.render' }) === 'explicit-user', 'Official-only must never bypass DOM review')
-expect(mode({ official: false, projection: { ...certification, integrity: `sha256:${'4'.repeat(64)}` }, capability: 'ui.extension-points.render' }) === 'explicit-user', 'artifact digest mismatch must invalidate certification')
-expect(mode({ official: false, projection: { ...certification, source: 'https://plugins.example.test/other' }, capability: 'ui.extension-points.render' }) === 'explicit-user', 'source mismatch or revocation must invalidate certification')
-expect(mode({ official: false, projection: { ...certification, expiresAt: '2026-08-30T00:00:00Z' }, capability: 'ui.extension-points.render' }) === 'explicit-user', 'expired certification must invalidate implicit approval')
-expect(mode({ official: false, projection: undefined, capability: 'ui.extension-points.render' }) === 'explicit-user', 'missing or revoked certification must invalidate implicit approval')
+expect(
+  mode({
+    official: false,
+    projection: certification,
+    capability: 'ui.extension-points.render',
+    policy: 'deny-persistent',
+  }) === 'persistent-policy',
+  'explicit persistent denial must win over certification',
+)
+expect(
+  mode({ official: true, projection: undefined, capability: 'ui.extension-points.render' }) === 'explicit-user',
+  'Official-only must never bypass DOM review',
+)
+expect(
+  mode({
+    official: false,
+    projection: { ...certification, integrity: `sha256:${'4'.repeat(64)}` },
+    capability: 'ui.extension-points.render',
+  }) === 'explicit-user',
+  'artifact digest mismatch must invalidate certification',
+)
+expect(
+  mode({
+    official: false,
+    projection: { ...certification, source: 'https://plugins.example.test/other' },
+    capability: 'ui.extension-points.render',
+  }) === 'explicit-user',
+  'source mismatch or revocation must invalidate certification',
+)
+expect(
+  mode({
+    official: false,
+    projection: { ...certification, expiresAt: '2026-08-30T00:00:00Z' },
+    capability: 'ui.extension-points.render',
+  }) === 'explicit-user',
+  'expired certification must invalidate implicit approval',
+)
+expect(
+  mode({ official: false, projection: undefined, capability: 'ui.extension-points.render' }) === 'explicit-user',
+  'missing or revoked certification must invalidate implicit approval',
+)
 
 const lease = Object.freeze({
-  profileId: 'work', identity, capability: 'ui.extension-points.render', scope: domDeclaration.scope,
-  securityFingerprint: domDeclaration.securityFingerprint, runtimeGeneration: binding.runtimeGeneration,
-  moduleGeneration: binding.moduleGeneration, certificationFingerprint: certification.fingerprint,
+  profileId: 'work',
+  identity,
+  capability: 'ui.extension-points.render',
+  scope: domDeclaration.scope,
+  securityFingerprint: domDeclaration.securityFingerprint,
+  runtimeGeneration: binding.runtimeGeneration,
+  moduleGeneration: binding.moduleGeneration,
+  certificationFingerprint: certification.fingerprint,
   certificationRevision: certification.revision,
 })
 const validLease = candidate => digest(candidate) === digest(lease)
 expect(validLease({ ...lease }), 'exact certification lease must remain valid')
-for (const [label, candidate] of [
-  ['scope expansion', { ...lease, scope: { extensionPoints: ['workspace.toolbar.items', 'sidebar.footer.menu'] } }],
-  ['runtime generation replacement', { ...lease, runtimeGeneration: 'runtime-10' }],
-  ['module generation replacement', { ...lease, moduleGeneration: 'module-5' }],
-  ['certification revocation/replacement', { ...lease, certificationRevision: '2026-08-30T01:00:00Z' }],
-  ['certification fingerprint change', { ...lease, certificationFingerprint: `sha256:${'5'.repeat(64)}` }],
-]) expect(!validLease(candidate), `${label} must invalidate the exact lease`)
+for (
+  const [label, candidate] of [
+    ['scope expansion', { ...lease, scope: { extensionPoints: ['workspace.toolbar.items', 'sidebar.footer.menu'] } }],
+    ['runtime generation replacement', { ...lease, runtimeGeneration: 'runtime-10' }],
+    ['module generation replacement', { ...lease, moduleGeneration: 'module-5' }],
+    ['certification revocation/replacement', { ...lease, certificationRevision: '2026-08-30T01:00:00Z' }],
+    ['certification fingerprint change', { ...lease, certificationFingerprint: `sha256:${'5'.repeat(64)}` }],
+  ]
+) expect(!validLease(candidate), `${label} must invalidate the exact lease`)
 
 const policy = Object.freeze({
   $schema: ids.policy,
   schemaVersion: 3,
   key: {
-    profileId: 'work', identity, capability: 'ui.extension-points.render', scope: domDeclaration.scope,
+    profileId: 'work',
+    identity,
+    capability: 'ui.extension-points.render',
+    scope: domDeclaration.scope,
     securityFingerprint: domDeclaration.securityFingerprint,
   },
   policy: 'ask',
