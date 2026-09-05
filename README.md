@@ -19,6 +19,11 @@ runtime, and extension-point management
 contracts are indexed in `.agents/docs/README.md` and backed by schemas plus
 conformance vectors in this repository.
 
+Visuals v1 defines owner-local provider ids and a framework-neutral projection
+of detached, deeply immutable JSON data plus the effective light/dark theme.
+It participates in the existing plugin generation transaction and defines no
+second lifecycle or renderer wire format. See `.agents/docs/visuals/README.md`.
+
 The additive Manager Content v1/v2 contracts separate plugin-declared subroute
 and tab route references from the Host-owned renderer-safe header, breadcrumb,
 back, and history projection. V2 adds only an optional localized tab label so

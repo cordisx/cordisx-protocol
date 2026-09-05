@@ -1,0 +1,6 @@
+{
+  "case": "owner-isolation",
+  "owners": [
+    { "key": "alpha", "providerIds": ["same.badge", "same.badge"] }
+  ]
+}

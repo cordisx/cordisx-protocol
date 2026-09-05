@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/visual-projection.v1.schema.json",
+  "title": "CordisX Visual Projection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["data", "theme"],
+  "properties": {
+    "data": { "$ref": "visuals-common.v1.schema.json#/$defs/visualData" },
+    "theme": { "$ref": "visuals-common.v1.schema.json#/$defs/theme" }
+  }
+}

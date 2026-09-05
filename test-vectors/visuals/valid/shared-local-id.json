@@ -1,0 +1,7 @@
+{
+  "case": "owner-isolation",
+  "owners": [
+    { "key": "alpha", "providerIds": ["shared.badge"] },
+    { "key": "beta", "providerIds": ["shared.badge"] }
+  ]
+}

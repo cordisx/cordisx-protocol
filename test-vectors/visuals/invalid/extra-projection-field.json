@@ -1,0 +1,9 @@
+{
+  "case": "projection",
+  "providerId": "sample.badge",
+  "value": {
+    "theme": "light",
+    "data": { "label": "Sample" },
+    "callback": "not-data"
+  }
+}

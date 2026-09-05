@@ -1,0 +1,11 @@
+{
+  "case": "projection",
+  "providerId": "trend.chart",
+  "value": {
+    "theme": "dark",
+    "data": {
+      "series": [{ "key": "latency", "points": [12.5, 9, 10.25] }],
+      "range": { "min": 0, "max": 20 }
+    }
+  }
+}

@@ -202,3 +202,6 @@ invalidation. Bridge vectors reject unknown or cross-root access, widening,
 selectors, raw nodes/HTML, script, style/event handlers, and private bridges.
 Modify-only conformance additionally proves that an omitted node targets only
 the acquired canonical root without granting read access.
+Visuals v1 conformance validates the closed light/dark projection, owner-local
+provider-id grammar and isolation, detached deep immutability, and rejection of
+callable, cyclic, sparse, accessor-backed, non-finite, and non-plain data.
