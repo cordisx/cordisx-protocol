@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -47,8 +47,10 @@ function validatorErrors(validator) {
 function canonical(value) {
   if (value === null || typeof value !== 'object') return JSON.stringify(value)
   if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`
-  return `{${Object.entries(value).sort(([left], [right]) => left.localeCompare(right))
-    .map(([key, child]) => `${JSON.stringify(key)}:${canonical(child)}`).join(',')}}`
+  return `{${
+    Object.entries(value).sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, child]) => `${JSON.stringify(key)}:${canonical(child)}`).join(',')
+  }}`
 }
 
 function tenantKey(ref) {
@@ -102,16 +104,23 @@ function validateGrantContext(grant, context) {
   const issued = matching[0]
   if (issued.consumed === true) errors.push('launch authorization token was already consumed')
   const exactFields = [
-    'operationId', 'routeId', 'serviceGeneration', 'configurationRevision',
-    'source', 'target', 'authorization',
+    'operationId',
+    'routeId',
+    'serviceGeneration',
+    'configurationRevision',
+    'source',
+    'target',
+    'authorization',
   ]
   for (const field of exactFields) {
     if (canonical(issued[field]) !== canonical(grant[field])) {
       errors.push(`launch authorization ${field} does not match the Host-issued grant`)
     }
   }
-  if (!Number.isNaN(Date.parse(context.authorizedAt))
-    && Date.parse(grant.authorization.expiresAt) <= Date.parse(context.authorizedAt)) {
+  if (
+    !Number.isNaN(Date.parse(context.authorizedAt))
+    && Date.parse(grant.authorization.expiresAt) <= Date.parse(context.authorizedAt)
+  ) {
     errors.push('launch authorization is expired at Host authorization time')
   }
   return errors
@@ -153,12 +162,16 @@ export function validateLaunchAuthorization(grant, request, context) {
 export function validateDispatchResult(result) {
   const errors = []
   if (!validators.dispatch(result)) return validatorErrors(validators.dispatch)
-  if (result.session !== undefined && result.turn !== undefined
-    && sessionKey(result.session) !== sessionKey(result.turn.session)) {
+  if (
+    result.session !== undefined && result.turn !== undefined
+    && sessionKey(result.session) !== sessionKey(result.turn.session)
+  ) {
     errors.push('dispatch result turn session does not match result session')
   }
-  if (result.session !== undefined && result.lifecycle !== undefined
-    && sessionKey(result.session) !== sessionKey(result.lifecycle.session)) {
+  if (
+    result.session !== undefined && result.lifecycle !== undefined
+    && sessionKey(result.session) !== sessionKey(result.lifecycle.session)
+  ) {
     errors.push('dispatch result lifecycle cursor does not match result session')
   }
   return errors
@@ -232,8 +245,10 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/channel-task-ga
     console.error(`${path.relative(root, file)} should be invalid`)
     failures += 1
   }
-  if (Array.isArray(vector.expectedErrors)
-    && JSON.stringify([...errors].sort()) !== JSON.stringify([...vector.expectedErrors].sort())) {
+  if (
+    Array.isArray(vector.expectedErrors)
+    && JSON.stringify([...errors].sort()) !== JSON.stringify([...vector.expectedErrors].sort())
+  ) {
     console.error(`${path.relative(root, file)} errors differ from expectedErrors`, {
       expected: vector.expectedErrors,
       actual: errors,
@@ -259,19 +274,21 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/channel-task-ro
   }
 }
 
-const rendererSafeChannelSchemas = JSON.stringify(await Promise.all([
-  'channel-binding.v1.schema.json',
-  'channel-runtime-snapshot.v1.schema.json',
-  'channel-runtime-snapshot.v2.schema.json',
-  'channel-runtime-snapshot.v3.schema.json',
-  'channel-service-config-descriptor.v1.schema.json',
-  'channel-manager-request.v1.schema.json',
-  'channel-manager-request.v2.schema.json',
-  'channel-manager-result.v1.schema.json',
-  'channel-manager-result.v2.schema.json',
-  'channel-manager-log-page.v1.schema.json',
-  'channel-manager-log-page.v2.schema.json',
-].map(async name => JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')))))
+const rendererSafeChannelSchemas = JSON.stringify(
+  await Promise.all([
+    'channel-binding.v1.schema.json',
+    'channel-runtime-snapshot.v1.schema.json',
+    'channel-runtime-snapshot.v2.schema.json',
+    'channel-runtime-snapshot.v3.schema.json',
+    'channel-service-config-descriptor.v1.schema.json',
+    'channel-manager-request.v1.schema.json',
+    'channel-manager-request.v2.schema.json',
+    'channel-manager-result.v1.schema.json',
+    'channel-manager-result.v2.schema.json',
+    'channel-manager-log-page.v1.schema.json',
+    'channel-manager-log-page.v2.schema.json',
+  ].map(async name => JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')))),
+)
 const launcherPrivateSchemas = JSON.stringify([
   'channel-task-launch-request.v1.schema.json',
   'channel-task-launch-authorization.v1.schema.json',
@@ -287,7 +304,17 @@ if (!launcherPrivateSchemas.includes('cwd') || !launcherPrivateSchemas.includes(
   console.error('Launcher-private task schemas must retain resolved cwd and single-use grant authority')
   failures += 1
 }
-for (const forbidden of ['secretRef', 'secretValue', 'credentialValue', 'rawBody', 'rawEvent', 'rawBridge', 'electronBridge']) {
+for (
+  const forbidden of [
+    'secretRef',
+    'secretValue',
+    'credentialValue',
+    'rawBody',
+    'rawEvent',
+    'rawBridge',
+    'electronBridge',
+  ]
+) {
   if (launcherPrivateSchemas.includes(forbidden)) {
     console.error(`Launcher-private task schemas must not expose ${forbidden}`)
     failures += 1

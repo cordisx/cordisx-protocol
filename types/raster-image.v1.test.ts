@@ -1,7 +1,8 @@
 import type { RasterImageSnapshotV1 } from './raster-image.v1.js'
 
 const image = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/raster-image-snapshot.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/raster-image-snapshot.v1.schema.json',
   contract: 'cordisx.raster-image-snapshot/v1',
   schemaVersion: 1,
   mediaType: 'image/png',

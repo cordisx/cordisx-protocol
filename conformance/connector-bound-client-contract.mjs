@@ -19,7 +19,7 @@ const schemaFiles = [
   'connector-event-subscription.v1.schema.json',
   'connector-event-page.v1.schema.json',
   'connector-client-result.v1.schema.json',
-  'connector-bound-client-result.v1.schema.json'
+  'connector-bound-client-result.v1.schema.json',
 ]
 
 const ajv = new Ajv2020({ allErrors: true, strict: true })
@@ -46,13 +46,13 @@ function validatePage(value) {
 const registration = {
   connectorId: 'connector.example',
   registrationId: 'registration-1',
-  generation: 1
+  generation: 1,
 }
 
 const authorization = (capability, state = 'allowed') => ({
   capability,
   state,
-  code: state === 'allowed' ? 'allowed' : 'principal-unavailable'
+  code: state === 'allowed' ? 'allowed' : 'principal-unavailable',
 })
 
 const stopCommand = {
@@ -63,7 +63,7 @@ const stopCommand = {
   commandId: 'command-1',
   registration,
   conversation: 'conversation-1',
-  run: 'run-1'
+  run: 'run-1',
 }
 
 function deferred() {
@@ -82,7 +82,14 @@ function unavailableResult(type, callId) {
     type,
     callId,
     status: 'unavailable',
-    authorization: authorization({ discover: 'connector.discovery', execute: 'connector.command.execute', subscribe: 'connector.events.subscribe' }[type], 'unavailable')
+    authorization: authorization(
+      {
+        discover: 'connector.discovery',
+        execute: 'connector.command.execute',
+        subscribe: 'connector.events.subscribe',
+      }[type],
+      'unavailable',
+    ),
   }
 }
 
@@ -97,7 +104,7 @@ function event(sequence, type) {
     occurredAt: '2026-08-28T00:00:00.000Z',
     type,
     conversation: 'conversation-1',
-    ...(type === 'run.started' ? { run: 'run-1' } : {})
+    ...(type === 'run.started' ? { run: 'run-1' } : {}),
   }
 }
 
@@ -111,7 +118,7 @@ function page(subscription, afterSequence, phase, eventValue) {
     phase,
     events: [eventValue],
     nextAfterSequence: eventValue.sequence,
-    hasMore: false
+    hasMore: false,
   }
 }
 
@@ -126,11 +133,15 @@ function subscriptionVector(result, pages) {
       issuedAt: '2026-08-28T00:00:00.000Z',
       principal: { principalHandle: 'principal-1', pluginId: 'consumer.plugin', generation: 1 },
       userHandle: 'user-1',
-      authorizations: [{ authorizationId: 'authorization-1', capability: 'connector.events.subscribe', target: { kind: 'registration', registration } }]
+      authorizations: [{
+        authorizationId: 'authorization-1',
+        capability: 'connector.events.subscribe',
+        target: { kind: 'registration', registration },
+      }],
     },
     context: {
       decision: 'allowed',
-      registrations: [{ registration, state: 'active' }]
+      registrations: [{ registration, state: 'active' }],
     },
     call: {
       $schema: schema('connector-bound-client-call.v1.schema.json'),
@@ -139,10 +150,10 @@ function subscriptionVector(result, pages) {
       type: 'subscribe',
       callId: result.callId,
       registration,
-      afterSequence: -1
+      afterSequence: -1,
     },
     result,
-    pages
+    pages,
   }
 }
 
@@ -173,8 +184,12 @@ function fakeHostBoundClient({ ignoreCancellation = false, calls = { discover: 0
           contract: 'cordisx.connector-client-snapshot/v1',
           schemaVersion: 1,
           observedAt: '2026-08-28T00:00:00.000Z',
-          registrations: [{ registration, capabilities: ['conversation.open', 'events.receive'], availability: 'available' }]
-        }
+          registrations: [{
+            registration,
+            capabilities: ['conversation.open', 'events.receive'],
+            availability: 'available',
+          }],
+        },
       }
       validateResult(result)
       return result
@@ -192,7 +207,7 @@ function fakeHostBoundClient({ ignoreCancellation = false, calls = { discover: 0
         callId: 'execute-1',
         status: 'accepted',
         authorization: authorization('connector.command.execute'),
-        execution: { kind: 'run.stopped', binding: { registration, conversation: 'conversation-1', run: 'run-1' } }
+        execution: { kind: 'run.stopped', binding: { registration, conversation: 'conversation-1', run: 'run-1' } },
       }
       validateResult(result)
       return result
@@ -218,8 +233,8 @@ function fakeHostBoundClient({ ignoreCancellation = false, calls = { discover: 0
           subscriptionId: 'subscription-1',
           registration,
           afterSequence,
-          snapshotSequence: 0
-        }
+          snapshotSequence: 0,
+        },
       }
       validateResult(result)
 
@@ -231,7 +246,7 @@ function fakeHostBoundClient({ ignoreCancellation = false, calls = { discover: 0
       validatePage(firstPage)
       validatePage(secondPage)
 
-      const pages = (async function* () {
+      const pages = (async function*() {
         yield firstPage
         await gate.promise
         if (ignoreCancellation || (!record.stopped && !disposed)) yield secondPage
@@ -244,8 +259,8 @@ function fakeHostBoundClient({ ignoreCancellation = false, calls = { discover: 0
           pages,
           unsubscribe() {
             if (!ignoreCancellation) record.stopped = true
-          }
-        }
+          },
+        },
       }
     },
 
@@ -258,7 +273,7 @@ function fakeHostBoundClient({ ignoreCancellation = false, calls = { discover: 0
 
     releaseAll() {
       for (const record of records) record.gate.release()
-    }
+    },
   }
 }
 
@@ -274,7 +289,10 @@ const controlSecond = await controlIterator.next()
 assert.equal(controlSecond.done, false)
 assert.equal(controlSecond.value.nextAfterSequence, 1)
 assert.equal((await controlIterator.next()).done, true)
-assert.deepEqual(validateSubscription(subscriptionVector(controlSubscribe.result, [controlFirst.value, controlSecond.value])), [])
+assert.deepEqual(
+  validateSubscription(subscriptionVector(controlSubscribe.result, [controlFirst.value, controlSecond.value])),
+  [],
+)
 
 const unsubscribeClient = fakeHostBoundClient()
 const unsubscribeSubscribe = await unsubscribeClient.subscribe(registration, -1)
@@ -293,11 +311,19 @@ assert.equal(activeDiscover.status, 'accepted')
 validateResult(activeDiscover)
 const invalidActiveDiscover = structuredClone(activeDiscover)
 invalidActiveDiscover.snapshot.registrations[0].capabilities[1] = 'events.subscribe'
-assert.equal(validateResultSchema(invalidActiveDiscover), false, 'AJV must reject non-capability events.subscribe in an active discovery snapshot')
+assert.equal(
+  validateResultSchema(invalidActiveDiscover),
+  false,
+  'AJV must reject non-capability events.subscribe in an active discovery snapshot',
+)
 const activeExecute = await ownerClient.execute(stopCommand)
 assert.equal(activeExecute.status, 'accepted')
 validateResult(activeExecute)
-assert.deepEqual(ownerCalls, { discover: 1, execute: 1 }, 'pre-gate must exercise accepted discover and execute exactly once before dispose')
+assert.deepEqual(
+  ownerCalls,
+  { discover: 1, execute: 1 },
+  'pre-gate must exercise accepted discover and execute exactly once before dispose',
+)
 const ownerSubscribe = await ownerClient.subscribe(registration, -1)
 const ownerIterator = ownerSubscribe.handle.pages[Symbol.asyncIterator]()
 const ownerFirst = await ownerIterator.next()
@@ -307,11 +333,13 @@ ownerClient.releaseAll()
 assert.equal((await ownerIterator.next()).done, true)
 assert.deepEqual(validateSubscription(subscriptionVector(ownerSubscribe.result, [ownerFirst.value])), [])
 
-for (const result of [
-  await ownerClient.discover(),
-  await ownerClient.execute(stopCommand),
-  (await ownerClient.subscribe(registration, -1)).result
-]) {
+for (
+  const result of [
+    await ownerClient.discover(),
+    await ownerClient.execute(stopCommand),
+    (await ownerClient.subscribe(registration, -1)).result,
+  ]
+) {
   assert.equal(result.status, 'unavailable')
   validateResult(result)
 }
@@ -322,7 +350,11 @@ const unsubscribeMutantIterator = unsubscribeMutantSubscribe.handle.pages[Symbol
 assert.equal((await unsubscribeMutantIterator.next()).done, false)
 unsubscribeMutantSubscribe.handle.unsubscribe()
 unsubscribeMutant.releaseAll()
-assert.equal((await unsubscribeMutantIterator.next()).done, false, 'mutation self-check: unsubscribe no-op must leak page 2')
+assert.equal(
+  (await unsubscribeMutantIterator.next()).done,
+  false,
+  'mutation self-check: unsubscribe no-op must leak page 2',
+)
 
 const ownerMutant = fakeHostBoundClient({ ignoreCancellation: true })
 const ownerMutantSubscribe = await ownerMutant.subscribe(registration, -1)
@@ -330,6 +362,12 @@ const ownerMutantIterator = ownerMutantSubscribe.handle.pages[Symbol.asyncIterat
 assert.equal((await ownerMutantIterator.next()).done, false)
 ownerMutant.dispose()
 ownerMutant.releaseAll()
-assert.equal((await ownerMutantIterator.next()).done, false, 'mutation self-check: owner dispose no-op must leak page 2')
+assert.equal(
+  (await ownerMutantIterator.next()).done,
+  false,
+  'mutation self-check: owner dispose no-op must leak page 2',
+)
 
-console.log('Bound Connector fake Host/plugin consumer AJV, deferred lifecycle, and mutation pre-gate: all cases passed')
+console.log(
+  'Bound Connector fake Host/plugin consumer AJV, deferred lifecycle, and mutation pre-gate: all cases passed',
+)

@@ -15,7 +15,8 @@ const routeDerivedTab = {
 } satisfies ManagerContentNavigationTabV2
 
 const declaration = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v2.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v2.schema.json',
   schemaVersion: 2,
   id: 'record-manager',
   route: { id: 'record-manager' },

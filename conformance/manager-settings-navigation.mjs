@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -88,7 +88,10 @@ function conditionMatches(condition, context) {
 function canonicalSource(value) {
   try {
     const url = new URL(value)
-    if (!['file:', 'https:'].includes(url.protocol) || url.username !== '' || url.password !== '' || url.search !== '' || url.hash !== '') return undefined
+    if (
+      !['file:', 'https:'].includes(url.protocol) || url.username !== '' || url.password !== '' || url.search !== ''
+      || url.hash !== ''
+    ) return undefined
     if (url.protocol === 'file:' && url.host !== '') return undefined
     if (url.protocol === 'https:' && url.pathname !== '/') url.pathname = url.pathname.replace(/\/+$/, '')
     return url.href
@@ -114,19 +117,31 @@ function descriptorErrors(catalog) {
     const point = byId.get(id)
     if (point === undefined) errors.push(`catalog is missing ${id}`)
     else {
-      if (point.kind !== kind || point.payloadFamily !== family) errors.push(`${id} has an incompatible kind or payload family`)
-      if (point.stability !== 'stable' || point.availability !== 'available') errors.push(`${id} must be stable and available`)
+      if (point.kind !== kind || point.payloadFamily !== family) {
+        errors.push(`${id} has an incompatible kind or payload family`)
+      }
+      if (point.stability !== 'stable' || point.availability !== 'available') {
+        errors.push(`${id} must be stable and available`)
+      }
     }
   }
   const contentOutlet = byId.get(CONTENT_OUTLET)
   if (contentOutlet !== undefined) {
-    if (JSON.stringify(contentOutlet.pageChrome) !== JSON.stringify(['body-only'])) errors.push(`${CONTENT_OUTLET} must accept only body-only page chrome`)
-    if (contentOutlet.presentationGroup !== 'manager.settings' || contentOutlet.routePathFamily !== 'manager-settings') errors.push(`${CONTENT_OUTLET} has incompatible presentation routing`)
+    if (JSON.stringify(contentOutlet.pageChrome) !== JSON.stringify(['body-only'])) {
+      errors.push(`${CONTENT_OUTLET} must accept only body-only page chrome`)
+    }
+    if (
+      contentOutlet.presentationGroup !== 'manager.settings' || contentOutlet.routePathFamily !== 'manager-settings'
+    ) errors.push(`${CONTENT_OUTLET} has incompatible presentation routing`)
   }
   const managerOutlet = byId.get(MANAGER_OUTLET)
   if (managerOutlet !== undefined) {
-    if (JSON.stringify(managerOutlet.pageChrome) !== JSON.stringify(['standard'])) errors.push(`${MANAGER_OUTLET} must accept only standard page chrome`)
-    if (managerOutlet.presentationGroup !== 'manager' || managerOutlet.routePathFamily !== 'manager') errors.push(`${MANAGER_OUTLET} has incompatible presentation routing`)
+    if (JSON.stringify(managerOutlet.pageChrome) !== JSON.stringify(['standard'])) {
+      errors.push(`${MANAGER_OUTLET} must accept only standard page chrome`)
+    }
+    if (managerOutlet.presentationGroup !== 'manager' || managerOutlet.routePathFamily !== 'manager') {
+      errors.push(`${MANAGER_OUTLET} has incompatible presentation routing`)
+    }
   }
   return errors
 }
@@ -171,8 +186,9 @@ function lifecycleErrors(steps) {
       case 'reorder':
         break
       case 'activate':
-        if (!eligible.has(step.id)) errors.push(`lifecycle[${index}] cannot activate ineligible navigation item ${step.id}`)
-        else {
+        if (!eligible.has(step.id)) {
+          errors.push(`lifecycle[${index}] cannot activate ineligible navigation item ${step.id}`)
+        } else {
           cleanMounted(mounted)
           active = step.id
           mounted = step.id
@@ -203,8 +219,9 @@ function lifecycleErrors(steps) {
         else active = HOST_FALLBACK
         break
       case 'mount-throw':
-        if (!eligible.has(step.id)) errors.push(`lifecycle[${index}] cannot mount ineligible navigation item ${step.id}`)
-        else {
+        if (!eligible.has(step.id)) {
+          errors.push(`lifecycle[${index}] cannot mount ineligible navigation item ${step.id}`)
+        } else {
           active = step.id
           mounted = step.id
           cleanMounted(step.id)
@@ -214,9 +231,15 @@ function lifecycleErrors(steps) {
       default:
         errors.push(`lifecycle[${index}] has unknown action ${step?.action ?? '<missing>'}`)
     }
-    if (step?.expectActive !== active) errors.push(`lifecycle[${index}] expected active ${step?.expectActive}, received ${active}`)
+    if (step?.expectActive !== active) {
+      errors.push(`lifecycle[${index}] expected active ${step?.expectActive}, received ${active}`)
+    }
     if (JSON.stringify(step?.expectCleanup ?? []) !== JSON.stringify(cleanup)) {
-      errors.push(`lifecycle[${index}] expected cleanup ${JSON.stringify(step?.expectCleanup ?? [])}, received ${JSON.stringify(cleanup)}`)
+      errors.push(
+        `lifecycle[${index}] expected cleanup ${JSON.stringify(step?.expectCleanup ?? [])}, received ${
+          JSON.stringify(cleanup)
+        }`,
+      )
     }
     if (Object.hasOwn(step ?? {}, 'expectMounted') && step.expectMounted !== (mounted ?? null)) {
       errors.push(`lifecycle[${index}] expected mounted ${step.expectMounted}, received ${mounted ?? null}`)
@@ -230,12 +253,16 @@ export function validateManagerSettingsNavigationSuite(suite) {
   if (suite === null || typeof suite !== 'object' || Array.isArray(suite)) return ['suite must be an object']
   errors.push(...schemaErrors(validators.catalog, suite.catalog).map(error => `catalog schema: ${error}`))
   errors.push(...descriptorErrors(suite.catalog))
-  if (typeof suite.generation !== 'string' || suite.generation.length === 0) errors.push('generation must be a non-empty string')
+  if (typeof suite.generation !== 'string' || suite.generation.length === 0) {
+    errors.push('generation must be a non-empty string')
+  }
 
   const owners = new Map()
   if (!Array.isArray(suite.owners)) errors.push('owners must be an array')
   for (const [index, owner] of (Array.isArray(suite.owners) ? suite.owners : []).entries()) {
-    if (typeof owner?.id !== 'string' || !LOCAL_ID.test(owner.id) || isReservedOwner(owner.id)) errors.push(`owners[${index}] uses a reserved or invalid owner id`)
+    if (typeof owner?.id !== 'string' || !LOCAL_ID.test(owner.id) || isReservedOwner(owner.id)) {
+      errors.push(`owners[${index}] uses a reserved or invalid owner id`)
+    }
     if (owners.has(owner?.id)) errors.push(`duplicate owner id: ${owner?.id}`)
     const canonical = typeof owner?.source === 'string' ? canonicalSource(owner.source) : undefined
     if (canonical === undefined || canonical !== owner.source) errors.push(`owners[${index}] source must be canonical`)
@@ -245,7 +272,9 @@ export function validateManagerSettingsNavigationSuite(suite) {
   const contributions = new Map()
   recordDocuments(errors, 'contributions', suite.contributions, validators.contribution, owners, contributions)
   for (const [key, contribution] of contributions) {
-    if (contribution.surface !== NAVIGATION_SURFACE) errors.push(`contribution ${key} does not target ${NAVIGATION_SURFACE}`)
+    if (contribution.surface !== NAVIGATION_SURFACE) {
+      errors.push(`contribution ${key} does not target ${NAVIGATION_SURFACE}`)
+    }
   }
 
   const routes = new Map()
@@ -264,9 +293,15 @@ export function validateManagerSettingsNavigationSuite(suite) {
       pending.set(key, 'route')
       continue
     }
-    if (!route.path.startsWith('/manager/extensions/')) errors.push(`route ${qualified(owner, route.id)} must be strictly below /manager/extensions/`)
-    if (route.outlet !== MANAGER_OUTLET) errors.push(`route ${qualified(owner, route.id)} targets incompatible outlet ${route.outlet}`)
-    if (route.page?.includes(':')) errors.push(`route ${qualified(owner, route.id)} must reference a same-owner local page`)
+    if (!route.path.startsWith('/manager/extensions/')) {
+      errors.push(`route ${qualified(owner, route.id)} must be strictly below /manager/extensions/`)
+    }
+    if (route.outlet !== MANAGER_OUTLET) {
+      errors.push(`route ${qualified(owner, route.id)} targets incompatible outlet ${route.outlet}`)
+    }
+    if (route.page?.includes(':')) {
+      errors.push(`route ${qualified(owner, route.id)} must reference a same-owner local page`)
+    }
     const conflicting = pathOwner.get(route.path)
     if (conflicting !== undefined && conflicting !== key) errors.push(`manager route path conflict: ${route.path}`)
     pathOwner.set(route.path, key)
@@ -279,23 +314,36 @@ export function validateManagerSettingsNavigationSuite(suite) {
       pending.set(key, 'page')
       continue
     }
-    if ((page.chrome ?? 'standard') !== 'standard') errors.push(`page ${qualified(owner, page.id)} must use standard chrome`)
-    if (typeof page.icon !== 'string' || !page.icon.startsWith('host:')) errors.push(`page ${qualified(owner, page.id)} must declare a host icon token`)
+    if ((page.chrome ?? 'standard') !== 'standard') {
+      errors.push(`page ${qualified(owner, page.id)} must use standard chrome`)
+    }
+    if (typeof page.icon !== 'string' || !page.icon.startsWith('host:')) {
+      errors.push(`page ${qualified(owner, page.id)} must declare a host icon token`)
+    }
     for (const action of page.headerActions ?? []) {
-      if (action.icon !== undefined && !action.icon.startsWith('host:')) errors.push(`page ${qualified(owner, page.id)} header action ${action.id} must use a host icon token`)
+      if (action.icon !== undefined && !action.icon.startsWith('host:')) {
+        errors.push(`page ${qualified(owner, page.id)} header action ${action.id} must use a host icon token`)
+      }
     }
   }
 
   const expectedPending = new Map((suite.expectedPending ?? []).map(record => [record.id, record.reason]))
   if (JSON.stringify([...expectedPending].sort()) !== JSON.stringify([...pending].sort())) {
-    errors.push(`pending mismatch: expected ${JSON.stringify([...expectedPending])}, received ${JSON.stringify([...pending])}`)
+    errors.push(
+      `pending mismatch: expected ${JSON.stringify([...expectedPending])}, received ${JSON.stringify([...pending])}`,
+    )
   }
 
   const before = []
   const after = []
   for (const [id, contribution] of contributions) {
     if (pending.has(id) || !conditionMatches(contribution.when, suite.context ?? {})) continue
-    const projected = { id, owner: id.slice(0, id.indexOf(':')), order: contribution.order ?? 0, disabled: contribution.disabled?.value ?? false }
+    const projected = {
+      id,
+      owner: id.slice(0, id.indexOf(':')),
+      order: contribution.order ?? 0,
+      disabled: contribution.disabled?.value ?? false,
+    }
     ;(contribution.group === 'before-settings' ? before : after).push(projected)
   }
   before.sort(compareManagerSettingsNavigationItems)
@@ -307,7 +355,11 @@ export function validateManagerSettingsNavigationSuite(suite) {
     { id: HOST_ABOUT, disabled: false },
   ]
   if (JSON.stringify(projection) !== JSON.stringify(suite.expectedProjection ?? [])) {
-    errors.push(`projection mismatch: expected ${JSON.stringify(suite.expectedProjection ?? [])}, received ${JSON.stringify(projection)}`)
+    errors.push(
+      `projection mismatch: expected ${JSON.stringify(suite.expectedProjection ?? [])}, received ${
+        JSON.stringify(projection)
+      }`,
+    )
   }
 
   if (!Array.isArray(suite.accesses)) errors.push('accesses must be an array')
@@ -318,9 +370,13 @@ export function validateManagerSettingsNavigationSuite(suite) {
     const owner = String(access?.operation).startsWith('surface.')
       ? String(access?.contributionId ?? '').split(':')[0]
       : String(access?.routeId ?? '').split(':')[0]
-    if (access?.identity?.pluginId !== owner || access?.identity?.source !== owners.get(owner)) errors.push(`accesses[${index}] identity does not match the launcher-bound owner`)
+    if (access?.identity?.pluginId !== owner || access?.identity?.source !== owners.get(owner)) {
+      errors.push(`accesses[${index}] identity does not match the launcher-bound owner`)
+    }
     const expectedPoint = String(access?.operation).startsWith('surface.') ? NAVIGATION_SURFACE : MANAGER_OUTLET
-    if (access?.identity?.pointId !== expectedPoint) errors.push(`accesses[${index}] point origin does not match its operation`)
+    if (access?.identity?.pointId !== expectedPoint) {
+      errors.push(`accesses[${index}] point origin does not match its operation`)
+    }
     accessByOperation.set(access?.operation, access)
   }
 
@@ -332,9 +388,15 @@ export function validateManagerSettingsNavigationSuite(suite) {
     const surfaceAccess = accessByOperation.get('surface.route.navigate')
     const outletRouteAccess = accessByOperation.get('outlet.route.navigate')
     const outletPageAccess = accessByOperation.get('outlet.page.mount')
-    if (surfaceAccess?.contributionId !== suite.activated || surfaceAccess?.routeId !== qualified(owner, route?.id)) errors.push('activated navigation item requires a matching surface.route.navigate origin')
-    if (outletRouteAccess?.routeId !== qualified(owner, route?.id) || outletRouteAccess?.pageId !== pageId) errors.push('activated navigation item requires a matching outlet.route.navigate origin')
-    if (outletPageAccess?.routeId !== qualified(owner, route?.id) || outletPageAccess?.pageId !== pageId) errors.push('activated navigation item requires a matching outlet.page.mount origin')
+    if (surfaceAccess?.contributionId !== suite.activated || surfaceAccess?.routeId !== qualified(owner, route?.id)) {
+      errors.push('activated navigation item requires a matching surface.route.navigate origin')
+    }
+    if (outletRouteAccess?.routeId !== qualified(owner, route?.id) || outletRouteAccess?.pageId !== pageId) {
+      errors.push('activated navigation item requires a matching outlet.route.navigate origin')
+    }
+    if (outletPageAccess?.routeId !== qualified(owner, route?.id) || outletPageAccess?.pageId !== pageId) {
+      errors.push('activated navigation item requires a matching outlet.page.mount origin')
+    }
   }
 
   errors.push(...lifecycleErrors(suite.lifecycle))
@@ -364,7 +426,9 @@ function materializeInvalidVector(vector, completeSuite) {
 }
 
 let failures = 0
-const completeSuite = JSON.parse(await readFile(path.join(root, 'test-vectors/manager-settings-navigation/valid/complete.json'), 'utf8'))
+const completeSuite = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/manager-settings-navigation/valid/complete.json'), 'utf8'),
+)
 for (const file of await jsonFiles(path.join(root, 'test-vectors/manager-settings-navigation/valid'))) {
   const suite = JSON.parse(await readFile(file, 'utf8'))
   const errors = validateManagerSettingsNavigationSuite(suite)
@@ -400,12 +464,17 @@ if (validators.legacyContribution(completeSuite.contributions[0].document)) {
   console.error('surface contribution v4 must reject the separately versioned v5 navigation item')
   failures += 1
 }
-const contentTabV5 = JSON.parse(await readFile(
-  path.join(root, 'test-vectors/manager-settings-navigation/compatibility/content-tab-v5.json'),
-  'utf8',
-))
+const contentTabV5 = JSON.parse(
+  await readFile(
+    path.join(root, 'test-vectors/manager-settings-navigation/compatibility/content-tab-v5.json'),
+    'utf8',
+  ),
+)
 if (!validators.contribution(contentTabV5)) {
-  console.error('surface contribution v5 must preserve the existing manager.settings.tabs input meaning', validators.contribution.errors)
+  console.error(
+    'surface contribution v5 must preserve the existing manager.settings.tabs input meaning',
+    validators.contribution.errors,
+  )
   failures += 1
 }
 

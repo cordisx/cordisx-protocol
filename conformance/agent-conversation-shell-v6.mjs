@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -43,7 +43,8 @@ const validateSnapshot = ajv.getSchema(schemas.get('agent-conversation-shell-sna
 const validateClose = ajv.getSchema(schemas.get('agent-conversation-shell-subscription-close.v6.schema.json').$id)
 assert.ok(validateSnapshot)
 assert.ok(validateClose)
-const errors = (validate, value) => validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
+const errors = (validate, value) =>
+  validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
 
 const participant = {
   participantId: 'participant-reviewer',
@@ -71,7 +72,10 @@ const pendingApproval = {
   approvalId: 'approval-1',
   approvalKind: 'command',
   state: 'pending',
-  actions: [{ decision: 'approve', command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'approval-1' } } }],
+  actions: [{
+    decision: 'approve',
+    command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'approval-1' } },
+  }],
 }
 const snapshot = {
   $schema: schemas.get('agent-conversation-shell-snapshot.v6.schema.json').$id,
@@ -105,11 +109,19 @@ assert.deepEqual(structuredClone(snapshot), snapshot)
 
 const pendingWithoutGeneration = structuredClone(snapshot)
 delete pendingWithoutGeneration.items[0].agentGeneration
-assert.notDeepEqual(errors(validateSnapshot, pendingWithoutGeneration), [], 'pending approval requires exact live Agent generation')
+assert.notDeepEqual(
+  errors(validateSnapshot, pendingWithoutGeneration),
+  [],
+  'pending approval requires exact live Agent generation',
+)
 
 const pendingWithoutActions = structuredClone(snapshot)
 pendingWithoutActions.items[0].actions = []
-assert.notDeepEqual(errors(validateSnapshot, pendingWithoutActions), [], 'pending approval cannot degrade to an actionless card')
+assert.notDeepEqual(
+  errors(validateSnapshot, pendingWithoutActions),
+  [],
+  'pending approval cannot degrade to an actionless card',
+)
 
 const outcomeToState = new Map([
   ['allowed-once', 'approved'],
@@ -119,10 +131,15 @@ const outcomeToState = new Map([
 ])
 
 export function projectDurableTerminalApproval({ sessionId, approvalId, events, diagnostic }) {
-  const matching = events.filter(event => event.sessionId === sessionId && event.data?.id === approvalId && (event.type === 'approval/asked' || event.type === 'approval/decided'))
+  const matching = events.filter(event =>
+    event.sessionId === sessionId && event.data?.id === approvalId
+    && (event.type === 'approval/asked' || event.type === 'approval/decided')
+  )
   const asked = matching.filter(event => event.type === 'approval/asked')
   const decided = matching.filter(event => event.type === 'approval/decided')
-  if (asked.length !== 1 || decided.length !== 1 || asked[0].seq >= decided[0].seq) throw new Error('approval correlation unavailable')
+  if (asked.length !== 1 || decided.length !== 1 || asked[0].seq >= decided[0].seq) {
+    throw new Error('approval correlation unavailable')
+  }
   const state = outcomeToState.get(decided[0].data.outcome)
   if (!state) throw new Error('approval outcome unavailable')
   const item = {
@@ -138,33 +155,70 @@ export function projectDurableTerminalApproval({ sessionId, approvalId, events, 
     state,
     actions: [],
   }
-  if (state === 'failed') item.diagnostic = diagnostic ?? { key: 'approval.unavailable', fallback: 'Approval unavailable' }
+  if (state === 'failed') {
+    item.diagnostic = diagnostic ?? { key: 'approval.unavailable', fallback: 'Approval unavailable' }
+  }
   return item
 }
 
-const asked = { sessionId: activeRun.sessionId, seq: 17, type: 'approval/asked', data: { id: 'approval-1', toolName: 'shell' } }
-const terminalEvents = [asked, { sessionId: activeRun.sessionId, seq: 18, type: 'approval/decided', data: { id: 'approval-1', outcome: 'allowed-once' } }]
+const asked = {
+  sessionId: activeRun.sessionId,
+  seq: 17,
+  type: 'approval/asked',
+  data: { id: 'approval-1', toolName: 'shell' },
+}
+const terminalEvents = [asked, {
+  sessionId: activeRun.sessionId,
+  seq: 18,
+  type: 'approval/decided',
+  data: { id: 'approval-1', outcome: 'allowed-once' },
+}]
 for (const [outcome, state] of outcomeToState) {
-  const events = [asked, { sessionId: activeRun.sessionId, seq: 18, type: 'approval/decided', data: { id: 'approval-1', outcome } }]
+  const events = [asked, {
+    sessionId: activeRun.sessionId,
+    seq: 18,
+    type: 'approval/decided',
+    data: { id: 'approval-1', outcome },
+  }]
   const terminal = projectDurableTerminalApproval({ sessionId: activeRun.sessionId, approvalId: 'approval-1', events })
   assert.equal(terminal.state, state)
   assert.deepEqual(terminal.actions, [])
-  assert.equal(Object.hasOwn(terminal, 'agentGeneration'), false, 'durable replay must not synthesize an Agent generation')
+  assert.equal(
+    Object.hasOwn(terminal, 'agentGeneration'),
+    false,
+    'durable replay must not synthesize an Agent generation',
+  )
   const terminalSnapshot = structuredClone(snapshot)
   terminalSnapshot.items = [terminal]
-  assert.deepEqual(errors(validateSnapshot, terminalSnapshot), [], `${state} terminal approval without generation must validate`)
+  assert.deepEqual(
+    errors(validateSnapshot, terminalSnapshot),
+    [],
+    `${state} terminal approval without generation must validate`,
+  )
   assert.deepEqual(structuredClone(terminalSnapshot), terminalSnapshot)
 }
 
-const terminalWithKnownGeneration = projectDurableTerminalApproval({ sessionId: activeRun.sessionId, approvalId: 'approval-1', events: terminalEvents })
+const terminalWithKnownGeneration = projectDurableTerminalApproval({
+  sessionId: activeRun.sessionId,
+  approvalId: 'approval-1',
+  events: terminalEvents,
+})
 terminalWithKnownGeneration.agentGeneration = 2
 const terminalWithKnownGenerationSnapshot = structuredClone(snapshot)
 terminalWithKnownGenerationSnapshot.items = [terminalWithKnownGeneration]
-assert.deepEqual(errors(validateSnapshot, terminalWithKnownGenerationSnapshot), [], 'a separately authoritative terminal generation remains representable')
+assert.deepEqual(
+  errors(validateSnapshot, terminalWithKnownGenerationSnapshot),
+  [],
+  'a separately authoritative terminal generation remains representable',
+)
 
 const actionableTerminal = structuredClone(terminalWithKnownGenerationSnapshot)
 actionableTerminal.items[0].actions = pendingApproval.actions
-assert.notDeepEqual(errors(validateSnapshot, actionableTerminal), [], 'terminal approvals are immutable and non-invokable')
+assert.notDeepEqual(
+  errors(validateSnapshot, actionableTerminal),
+  [],
+  'terminal approvals are immutable and non-invokable',
+)
 
 assert.throws(
   () => projectDurableTerminalApproval({ sessionId: activeRun.sessionId, approvalId: 'approval-1', events: [asked] }),
@@ -172,22 +226,38 @@ assert.throws(
   'approval/asked alone cannot create a terminal item',
 )
 assert.throws(
-  () => projectDurableTerminalApproval({ sessionId: activeRun.sessionId, approvalId: 'other-approval', events: terminalEvents }),
+  () =>
+    projectDurableTerminalApproval({
+      sessionId: activeRun.sessionId,
+      approvalId: 'other-approval',
+      events: terminalEvents,
+    }),
   /correlation unavailable/u,
   'approval ids must match exactly',
 )
 assert.throws(
-  () => projectDurableTerminalApproval({ sessionId: 'other-session', approvalId: 'approval-1', events: terminalEvents }),
+  () =>
+    projectDurableTerminalApproval({ sessionId: 'other-session', approvalId: 'approval-1', events: terminalEvents }),
   /correlation unavailable/u,
   'Session ids must match exactly',
 )
 assert.throws(
-  () => projectDurableTerminalApproval({ sessionId: activeRun.sessionId, approvalId: 'approval-1', events: [...terminalEvents, terminalEvents[1]] }),
+  () =>
+    projectDurableTerminalApproval({
+      sessionId: activeRun.sessionId,
+      approvalId: 'approval-1',
+      events: [...terminalEvents, terminalEvents[1]],
+    }),
   /correlation unavailable/u,
   'duplicate terminal facts fail closed',
 )
 assert.throws(
-  () => projectDurableTerminalApproval({ sessionId: activeRun.sessionId, approvalId: 'approval-1', events: [asked, { ...terminalEvents[1], seq: 16 }] }),
+  () =>
+    projectDurableTerminalApproval({
+      sessionId: activeRun.sessionId,
+      approvalId: 'approval-1',
+      events: [asked, { ...terminalEvents[1], seq: 16 }],
+    }),
   /correlation unavailable/u,
   'a decision that does not follow its question fails closed',
 )
@@ -206,7 +276,17 @@ const close = code => ({
   status: 'closed',
   code,
 })
-for (const code of ['unsubscribed', 'explicit', 'owner-disposed', 'generation-replaced', 'permission-revoked', 'connection-replaced', 'observer-failed']) assert.deepEqual(errors(validateClose, close(code)), [])
+for (
+  const code of [
+    'unsubscribed',
+    'explicit',
+    'owner-disposed',
+    'generation-replaced',
+    'permission-revoked',
+    'connection-replaced',
+    'observer-failed',
+  ]
+) assert.deepEqual(errors(validateClose, close(code)), [])
 assert.notDeepEqual(errors(validateClose, close('silently-disposed')), [])
 
 const predecessorDigests = new Map([
@@ -218,7 +298,9 @@ const predecessorDigests = new Map([
 ])
 for (const [version, expected] of predecessorDigests) {
   const files = [
-    ...(await readdir(path.join(root, 'schemas'))).filter(name => new RegExp(`^agent-conversation-shell-.*\\.v${version}\\.schema\\.json$`, 'u').test(name)).map(name => `schemas/${name}`),
+    ...(await readdir(path.join(root, 'schemas'))).filter(name =>
+      new RegExp(`^agent-conversation-shell-.*\\.v${version}\\.schema\\.json$`, 'u').test(name)
+    ).map(name => `schemas/${name}`),
     `types/agent-conversation-shell.v${version}.d.ts`,
   ].sort()
   const digest = createHash('sha256')
@@ -234,27 +316,45 @@ for (const [version, expected] of predecessorDigests) {
 for (const v6Name of schemaNames.filter(name => name.includes('agent-conversation-shell') && name.includes('.v6.'))) {
   const v5Name = v6Name.replace('.v6.', '.v5.')
   const v5Schema = JSON.parse(await readFile(path.join(root, 'schemas', v5Name), 'utf8'))
-  const normalized = JSON.parse(JSON.stringify(schemas.get(v6Name))
-    .replaceAll('.v6.schema.json', '.v5.schema.json')
-    .replaceAll('/v6', '/v5')
-    .replaceAll(' v6', ' v5'))
+  const normalized = JSON.parse(
+    JSON.stringify(schemas.get(v6Name))
+      .replaceAll('.v6.schema.json', '.v5.schema.json')
+      .replaceAll('/v6', '/v5')
+      .replaceAll(' v6', ' v5'),
+  )
   if (normalized.properties?.schemaVersion) normalized.properties.schemaVersion.const = 5
   if (v6Name === 'agent-conversation-shell-snapshot.v6.schema.json') {
-    normalized.$defs.approvalItem.required.splice(normalized.$defs.approvalItem.required.indexOf('sessionId') + 1, 0, 'agentGeneration')
+    normalized.$defs.approvalItem.required.splice(
+      normalized.$defs.approvalItem.required.indexOf('sessionId') + 1,
+      0,
+      'agentGeneration',
+    )
     delete normalized.$defs.approvalItem.allOf[0].then.required
     delete normalized.$defs.approvalItem.allOf[0].then.properties.agentGeneration
   }
-  assert.deepEqual(normalized, v5Schema, `${v6Name} must preserve the complete v5 shape outside terminal approval generation`)
+  assert.deepEqual(
+    normalized,
+    v5Schema,
+    `${v6Name} must preserve the complete v5 shape outside terminal approval generation`,
+  )
 }
 
 const v6PublicFiles = [
-  ...(await readdir(path.join(root, 'schemas'))).filter(name => /^agent-conversation-shell-.*\.v6\.schema\.json$/u.test(name)).map(name => path.join(root, 'schemas', name)),
+  ...(await readdir(path.join(root, 'schemas'))).filter(name =>
+    /^agent-conversation-shell-.*\.v6\.schema\.json$/u.test(name)
+  ).map(name => path.join(root, 'schemas', name)),
   path.join(root, 'types', 'agent-conversation-shell.v6.d.ts'),
 ]
 for (const file of v6PublicFiles) {
   const source = await readFile(file, 'utf8')
-  assert.ok(!/agent-loop|detailsUrl|AgentLoop/u.test(source), `${path.basename(file)} leaked the legacy runtime shape into v6`)
-  assert.ok(!/DeepSeek|Harness|DSH|pi-agent/iu.test(source), `${path.basename(file)} leaked an external reference-project name`)
+  assert.ok(
+    !/agent-loop|detailsUrl|AgentLoop/u.test(source),
+    `${path.basename(file)} leaked the legacy runtime shape into v6`,
+  )
+  assert.ok(
+    !/DeepSeek|Harness|DSH|pi-agent/iu.test(source),
+    `${path.basename(file)} leaked an external reference-project name`,
+  )
 }
 
 console.log('Agent Conversation Shell v6 terminal approval replay and v1-v5 compatibility conformance passed')

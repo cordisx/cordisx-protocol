@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -19,10 +19,12 @@ const schemaNames = [
   'channel-common.v1.schema.json',
   'plugin-manifest.v3.schema.json',
 ]
-const schemas = new Map(await Promise.all(schemaNames.map(async name => [
-  name,
-  JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')),
-])))
+const schemas = new Map(
+  await Promise.all(schemaNames.map(async name => [
+    name,
+    JSON.parse(await readFile(path.join(root, 'schemas', name), 'utf8')),
+  ])),
+)
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv)
 for (const schema of schemas.values()) ajv.addSchema(schema)
@@ -32,7 +34,9 @@ const validateCertificationSchema = ajv.getSchema(certificationSchema.$id)
 if (validateCertificationSchema === undefined) throw new Error('certification schema was not registered')
 const certifiedPermissionProjectionSchema = schemas.get('marketplace-certified-permission-projection.v1.schema.json')
 const validateCertifiedPermissionProjectionSchema = ajv.getSchema(certifiedPermissionProjectionSchema.$id)
-if (validateCertifiedPermissionProjectionSchema === undefined) throw new Error('certified permission projection schema was not registered')
+if (validateCertifiedPermissionProjectionSchema === undefined) {
+  throw new Error('certified permission projection schema was not registered')
+}
 const officialSchema = schemas.get('marketplace-official.v1.schema.json')
 const validateOfficialSchema = ajv.getSchema(officialSchema.$id)
 if (validateOfficialSchema === undefined) throw new Error('official publisher schema was not registered')
@@ -69,7 +73,9 @@ export function validateCertification(value, options = {}) {
   }
 
   if (options.subject !== undefined && !sameIdentity(value.identity, options.subject)) {
-    errors.push({ message: 'certification identity must exactly match pluginId, version, canonicalSource, and integrity' })
+    errors.push({
+      message: 'certification identity must exactly match pluginId, version, canonicalSource, and integrity',
+    })
   }
 
   const evaluatedAt = instant(options.evaluatedAt, 'evaluatedAt', errors)
@@ -78,8 +84,12 @@ export function validateCertification(value, options = {}) {
   const revokedAt = value.revokedAt === undefined ? undefined : instant(value.revokedAt, 'revokedAt', errors)
   if (errors.length > 0) return errors
 
-  if (value.status === 'revoked' && revokedAt === undefined) errors.push({ message: 'revoked certification requires revokedAt' })
-  if (value.status !== 'revoked' && revokedAt !== undefined) errors.push({ message: 'only revoked certification may include revokedAt' })
+  if (value.status === 'revoked' && revokedAt === undefined) {
+    errors.push({ message: 'revoked certification requires revokedAt' })
+  }
+  if (value.status !== 'revoked' && revokedAt !== undefined) {
+    errors.push({ message: 'only revoked certification may include revokedAt' })
+  }
   if (errors.length > 0) return errors
 
   if (reviewedAt > evaluatedAt) errors.push({ message: 'reviewedAt must not be after evaluatedAt' })
@@ -100,14 +110,20 @@ export function validateCertification(value, options = {}) {
 
 export function validateCertifiedPermissionProjection(value, options = {}) {
   const errors = []
-  if (!validateCertifiedPermissionProjectionSchema(value)) return validateCertifiedPermissionProjectionSchema.errors ?? []
-  if (options.subject !== undefined && !sameIdentity({
-    pluginId: value.pluginId,
-    version: value.version,
-    canonicalSource: value.source,
-    integrity: value.integrity,
-  }, options.subject)) {
-    errors.push({ message: 'certified permission projection must exactly match pluginId, version, canonicalSource, and integrity' })
+  if (!validateCertifiedPermissionProjectionSchema(value)) {
+    return validateCertifiedPermissionProjectionSchema.errors ?? []
+  }
+  if (
+    options.subject !== undefined && !sameIdentity({
+      pluginId: value.pluginId,
+      version: value.version,
+      canonicalSource: value.source,
+      integrity: value.integrity,
+    }, options.subject)
+  ) {
+    errors.push({
+      message: 'certified permission projection must exactly match pluginId, version, canonicalSource, and integrity',
+    })
   }
 
   const evaluatedAt = instant(options.evaluatedAt, 'evaluatedAt', errors)
@@ -119,8 +135,12 @@ export function validateCertifiedPermissionProjection(value, options = {}) {
   if (feedGeneratedAt > evaluatedAt) errors.push({ message: 'feedGeneratedAt must not be after evaluatedAt' })
   if (reviewedAt > feedGeneratedAt) errors.push({ message: 'reviewedAt must not be after feedGeneratedAt' })
   if (expiresAt <= reviewedAt) errors.push({ message: 'expiresAt must be after reviewedAt' })
-  if (expiresAt <= evaluatedAt) errors.push({ message: 'expired certification cannot produce an active permission projection' })
-  if (value.revision !== value.feed.generatedAt) errors.push({ message: 'projection revision must equal the source feed generatedAt' })
+  if (expiresAt <= evaluatedAt) {
+    errors.push({ message: 'expired certification cannot produce an active permission projection' })
+  }
+  if (value.revision !== value.feed.generatedAt) {
+    errors.push({ message: 'projection revision must equal the source feed generatedAt' })
+  }
   const fingerprintPayload = {
     source: value.source,
     pluginId: value.pluginId,
@@ -133,7 +153,9 @@ export function validateCertifiedPermissionProjection(value, options = {}) {
     feed: value.feed,
   }
   const fingerprint = `sha256:${createHash('sha256').update(JSON.stringify(fingerprintPayload)).digest('hex')}`
-  if (value.fingerprint !== fingerprint) errors.push({ message: 'projection fingerprint must cover every security-relevant field in canonical order' })
+  if (value.fingerprint !== fingerprint) {
+    errors.push({ message: 'projection fingerprint must cover every security-relevant field in canonical order' })
+  }
   return errors
 }
 
@@ -145,7 +167,10 @@ export function validateOfficial(value, options = {}) {
   }
 
   if (options.subject !== undefined && !sameOfficialIdentity(value.identity, options.subject)) {
-    errors.push({ message: 'official identity must exactly match pluginId, canonicalSource, publisherIdentity, packageNamespace, and packageName' })
+    errors.push({
+      message:
+        'official identity must exactly match pluginId, canonicalSource, publisherIdentity, packageNamespace, and packageName',
+    })
   }
 
   if (!value.identity.packageName.startsWith(`${value.identity.packageNamespace}/`)) {
@@ -157,8 +182,12 @@ export function validateOfficial(value, options = {}) {
   const revokedAt = value.revokedAt === undefined ? undefined : instant(value.revokedAt, 'revokedAt', errors)
   if (errors.length > 0) return errors
 
-  if (value.status === 'revoked' && revokedAt === undefined) errors.push({ message: 'revoked official record requires revokedAt' })
-  if (value.status !== 'revoked' && revokedAt !== undefined) errors.push({ message: 'only revoked official record may include revokedAt' })
+  if (value.status === 'revoked' && revokedAt === undefined) {
+    errors.push({ message: 'revoked official record requires revokedAt' })
+  }
+  if (value.status !== 'revoked' && revokedAt !== undefined) {
+    errors.push({ message: 'only revoked official record may include revokedAt' })
+  }
   if (errors.length > 0) return errors
 
   if (verifiedAt > evaluatedAt) errors.push({ message: 'verifiedAt must not be after evaluatedAt' })
@@ -199,7 +228,9 @@ export function validateTrustFeed(feed, options = {}) {
     const key = `${plugin.source}\u0000${plugin.id}`
     if (plugins.has(key)) errors.push({ message: `duplicate plugin identity: ${plugin.source} + ${plugin.id}` })
     plugins.set(key, plugin)
-    if (plugin.artifact !== undefined && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)) {
+    if (
+      plugin.artifact !== undefined && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)
+    ) {
       errors.push({ message: `plugin ${plugin.id} packageName must belong to packageNamespace` })
     }
   }
@@ -233,7 +264,10 @@ export function validateTrustFeed(feed, options = {}) {
     certificationKeys.add(key)
     const plugin = plugins.get(`${record.identity.canonicalSource}\u0000${record.identity.pluginId}`)
     if (plugin?.artifact === undefined || plugin.version !== record.identity.version) {
-      errors.push({ message: `certification has no matching exact plugin artifact: ${record.identity.pluginId}@${record.identity.version}` })
+      errors.push({
+        message:
+          `certification has no matching exact plugin artifact: ${record.identity.pluginId}@${record.identity.version}`,
+      })
       continue
     }
     errors.push(...validateCertification(record, {
@@ -305,7 +339,9 @@ for (const vectorGroup of ['marketplace-certification', 'marketplace-official'])
 }
 
 for (const kind of ['valid', 'invalid']) {
-  for (const file of await jsonFiles(path.join(root, 'test-vectors/marketplace-certified-permission-projection', kind))) {
+  for (
+    const file of await jsonFiles(path.join(root, 'test-vectors/marketplace-certified-permission-projection', kind))
+  ) {
     const vector = JSON.parse(await readFile(file, 'utf8'))
     const errors = validateProjectionVector(vector)
     const shouldPass = kind === 'valid'

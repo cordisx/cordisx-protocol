@@ -27,8 +27,17 @@ event.type satisfies 'approval/authority-bound'
 event.ignorable satisfies true
 
 // @ts-expect-error requester-authored reason is required
-approvals.request({ requester: { agent: reviewer, definition: reviewerDefinition }, authority: { agent: lead, definition: leadDefinition }, toolName: 'review' })
-// @ts-expect-error v2 has no default user or unbound identity authority
-approvals.request({ requester: { agent: reviewer, definition: reviewerDefinition }, authority: { definition: leadDefinition }, toolName: 'review', reason: { kind: 'plain-text', text: 'Review.' } })
+approvals.request({
+  requester: { agent: reviewer, definition: reviewerDefinition },
+  authority: { agent: lead, definition: leadDefinition },
+  toolName: 'review',
+})
+approvals.request({
+  requester: { agent: reviewer, definition: reviewerDefinition },
+  // @ts-expect-error v2 has no default user or unbound identity authority
+  authority: { definition: leadDefinition },
+  toolName: 'review',
+  reason: { kind: 'plain-text', text: 'Review.' },
+})
 // @ts-expect-error outcomes remain closed
 approvals.registerAuthorityAnswerer({ agent: lead, definition: leadDefinition }, () => 'approved')

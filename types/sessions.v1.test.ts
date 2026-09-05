@@ -1,10 +1,4 @@
-import type {
-  Session,
-  SessionEvent,
-  SessionEventDataMap,
-  SessionRegistry,
-  UserMessage,
-} from './sessions.v1.js'
+import type { Session, SessionEvent, SessionEventDataMap, SessionRegistry, UserMessage } from './sessions.v1.js'
 
 declare const sessions: SessionRegistry
 declare const session: Session
@@ -27,7 +21,9 @@ session.read({ afterSeq: -1, limit: 100 })
 session.snapshot().then(result => {
   if (result.status === 'available') session.read({ afterSeq: -1, snapshotSeq: result.snapshot.snapshotSeq })
 })
-session.subscribe({ afterSeq: -1 }, async page => { page.phase satisfies 'replay' | 'live' })
+session.subscribe({ afterSeq: -1 }, async page => {
+  page.phase satisfies 'replay' | 'live'
+})
 sessions.get(session.id)
 
 declare module './sessions.v1.js' {
@@ -49,6 +45,11 @@ const extension: SessionEvent<'example/notice'> = {
 }
 extension.data satisfies SessionEventDataMap['example/notice']
 
-// @ts-expect-error non-surface events cannot forge source-event causality
-const badSourceSeqs: SessionEvent<'turn/start'> = { ...extension, type: 'turn/start', data: { turn: 1 }, sourceEventSeqs: [0] }
+const badSourceSeqs: SessionEvent<'turn/start'> = {
+  ...extension,
+  type: 'turn/start',
+  data: { turn: 1 },
+  // @ts-expect-error non-surface events cannot forge source-event causality
+  sourceEventSeqs: [0],
+}
 void badSourceSeqs

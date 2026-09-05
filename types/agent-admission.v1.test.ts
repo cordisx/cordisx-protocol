@@ -1,4 +1,4 @@
-import type { AgentAdmissionCaptureService, AgentCommandOrigin, AgentAdmissionReceipt } from './agent-admission.v1.js'
+import type { AgentAdmissionCaptureService, AgentAdmissionReceipt, AgentCommandOrigin } from './agent-admission.v1.js'
 import type { AgentAdmission } from './agents.v1.js'
 import type { AgentHandle } from './agents.v1.js'
 
@@ -11,7 +11,15 @@ capture.capture({ handle, admission, origin }).then(result => {
   if (result.status === 'captured') {
     const receipt: AgentAdmissionReceipt = result.handle.receipt
     receipt.origin.room.roomId satisfies string
-    result.handle.closed.then(closed => closed.code satisfies 'command-complete' | 'command-replaced' | 'agent-replaced' | 'plugin-generation-replaced' | 'connection-replaced' | 'disposed')
+    result.handle.closed.then(closed =>
+      closed.code satisfies
+        | 'command-complete'
+        | 'command-replaced'
+        | 'agent-replaced'
+        | 'plugin-generation-replaced'
+        | 'connection-replaced'
+        | 'disposed'
+    )
   }
 })
 

@@ -1,29 +1,59 @@
-import type { BoundHostDomClient, HostDomBridgeRequest, HostDomHandle, HostDomNodeRef } from '@cordisx/protocol/host-dom/v1'
+import type {
+  BoundHostDomClient,
+  HostDomBridgeRequest,
+  HostDomHandle,
+  HostDomNodeRef,
+} from '@cordisx/protocol/host-dom/v1'
 
 declare const client: BoundHostDomClient
 declare const handle: HostDomHandle
 declare const node: HostDomNodeRef
 
 const acquire = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-request.v1.schema.json',
-  contract: 'cordisx.bound-host-dom/v1', schemaVersion: 1, requestId: 'request-1', type: 'acquire',
-  capability: 'ui.host-dom.read', rootId: 'workspace.composer', operations: ['inspect-structure', 'read-text'],
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-dom-bridge-request.v1.schema.json',
+  contract: 'cordisx.bound-host-dom/v1',
+  schemaVersion: 1,
+  requestId: 'request-1',
+  type: 'acquire',
+  capability: 'ui.host-dom.read',
+  rootId: 'workspace.composer',
+  operations: ['inspect-structure', 'read-text'],
 } as const satisfies HostDomBridgeRequest
 
 const modify = {
-  $schema: acquire.$schema, contract: acquire.contract, schemaVersion: 1, requestId: 'request-2', type: 'modify', handle, node,
-  operation: 'insert-owned-structured-child', child: { id: 'retry', kind: 'action', label: { key: 'retry.label', fallback: 'Retry' }, command: { id: 'retry' } },
+  $schema: acquire.$schema,
+  contract: acquire.contract,
+  schemaVersion: 1,
+  requestId: 'request-2',
+  type: 'modify',
+  handle,
+  node,
+  operation: 'insert-owned-structured-child',
+  child: { id: 'retry', kind: 'action', label: { key: 'retry.label', fallback: 'Retry' }, command: { id: 'retry' } },
 } as const satisfies HostDomBridgeRequest
 
 const modifyRoot = {
-  $schema: acquire.$schema, contract: acquire.contract, schemaVersion: 1, requestId: 'request-3', type: 'modify', handle,
+  $schema: acquire.$schema,
+  contract: acquire.contract,
+  schemaVersion: 1,
+  requestId: 'request-3',
+  type: 'modify',
+  handle,
   operation: 'focus',
 } as const satisfies HostDomBridgeRequest
 
 await client.request(acquire)
 const result = await client.request(modify)
 await client.request(modifyRoot)
-if (result.status === 'accepted' && result.type === 'modify') result.operation satisfies 'set-text' | 'set-attribute' | 'insert-owned-structured-child' | 'remove-owned-child' | 'focus'
+if (result.status === 'accepted' && result.type === 'modify') {
+  result.operation satisfies
+    | 'set-text'
+    | 'set-attribute'
+    | 'insert-owned-structured-child'
+    | 'remove-owned-child'
+    | 'focus'
+}
 
 // @ts-expect-error selectors are never part of the bound request contract
 const selector: HostDomBridgeRequest = { ...acquire, selector: '#composer' }

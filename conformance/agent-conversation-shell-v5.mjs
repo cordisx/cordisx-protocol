@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -43,7 +43,8 @@ const validateSnapshot = ajv.getSchema(schemas.get('agent-conversation-shell-sna
 const validateClose = ajv.getSchema(schemas.get('agent-conversation-shell-subscription-close.v5.schema.json').$id)
 assert.ok(validateSnapshot)
 assert.ok(validateClose)
-const errors = (validate, value) => validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
+const errors = (validate, value) =>
+  validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
 
 const participant = {
   participantId: 'participant-reviewer',
@@ -71,7 +72,10 @@ const approval = {
   approvalId: 'approval-1',
   approvalKind: 'command',
   state: 'pending',
-  actions: [{ decision: 'approve', command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'approval-1' } } }],
+  actions: [{
+    decision: 'approve',
+    command: { id: 'chatroom.approval.approve', arguments: { approvalId: 'approval-1' } },
+  }],
 }
 const introduction = {
   kind: 'message',
@@ -125,16 +129,27 @@ const snapshot = {
 export function semanticErrors(value) {
   const issues = []
   if (value.selection?.kind !== 'room') return issues
-  const runs = new Set((value.selection.activeRuns ?? []).map(run => [run.participantId, run.memberId, run.runId, run.sessionId].join('\u0000')))
+  const runs = new Set(
+    (value.selection.activeRuns ?? []).map(run =>
+      [run.participantId, run.memberId, run.runId, run.sessionId].join('\u0000')
+    ),
+  )
   for (const item of value.items ?? []) {
     if (item.kind === 'approval') {
       const key = [item.participantId, item.memberId, item.runId, item.sessionId].join('\u0000')
       if (!runs.has(key)) issues.push('approval must match one exact active Session run')
     }
     if (item.kind === 'message' && item.semantic?.purpose === 'member-self-introduction') {
-      const key = [item.semantic.participantId, item.semantic.memberId, item.semantic.runId, item.semantic.correlation.sessionId].join('\u0000')
+      const key = [
+        item.semantic.participantId,
+        item.semantic.memberId,
+        item.semantic.runId,
+        item.semantic.correlation.sessionId,
+      ].join('\u0000')
       if (!runs.has(key)) issues.push('self-introduction must match one exact active Session run')
-      if (item.source?.kind !== 'session-event' || item.source.sessionId !== item.semantic.correlation.sessionId) issues.push('self-introduction correlation must match its SessionEvent source')
+      if (item.source?.kind !== 'session-event' || item.source.sessionId !== item.semantic.correlation.sessionId) {
+        issues.push('self-introduction correlation must match its SessionEvent source')
+      }
     }
   }
   return issues
@@ -170,7 +185,8 @@ export function migrateV4ComposerToV5(value) {
   }
 }
 const v4Snapshot = structuredClone(snapshot)
-v4Snapshot.$schema = 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v4.schema.json'
+v4Snapshot.$schema =
+  'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v4.schema.json'
 v4Snapshot.contract = 'cordisx.agent-conversation-shell-snapshot/v4'
 v4Snapshot.schemaVersion = 4
 delete v4Snapshot.composer.shortcutPolicy
@@ -193,14 +209,28 @@ assert.equal(shouldSubmitComposerKey('enter', { key: 'Enter', isComposing: true 
 assert.equal(shouldSubmitComposerKey('mod-enter', { key: 'Enter', metaKey: true, isComposing: true }), false)
 assert.equal(shouldSubmitComposerKey('shift-enter', { key: 'Enter' }), false)
 
-for (const [label, mutate] of [
-  ['details URL', value => { value.selection.activeRuns[0].detailsUrl = { target: 'host', url: 'app://-/agent' } }],
-  ['raw navigation URL', value => { value.selection.activeRuns[0].details.ref = 'https://example.test/agent' }],
-  ['AgentLoop approval binding', value => { value.items[0].binding = { bindingId: 'legacy', generation: 1 } }],
-  ['AgentLoop approval turn', value => { value.items[0].turn = 'turn-1' }],
-  ['legacy message source', value => { value.items[1].source = 'agent-loop' }],
-  ['AgentLoop introduction binding', value => { value.items[1].semantic.binding = { bindingId: 'legacy', generation: 1 } }],
-]) {
+for (
+  const [label, mutate] of [
+    ['details URL', value => {
+      value.selection.activeRuns[0].detailsUrl = { target: 'host', url: 'app://-/agent' }
+    }],
+    ['raw navigation URL', value => {
+      value.selection.activeRuns[0].details.ref = 'https://example.test/agent'
+    }],
+    ['AgentLoop approval binding', value => {
+      value.items[0].binding = { bindingId: 'legacy', generation: 1 }
+    }],
+    ['AgentLoop approval turn', value => {
+      value.items[0].turn = 'turn-1'
+    }],
+    ['legacy message source', value => {
+      value.items[1].source = 'agent-loop'
+    }],
+    ['AgentLoop introduction binding', value => {
+      value.items[1].semantic.binding = { bindingId: 'legacy', generation: 1 }
+    }],
+  ]
+) {
   const invalid = structuredClone(snapshot)
   mutate(invalid)
   assert.notDeepEqual(errors(validateSnapshot, invalid), [], `${label} must fail closed`)
@@ -209,7 +239,11 @@ for (const [label, mutate] of [
 const mismatched = structuredClone(snapshot)
 mismatched.items[1].semantic.correlation.sessionId = 'other-session'
 assert.deepEqual(errors(validateSnapshot, mismatched), [])
-assert.notDeepEqual(semanticErrors(mismatched), [], 'cross-Session self-introduction correlation must fail semantic conformance')
+assert.notDeepEqual(
+  semanticErrors(mismatched),
+  [],
+  'cross-Session self-introduction correlation must fail semantic conformance',
+)
 
 const close = code => ({
   $schema: schemas.get('agent-conversation-shell-subscription-close.v5.schema.json').$id,
@@ -221,7 +255,17 @@ const close = code => ({
   status: 'closed',
   code,
 })
-for (const code of ['unsubscribed', 'explicit', 'owner-disposed', 'generation-replaced', 'permission-revoked', 'connection-replaced', 'observer-failed']) assert.deepEqual(errors(validateClose, close(code)), [])
+for (
+  const code of [
+    'unsubscribed',
+    'explicit',
+    'owner-disposed',
+    'generation-replaced',
+    'permission-revoked',
+    'connection-replaced',
+    'observer-failed',
+  ]
+) assert.deepEqual(errors(validateClose, close(code)), [])
 assert.notDeepEqual(errors(validateClose, close('silently-disposed')), [])
 
 export function subscriptionLifecycleErrors(deliveries) {
@@ -236,11 +280,22 @@ export function subscriptionLifecycleErrors(deliveries) {
   return issues
 }
 assert.deepEqual(subscriptionLifecycleErrors([{ kind: 'page' }, { kind: 'closed', value: close('unsubscribed') }]), [])
-assert.notDeepEqual(subscriptionLifecycleErrors([{ kind: 'closed', value: close('connection-replaced') }, { kind: 'page' }]), [])
-assert.notDeepEqual(subscriptionLifecycleErrors([{ kind: 'closed', value: close('connection-replaced') }, { kind: 'closed', value: close('unsubscribed') }]), [])
+assert.notDeepEqual(
+  subscriptionLifecycleErrors([{ kind: 'closed', value: close('connection-replaced') }, { kind: 'page' }]),
+  [],
+)
+assert.notDeepEqual(
+  subscriptionLifecycleErrors([{ kind: 'closed', value: close('connection-replaced') }, {
+    kind: 'closed',
+    value: close('unsubscribed'),
+  }]),
+  [],
+)
 
 const frozenV3Files = [
-  ...(await readdir(path.join(root, 'schemas'))).filter(name => /^agent-conversation-shell-.*\.v3\.schema\.json$/u.test(name)).map(name => `schemas/${name}`),
+  ...(await readdir(path.join(root, 'schemas'))).filter(name =>
+    /^agent-conversation-shell-.*\.v3\.schema\.json$/u.test(name)
+  ).map(name => `schemas/${name}`),
   'types/agent-conversation-shell.v3.d.ts',
 ].sort()
 const digest = createHash('sha256')
@@ -250,10 +305,16 @@ for (const file of frozenV3Files) {
   digest.update(await readFile(path.join(root, file)))
   digest.update('\0')
 }
-assert.equal(digest.digest('hex'), '4513266ec7c5e2a2514556c795a2c20b1fc27127a79b0904f308ac6a52e855f3', 'Agent Conversation Shell v3 public bytes drifted')
+assert.equal(
+  digest.digest('hex'),
+  '4513266ec7c5e2a2514556c795a2c20b1fc27127a79b0904f308ac6a52e855f3',
+  'Agent Conversation Shell v3 public bytes drifted',
+)
 
 const frozenV4Files = [
-  ...(await readdir(path.join(root, 'schemas'))).filter(name => /^agent-conversation-shell-.*\.v4\.schema\.json$/u.test(name)).map(name => `schemas/${name}`),
+  ...(await readdir(path.join(root, 'schemas'))).filter(name =>
+    /^agent-conversation-shell-.*\.v4\.schema\.json$/u.test(name)
+  ).map(name => `schemas/${name}`),
   'types/agent-conversation-shell.v4.d.ts',
 ].sort()
 const v4Digest = createHash('sha256')
@@ -263,7 +324,11 @@ for (const file of frozenV4Files) {
   v4Digest.update(await readFile(path.join(root, file)))
   v4Digest.update('\0')
 }
-assert.equal(v4Digest.digest('hex'), '44ba5feba050e5b051ea6b8ec369c96bea0cea3f1a3cf244319e4dd66c22aded', 'Agent Conversation Shell v4 public bytes drifted')
+assert.equal(
+  v4Digest.digest('hex'),
+  '44ba5feba050e5b051ea6b8ec369c96bea0cea3f1a3cf244319e4dd66c22aded',
+  'Agent Conversation Shell v4 public bytes drifted',
+)
 
 for (const v5Name of schemaNames.filter(name => name.includes('agent-conversation-shell') && name.includes('.v5.'))) {
   const v4Name = v5Name.replace('.v5.', '.v4.')
@@ -273,22 +338,32 @@ for (const v5Name of schemaNames.filter(name => name.includes('agent-conversatio
     v5Schema.$defs.composer.required = v5Schema.$defs.composer.required.filter(name => name !== 'shortcutPolicy')
     delete v5Schema.$defs.composer.properties.shortcutPolicy
   }
-  const normalized = JSON.parse(JSON.stringify(v5Schema)
-    .replaceAll('.v5.schema.json', '.v4.schema.json')
-    .replaceAll('/v5', '/v4')
-    .replaceAll(' v5', ' v4'))
+  const normalized = JSON.parse(
+    JSON.stringify(v5Schema)
+      .replaceAll('.v5.schema.json', '.v4.schema.json')
+      .replaceAll('/v5', '/v4')
+      .replaceAll(' v5', ' v4'),
+  )
   if (normalized.properties?.schemaVersion) normalized.properties.schemaVersion.const = 4
   assert.deepEqual(normalized, v4Schema, `${v5Name} must preserve the complete v4 shape outside shortcutPolicy`)
 }
 
 const v5PublicFiles = [
-  ...(await readdir(path.join(root, 'schemas'))).filter(name => /^agent-conversation-shell-.*\.v5\.schema\.json$/u.test(name)).map(name => path.join(root, 'schemas', name)),
+  ...(await readdir(path.join(root, 'schemas'))).filter(name =>
+    /^agent-conversation-shell-.*\.v5\.schema\.json$/u.test(name)
+  ).map(name => path.join(root, 'schemas', name)),
   path.join(root, 'types', 'agent-conversation-shell.v5.d.ts'),
 ]
 for (const file of v5PublicFiles) {
   const source = await readFile(file, 'utf8')
-  assert.ok(!/agent-loop|detailsUrl|AgentLoop/u.test(source), `${path.basename(file)} leaked the legacy runtime shape into v5`)
-  assert.ok(!/DeepSeek|Harness|DSH|pi-agent/iu.test(source), `${path.basename(file)} leaked an external reference-project name`)
+  assert.ok(
+    !/agent-loop|detailsUrl|AgentLoop/u.test(source),
+    `${path.basename(file)} leaked the legacy runtime shape into v5`,
+  )
+  assert.ok(
+    !/DeepSeek|Harness|DSH|pi-agent/iu.test(source),
+    `${path.basename(file)} leaked an external reference-project name`,
+  )
 }
 
 console.log('Agent Conversation Shell v5 composer shortcut and v4 compatibility conformance passed')

@@ -45,7 +45,8 @@ const validator = name => {
   if (result === undefined) throw new Error(`${name} was not registered`)
   return result
 }
-const schemaErrors = (validate, value) => validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
+const schemaErrors = (validate, value) =>
+  validate(value) ? [] : (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
 const scalarKey = value => JSON.stringify([value === null ? 'null' : typeof value, value])
 
 const frozenFiles = [
@@ -75,7 +76,11 @@ for (const file of frozenFiles) {
   frozenDigest.update(readFileSync(path.join(root, file)))
   frozenDigest.update('\0')
 }
-assert.equal(frozenDigest.digest('hex'), 'dc29d3120dc9acaf941357f0da6df2031cedecc70e031b981140ed856ddebb1a', 'manager navigation v1-v4 and reused config contracts must remain byte-frozen')
+assert.equal(
+  frozenDigest.digest('hex'),
+  'dc29d3120dc9acaf941357f0da6df2031cedecc70e031b981140ed856ddebb1a',
+  'manager navigation v1-v4 and reused config contracts must remain byte-frozen',
+)
 
 function fieldSchema(envelope, segments) {
   let current = envelope
@@ -87,10 +92,18 @@ function fieldSchema(envelope, segments) {
 }
 
 function finiteScalars(schema) {
-  if (Array.isArray(schema?.enum) && schema.enum.every(value => value === null || ['string', 'number', 'boolean'].includes(typeof value))) return schema.enum
+  if (
+    Array.isArray(schema?.enum)
+    && schema.enum.every(value => value === null || ['string', 'number', 'boolean'].includes(typeof value))
+  ) return schema.enum
   if (Array.isArray(schema?.oneOf)) {
     const values = schema.oneOf.map(branch => branch?.const)
-    if (schema.oneOf.every((branch, index) => Object.hasOwn(branch ?? {}, 'const') && (values[index] === null || ['string', 'number', 'boolean'].includes(typeof values[index])))) return values
+    if (
+      schema.oneOf.every((branch, index) =>
+        Object.hasOwn(branch ?? {}, 'const')
+        && (values[index] === null || ['string', 'number', 'boolean'].includes(typeof values[index]))
+      )
+    ) return values
   }
   return undefined
 }
@@ -128,11 +141,15 @@ function resolveLabel(label, locale, catalogs) {
   return catalogs[locale]?.[label.namespace ?? 'chatroom']?.[label.key] ?? label.fallback
 }
 
-const base = JSON.parse(await readFile(path.join(root, 'test-vectors/manager-content-navigation-v4/valid/host-config-form.json'), 'utf8'))
+const base = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/manager-content-navigation-v4/valid/host-config-form.json'), 'utf8'),
+)
 const valid = structuredClone(base)
-valid.declaration.$schema = 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v5.schema.json'
+valid.declaration.$schema =
+  'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-navigation.v5.schema.json'
 valid.declaration.schemaVersion = 5
-valid.projection.$schema = 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v4.schema.json'
+valid.projection.$schema =
+  'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-projection.v4.schema.json'
 valid.projection.schemaVersion = 4
 valid.projection.body.configuration.version = 3
 valid.projection.body.configuration.schema.form = {
@@ -154,29 +171,60 @@ const sourceAnnotation = {
   },
 }
 for (const page of valid.subscriptionPages) {
-  page.$schema = 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-page.v2.schema.json'
+  page.$schema =
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-content-config-subscription-page.v2.schema.json'
   page.contract = 'cordisx.manager-content-config-subscription-page/v2'
   page.schemaVersion = 2
-  for (const update of page.updates) if (update.kind === 'snapshot-replaced') update.body = structuredClone(valid.projection.body)
+  for (const update of page.updates) {
+    if (update.kind === 'snapshot-replaced') update.body = structuredClone(valid.projection.body)
+  }
 }
 
 assert.deepEqual(schemaErrors(validator('manager-content-navigation.v5.schema.json'), valid.declaration), [])
 assert.deepEqual(validateChoiceProjection(valid.projection), [])
-const validateFormPresentation = ajv.getSchema(`${schemas.get('plugin-config-common.v3.schema.json').$id}#/$defs/formPresentation`)
+const validateFormPresentation = ajv.getSchema(
+  `${schemas.get('plugin-config-common.v3.schema.json').$id}#/$defs/formPresentation`,
+)
 assert.ok(validateFormPresentation)
-assert.deepEqual(schemaErrors(validateFormPresentation, sourceAnnotation.meta.extra.cordisxForm), [], 'the public Schemastery annotation must normalize to form presentation v2')
-assert.deepEqual(structuredClone(sourceAnnotation.meta.extra.cordisxForm), valid.projection.body.configuration.schema.form)
-for (const page of valid.subscriptionPages) assert.deepEqual(schemaErrors(validator('manager-content-config-subscription-page.v2.schema.json'), page), [])
-assert.deepEqual(structuredClone(valid), valid, 'v5 choice labels and lifecycle documents must be structured-clone safe')
+assert.deepEqual(
+  schemaErrors(validateFormPresentation, sourceAnnotation.meta.extra.cordisxForm),
+  [],
+  'the public Schemastery annotation must normalize to form presentation v2',
+)
+assert.deepEqual(
+  structuredClone(sourceAnnotation.meta.extra.cordisxForm),
+  valid.projection.body.configuration.schema.form,
+)
+for (const page of valid.subscriptionPages) {
+  assert.deepEqual(schemaErrors(validator('manager-content-config-subscription-page.v2.schema.json'), page), [])
+}
+assert.deepEqual(
+  structuredClone(valid),
+  valid,
+  'v5 choice labels and lifecycle documents must be structured-clone safe',
+)
 
 const catalogs = {
-  en: { chatroom: { 'composer.shortcut.enter': 'Enter sends', 'composer.shortcut.mod-enter': 'Command/Ctrl+Enter sends' } },
-  'zh-CN': { chatroom: { 'composer.shortcut.enter': 'Enter 发送', 'composer.shortcut.mod-enter': 'Command/Ctrl+Enter 发送' } },
+  en: {
+    chatroom: { 'composer.shortcut.enter': 'Enter sends', 'composer.shortcut.mod-enter': 'Command/Ctrl+Enter sends' },
+  },
+  'zh-CN': {
+    chatroom: { 'composer.shortcut.enter': 'Enter 发送', 'composer.shortcut.mod-enter': 'Command/Ctrl+Enter 发送' },
+  },
 }
 const choices = valid.projection.body.configuration.schema.form.fields[0].choices
-assert.deepEqual(choices.map(choice => resolveLabel(choice.label, 'en', catalogs)), ['Enter sends', 'Command/Ctrl+Enter sends'])
-assert.deepEqual(choices.map(choice => resolveLabel(choice.label, 'zh-CN', catalogs)), ['Enter 发送', 'Command/Ctrl+Enter 发送'])
-assert.deepEqual(choices.map(choice => resolveLabel(choice.label, 'fr', catalogs)), ['Enter sends', 'Command/Ctrl+Enter sends'])
+assert.deepEqual(choices.map(choice => resolveLabel(choice.label, 'en', catalogs)), [
+  'Enter sends',
+  'Command/Ctrl+Enter sends',
+])
+assert.deepEqual(choices.map(choice => resolveLabel(choice.label, 'zh-CN', catalogs)), [
+  'Enter 发送',
+  'Command/Ctrl+Enter 发送',
+])
+assert.deepEqual(choices.map(choice => resolveLabel(choice.label, 'fr', catalogs)), [
+  'Enter sends',
+  'Command/Ctrl+Enter sends',
+])
 assert.deepEqual(choices.map(choice => choice.value), ['enter', 'mod-enter'])
 
 const saveValues = valid.commands
@@ -190,16 +238,32 @@ function invalid(mutator, message) {
   mutator(candidate.body.configuration.schema)
   assert.notDeepEqual(validateChoiceProjection(candidate), [], message)
 }
-invalid(schema => schema.form.fields[0].choices[1].value = 'enter', 'duplicate values with divergent labels must fail closed')
+invalid(
+  schema => schema.form.fields[0].choices[1].value = 'enter',
+  'duplicate values with divergent labels must fail closed',
+)
 invalid(schema => schema.form.fields[0].choices.pop(), 'missing finite values must fail closed')
-invalid(schema => schema.form.fields[0].choices.push({ value: 'shift-enter', label: { key: 'composer.shortcut.shift-enter', fallback: 'Shift+Enter sends' } }), 'additional values must fail closed')
+invalid(
+  schema =>
+    schema.form.fields[0].choices.push({
+      value: 'shift-enter',
+      label: { key: 'composer.shortcut.shift-enter', fallback: 'Shift+Enter sends' },
+    }),
+  'additional values must fail closed',
+)
 invalid(schema => delete schema.form.fields[0].choices[0].label.fallback, 'labels without fallback must fail closed')
 invalid(schema => schema.form.fields[0].choices[0].label.html = '<b>Enter</b>', 'unknown label fields must fail closed')
-invalid(schema => schema.envelope.properties.shortcutPolicy = { type: 'string' }, 'choice metadata on a non-finite field must fail closed')
+invalid(
+  schema => schema.envelope.properties.shortcutPolicy = { type: 'string' },
+  'choice metadata on a non-finite field must fail closed',
+)
 invalid(schema => schema.form.version = 3, 'unknown form presentation versions must fail closed')
 
 const divergentOneOf = structuredClone(valid.projection)
-divergentOneOf.body.configuration.schema.envelope.properties.shortcutPolicy = { oneOf: [{ const: 1 }, { const: '1' }], default: 1 }
+divergentOneOf.body.configuration.schema.envelope.properties.shortcutPolicy = {
+  oneOf: [{ const: 1 }, { const: '1' }],
+  default: 1,
+}
 divergentOneOf.body.configuration.schema.form.fields[0].choices = [
   { value: 1, label: { key: 'numeric.one', fallback: 'Numeric one' } },
   { value: '1', label: { key: 'string.one', fallback: 'String one' } },
@@ -208,9 +272,28 @@ assert.deepEqual(validateChoiceProjection(divergentOneOf), [], 'JSON scalar type
 
 const v4Smuggle = structuredClone(base.projection)
 v4Smuggle.body.configuration.schema.form = structuredClone(valid.projection.body.configuration.schema.form)
-assert.notDeepEqual(schemaErrors(validator('manager-content-projection.v3.schema.json'), v4Smuggle), [], 'frozen projection v3 must reject v5 choice metadata')
+assert.notDeepEqual(
+  schemaErrors(validator('manager-content-projection.v3.schema.json'), v4Smuggle),
+  [],
+  'frozen projection v3 must reject v5 choice metadata',
+)
 
-const publicSchemas = JSON.stringify([...schemas.values()].filter(schema => schema.$id.includes('manager-content') || schema.$id.includes('plugin-config')))
-for (const forbidden of ['homeConfigPath', 'localPath', 'rendererCallback', 'container', 'electronBridge', 'pluginMount', 'rawPath', 'html']) assert.equal(publicSchemas.includes(forbidden), false, `public schemas must not expose ${forbidden}`)
+const publicSchemas = JSON.stringify(
+  [...schemas.values()].filter(schema =>
+    schema.$id.includes('manager-content') || schema.$id.includes('plugin-config')
+  ),
+)
+for (
+  const forbidden of [
+    'homeConfigPath',
+    'localPath',
+    'rendererCallback',
+    'container',
+    'electronBridge',
+    'pluginMount',
+    'rawPath',
+    'html',
+  ]
+) assert.equal(publicSchemas.includes(forbidden), false, `public schemas must not expose ${forbidden}`)
 
 console.log('Manager content navigation v5 localized choice labels conformance passed')

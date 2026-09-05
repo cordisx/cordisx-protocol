@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -95,7 +95,13 @@ export function resolveMessage(owner, message, locale, catalogs) {
     const formatted = new IntlMessageFormat(catalog.messages[message.key], catalog.locale).format(message.params ?? {})
     return { text: String(formatted), namespace, key: message.key, locale: catalog.locale }
   } catch {
-    return { text: fallbackText(namespace, message), diagnostic: 'missing-params', namespace, key: message.key, locale: catalog.locale }
+    return {
+      text: fallbackText(namespace, message),
+      diagnostic: 'missing-params',
+      namespace,
+      key: message.key,
+      locale: catalog.locale,
+    }
   }
 }
 
@@ -190,9 +196,21 @@ export function validateSuite(suite) {
   const pages = Array.isArray(suite.pages) ? suite.pages : []
   const outlets = Array.isArray(suite.outlets) ? suite.outlets : []
 
-  addDuplicateErrors(errors, owner, 'catalog', catalogs, record => `${qualifyNamespace(owner, record.namespace)}\0${record.locale}`)
+  addDuplicateErrors(
+    errors,
+    owner,
+    'catalog',
+    catalogs,
+    record => `${qualifyNamespace(owner, record.namespace)}\0${record.locale}`,
+  )
   addDuplicateErrors(errors, owner, 'command', commands)
-  addDuplicateErrors(errors, owner, 'contribution', contributions, record => `${record.surface}\0${qualify(owner, record.id)}`)
+  addDuplicateErrors(
+    errors,
+    owner,
+    'contribution',
+    contributions,
+    record => `${record.surface}\0${qualify(owner, record.id)}`,
+  )
   addDuplicateErrors(errors, owner, 'route', routes)
   addDuplicateErrors(errors, owner, 'page', pages)
   addDuplicateErrors(errors, owner, 'outlet', outlets, record => record.id)
@@ -214,7 +232,11 @@ export function validateSuite(suite) {
       try {
         new IntlMessageFormat(value, catalog.locale)
       } catch (error) {
-        errors.push(`catalogs[${index}] message ${key} is not valid ICU: ${error instanceof Error ? error.message : String(error)}`)
+        errors.push(
+          `catalogs[${index}] message ${key} is not valid ICU: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        )
       }
     }
   }
@@ -244,7 +266,9 @@ export function validateSuite(suite) {
       actionIds.add(action.id)
     }
     for (const reference of pageCommandReferences(page)) {
-      if (!commandIds.has(qualify(owner, reference))) errors.push(`dangling page header command reference: ${reference}`)
+      if (!commandIds.has(qualify(owner, reference))) {
+        errors.push(`dangling page header command reference: ${reference}`)
+      }
     }
   }
 
@@ -252,7 +276,9 @@ export function validateSuite(suite) {
     if (!pageIds.has(qualify(owner, route.page))) errors.push(`dangling page reference: ${route.page}`)
     if (!outletIds.has(route.outlet)) errors.push(`dangling outlet reference: ${route.outlet}`)
     const expected = expectedOutletForPath(route.path)
-    if (route.outlet !== expected) errors.push(`route ${route.id} path requires outlet ${expected}, received ${route.outlet}`)
+    if (route.outlet !== expected) {
+      errors.push(`route ${route.id} path requires outlet ${expected}, received ${route.outlet}`)
+    }
     const duplicates = duplicateParameters(route.path)
     if (duplicates.length > 0) errors.push(`route ${route.id} repeats parameter ${duplicates[0]}`)
     if (expected === 'session.content' && !route.path.split('/').includes(':sessionId')) {
@@ -260,7 +286,9 @@ export function validateSuite(suite) {
     }
     const page = pagesById.get(qualify(owner, route.page))
     if (page?.chrome === 'body-only' && route.outlet !== 'session.content') {
-      errors.push(`body-only page ${page.id} requires an outlet with persistent external chrome; received ${route.outlet}`)
+      errors.push(
+        `body-only page ${page.id} requires an outlet with persistent external chrome; received ${route.outlet}`,
+      )
     }
   }
 
@@ -277,11 +305,15 @@ export function validateSuite(suite) {
   for (const contribution of contributions) {
     if (contribution.surface === 'environment.section.actions' || contribution.surface === 'environment.section.rows') {
       const target = contribution.item?.sectionId
-      if (typeof target === 'string' && !sectionIds.has(qualify(owner, target))) errors.push(`dangling environment section: ${target}`)
+      if (typeof target === 'string' && !sectionIds.has(qualify(owner, target))) {
+        errors.push(`dangling environment section: ${target}`)
+      }
     }
     if (contribution.surface === 'environment.row.trailing-actions') {
       const target = contribution.item?.rowId
-      if (typeof target === 'string' && !rowIds.has(qualify(owner, target))) errors.push(`dangling environment row: ${target}`)
+      if (typeof target === 'string' && !rowIds.has(qualify(owner, target))) {
+        errors.push(`dangling environment row: ${target}`)
+      }
     }
   }
 
@@ -312,16 +344,38 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/ui/invalid'))) 
   }
 }
 
-const localizedMetadataSuite = JSON.parse(await readFile(
-  path.join(root, 'test-vectors/ui/valid/localized-route-page-metadata.json'),
-  'utf8',
-))
+const localizedMetadataSuite = JSON.parse(
+  await readFile(
+    path.join(root, 'test-vectors/ui/valid/localized-route-page-metadata.json'),
+    'utf8',
+  ),
+)
 const localizedRoute = localizedMetadataSuite.routes[0]
 const localizedPage = localizedMetadataSuite.pages[0]
-const routeTitleZh = resolveMessage(localizedMetadataSuite.owner, localizedRoute.title, 'zh-CN', localizedMetadataSuite.catalogs)
-const routeDescriptionEn = resolveMessage(localizedMetadataSuite.owner, localizedRoute.description, 'en', localizedMetadataSuite.catalogs)
-const pageTitleEn = resolveMessage(localizedMetadataSuite.owner, localizedPage.title, 'en', localizedMetadataSuite.catalogs)
-const pageDescriptionZh = resolveMessage(localizedMetadataSuite.owner, localizedPage.description, 'zh-CN', localizedMetadataSuite.catalogs)
+const routeTitleZh = resolveMessage(
+  localizedMetadataSuite.owner,
+  localizedRoute.title,
+  'zh-CN',
+  localizedMetadataSuite.catalogs,
+)
+const routeDescriptionEn = resolveMessage(
+  localizedMetadataSuite.owner,
+  localizedRoute.description,
+  'en',
+  localizedMetadataSuite.catalogs,
+)
+const pageTitleEn = resolveMessage(
+  localizedMetadataSuite.owner,
+  localizedPage.title,
+  'en',
+  localizedMetadataSuite.catalogs,
+)
+const pageDescriptionZh = resolveMessage(
+  localizedMetadataSuite.owner,
+  localizedPage.description,
+  'zh-CN',
+  localizedMetadataSuite.catalogs,
+)
 if (
   routeTitleZh.text !== '打开概览'
   || routeDescriptionEn.text !== 'Review the plugin overview in the application area.'
@@ -372,8 +426,18 @@ const localizationProbe = [
     messages: { greeting: '你好，{name}！' },
   },
 ]
-const exactProjection = resolveMessage('demo', { key: 'greeting', params: { name: 'CordisX' } }, 'zh-CN', localizationProbe)
-const languageProjection = resolveMessage('demo', { key: 'greeting', params: { name: 'CordisX' } }, 'en-GB', localizationProbe)
+const exactProjection = resolveMessage(
+  'demo',
+  { key: 'greeting', params: { name: 'CordisX' } },
+  'zh-CN',
+  localizationProbe,
+)
+const languageProjection = resolveMessage(
+  'demo',
+  { key: 'greeting', params: { name: 'CordisX' } },
+  'en-GB',
+  localizationProbe,
+)
 const missingProjection = resolveMessage('demo', { key: 'missing', fallback: 'Fallback' }, 'zh-CN', localizationProbe)
 const missingParams = resolveMessage('demo', { key: 'greeting' }, 'en', localizationProbe)
 if (exactProjection.text !== '你好，CordisX！' || exactProjection.locale !== 'zh-CN') {

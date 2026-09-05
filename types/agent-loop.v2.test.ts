@@ -1,8 +1,8 @@
 import type {
   AgentDefinition,
   AgentLoopCommand,
-  AgentLoopCreateOrBindUnavailableCode,
   AgentLoopCreateOrBindResult,
+  AgentLoopCreateOrBindUnavailableCode,
   AgentLoopDeliveryDisposition,
   AgentLoopEvent,
   AgentLoopOperationId,
@@ -49,7 +49,8 @@ const definition = {
 } satisfies AgentDefinition
 
 const binding = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-loop-task-binding.v2.schema.json',
   contract: 'cordisx.agent-loop-task-binding/v2',
   schemaVersion: 2,
   binding: { bindingId: 'binding-1', generation: 1 },
@@ -209,28 +210,44 @@ async function consume() {
 
 void consume
 
-// @ts-expect-error image content is reference-only and cannot carry a URL
-const invalidImage: AgentLoopCommand = { ...send, content: [{ kind: 'image-ref', ref: 'image-1', mediaType: 'image/png', url: 'https://example.com/a.png' }] }
+const invalidImage: AgentLoopCommand = {
+  ...send,
+  // @ts-expect-error image content is reference-only and cannot carry a URL
+  content: [{ kind: 'image-ref', ref: 'image-1', mediaType: 'image/png', url: 'https://example.com/a.png' }],
+}
 void invalidImage
 
 // @ts-expect-error room identity is not part of a task binding
 const invalidBinding: AgentLoopTaskBinding = { ...binding, roomId: 'room-1' }
 void invalidBinding
 
-// @ts-expect-error Host targets require the app scheme
-const invalidTaskDetailsTarget: AgentLoopCreateOrBindResult = { ...acceptedCreate, detailsUrl: { url: 'https://example.test/tasks/1', target: 'host' } }
+const invalidTaskDetailsTarget: AgentLoopCreateOrBindResult = {
+  ...acceptedCreate,
+  // @ts-expect-error Host targets require the app scheme
+  detailsUrl: { url: 'https://example.test/tasks/1', target: 'host' },
+}
 void invalidTaskDetailsTarget
 
 // @ts-expect-error details-unavailable applies only to create-or-bind
-const invalidDetailsUnavailableSend: AgentLoopSendResult = { ...unavailableSend, authorization: { capability: 'turns.submit', state: 'allowed', code: 'allowed' }, code: 'details-unavailable' }
+const invalidDetailsUnavailableSend: AgentLoopSendResult = {
+  ...unavailableSend,
+  authorization: { capability: 'turns.submit', state: 'allowed', code: 'allowed' },
+  code: 'details-unavailable',
+}
 void invalidDetailsUnavailableSend
 
-// @ts-expect-error create-or-bind denied results cannot claim turns.submit
-const invalidCreateAuthorization: AgentLoopCreateOrBindResult = { ...deniedCreate, authorization: { capability: 'turns.submit', state: 'denied', code: 'user-denied' } }
+const invalidCreateAuthorization: AgentLoopCreateOrBindResult = {
+  ...deniedCreate,
+  // @ts-expect-error create-or-bind denied results cannot claim turns.submit
+  authorization: { capability: 'turns.submit', state: 'denied', code: 'user-denied' },
+}
 void invalidCreateAuthorization
 
-// @ts-expect-error send unavailable results cannot claim tasks.content.read
-const invalidSendAuthorization: AgentLoopSendResult = { ...unavailableSend, authorization: { capability: 'tasks.content.read', state: 'unavailable', code: 'task-unavailable' } }
+const invalidSendAuthorization: AgentLoopSendResult = {
+  ...unavailableSend,
+  // @ts-expect-error send unavailable results cannot claim tasks.content.read
+  authorization: { capability: 'tasks.content.read', state: 'unavailable', code: 'task-unavailable' },
+}
 void invalidSendAuthorization
 
 // @ts-expect-error accepted sends always return the stable turn identity

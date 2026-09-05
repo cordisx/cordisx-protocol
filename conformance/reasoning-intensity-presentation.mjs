@@ -27,7 +27,9 @@ for (const schema of schemas.values()) ajv.addSchema(schema)
 
 const contribution = ajv.getSchema(schemas.get('surface-contribution.v6.schema.json').$id)
 const catalog = ajv.getSchema(schemas.get('host-extension-point-catalog.v6.schema.json').$id)
-if (contribution === undefined || catalog === undefined) throw new Error('reasoning-intensity schemas were not registered')
+if (contribution === undefined || catalog === undefined) {
+  throw new Error('reasoning-intensity schemas were not registered')
+}
 
 const text = key => ({ key, fallback: key })
 const valid = {
@@ -74,14 +76,28 @@ expect('valid reasoning-intensity descriptor', catalog, {
   }],
 }, true)
 
-for (const [label, mutate] of [
-  ['raw CSS', value => { value.item.css = '.native { display: none }' }],
-  ['native selector', value => { value.item.selector = 'input[type=range]' }],
-  ['HTML payload', value => { value.item.html = '<div>replacement</div>' }],
-  ['unknown material', value => { value.item.stages[2].material = 'diamond' }],
-  ['one stage', value => { value.item.stages = value.item.stages.slice(0, 1) }],
-  ['group override', value => { value.group = 'theme' }],
-]) {
+for (
+  const [label, mutate] of [
+    ['raw CSS', value => {
+      value.item.css = '.native { display: none }'
+    }],
+    ['native selector', value => {
+      value.item.selector = 'input[type=range]'
+    }],
+    ['HTML payload', value => {
+      value.item.html = '<div>replacement</div>'
+    }],
+    ['unknown material', value => {
+      value.item.stages[2].material = 'diamond'
+    }],
+    ['one stage', value => {
+      value.item.stages = value.item.stages.slice(0, 1)
+    }],
+    ['group override', value => {
+      value.group = 'theme'
+    }],
+  ]
+) {
   const candidate = structuredClone(valid)
   mutate(candidate)
   expect(`reject ${label}`, contribution, candidate, false)

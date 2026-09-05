@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -32,7 +32,10 @@ for (const [kind, validator] of Object.entries(validators)) {
 
 export function canonicalSource(value) {
   const url = new URL(value)
-  if (!['file:', 'https:'].includes(url.protocol) || url.username !== '' || url.password !== '' || url.search !== '' || url.hash !== '') {
+  if (
+    !['file:', 'https:'].includes(url.protocol) || url.username !== '' || url.password !== '' || url.search !== ''
+    || url.hash !== ''
+  ) {
     throw new Error('source must be a file or HTTPS URL without credentials, query, or fragment')
   }
   if (url.protocol === 'file:' && url.host !== '') throw new Error('file source must be a local absolute file URL')
@@ -102,7 +105,9 @@ export function validateExtensionPointSuite(suite) {
       const key = pointIdentityKey(policy.identity)
       if (policyKeys.has(key)) errors.push(`duplicate point policy identity: ${key}`)
       policyKeys.add(key)
-      if (!pointsById.has(policy.identity.pointId)) errors.push(`policy references unknown point: ${policy.identity.pointId}`)
+      if (!pointsById.has(policy.identity.pointId)) {
+        errors.push(`policy references unknown point: ${policy.identity.pointId}`)
+      }
     }
   }
 
@@ -127,7 +132,9 @@ export function validateExtensionPointSuite(suite) {
 
     const effective = effectivePointPolicy(policies, request.identity)
     if (vector.expectedEffectivePolicy !== effective) {
-      errors.push(`accesses[${index}] expected effective policy ${vector.expectedEffectivePolicy}, received ${effective}`)
+      errors.push(
+        `accesses[${index}] expected effective policy ${vector.expectedEffectivePolicy}, received ${effective}`,
+      )
     }
     const authorized = effective === 'allow'
     if (vector.expectedAuthorized !== authorized) {

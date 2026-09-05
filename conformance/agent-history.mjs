@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -50,9 +50,11 @@ export function validateHistoryPage(page) {
   if (!page.coverage.tailAvailable && page.tailCursor !== undefined) {
     errors.push('tail cursor requires tail availability')
   }
-  if (page.coverage.earliestTime !== undefined
+  if (
+    page.coverage.earliestTime !== undefined
     && page.coverage.latestTime !== undefined
-    && page.coverage.earliestTime > page.coverage.latestTime) {
+    && page.coverage.earliestTime > page.coverage.latestTime
+  ) {
     errors.push('coverage earliestTime cannot be later than latestTime')
   }
 
@@ -61,11 +63,15 @@ export function validateHistoryPage(page) {
     const event = events[index]
     if (event.sessionId !== page.sessionId) errors.push(`event[${index}] sessionId differs from page`)
     if (!allowedEventTypes.has(event.type)) errors.push(`event[${index}] type is not provable history`)
-    if (!['observed', 'inferred'].includes(event.provenance)) errors.push(`event[${index}] history provenance must be observed or inferred`)
+    if (!['observed', 'inferred'].includes(event.provenance)) {
+      errors.push(`event[${index}] history provenance must be observed or inferred`)
+    }
     if (event.source?.kind !== 'adapter') errors.push(`event[${index}] history source must be an adapter`)
-    if (event.source?.adapterId !== page.source.adapterId
+    if (
+      event.source?.adapterId !== page.source.adapterId
       || event.source?.adapterVersion !== page.source.adapterVersion
-      || event.source?.hostId !== page.source.hostId) {
+      || event.source?.hostId !== page.source.hostId
+    ) {
       errors.push(`event[${index}] adapter source differs from page source`)
     }
     if (eventIds.has(event.eventId)) errors.push(`duplicate event id ${event.eventId}`)
@@ -110,19 +116,21 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/agent-history/i
 }
 
 const publicSchema = JSON.stringify(schemas.get('agent-history-page.v1.schema.json'))
-for (const forbidden of [
-  'additionalContext',
-  'model-consumed',
-  'modelConsumed',
-  'providerId',
-  'remoteSessionId',
-  'CODEX_HOME',
-  'HOME',
-  'filePath',
-  'byteOffset',
-  'inode',
-  'credential',
-]) {
+for (
+  const forbidden of [
+    'additionalContext',
+    'model-consumed',
+    'modelConsumed',
+    'providerId',
+    'remoteSessionId',
+    'CODEX_HOME',
+    'HOME',
+    'filePath',
+    'byteOffset',
+    'inode',
+    'credential',
+  ]
+) {
   if (publicSchema.includes(forbidden)) {
     console.error(`public Agent history schema leaks forbidden authority ${forbidden}`)
     failures += 1

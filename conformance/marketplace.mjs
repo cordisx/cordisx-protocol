@@ -1,25 +1,45 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchemas = [1, 2, 3, 4].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8')))
-const feedSchemas = [1, 2, 3, 4].map(async version => JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8')))
+const pluginSchemas = [1, 2, 3, 4].map(async version =>
+  JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8'))
+)
+const feedSchemas = [1, 2, 3, 4].map(async version =>
+  JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8'))
+)
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
 const resolvedFeedSchemas = await Promise.all(feedSchemas)
-const marketplaceSourceSchema = JSON.parse(await readFile(path.join(root, 'schemas/marketplace-source.v1.schema.json'), 'utf8'))
+const marketplaceSourceSchema = JSON.parse(
+  await readFile(path.join(root, 'schemas/marketplace-source.v1.schema.json'), 'utf8'),
+)
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true })
 addFormats(ajv)
-for (const dependency of ['ui-common.v1.schema.json', 'plugin-lifecycle-common.v1.schema.json', 'marketplace-official.v1.schema.json', 'marketplace-certification.v1.schema.json', 'commerce-descriptor.v1.schema.json']) {
+for (
+  const dependency of [
+    'ui-common.v1.schema.json',
+    'plugin-lifecycle-common.v1.schema.json',
+    'marketplace-official.v1.schema.json',
+    'marketplace-certification.v1.schema.json',
+    'commerce-descriptor.v1.schema.json',
+  ]
+) {
   ajv.addSchema(JSON.parse(await readFile(path.join(root, 'schemas', dependency), 'utf8')))
 }
 for (const schema of resolvedPluginSchemas) ajv.addSchema(schema)
-const pluginValidators = new Map(resolvedPluginSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.getSchema(schema.$id)]))
-const feedValidators = new Map(resolvedFeedSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.compile(schema)]))
+const pluginValidators = new Map(
+  resolvedPluginSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.getSchema(schema.$id)]),
+)
+const feedValidators = new Map(
+  resolvedFeedSchemas.map(schema => [schema.properties.schemaVersion.const, ajv.compile(schema)]),
+)
 const marketplaceSourceValidator = ajv.compile(marketplaceSourceSchema)
-if ([...pluginValidators.values()].some(validator => validator === undefined)) throw new Error('plugin schema was not registered')
+if ([...pluginValidators.values()].some(validator => validator === undefined)) {
+  throw new Error('plugin schema was not registered')
+}
 
 export function canonicalSource(value) {
   const url = new URL(value)
@@ -39,15 +59,21 @@ export function canonicalMarketplaceFeedUrl(value) {
 }
 
 export function validateMarketplaceSource(source) {
-  if (!marketplaceSourceValidator(source)) return marketplaceSourceValidator.errors ?? [{ message: 'invalid marketplace source' }]
+  if (!marketplaceSourceValidator(source)) {
+    return marketplaceSourceValidator.errors ?? [{ message: 'invalid marketplace source' }]
+  }
   const errors = []
   try {
-    if (canonicalMarketplaceFeedUrl(source.url) !== source.url) errors.push({ message: 'marketplace source URL must use canonical serialization' })
+    if (canonicalMarketplaceFeedUrl(source.url) !== source.url) {
+      errors.push({ message: 'marketplace source URL must use canonical serialization' })
+    }
   } catch (error) {
     errors.push({ message: error instanceof Error ? error.message : String(error) })
   }
   for (const [field, value] of Object.entries(source.local ?? {})) {
-    if (value !== value.trim()) errors.push({ message: `marketplace source local.${field} must not have leading or trailing whitespace` })
+    if (value !== value.trim()) {
+      errors.push({ message: `marketplace source local.${field} must not have leading or trailing whitespace` })
+    }
   }
   return errors
 }
@@ -60,11 +86,19 @@ function canonicalLocale(value) {
 
 function localeErrors(value, label, authorCount) {
   const errors = []
-  if (canonicalLocale(value.fallbackLocale) !== value.fallbackLocale) errors.push({ message: `${label}.fallbackLocale must use canonical serialization` })
+  if (canonicalLocale(value.fallbackLocale) !== value.fallbackLocale) {
+    errors.push({ message: `${label}.fallbackLocale must use canonical serialization` })
+  }
   for (const [locale, localization] of Object.entries(value.localizations ?? {})) {
-    if (canonicalLocale(locale) !== locale) errors.push({ message: `${label}.localizations locale must use canonical serialization: ${locale}` })
-    if (locale === value.fallbackLocale) errors.push({ message: `${label}.localizations must not repeat fallbackLocale ${locale}` })
-    if (authorCount !== undefined && localization.authors !== undefined && localization.authors.length !== authorCount) {
+    if (canonicalLocale(locale) !== locale) {
+      errors.push({ message: `${label}.localizations locale must use canonical serialization: ${locale}` })
+    }
+    if (locale === value.fallbackLocale) {
+      errors.push({ message: `${label}.localizations must not repeat fallbackLocale ${locale}` })
+    }
+    if (
+      authorCount !== undefined && localization.authors !== undefined && localization.authors.length !== authorCount
+    ) {
       errors.push({ message: `${label}.localizations.${locale}.authors must match the base author order and length` })
     }
   }
@@ -88,22 +122,38 @@ export function projectPluginMetadata(plugin, currentLocale) {
   return {
     name: localizedField(plugin.name, localizations, 'name', currentLocale, fallbackLocale),
     description: localizedField(plugin.description, localizations, 'description', currentLocale, fallbackLocale),
-    authors: localizedField(plugin.authors.map(author => author.name), localizations, 'authors', currentLocale, fallbackLocale),
+    authors: localizedField(
+      plugin.authors.map(author => author.name),
+      localizations,
+      'authors',
+      currentLocale,
+      fallbackLocale,
+    ),
     keywords: localizedField(plugin.keywords ?? [], localizations, 'keywords', currentLocale, fallbackLocale),
   }
 }
 
 export function projectFeedName(feed, currentLocale) {
   const fallbackLocale = feed.schemaVersion >= 2 ? feed.fallbackLocale : 'en'
-  return localizedField(feed.name, feed.schemaVersion >= 2 ? feed.localizations : undefined, 'name', currentLocale, fallbackLocale)
+  return localizedField(
+    feed.name,
+    feed.schemaVersion >= 2 ? feed.localizations : undefined,
+    'name',
+    currentLocale,
+    fallbackLocale,
+  )
 }
 
 export function validatePlugin(plugin) {
   const validatePluginSchema = pluginValidators.get(plugin?.schemaVersion)
-  if (validatePluginSchema === undefined || !validatePluginSchema(plugin)) return validatePluginSchema?.errors ?? [{ message: 'unsupported marketplace plugin schemaVersion' }]
+  if (validatePluginSchema === undefined || !validatePluginSchema(plugin)) {
+    return validatePluginSchema?.errors ?? [{ message: 'unsupported marketplace plugin schemaVersion' }]
+  }
   const errors = []
   try {
-    if (canonicalSource(plugin.source) !== plugin.source) errors.push({ message: 'source must use canonical serialization' })
+    if (canonicalSource(plugin.source) !== plugin.source) {
+      errors.push({ message: 'source must use canonical serialization' })
+    }
   } catch (error) {
     errors.push({ message: error instanceof Error ? error.message : String(error) })
   }
@@ -114,8 +164,10 @@ export function validatePlugin(plugin) {
       errors.push({ message: error instanceof Error ? error.message : String(error) })
     }
   }
-  if (plugin.schemaVersion >= 3 && plugin.artifact !== undefined
-    && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)) {
+  if (
+    plugin.schemaVersion >= 3 && plugin.artifact !== undefined
+    && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)
+  ) {
     errors.push({ message: 'artifact.packageName must belong to artifact.packageNamespace' })
   }
   return errors
@@ -149,7 +201,9 @@ export function validateFeed(feed) {
     identities.add(identity)
   }
   const sorted = [...feed.plugins].sort(comparePlugins)
-  if (JSON.stringify(sorted) !== JSON.stringify(feed.plugins)) errors.push({ message: 'plugins must use deterministic source/id/version ordering' })
+  if (JSON.stringify(sorted) !== JSON.stringify(feed.plugins)) {
+    errors.push({ message: 'plugins must use deterministic source/id/version ordering' })
+  }
   return errors
 }
 
@@ -201,21 +255,27 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/marketplace-sou
   }
 }
 
-const localizedFeed = JSON.parse(await readFile(path.join(root, 'test-vectors/marketplace/feeds/valid-localized-v2.json'), 'utf8'))
+const localizedFeed = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/marketplace/feeds/valid-localized-v2.json'), 'utf8'),
+)
 const localizedPlugin = localizedFeed.plugins[0]
 const zhProjection = projectPluginMetadata(localizedPlugin, 'zh-CN')
-if (projectFeedName(localizedFeed, 'zh-CN') !== 'CordisX 插件商店'
+if (
+  projectFeedName(localizedFeed, 'zh-CN') !== 'CordisX 插件商店'
   || zhProjection.name !== '点位展示'
   || zhProjection.description !== '展示结构化 CordisX 扩展点。'
   || JSON.stringify(zhProjection.authors) !== JSON.stringify(['CordisX 团队'])
-  || JSON.stringify(zhProjection.keywords) !== JSON.stringify(['扩展点', '界面'])) {
+  || JSON.stringify(zhProjection.keywords) !== JSON.stringify(['扩展点', '界面'])
+) {
   console.error('marketplace v2 zh-CN projection is incorrect', zhProjection)
   failures += 1
 }
 const fallbackProjection = projectPluginMetadata(localizedPlugin, 'fr-FR')
-if (projectFeedName(localizedFeed, 'fr-FR') !== 'CordisX Marketplace'
+if (
+  projectFeedName(localizedFeed, 'fr-FR') !== 'CordisX Marketplace'
   || fallbackProjection.name !== 'Slot Showcase'
-  || fallbackProjection.description !== 'Shows structured CordisX extension points.') {
+  || fallbackProjection.description !== 'Shows structured CordisX extension points.'
+) {
   console.error('marketplace v2 fallback projection is incorrect', fallbackProjection)
   failures += 1
 }

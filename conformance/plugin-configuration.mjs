@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -146,7 +146,9 @@ const caseValidators = {
 function validateVector(vector) {
   if (vector?.case === 'descriptor-v2-modes') {
     if (!Array.isArray(vector.values)) return ['descriptor-v2-modes requires values']
-    return vector.values.flatMap((value, index) => validateDescriptorV2(value).map(error => `values[${index}] ${error}`))
+    return vector.values.flatMap((value, index) =>
+      validateDescriptorV2(value).map(error => `values[${index}] ${error}`)
+    )
   }
   if (vector?.case === 'result-v2-modes') {
     if (!Array.isArray(vector.values)) return ['result-v2-modes requires values']
@@ -185,23 +187,27 @@ for (const file of await jsonFiles(path.join(root, 'test-vectors/plugin-configur
   }
 }
 
-if (normalizedApplies(1, 'restart') !== 'plugin-restart'
+if (
+  normalizedApplies(1, 'restart') !== 'plugin-restart'
   || normalizedApplies(2, 'plugin-restart') !== 'plugin-restart'
   || normalizedApplies(2, 'service-restart') !== 'service-restart'
-  || normalizedApplies(2, 'app-restart') !== 'app-restart') {
+  || normalizedApplies(2, 'app-restart') !== 'app-restart'
+) {
   console.error('Plugin configuration mode compatibility normalization is incorrect')
   failures += 1
 }
 
 const publicSchemas = JSON.stringify(schemaNames.map(name => schemas.get(name)))
-for (const forbidden of [
-  'homeConfigPath',
-  'localPath',
-  'secretValue',
-  'rendererCallback',
-  'container',
-  'electronBridge',
-]) {
+for (
+  const forbidden of [
+    'homeConfigPath',
+    'localPath',
+    'secretValue',
+    'rendererCallback',
+    'container',
+    'electronBridge',
+  ]
+) {
   if (publicSchemas.includes(forbidden)) {
     console.error(`Plugin configuration public schemas must not expose ${forbidden}`)
     failures += 1

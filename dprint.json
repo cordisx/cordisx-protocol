@@ -1,0 +1,38 @@
+{
+  "$schema": "https://dprint.dev/schemas/v0.json",
+  "indentWidth": 2,
+  "newLineKind": "lf",
+  "typescript": {
+    "quoteStyle": "preferSingle",
+    "module.sortImportDeclarations": "maintain",
+    "module.sortExportDeclarations": "maintain",
+    "semiColons": "asi"
+  },
+  "markdown": {
+    "textWrap": "maintain"
+  },
+  "includes": [
+    "**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,json,jsonc,md}"
+  ],
+  // Formatting excludes build outputs and the npm-generated lock; source generators and tests remain included.
+  "excludes": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "package-lock.json",
+    // Preserve frozen public declarations, serialized schemas, and conformance vectors byte-for-byte.
+    "types/**/*.d.ts",
+    "runtime/**",
+    // Topic specifications are public contracts; only the top-level documentation index is formatted.
+    ".agents/docs/*/**",
+    ".agents/docs/plugin-devtools-console.md",
+    ".agents/docs/publisher-grants.md",
+    "schemas/**/*.json",
+    "test-vectors/*/**"
+  ],
+  "plugins": [
+    "npm:@dprint/typescript@0.96.1",
+    "npm:@dprint/json@0.23.0",
+    "npm:@dprint/markdown@0.23.3"
+  ]
+}

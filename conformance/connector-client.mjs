@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -74,12 +74,16 @@ function validateCaller(request, context, errors) {
   if (request.caller.authorization.target.kind !== expectedTarget) {
     errors.push(`caller authorization target does not match ${request.type}`)
   }
-  if (expectedTarget === 'registration'
-    && !sameRegistration(request.caller.authorization.target.registration, request.registration)) {
+  if (
+    expectedTarget === 'registration'
+    && !sameRegistration(request.caller.authorization.target.registration, request.registration)
+  ) {
     errors.push('caller authorization registration does not match request registration')
   }
-  const issued = context?.callers?.find(record => samePrincipal(record.principal, request.caller.principal)
-    && record.userHandle === request.caller.userHandle)
+  const issued = context?.callers?.find(record =>
+    samePrincipal(record.principal, request.caller.principal)
+    && record.userHandle === request.caller.userHandle
+  )
   if (issued === undefined) errors.push('caller principal/user pair was not issued by the Host')
   return issued
 }
@@ -94,31 +98,40 @@ function validateRequest(request, context) {
     else if (record.state === 'replaced') errors.push('request registration was replaced')
     else if (record.state === 'disposed') errors.push('request registration was disposed')
   }
-  if (request.type === 'connector.command.execute' && !sameRegistration(request.command.registration, request.registration)) {
+  if (
+    request.type === 'connector.command.execute'
+    && !sameRegistration(request.command.registration, request.registration)
+  ) {
     errors.push('command registration does not match client request registration')
   }
   return errors
 }
 
 function expectedAuthorization(request, context) {
-  return context?.authorizations?.find(record => samePrincipal(record.principal, request.caller.principal)
+  return context?.authorizations?.find(record =>
+    samePrincipal(record.principal, request.caller.principal)
     && record.userHandle === request.caller.userHandle
     && record.capability === request.caller.authorization.capability
     && record.targetKind === request.caller.authorization.target.kind
-    && (record.targetKind === 'catalog' || sameRegistration(record.registration, request.registration)))
+    && (record.targetKind === 'catalog' || sameRegistration(record.registration, request.registration))
+  )
 }
 
 function validateExecution(command, execution, context, errors) {
   if (command.type === 'conversation.open' && execution?.kind !== 'conversation.opened') {
     errors.push('open command result must be conversation.opened')
   }
-  if (command.type === 'message.send' && (execution?.kind !== 'message.sent'
-    || execution.conversation !== command.conversation || execution.messageId !== command.message.messageId)) {
+  if (
+    command.type === 'message.send' && (execution?.kind !== 'message.sent'
+      || execution.conversation !== command.conversation || execution.messageId !== command.message.messageId)
+  ) {
     errors.push('send command result does not match command conversation/message')
   }
   if (command.type === 'run.stop') {
-    if (execution?.kind !== 'run.stopped'
-      || execution.binding?.conversation !== command.conversation || execution.binding?.run !== command.run) {
+    if (
+      execution?.kind !== 'run.stopped'
+      || execution.binding?.conversation !== command.conversation || execution.binding?.run !== command.run
+    ) {
       errors.push('stop command result does not match command run binding')
     }
     const binding = context?.runBindings?.find(record => record.run === command.run)
@@ -126,8 +139,10 @@ function validateExecution(command, execution, context, errors) {
       errors.push('run is not bound to command conversation')
     }
   }
-  if (command.type === 'conversation.close' && (execution?.kind !== 'conversation.closed'
-    || execution.conversation !== command.conversation)) {
+  if (
+    command.type === 'conversation.close' && (execution?.kind !== 'conversation.closed'
+      || execution.conversation !== command.conversation)
+  ) {
     errors.push('close command result does not match command conversation')
   }
 }
@@ -161,11 +176,15 @@ function validateExchange(vector) {
       registrations.add(key)
     }
   }
-  if (request.type === 'connector.command.execute') validateExecution(request.command, result.execution, context, errors)
+  if (request.type === 'connector.command.execute') {
+    validateExecution(request.command, result.execution, context, errors)
+  }
   if (request.type === 'connector.events.subscribe') {
     if (!validators.subscription(result.subscription)) errors.push(...validatorErrors(validators.subscription))
-    if (!sameRegistration(result.subscription?.registration, request.registration)
-      || result.subscription?.afterSequence !== request.afterSequence) {
+    if (
+      !sameRegistration(result.subscription?.registration, request.registration)
+      || result.subscription?.afterSequence !== request.afterSequence
+    ) {
       errors.push('subscription does not match request registration/cursor')
     }
     if (result.subscription?.snapshotSequence < request.afterSequence) {
@@ -186,9 +205,11 @@ function validatePages(vector, errors) {
       errors.push(...validatorErrors(validators.page).map(error => `page[${index}] ${error}`))
       continue
     }
-    if (page.subscription?.subscriptionId !== subscription?.subscriptionId
+    if (
+      page.subscription?.subscriptionId !== subscription?.subscriptionId
       || !sameRegistration(page.subscription?.registration, subscription?.registration)
-      || page.subscription?.snapshotSequence !== subscription?.snapshotSequence) {
+      || page.subscription?.snapshotSequence !== subscription?.snapshotSequence
+    ) {
       errors.push(`page[${index}] does not match subscription`)
     }
     if (page.afterSequence !== afterSequence) errors.push(`page[${index}] replay cursor is not serialized`)
@@ -196,7 +217,9 @@ function validatePages(vector, errors) {
     if (page.phase !== expectedPhase) errors.push(`page[${index}] phase does not match replay cursor`)
     let expectedSequence = page.afterSequence + 1
     for (const event of page.events) {
-      if (!sameRegistration(event.registration, subscription.registration)) errors.push(`page[${index}] event registration drifts`)
+      if (!sameRegistration(event.registration, subscription.registration)) {
+        errors.push(`page[${index}] event registration drifts`)
+      }
       if (event.sequence !== expectedSequence) errors.push(`page[${index}] events are not contiguous`)
       expectedSequence += 1
       if (eventIds.has(event.eventId)) errors.push(`page[${index}] duplicates event id ${event.eventId}`)
@@ -246,7 +269,21 @@ for (const outcome of ['valid', 'invalid']) {
 }
 
 const publicSchemas = JSON.stringify([...schemas.values()])
-for (const forbidden of ['room', 'provider', 'workspace', 'secret', 'credential', 'rawBridge', 'callback', 'document', 'selector', 'path', 'connection']) {
+for (
+  const forbidden of [
+    'room',
+    'provider',
+    'workspace',
+    'secret',
+    'credential',
+    'rawBridge',
+    'callback',
+    'document',
+    'selector',
+    'path',
+    'connection',
+  ]
+) {
   if (publicSchemas.toLowerCase().includes(forbidden.toLowerCase())) {
     console.error(`Connector client schemas must not expose ${forbidden}`)
     failures += 1

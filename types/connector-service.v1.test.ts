@@ -1,16 +1,32 @@
-import type { BoundConnectorClient, ConnectorCommand, ConnectorEvent, ConnectorRegistration, ConnectorServiceDescriptor } from '@cordisx/protocol/connector-service/v1'
+import type {
+  BoundConnectorClient,
+  ConnectorCommand,
+  ConnectorEvent,
+  ConnectorRegistration,
+  ConnectorServiceDescriptor,
+} from '@cordisx/protocol/connector-service/v1'
 
 const descriptor = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-service-descriptor.v1.schema.json',
   contract: 'cordisx.connector-service-descriptor/v1',
   schemaVersion: 1,
   connectorId: 'agent.connector',
   protocolVersion: 1,
-  capabilities: ['conversation.open', 'conversation.continue', 'message.send', 'events.receive', 'run.stop', 'conversation.close', 'lifecycle.dispose'],
+  capabilities: [
+    'conversation.open',
+    'conversation.continue',
+    'message.send',
+    'events.receive',
+    'run.stop',
+    'conversation.close',
+    'lifecycle.dispose',
+  ],
 } satisfies ConnectorServiceDescriptor
 
 const registration = {
-  $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-registration.v1.schema.json',
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/connector-registration.v1.schema.json',
   contract: 'cordisx.connector-registration/v1',
   schemaVersion: 1,
   registration: { registrationId: 'registration-1', connectorId: 'agent.connector', generation: 1 },

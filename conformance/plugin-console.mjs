@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -33,9 +33,11 @@ export function validatePluginConsolePage(page) {
     if (entry.kind === 'console' && entry.coverage !== 'scoped-console') {
       errors.push(`entry[${index}] plugin console requires scoped-console coverage`)
     }
-    if (entry.effectiveOwner !== undefined
+    if (
+      entry.effectiveOwner !== undefined
       && JSON.stringify(entry.effectiveOwner) !== JSON.stringify(entry.plugin)
-      && entry.trigger?.kind !== 'registration') {
+      && entry.trigger?.kind !== 'registration'
+    ) {
       errors.push(`entry[${index}] cross-owner invocation requires a registration trigger`)
     }
     previousSeq = entry.seq

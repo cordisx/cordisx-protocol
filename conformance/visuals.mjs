@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { isDeepStrictEqual } from 'node:util'
@@ -13,7 +13,9 @@ ajv.addSchema(common)
 ajv.addSchema(projectionSchema)
 const validateProviderId = ajv.getSchema(`${common.$id}#/$defs/providerId`)
 const validateProjection = ajv.getSchema(projectionSchema.$id)
-if (validateProviderId === undefined || validateProjection === undefined) throw new Error('visuals schemas were not registered')
+if (validateProviderId === undefined || validateProjection === undefined) {
+  throw new Error('visuals schemas were not registered')
+}
 
 function errorsOf(validator) {
   return (validator.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`)
@@ -84,7 +86,9 @@ function validateOwnerIsolationCase(vector) {
       }
     }
   }
-  if (![...ownersById.values()].some(keys => keys.size > 1)) errors.push('isolation case must share one local id across owners')
+  if (![...ownersById.values()].some(keys => keys.size > 1)) {
+    errors.push('isolation case must share one local id across owners')
+  }
   return errors
 }
 
@@ -118,7 +122,9 @@ const detachedSource = { status: { state: 'ready' }, points: [1, 2, 3] }
 const detached = cloneVisualData(detachedSource)
 detachedSource.status.state = 'changed'
 detachedSource.points.push(5)
-if (detached.status.state !== 'ready' || detached.points.length !== 3) throw new Error('detached data changed with its source')
+if (detached.status.state !== 'ready' || detached.points.length !== 3) {
+  throw new Error('detached data changed with its source')
+}
 const detachedFreezeErrors = []
 frozenErrors(detached, 'detached', detachedFreezeErrors)
 if (detachedFreezeErrors.length > 0) throw new Error(detachedFreezeErrors.join('; '))

@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -53,9 +53,13 @@ function validateBundle(value) {
   if (!validators.bundle(value)) return schemaErrors(validators.bundle)
   const errors = []
   for (const id of duplicates(value.members.map(member => member.id))) errors.push(`duplicate member id: ${id}`)
-  for (const memberPath of duplicates(value.members.map(member => member.path))) errors.push(`duplicate member path: ${memberPath}`)
+  for (const memberPath of duplicates(value.members.map(member => member.path))) {
+    errors.push(`duplicate member path: ${memberPath}`)
+  }
   for (const member of value.members) {
-    if (member.required && !member.enabledByDefault) errors.push(`required member is not enabled by default: ${member.id}`)
+    if (member.required && !member.enabledByDefault) {
+      errors.push(`required member is not enabled by default: ${member.id}`)
+    }
   }
   return errors
 }
@@ -65,16 +69,22 @@ function validateOperation(value) {
   const operation = value.operation
   const errors = []
   if ('bundlePermissions' in operation) {
-    for (const id of duplicates(operation.bundlePermissions.map(item => item.permissionId))) errors.push(`duplicate bundle permission: ${id}`)
+    for (const id of duplicates(operation.bundlePermissions.map(item => item.permissionId))) {
+      errors.push(`duplicate bundle permission: ${id}`)
+    }
   }
   if ('pluginOverrides' in operation) {
-    for (const key of duplicates(operation.pluginOverrides.map(item => `${item.pluginId}\0${item.permissionId}`))) errors.push(`duplicate plugin override: ${key}`)
+    for (const key of duplicates(operation.pluginOverrides.map(item => `${item.pluginId}\0${item.permissionId}`))) {
+      errors.push(`duplicate plugin override: ${key}`)
+    }
   }
   if ('clearPluginOverrides' in operation) {
     const clearKeys = operation.clearPluginOverrides.map(item => `${item.pluginId}\0${item.permissionId}`)
     for (const key of duplicates(clearKeys)) errors.push(`duplicate cleared plugin override: ${key}`)
     const assigned = new Set(operation.pluginOverrides.map(item => `${item.pluginId}\0${item.permissionId}`))
-    for (const key of clearKeys) if (assigned.has(key)) errors.push(`plugin override is both assigned and cleared: ${key}`)
+    for (const key of clearKeys) {
+      if (assigned.has(key)) errors.push(`plugin override is both assigned and cleared: ${key}`)
+    }
   }
   return errors
 }
@@ -83,7 +93,9 @@ function validateResult(value) {
   if (!validators.result(value)) return schemaErrors(validators.result)
   if (value.plan === undefined) return []
   const errors = []
-  for (const id of duplicates(value.plan.permissionRequests.map(item => item.permissionId))) errors.push(`duplicate permission request: ${id}`)
+  for (const id of duplicates(value.plan.permissionRequests.map(item => item.permissionId))) {
+    errors.push(`duplicate permission request: ${id}`)
+  }
   return errors
 }
 
@@ -94,28 +106,49 @@ function validateSnapshot(value) {
   for (const id of duplicates(value.bundles.map(bundle => bundle.id))) errors.push(`duplicate bundle id: ${id}`)
   for (const bundle of value.bundles) {
     const memberIds = new Set(bundle.members.map(member => member.pluginId))
-    for (const id of duplicates(bundle.members.map(member => member.pluginId))) errors.push(`duplicate member ${id} in ${bundle.id}`)
+    for (const id of duplicates(bundle.members.map(member => member.pluginId))) {
+      errors.push(`duplicate member ${id} in ${bundle.id}`)
+    }
     for (const member of bundle.members) {
-      if (member.installedViaBundle !== (member.bundleIds.length > 0)) errors.push(`installedViaBundle differs from claims for ${member.pluginId}`)
-      if (member.state === 'version-conflict' && member.conflict === undefined) errors.push(`version conflict lacks details for ${member.pluginId}`)
+      if (member.installedViaBundle !== (member.bundleIds.length > 0)) {
+        errors.push(`installedViaBundle differs from claims for ${member.pluginId}`)
+      }
+      if (member.state === 'version-conflict' && member.conflict === undefined) {
+        errors.push(`version conflict lacks details for ${member.pluginId}`)
+      }
       for (const owner of member.bundleIds) if (!bundleIds.has(owner)) errors.push(`unknown bundle claim ${owner}`)
     }
     for (const permission of bundle.permissions) {
       if (!memberIds.has(permission.pluginId)) errors.push(`permission references non-member ${permission.pluginId}`)
-      if (permission.pluginOverride !== undefined && permission.effectiveSource !== 'plugin-override') errors.push(`override source mismatch for ${permission.permissionId}`)
-      for (const affected of permission.affectedBundleIds) if (!bundleIds.has(affected)) errors.push(`unknown affected bundle ${affected}`)
+      if (permission.pluginOverride !== undefined && permission.effectiveSource !== 'plugin-override') {
+        errors.push(`override source mismatch for ${permission.permissionId}`)
+      }
+      for (const affected of permission.affectedBundleIds) {
+        if (!bundleIds.has(affected)) errors.push(`unknown affected bundle ${affected}`)
+      }
     }
     for (const claim of bundle.claims) {
       if (!memberIds.has(claim.pluginId)) errors.push(`claim references non-member ${claim.pluginId}`)
-      if (claim.kind === 'bundle' && !bundleIds.has(claim.claimantId)) errors.push(`claim references unknown bundle ${claim.claimantId}`)
+      if (claim.kind === 'bundle' && !bundleIds.has(claim.claimantId)) {
+        errors.push(`claim references unknown bundle ${claim.claimantId}`)
+      }
     }
-    if (bundle.enabled && bundle.availableOperations.includes('enable')) errors.push(`enabled bundle ${bundle.id} exposes enable`)
-    if (!bundle.enabled && bundle.availableOperations.includes('disable')) errors.push(`disabled bundle ${bundle.id} exposes disable`)
+    if (bundle.enabled && bundle.availableOperations.includes('enable')) {
+      errors.push(`enabled bundle ${bundle.id} exposes enable`)
+    }
+    if (!bundle.enabled && bundle.availableOperations.includes('disable')) {
+      errors.push(`disabled bundle ${bundle.id} exposes disable`)
+    }
   }
   return errors
 }
 
-const caseValidators = { bundle: validateBundle, operation: validateOperation, result: validateResult, snapshot: validateSnapshot }
+const caseValidators = {
+  bundle: validateBundle,
+  operation: validateOperation,
+  result: validateResult,
+  snapshot: validateSnapshot,
+}
 
 async function files(directory) {
   return (await readdir(directory, { withFileTypes: true }))
