@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-command-result.v2.schema.json",
+  "title": "CordisX product-page composer command completion v2",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code", "disposition", "roomId", "deliveries"],
+      "properties": {
+        "status": { "const": "accepted" },
+        "code": { "const": "submitted" },
+        "disposition": { "enum": ["existing-room", "fresh-room"] },
+        "roomId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "deliveries": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/acceptedDelivery" } }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code", "deliveries"],
+      "properties": {
+        "status": { "const": "failed" },
+        "code": { "enum": ["handler-failed", "incomplete-submission", "navigation-failed", "claim-failed"] },
+        "roomId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "deliveries": { "type": "array", "items": { "$ref": "#/$defs/deliveryOutcome" } }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code"],
+      "properties": { "status": { "const": "denied" }, "code": { "const": "command-denied" } }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code"],
+      "properties": { "status": { "const": "unavailable" }, "code": { "enum": ["page-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable", "unsupported"] } }
+    }
+  ],
+  "$defs": {
+    "target": { "$ref": "agent-page-composer-origin.v1.schema.json#/$defs/target" },
+    "acceptedDelivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "status", "sessionId", "messageId"],
+      "properties": {
+        "target": { "$ref": "#/$defs/target" },
+        "status": { "const": "accepted" },
+        "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "messageId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }
+      }
+    },
+    "deniedDelivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "status", "code"],
+      "properties": {
+        "target": { "$ref": "#/$defs/target" },
+        "status": { "const": "denied" },
+        "code": { "enum": ["reservation-denied", "submit-denied", "stale", "page-replaced", "plugin-generation-replaced", "connection-replaced", "command-complete", "revoked"] }
+      }
+    },
+    "deliveryOutcome": { "oneOf": [{ "$ref": "#/$defs/acceptedDelivery" }, { "$ref": "#/$defs/deniedDelivery" }] }
+  }
+}

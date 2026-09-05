@@ -16,6 +16,7 @@ const expectedExports = [
   './agent-admission/v5',
   './agent-admission/v6',
   './agent-page-admission/v1',
+  './agent-page-admission/v2',
   './agent-avatar/v1',
   './agent-conversation-shell/v1',
   './agent-conversation-shell/v2',
@@ -81,6 +82,7 @@ const expectedFiles = [
   'types/agent-admission.v5.d.ts',
   'types/agent-admission.v6.d.ts',
   'types/agent-page-admission.v1.d.ts',
+  'types/agent-page-admission.v2.d.ts',
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
@@ -207,6 +209,7 @@ import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalSer
 import type { ApprovalRequestRoutingResult, ApprovalService as ApprovalServiceV3 } from '@cordisx/protocol/approval/v3'
 import type { AgentAdmissionBootstrapRouteClaimRequest, AgentAdmissionBootstrapRouteClaimService, AgentAdmissionBootstrapRouteDeclarationRequest, AgentAdmissionBootstrapRouteDeclarationService, AgentAdmissionBootstrapRouteReservationRequest, AgentAdmissionBootstrapRouteReservationService, AgentAdmissionBootstrapRouteTarget } from '@cordisx/protocol/agent-admission/v6'
 import type { AgentPageAdmissionRouteClaimRequest, AgentPageAdmissionRouteClaimService, AgentPageAdmissionRouteDeclarationRequest, AgentPageAdmissionRouteDeclarationService, AgentPageAdmissionRouteReservationRequest, AgentPageAdmissionRouteReservationService, AgentPageAdmissionRouteTarget, AgentPageAdmissionTargetRequest, AgentPageAdmissionTargetService, AgentPageComposerCommandAdapter, AgentPageComposerCommandContext, AgentPageComposerCommandRequest } from '@cordisx/protocol/agent-page-admission/v1'
+import type { AgentPageComposerCommandAdapter as AgentPageComposerCommandAdapterV2, AgentPageComposerCommandContext as AgentPageComposerCommandContextV2, AgentPageComposerCommandRequest as AgentPageComposerCommandRequestV2, AgentPageFreshRoomNavigationService } from '@cordisx/protocol/agent-page-admission/v2'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
 const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
@@ -263,6 +266,10 @@ declare const pageRouteClaim: AgentPageAdmissionRouteClaimRequest
 declare const pageCommandContext: AgentPageComposerCommandContext
 declare const pageCommands: AgentPageComposerCommandAdapter
 declare const pageCommandRequest: AgentPageComposerCommandRequest
+declare const pageCommandsV2: AgentPageComposerCommandAdapterV2
+declare const pageCommandRequestV2: AgentPageComposerCommandRequestV2
+declare const pageCommandContextV2: AgentPageComposerCommandContextV2
+declare const freshRoomNavigation: AgentPageFreshRoomNavigationService
 declare const agent: Agent
 declare const leadAgent: Agent
 declare const session: Session
@@ -344,6 +351,12 @@ pageRouteDeclarations.declare({ ...pageRouteRequest, target: installedPageRouteT
 })
 pageCommandContext.origin.scope satisfies 'page-composer-submit'
 pageCommands.execute(pageCommandRequest).then(result => result.status satisfies 'accepted' | 'denied' | 'unavailable')
+pageCommandsV2.execute(pageCommandRequestV2).then(result => {
+  if (result.status === 'accepted') result.deliveries[0].messageId satisfies string
+})
+if (pageCommandContextV2.freshRoomNavigation !== undefined) {
+  freshRoomNavigation.navigate({ navigation: pageCommandContextV2.freshRoomNavigation, route: installedPageRouteTarget.route })
+}
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient

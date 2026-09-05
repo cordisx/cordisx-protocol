@@ -80,3 +80,34 @@ framework, callback, raw path, or private Host state. The public TypeScript
 entrypoint is `@cordisx/protocol/agent-page-admission/v1`; Host availability is
 separate and must be honestly unavailable until the matching Host runtime is
 installed.
+
+## V2 completion round trip
+
+V1 reports only page-command dispatch availability. V2 preserves every V1 byte
+and adds the completion contract required by a page that must retain its draft
+until all exact reservations have actually submitted.
+
+The V2 `AgentPageComposerCommandAdapter.execute` awaits the existing generic
+handler. The Host, never the plugin, derives the completion from its retained
+reservation receipts. An `accepted/submitted` result contains one Room id,
+either `existing-room` or `fresh-room` disposition, and a non-empty list of
+exact `{ target, sessionId, messageId }` admissions. The page clears its draft
+only for that result. Every returned target has the completion's exact Room id;
+Host rejects a mismatched or partial success as `failed` rather than fabricating
+an accepted completion.
+
+Handler failure, an incomplete target set, navigation failure, or claim failure
+returns `failed` with the Host-derived accepted and denied delivery outcomes.
+The page retains its draft. Already accepted messages remain durable facts; the
+Host never rolls them back, reissues a request, or retries automatically.
+
+For a fresh page command the V2 Host context contains an opaque fresh-Room
+navigation permit. After every declared target has accepted `submit()`, the
+handler calls the Host-owned fresh navigation service with its declared route.
+The Host performs navigation and every exact destination binding claim before
+that service resolves. The generic handler then settles, and only after that
+does the page adapter return its final completion. A page replacement before
+submission, any nonaccepted target, navigation abort, or claim failure denies
+or fails the completion and revokes the continuation. This sequencing prevents
+the command-complete-before-claim failure class without retaining or copying
+the old binding.
