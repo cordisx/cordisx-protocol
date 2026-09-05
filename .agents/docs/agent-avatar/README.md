@@ -2,7 +2,8 @@
 
 `agent-avatar/v1` is a data-only, stable Agent identity reference. It defines no
 renderer, DOM, CSS, raw asset, cache, animation, theme, or accessibility policy.
-Those remain Host-owned.
+Those remain owned by the product that creates and presents the identity. The
+CordisX base Host does not implement an Agent-avatar renderer.
 
 ## References
 

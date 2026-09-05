@@ -1,10 +1,11 @@
 # Agent Conversation Shell v2, v3, v4, and v5
 
-This data-only source contract serves a Host-owned Agent Desktop conversation
-shell. The production Host renderer is independently implemented in the real
-Host renderer/runtime. Playground visuals may later consume that production
-renderer, never the reverse. No current Playground component, demo DOM,
-geometry, copy, selector, or hardcoded visual is normative here.
+This frozen data-only source-contract family is retained for compatibility with
+existing producers. The current Chatroom product owns its conversation page,
+React tree, CSS, avatar renderer, member panel, composer, and identity-detail
+behavior. CordisX does not provide or require an Agent Conversation Shell
+service. No demo DOM, geometry, copy, selector, or hardcoded visual is
+normative here.
 
 The formal v1 wire contract remains frozen and consumable. V2 is the additive
 successor for Agent identity, active runs, member presence, message provenance,

@@ -1,5 +1,9 @@
 # TypeScript declarations
 
+`raster-image.v1.d.ts` exposes a generic bounded PNG snapshot after an owning
+product has completed visual composition. It carries no URL, SVG, DOM,
+callback, renderer, avatar, participant, room, or vendor semantics.
+
 `manager-content-navigation.v2.d.ts` is the additive declaration successor for
 an explicit localized tab label that may differ from the target route title.
 An absent label retains v1 route-title derivation. It adds no description,

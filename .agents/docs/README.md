@@ -32,7 +32,7 @@ Specified areas:
 - `entities/`: Host-managed profile-local Agent entity files, package-relative
   no-overwrite templates, scoped registries, deterministic revisions, file
   change fences, and exact AgentDefinition resolution version 1.
-- `agent-conversation-shell/`: Host-owned conversation data plane versions 2
+- `agent-conversation-shell/`: frozen compatibility conversation data plane versions 2
   through 5; v4 adds exact SessionEvent, Agent detail, approval, and
   self-introduction correlations, while v5 adds a closed composer shortcut
   policy without changing the submit command or earlier Shell paths.
@@ -48,6 +48,8 @@ Specified areas:
   portrait projection driven by native reasoning progress.
 - `transient-canvas/`: isolated, Host-bounded transparent Canvas presentations
   at semantic extension points without renderer DOM authority.
+- `raster-image/`: generic bounded PNG snapshots produced after product-specific
+  composition, with no URL, SVG, DOM, callback, or product semantics.
 - `manager-settings-tabs/`: structured Manager settings content-tab surface
   versions 4/5, catalog versions 3/4, controlled body-only outlet,
   deterministic projection, authorization origin, and lifecycle.
