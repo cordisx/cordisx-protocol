@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-command-result.v1.schema.json",
+  "title": "CordisX product-page composer command result v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code"],
+      "properties": { "status": { "const": "accepted" }, "code": { "const": "dispatched" } }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code"],
+      "properties": { "status": { "const": "denied" }, "code": { "const": "command-denied" } }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code"],
+      "properties": {
+        "status": { "const": "unavailable" },
+        "code": { "enum": ["page-replaced", "plugin-generation-replaced", "connection-replaced", "host-unavailable", "unsupported"] }
+      }
+    }
+  ]
+}

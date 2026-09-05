@@ -11,6 +11,20 @@ its scope are described in [conformance](../conformance/README.md).
 - `visuals-common.v1.schema.json` and `visual-projection.v1.schema.json`:
   owner-local provider ids plus the framework-neutral opaque data and effective
   theme projection supplied to one bounded visual seat;
+- `agent-page-composer-origin.v1.schema.json` and
+  `agent-page-composer-command-context.v1.schema.json`,
+  `agent-page-composer-command-request.v1.schema.json`, and
+  `agent-page-composer-command-result.v1.schema.json`: Host-issued,
+  page-binding/execution-fenced origins plus the mounted page command adapter
+  request/context/result for one product-page composer command;
+- `agent-page-admission-target-origin.v1.schema.json`,
+  `agent-page-admission-target-receipt.v1.schema.json`, and
+  `agent-page-admission-reservation.v1.schema.json`: exact same-page Room
+  target capabilities, receipts, and one-shot pre-submit reservations;
+- `agent-page-admission-route-continuation.v1.schema.json`,
+  `agent-page-admission-route-reservation.v1.schema.json`, and
+  `agent-page-admission-route-claim-receipt.v1.schema.json`: fresh-Room
+  continuation, reservation, and Host-only destination-binding claim evidence;
 - `plugin-bundle.v1.schema.json`: one non-executable explicit-local bundle
   manifest with exact member versions and contained package directories;
 - `plugin-bundle-lifecycle-operation.v1.schema.json` and

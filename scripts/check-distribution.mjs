@@ -15,6 +15,7 @@ const expectedExports = [
   './agent-admission/v4',
   './agent-admission/v5',
   './agent-admission/v6',
+  './agent-page-admission/v1',
   './agent-avatar/v1',
   './agent-conversation-shell/v1',
   './agent-conversation-shell/v2',
@@ -79,6 +80,7 @@ const expectedFiles = [
   'types/agent-admission.v4.d.ts',
   'types/agent-admission.v5.d.ts',
   'types/agent-admission.v6.d.ts',
+  'types/agent-page-admission.v1.d.ts',
   'types/agent-loop.v1.d.ts',
   'types/agent-loop.v2.d.ts',
   'types/agent-loop.v3.d.ts',
@@ -204,6 +206,7 @@ import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalServiceV2 } from '@cordisx/protocol/approval/v2'
 import type { ApprovalRequestRoutingResult, ApprovalService as ApprovalServiceV3 } from '@cordisx/protocol/approval/v3'
 import type { AgentAdmissionBootstrapRouteClaimRequest, AgentAdmissionBootstrapRouteClaimService, AgentAdmissionBootstrapRouteDeclarationRequest, AgentAdmissionBootstrapRouteDeclarationService, AgentAdmissionBootstrapRouteReservationRequest, AgentAdmissionBootstrapRouteReservationService, AgentAdmissionBootstrapRouteTarget } from '@cordisx/protocol/agent-admission/v6'
+import type { AgentPageAdmissionRouteClaimRequest, AgentPageAdmissionRouteClaimService, AgentPageAdmissionRouteDeclarationRequest, AgentPageAdmissionRouteDeclarationService, AgentPageAdmissionRouteReservationRequest, AgentPageAdmissionRouteReservationService, AgentPageAdmissionRouteTarget, AgentPageAdmissionTargetRequest, AgentPageAdmissionTargetService, AgentPageComposerCommandAdapter, AgentPageComposerCommandContext, AgentPageComposerCommandRequest } from '@cordisx/protocol/agent-page-admission/v1'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
 import type { BoundHostDomClient } from '@cordisx/protocol/host-dom/v1'
 const avatar = createGeneratedAgentAvatarRef({ namespace: 'agent-definition', agentId: 'reviewer' })
@@ -249,6 +252,17 @@ declare const bootstrapRouteClaims: AgentAdmissionBootstrapRouteClaimService
 declare const bootstrapRouteDeclaration: AgentAdmissionBootstrapRouteDeclarationRequest
 declare const bootstrapRouteReservation: AgentAdmissionBootstrapRouteReservationRequest
 declare const bootstrapRouteClaim: AgentAdmissionBootstrapRouteClaimRequest
+declare const pageTargets: AgentPageAdmissionTargetService
+declare const pageTargetRequest: AgentPageAdmissionTargetRequest
+declare const pageRouteDeclarations: AgentPageAdmissionRouteDeclarationService
+declare const pageRouteReservations: AgentPageAdmissionRouteReservationService
+declare const pageRouteClaims: AgentPageAdmissionRouteClaimService
+declare const pageRouteRequest: AgentPageAdmissionRouteDeclarationRequest
+declare const pageRouteReservation: AgentPageAdmissionRouteReservationRequest
+declare const pageRouteClaim: AgentPageAdmissionRouteClaimRequest
+declare const pageCommandContext: AgentPageComposerCommandContext
+declare const pageCommands: AgentPageComposerCommandAdapter
+declare const pageCommandRequest: AgentPageComposerCommandRequest
 declare const agent: Agent
 declare const leadAgent: Agent
 declare const session: Session
@@ -313,6 +327,23 @@ bootstrapRouteDeclarations.declare({ ...bootstrapRouteDeclaration, target: insta
     })
   }
 })
+const installedPageTarget = { roomId: 'room-page-installed', participantId: 'participant-page-installed', memberId: 'member-page-installed', runId: 'run-page-installed' }
+pageTargets.issue({ ...pageTargetRequest, target: installedPageTarget }).then(result => {
+  if (result.status === 'issued') result.receipt.target.runId satisfies string
+})
+const installedPageRouteTarget = { ...installedPageTarget, route: { outlet: 'main', routeDefinitionId: 'room', param: 'roomId', roomId: installedPageTarget.roomId } } satisfies AgentPageAdmissionRouteTarget
+pageRouteDeclarations.declare({ ...pageRouteRequest, target: installedPageRouteTarget }).then(result => {
+  if (result.status === 'declared') {
+    pageRouteReservations.reserve({ ...pageRouteReservation, continuation: result.continuation }).then(reservation => {
+      if (reservation.status === 'reserved') void reservation.reservation.submit()
+    })
+    pageRouteClaims.claim({ ...pageRouteClaim, continuation: result.continuation }).then(claim => {
+      if (claim.status === 'claimed') claim.receipt.target.route.roomId satisfies string
+    })
+  }
+})
+pageCommandContext.origin.scope satisfies 'page-composer-submit'
+pageCommands.execute(pageCommandRequest).then(result => result.status satisfies 'accepted' | 'denied' | 'unavailable')
 declare const createCommand: Parameters<BoundAgentLoopClient['createOrBind']>[0]
 declare const sendCommand: Parameters<BoundAgentLoopClient['send']>[0]
 declare const hostDom: BoundHostDomClient

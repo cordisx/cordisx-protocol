@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-reservation.v1.schema.json",
+  "title": "CordisX product-page Room route pre-submit reservation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "reservationId", "continuation", "message"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-reservation.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-page-admission-route-reservation/v1" },
+    "schemaVersion": { "const": 1 },
+    "reservationId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "continuation": { "$ref": "agent-page-admission-route-continuation.v1.schema.json" },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": { "text": { "type": "string", "minLength": 1, "maxLength": 65536 } }
+    }
+  }
+}

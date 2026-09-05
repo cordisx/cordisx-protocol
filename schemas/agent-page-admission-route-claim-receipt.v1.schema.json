@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-claim-receipt.v1.schema.json",
+  "title": "CordisX product-page Room route claim receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "receiptId", "owner", "origin", "target", "binding", "source"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-admission-route-claim-receipt.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-page-admission-route-claim-receipt/v1" },
+    "schemaVersion": { "const": 1 },
+    "receiptId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+    "owner": { "$ref": "session-common.v1.schema.json#/$defs/pluginOwner" },
+    "origin": { "$ref": "agent-page-composer-origin.v1.schema.json" },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roomId", "participantId", "memberId", "runId", "route"],
+      "properties": {
+        "roomId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "participantId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "memberId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "runId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "route": { "$ref": "agent-page-composer-origin.v1.schema.json#/$defs/roomRoute" }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binding", "generation", "route"],
+      "properties": {
+        "binding": { "$ref": "agent-page-composer-origin.v1.schema.json#/$defs/pageBinding" },
+        "generation": { "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/generation" },
+        "route": { "$ref": "agent-page-composer-origin.v1.schema.json#/$defs/roomRoute" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionId", "messageId"],
+      "properties": {
+        "sessionId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" },
+        "messageId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" }
+      }
+    }
+  }
+}

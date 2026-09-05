@@ -28,6 +28,9 @@ semantics, `AgentId = SessionId`, MessageId-only admission, pending-message
 discard, fixed Session snapshots, contiguous replay-to-live delivery,
 first-terminal subscription closure, and exact Agent-scoped approval identity.
 These checks do not delete or replace AgentLoop v1-v4 conformance.
+Product-page admission conformance additively covers Host-issued page command
+origins, same-Room N=1/2/3 exact target capabilities, one-shot reservation,
+frozen Shell-origin rejection, and fresh-Room destination route claim evidence.
 UI extension catalog conformance covers the complete version-2 point
 vocabulary, payload-family mapping, independent stability/availability,
 generation-fenced surface origin, host-only contextual identity, and
