@@ -1,5 +1,9 @@
 # Agent and Session runtime v1
 
+The core Agent/Session surface is v1. Approval and admission entrypoints evolve
+independently; use the [public entrypoints](#public-entrypoints) and topic
+sections below to select their exact versions.
+
 This specification defines an additive, implementation-neutral Agent/Session
 surface. It introduces `ctx.agents`, `ctx.sessions`, and `ctx.approvals` without
 removing or changing AgentLoop v1-v4, Agent Events, Agent History, Manager,
@@ -174,32 +178,34 @@ the requester's single SessionEvent ledger.
 
 ## Minimum consumption
 
-Host adds three typed Cordis services to its public context and binds them to
-one Host-owned runtime authority. It may keep the existing AgentLoop v4
-registration active in parallel.
-
-Chatroom may adopt `ctx.agents.create/resume/get` and an acquired Agent's
-`followup`, `steer`, `inject`, `discard`, `cancel`, and `whenIdle` incrementally.
-It should keep the accepted current AgentLoop path until the Host-provided new
-services are available and verified.
-
-Trace calls `ctx.sessions.get(sessionId)`, captures `snapshot()`, reads pages
-pinned to `snapshotSeq`, and then subscribes after the last committed sequence.
-It renders durable state only from SessionEvent and observes
-`subscription.closed` as a terminal fence.
+Historical Host, Chatroom, and Trace adoption guidance is preserved in
+[dated maintainer notes](../../maintainers/adoption-notes.md#agent-and-session-adoption).
+It does not add protocol requirements or report current consumer availability.
+The public services and compatibility requirements above remain normative.
 
 ## Public entrypoints
 
-- `@cordisx/protocol/agents/v1` -> `types/agents.v1.d.ts`;
-- `@cordisx/protocol/sessions/v1` -> `types/sessions.v1.d.ts`;
-- `@cordisx/protocol/approval/v1` -> `types/approval.v1.d.ts`;
-- `@cordisx/protocol/approval/v2` -> `types/approval.v2.d.ts`;
-- `@cordisx/protocol/approval/v3` -> `types/approval.v3.d.ts`.
-- `@cordisx/protocol/agent-admission/v3` -> `types/agent-admission.v3.d.ts`.
-- `@cordisx/protocol/agent-admission/v4` -> `types/agent-admission.v4.d.ts`.
-- `@cordisx/protocol/agent-admission/v5` -> `types/agent-admission.v5.d.ts`.
-- `@cordisx/protocol/agent-admission/v6` -> `types/agent-admission.v6.d.ts`.
-- `@cordisx/protocol/agent-conversation-shell/v9` -> `types/agent-conversation-shell.v9.d.ts`.
+The [TypeScript index](../../../types/INDEX.md#agent-and-session) maps the exact
+`@cordisx/protocol` imports for Agent/Session v1, approval v1-v3, and admission
+v1-v6. Approval successors are described under [v2 authority](#v2-exact-approval-authority)
+and [v3 request routing](#v3-pre-persistence-request-routing).
+
+Admission versions select different capture/reservation services; they do not
+change the Agent or Session core version. Schema versions also remain independent.
+
+| Admission entrypoint | Scope | Wire definitions |
+| --- | --- | --- |
+| [v1](../../../types/agent-admission.v1.d.ts) | Capture an already accepted admission under a live command origin | [Receipt](../../../schemas/agent-admission-receipt.v1.schema.json), [capture result](../../../schemas/agent-admission-capture-result.v1.schema.json) |
+| [v2](../../../types/agent-admission.v2.d.ts) | Reserve before the reservation's submit | [Reservation v2](../../../schemas/agent-admission-reservation.v2.schema.json) |
+| [v3](../../../types/agent-admission.v3.d.ts) | [Exact target-scoped pre-submit admission](#target-scoped-pre-submit-admission) | [Origin v3](../../../schemas/agent-admission-target-origin.v3.schema.json), [reservation v3](../../../schemas/agent-admission-target-reservation.v3.schema.json) |
+| [v4](../../../types/agent-admission.v4.d.ts) | [Bootstrap target admission](#bootstrap-target-admission) | [Bootstrap command origin v1](../../../schemas/agent-bootstrap-command-origin.v1.schema.json), [reservation v4](../../../schemas/agent-admission-bootstrap-reservation.v4.schema.json) |
+| [v5](../../../types/agent-admission.v5.d.ts) | [Bootstrap Room source capture](#bootstrap-room-source-capture) | [Room-target receipt v5](../../../schemas/agent-admission-bootstrap-room-target-receipt.v5.schema.json), [reservation v5](../../../schemas/agent-admission-bootstrap-room-reservation.v5.schema.json) |
+| [v6](../../../types/agent-admission.v6.d.ts) | [Bootstrap Room route rebind](#bootstrap-room-route-rebind) | [Continuation v6](../../../schemas/agent-admission-bootstrap-route-continuation.v6.schema.json), [claim receipt v6](../../../schemas/agent-admission-bootstrap-route-claim-receipt.v6.schema.json) |
+
+The [Shell version map](../agent-conversation-shell/README.md#version-navigation)
+distinguishes composer command-context successors from the earlier Shell wire
+families. [Admission conformance](../../../conformance/agent-admission.mjs)
+checks these admission and composer-origin boundaries.
 
 ### Target-scoped pre-submit admission
 

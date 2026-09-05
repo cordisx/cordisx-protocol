@@ -2,6 +2,12 @@
 
 Machine-readable CordisX manifest and protocol schemas belong here.
 
+Use the [specification topics](../.agents/docs/README.md) for normative behavior
+and version navigation, and the [TypeScript index](../types/INDEX.md) for exact
+package imports. A schema version belongs to that document; it need not equal
+the version of a service or entrypoint that reuses it. Validation behavior and
+its scope are described in [conformance](../conformance/README.md).
+
 - `visuals-common.v1.schema.json` and `visual-projection.v1.schema.json`:
   owner-local provider ids plus the framework-neutral opaque data and effective
   theme projection supplied to one bounded visual seat;

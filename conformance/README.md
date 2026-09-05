@@ -1,5 +1,11 @@
 # Conformance
 
+Start with the [specification topics](../.agents/docs/README.md) and their version
+maps to select a contract, then use its schemas, fixtures, and conformance suite.
+The [TypeScript index](../types/INDEX.md) maps public imports; [test vectors](../test-vectors/README.md)
+describe example coverage. These are protocol checks, separate from Host
+interoperability, package publication, and consumer acceptance.
+
 Implementation-independent compatibility fixtures and expected outcomes belong here.
 
 Run `npm run check` for marketplace schema, canonical identity, source import, tuple
