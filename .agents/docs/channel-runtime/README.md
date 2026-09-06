@@ -6,6 +6,13 @@ messages, exposes Channel thread/session identity, emits normalized events,
 and reports health. It does not select a model, workspace, provider, task,
 notification policy, or downstream consumer.
 
+The public TypeScript entrypoints are
+`@cordisx/protocol/channel-runtime/v1` for the source- and generation-bound
+launcher `ctx.channel` service and `@cordisx/protocol/channel-manager/v2` for
+the renderer-safe `ctx.channelManager` projection and operation service. They
+describe the existing wire families below and do not introduce new schema
+versions.
+
 ## Contracts
 
 The machine-readable contracts are:
