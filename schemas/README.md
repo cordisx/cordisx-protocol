@@ -17,6 +17,11 @@ its scope are described in [conformance](../conformance/README.md).
   `agent-page-composer-command-result.v1.schema.json`: Host-issued,
   page-binding/execution-fenced origins plus the mounted page command adapter
   request/context/result for one product-page composer command;
+- `agent-page-composer-command-context.v2.schema.json`,
+  `agent-page-composer-command-result.v2.schema.json`,
+  `agent-page-fresh-room-navigation.v1.schema.json`, and
+  `agent-page-fresh-room-navigation-result.v1.schema.json`: additive
+  Host-derived page completion and fresh-Room navigation/claim round trip;
 - `agent-page-admission-target-origin.v1.schema.json`,
   `agent-page-admission-target-receipt.v1.schema.json`, and
   `agent-page-admission-reservation.v1.schema.json`: exact same-page Room

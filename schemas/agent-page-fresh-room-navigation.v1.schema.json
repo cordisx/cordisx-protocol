@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-fresh-room-navigation.v1.schema.json",
+  "title": "CordisX product-page fresh Room navigation permit v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "token"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-fresh-room-navigation.v1.schema.json" },
+    "contract": { "const": "cordisx.agent-page-fresh-room-navigation/v1" },
+    "schemaVersion": { "const": 1 },
+    "token": { "type": "string", "minLength": 1, "maxLength": 4096 }
+  }
+}

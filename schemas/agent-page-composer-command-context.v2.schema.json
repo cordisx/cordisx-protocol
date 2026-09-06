@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-command-context.v2.schema.json",
+  "title": "CordisX product-page composer command context v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "generation", "scope", "command", "submitPayload", "origin"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-command-context.v2.schema.json" },
+    "contract": { "const": "cordisx.agent-page-composer-command-context/v2" },
+    "schemaVersion": { "const": 2 },
+    "binding": { "$ref": "agent-page-composer-origin.v1.schema.json#/$defs/pageBinding" },
+    "generation": { "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/generation" },
+    "scope": { "const": "page-composer-submit" },
+    "command": { "type": "object", "additionalProperties": false, "required": ["id"], "properties": { "id": { "$ref": "ui-common.v1.schema.json#/$defs/reference" } } },
+    "submitPayload": { "type": "string", "minLength": 1, "maxLength": 65536 },
+    "origin": { "$ref": "agent-page-composer-origin.v1.schema.json" },
+    "freshRoomNavigation": { "$ref": "agent-page-fresh-room-navigation.v1.schema.json" }
+  }
+}

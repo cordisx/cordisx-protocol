@@ -33,6 +33,10 @@ const names = [
   'agent-page-composer-command-context.v1.schema.json',
   'agent-page-composer-command-request.v1.schema.json',
   'agent-page-composer-command-result.v1.schema.json',
+  'agent-page-fresh-room-navigation.v1.schema.json',
+  'agent-page-fresh-room-navigation-result.v1.schema.json',
+  'agent-page-composer-command-context.v2.schema.json',
+  'agent-page-composer-command-result.v2.schema.json',
   'agent-page-admission-target-origin.v1.schema.json',
   'agent-page-admission-target-receipt.v1.schema.json',
   'agent-page-admission-reservation.v1.schema.json',
@@ -672,4 +676,129 @@ assert.notDeepEqual(
   [],
   'cross-room page route claim fails closed',
 )
-console.log('agent admission v1-v6, page admission v1, and shell v8-v9 conformance passed')
+const pageFreshNavigation = {
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-fresh-room-navigation.v1.schema.json',
+  contract: 'cordisx.agent-page-fresh-room-navigation/v1',
+  schemaVersion: 1,
+  token: 'page-fresh-navigation-1',
+}
+const pageContextV2 = {
+  ...pageContext,
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-composer-command-context.v2.schema.json',
+  contract: 'cordisx.agent-page-composer-command-context/v2',
+  schemaVersion: 2,
+  freshRoomNavigation: pageFreshNavigation,
+}
+assert.equal(validatePage('agent-page-fresh-room-navigation.v1.schema.json')(pageFreshNavigation), true)
+assert.equal(validatePage('agent-page-composer-command-context.v2.schema.json')(pageContextV2), true)
+const acceptedPageCompletion = {
+  status: 'accepted',
+  code: 'submitted',
+  disposition: 'fresh-room',
+  roomId: pageTargets[0].roomId,
+  deliveries: pageTargets.map(target => ({
+    target: {
+      roomId: target.roomId,
+      participantId: target.participantId,
+      memberId: target.memberId,
+      runId: target.runId,
+    },
+    status: 'accepted',
+    sessionId: `session-${target.memberId}`,
+    messageId: `message-${target.runId}`,
+  })),
+}
+assert.equal(validatePage('agent-page-composer-command-result.v2.schema.json')(acceptedPageCompletion), true)
+const pageCompletionErrors = completion => {
+  if (completion.status !== 'accepted') return []
+  return completion.deliveries.every(delivery => delivery.target.roomId === completion.roomId)
+    ? []
+    : ['completion target Room mismatch']
+}
+assert.deepEqual(pageCompletionErrors(acceptedPageCompletion), [])
+assert.notDeepEqual(
+  pageCompletionErrors({
+    ...acceptedPageCompletion,
+    deliveries: [{
+      ...acceptedPageCompletion.deliveries[0],
+      target: { ...acceptedPageCompletion.deliveries[0].target, roomId: 'foreign-room' },
+    }],
+  }),
+  [],
+  'Host cannot return an accepted completion across Rooms',
+)
+const failedPageCompletion = {
+  status: 'failed',
+  code: 'incomplete-submission',
+  roomId: pageTargets[0].roomId,
+  deliveries: [
+    acceptedPageCompletion.deliveries[0],
+    {
+      target: acceptedPageCompletion.deliveries[1].target,
+      status: 'denied',
+      code: 'submit-denied',
+    },
+  ],
+}
+assert.equal(validatePage('agent-page-composer-command-result.v2.schema.json')(failedPageCompletion), true)
+assert.equal(
+  validatePage('agent-page-composer-command-result.v2.schema.json')({
+    ...acceptedPageCompletion,
+    deliveries: [{ ...acceptedPageCompletion.deliveries[0], status: 'denied' }],
+  }),
+  false,
+  'page UI cannot clear its draft from a non-accepted delivery',
+)
+const completionTimeline = []
+const completeFreshPageCommand = async ({ outcomes, navigate }) => {
+  completionTimeline.push('handler-start')
+  if (outcomes.some(outcome => outcome.status !== 'accepted')) {
+    completionTimeline.push('handler-failed')
+    return failedPageCompletion
+  }
+  completionTimeline.push('submitted')
+  const navigation = await navigate()
+  if (navigation.status !== 'accepted') {
+    completionTimeline.push('claim-failed')
+    return { status: 'failed', code: 'claim-failed', roomId: pageTargets[0].roomId, deliveries: outcomes }
+  }
+  completionTimeline.push('claimed-before-adapter-result')
+  return acceptedPageCompletion
+}
+const roundTrip = await completeFreshPageCommand({
+  outcomes: acceptedPageCompletion.deliveries,
+  navigate: async () => {
+    completionTimeline.push('navigation-start')
+    completionTimeline.push('destination-binding-claim')
+    return { status: 'accepted', code: 'claimed', roomId: pageTargets[0].roomId }
+  },
+})
+completionTimeline.push('adapter-result')
+assert.equal(roundTrip.status, 'accepted')
+assert.ok(
+  completionTimeline.indexOf('destination-binding-claim') < completionTimeline.indexOf('adapter-result'),
+  'fresh route claim occurs before adapter completion and therefore before UI draft clearing',
+)
+const failedRoundTrip = await completeFreshPageCommand({
+  outcomes: failedPageCompletion.deliveries,
+  navigate: async () => ({ status: 'accepted', code: 'claimed', roomId: pageTargets[0].roomId }),
+})
+assert.equal(failedRoundTrip.status, 'failed', 'partial delivery keeps the page draft')
+assert.equal(
+  validatePage('agent-page-fresh-room-navigation-result.v1.schema.json')({
+    status: 'accepted',
+    code: 'claimed',
+    roomId: pageTargets[0].roomId,
+  }),
+  true,
+)
+assert.equal(
+  validatePage('agent-page-fresh-room-navigation-result.v1.schema.json')({
+    status: 'unavailable',
+    code: 'claim-failed',
+  }),
+  true,
+)
+console.log('agent admission v1-v6, page admission v1-v2, and shell v8-v9 conformance passed')

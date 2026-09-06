@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-page-fresh-room-navigation-result.v1.schema.json",
+  "title": "CordisX product-page fresh Room navigation result v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code", "roomId"],
+      "properties": { "status": { "const": "accepted" }, "code": { "const": "claimed" }, "roomId": { "$ref": "session-common.v1.schema.json#/$defs/opaqueId" } }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code"],
+      "properties": { "status": { "const": "denied" }, "code": { "enum": ["not-owner", "navigation-denied", "route-mismatch", "not-submitted", "incomplete-submission", "reused"] } }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "code"],
+      "properties": { "status": { "const": "unavailable" }, "code": { "enum": ["page-replaced", "plugin-generation-replaced", "connection-replaced", "command-complete", "claim-failed", "navigation-failed", "revoked"] } }
+    }
+  ]
+}

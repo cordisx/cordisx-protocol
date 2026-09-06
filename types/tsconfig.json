@@ -93,6 +93,8 @@
     "agent-admission.v6.test.ts",
     "agent-page-admission.v1.d.ts",
     "agent-page-admission.v1.test.ts",
+    "agent-page-admission.v2.d.ts",
+    "agent-page-admission.v2.test.ts",
     "host-dom.v1.d.ts",
     "host-dom.v1.test.ts"
   ]
