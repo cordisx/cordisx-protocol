@@ -15,6 +15,7 @@ const expectedExports = [
   './agent-admission/v4',
   './agent-admission/v5',
   './agent-admission/v6',
+  './agent-detail-navigation/v1',
   './agent-page-admission/v1',
   './agent-page-admission/v2',
   './agent-avatar/v1',
@@ -81,6 +82,7 @@ const expectedFiles = [
   'types/agent-admission.v4.d.ts',
   'types/agent-admission.v5.d.ts',
   'types/agent-admission.v6.d.ts',
+  'types/agent-detail-navigation.v1.d.ts',
   'types/agent-page-admission.v1.d.ts',
   'types/agent-page-admission.v2.d.ts',
   'types/agent-loop.v1.d.ts',
@@ -208,6 +210,7 @@ import type { ApprovalService } from '@cordisx/protocol/approval/v1'
 import type { ApprovalAuthorityBoundSessionEvent, ApprovalService as ApprovalServiceV2 } from '@cordisx/protocol/approval/v2'
 import type { ApprovalRequestRoutingResult, ApprovalService as ApprovalServiceV3 } from '@cordisx/protocol/approval/v3'
 import type { AgentAdmissionBootstrapRouteClaimRequest, AgentAdmissionBootstrapRouteClaimService, AgentAdmissionBootstrapRouteDeclarationRequest, AgentAdmissionBootstrapRouteDeclarationService, AgentAdmissionBootstrapRouteReservationRequest, AgentAdmissionBootstrapRouteReservationService, AgentAdmissionBootstrapRouteTarget } from '@cordisx/protocol/agent-admission/v6'
+import type { AgentDetailNavigationRequest, AgentDetailNavigationService, AgentSessionDetailReferenceRequest, AgentSessionDetailReferenceService } from '@cordisx/protocol/agent-detail-navigation/v1'
 import type { AgentPageAdmissionRouteClaimRequest, AgentPageAdmissionRouteClaimService, AgentPageAdmissionRouteDeclarationRequest, AgentPageAdmissionRouteDeclarationService, AgentPageAdmissionRouteReservationRequest, AgentPageAdmissionRouteReservationService, AgentPageAdmissionRouteTarget, AgentPageAdmissionTargetRequest, AgentPageAdmissionTargetService, AgentPageComposerCommandAdapter, AgentPageComposerCommandContext, AgentPageComposerCommandRequest } from '@cordisx/protocol/agent-page-admission/v1'
 import type { AgentPageComposerCommandAdapter as AgentPageComposerCommandAdapterV2, AgentPageComposerCommandContext as AgentPageComposerCommandContextV2, AgentPageComposerCommandRequest as AgentPageComposerCommandRequestV2, AgentPageFreshRoomNavigationService } from '@cordisx/protocol/agent-page-admission/v2'
 import type { Session, SessionEvent, SessionRegistry, UserMessage } from '@cordisx/protocol/sessions/v1'
@@ -255,6 +258,10 @@ declare const bootstrapRouteClaims: AgentAdmissionBootstrapRouteClaimService
 declare const bootstrapRouteDeclaration: AgentAdmissionBootstrapRouteDeclarationRequest
 declare const bootstrapRouteReservation: AgentAdmissionBootstrapRouteReservationRequest
 declare const bootstrapRouteClaim: AgentAdmissionBootstrapRouteClaimRequest
+declare const detailReferences: AgentSessionDetailReferenceService
+declare const detailNavigation: AgentDetailNavigationService
+declare const detailReferenceRequest: AgentSessionDetailReferenceRequest
+declare const detailNavigationRequest: AgentDetailNavigationRequest
 declare const pageTargets: AgentPageAdmissionTargetService
 declare const pageTargetRequest: AgentPageAdmissionTargetRequest
 declare const pageRouteDeclarations: AgentPageAdmissionRouteDeclarationService
@@ -354,6 +361,10 @@ pageCommands.execute(pageCommandRequest).then(result => result.status satisfies 
 pageCommandsV2.execute(pageCommandRequestV2).then(result => {
   if (result.status === 'accepted') result.deliveries[0].messageId satisfies string
 })
+detailReferences.get(detailReferenceRequest).then(result => {
+  if (result.status === 'accepted') detailNavigation.open({ target: result.target })
+})
+detailNavigation.open(detailNavigationRequest).then(result => result.status satisfies 'accepted' | 'denied' | 'unavailable')
 if (pageCommandContextV2.freshRoomNavigation !== undefined) {
   freshRoomNavigation.navigate({ navigation: pageCommandContextV2.freshRoomNavigation, route: installedPageRouteTarget.route })
 }

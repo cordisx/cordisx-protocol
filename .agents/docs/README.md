@@ -30,6 +30,9 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 
 - [Agent and Session runtime](agent-runtime/README.md): Agent handles, persistent
   SessionEvent facts, approvals, and the versioned admission entrypoints.
+- [Agent detail navigation](agent-detail-navigation/README.md): read-only
+  current Session-to-detail reference projection and Host-owned opaque detail
+  navigation without raw URLs or Agent acquisition.
 - [Product-page Agent admission](agent-page-admission/README.md): Host-issued
   page composer origins, exact target-scoped pre-submit delivery, and explicit
   fresh-Room route claims without reusing Conversation Shell origins.
