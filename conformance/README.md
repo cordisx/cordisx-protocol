@@ -8,6 +8,17 @@ interoperability, package publication, and consumer acceptance.
 
 Implementation-independent compatibility fixtures and expected outcomes belong here.
 
+The Agent Loop v3/v4 and Conversation Shell v3 entry scripts run scenario
+assertions; their adjacent `reference-model.mjs` modules own schema validation
+and the version-specific reference state machines. Extension-point control uses
+an adjacent `validate-suite.mjs` for semantic validation and keeps vector loading
+and mutation assertions in its entry script. These are conformance-only models,
+not portable runtime implementations. Keep each version's semantics separate.
+The existing entry commands and the extension-point validator export remain
+stable. Add scenario coverage in the entry and model behavior in the adjacent
+module; do not grow a shared cross-version model or remove assertions to fit a
+file-size threshold.
+
 Run `npm run check` for marketplace schema, canonical identity, source import, tuple
 uniqueness, deterministic ordering, structured UI schemas, route/outlet path
 compatibility, native sidebar menu fail-pending projection, unique identities,
