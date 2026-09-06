@@ -33,3 +33,9 @@ export interface ExtensionPointInteractionCapabilityV1 {
     events: readonly ExtensionPointInteractionV1[]
   }>
 }
+
+export interface ExtensionPointRenderCapabilityV1 {
+  readonly name: 'ui.extension-points.render'
+  readonly required: boolean
+  readonly scope: Readonly<{ extensionPoints: readonly string[] }>
+}

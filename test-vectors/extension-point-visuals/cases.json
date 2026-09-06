@@ -653,5 +653,28 @@
     },
     "valid": false,
     "fragment": "#/$defs/capabilityScopeFence"
+  },
+  {
+    "name": "explicit visual rendering declaration",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.render",
+          "required": true,
+          "scope": {
+            "extensionPoints": [
+              "composer.primary-action.visual",
+              "composer.frame.overlay"
+            ]
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": true
   }
 ]

@@ -34,6 +34,9 @@
           },
           {
             "$ref": "#/$defs/interactionCapability"
+          },
+          {
+            "$ref": "#/$defs/visualRenderCapability"
           }
         ]
       }
@@ -365,6 +368,35 @@
             },
             "events": {
               "$ref": "extension-point-visual.v1.schema.json#/$defs/nonemptyEvents"
+            }
+          }
+        }
+      }
+    },
+    "visualRenderCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "required",
+        "scope"
+      ],
+      "properties": {
+        "name": {
+          "const": "ui.extension-points.render"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "extensionPoints"
+          ],
+          "properties": {
+            "extensionPoints": {
+              "$ref": "permission-common.v5.schema.json#/$defs/scope/properties/extensionPoints"
             }
           }
         }
