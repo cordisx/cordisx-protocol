@@ -26,6 +26,9 @@ v9 publishes the authoritative labels and order. See
 `.agents/docs/manager-settings-navigation/groups-v1.md`.
 The v2 public entrypoint adds exact surface-v9 versus legacy-unversioned
 provenance for `ctx.slots.register` and Host diagnostics.
+The unified Plugins destination owns discovery, installation, and installed
+management only; explicit plugin business navigation contributions remain
+independent lifecycle-owned entries.
 
 ## For maintainers
 
