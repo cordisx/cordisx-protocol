@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-response.v1.schema.json",
+  "title": "CordisX Platform Provider Broker Event Response v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "eventId", "operation", "method", "responseSchema", "value"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-response.v1.schema.json" },
+    "contract": { "const": "cordisx.platform-provider-broker-response/v1" },
+    "schemaVersion": { "const": 1 },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "operation": { "$ref": "platform-provider-common.v1.schema.json#/$defs/operation" },
+    "method": { "$ref": "platform-provider-common.v1.schema.json#/$defs/method" },
+    "responseSchema": { "$ref": "platform-provider-common.v1.schema.json#/$defs/brokerValueSchema" },
+    "value": { "$ref": "platform-provider-broker-value.v1.schema.json" }
+  }
+}

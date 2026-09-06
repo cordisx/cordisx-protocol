@@ -57,6 +57,7 @@ not require a Host shell service; see the topic's ownership statement.
 | `connector-service/v1`             | [connector-service.v1.d.ts](connector-service.v1.d.ts)                         | [Specification](../.agents/docs/connector-service/README.md)                                                                         |
 | `channel-runtime/v1`               | [channel-runtime.v1.d.ts](channel-runtime.v1.d.ts)                             | [Specification](../.agents/docs/channel-runtime/README.md)                                                                           |
 | `channel-manager/v2`               | [channel-manager.v2.d.ts](channel-manager.v2.d.ts)                             | [Manager v2 and target issuance](../.agents/docs/channel-runtime/README.md#channel-manager-v2-operations-logs-and-ingress)           |
+| `platform-provider/v1`             | [platform-provider.v1.d.ts](platform-provider.v1.d.ts)                         | [Source-fenced Node provider registration](../.agents/docs/platform-provider/README.md)                                              |
 | `host-dom/v1`                      | [host-dom.v1.d.ts](host-dom.v1.d.ts)                                           | [Specification](../.agents/docs/platform-capabilities/host-dom-v1.md)                                                                |
 | `navigation-collection-actions/v1` | [navigation-collection-actions.v1.d.ts](navigation-collection-actions.v1.d.ts) | [Specification](../.agents/docs/navigation-collection-actions/README.md)                                                             |
 | `manager-collection/v1`            | [manager-collection.v1.d.ts](manager-collection.v1.d.ts)                       | [Specification](../.agents/docs/manager-collection/README.md)                                                                        |
@@ -78,7 +79,9 @@ not require a Host shell service; see the topic's ownership statement.
 | `plugin-manifest/v6`            | [plugin-manifest.v6.d.ts](plugin-manifest.v6.d.ts)                       | [Specification](../.agents/docs/manifests/README.md)                                                      |
 | `plugin-manifest/v7`            | [plugin-manifest.v7.d.ts](plugin-manifest.v7.d.ts)                       | [Specification](../.agents/docs/manifests/README.md)                                                      |
 | `plugin-manifest/v8`            | [plugin-manifest.v8.d.ts](plugin-manifest.v8.d.ts)                       | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-manifest.v8.schema.json) |
+| `plugin-manifest/v9`            | [plugin-manifest.v9.d.ts](plugin-manifest.v9.d.ts)                       | [Platform provider service successor](../.agents/docs/platform-provider/README.md)                        |
 | `plugin-package/v8`             | [plugin-package.v8.d.ts](plugin-package.v8.d.ts)                         | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-package.v8.schema.json)  |
+| `plugin-package/v9`             | [plugin-package.v9.d.ts](plugin-package.v9.d.ts)                         | [Manifest v9 package successor](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v9)      |
 | `plugin-generation-artifact/v1` | [plugin-generation-artifact.v1.d.ts](plugin-generation-artifact.v1.d.ts) | [Immutable browser ESM graph](../.agents/docs/plugin-generation-artifact/README.md)                       |
 
 ## Repository-only declarations

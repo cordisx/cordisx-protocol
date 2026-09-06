@@ -8,6 +8,27 @@ package imports. A schema version belongs to that document; it need not equal
 the version of a service or entrypoint that reuses it. Validation behavior and
 its scope are described in [conformance](../conformance/README.md).
 
+- `plugin-manifest.v9.schema.json` and `plugin-package.v9.schema.json`: additive
+  Platform provider service and matching explicit-local package successor;
+- `platform-provider-descriptor.v1.schema.json`: provider-local public identity,
+  implementation status, and closed operation coverage;
+- `platform-provider-registration.v1.schema.json`: Host-stamped source and
+  generation ownership, model mapping, redacted factory input, frozen broker
+  policy, and publication state;
+- `platform-provider-factory-configuration.v1.schema.json`: closed safe factory
+  input with revision, provider identity/display name, enabled state, and
+  request timeout only;
+- `platform-provider-common.v1.schema.json`,
+  `platform-provider-broker-value.v1.schema.json`,
+  `platform-provider-broker-policy.v1.schema.json`,
+  `platform-provider-broker-request.v1.schema.json`,
+  `platform-provider-broker-result.v1.schema.json`,
+  `platform-provider-broker-event.v1.schema.json`, and
+  `platform-provider-broker-response.v1.schema.json`: case-insensitive authority
+  redaction plus operation/method/schema-bound Host broker exchanges;
+- `platform-provider-lifecycle-event.v1.schema.json`: normalized provider turn
+  and approval lifecycle events with exact generation and terminal state;
+
 - `visuals-common.v1.schema.json` and `visual-projection.v1.schema.json`:
   owner-local provider ids plus the framework-neutral opaque data and effective
   theme projection supplied to one bounded visual seat;

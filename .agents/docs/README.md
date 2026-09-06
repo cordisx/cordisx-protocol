@@ -20,6 +20,9 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 - [Plugin configuration](plugin-configuration/README.md) and
   [service configuration](service-configuration/README.md): validation, Host forms,
   revisions, secrets, and application/restart boundaries.
+- [Platform provider service](platform-provider/README.md): source-fenced Node
+  provider definitions, redacted factory inputs, bounded broker calls, and
+  Host-owned Fleet publication.
 - [Platform capabilities](platform-capabilities/README.md): portable provider,
   model, Session, identity, and permission contracts, with versioned permission
   successors and a separately authorized Host DOM bridge.

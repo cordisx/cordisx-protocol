@@ -1,0 +1,11 @@
+{
+  "case": "safe-value",
+  "value": {
+    "SeCrEtRef": "hidden",
+    "BaseURL": "https://gateway.example",
+    "EndPoint": "gateway-a",
+    "HOST": "gateway.example",
+    "DaTaDiR": "/tmp/provider",
+    "RawClient": { "request": true }
+  }
+}

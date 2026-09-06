@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-result.v1.schema.json",
+  "title": "CordisX Platform Provider Broker Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "requestId", "operation", "method", "status"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-result.v1.schema.json" },
+    "contract": { "const": "cordisx.platform-provider-broker-result/v1" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "operation": { "$ref": "platform-provider-common.v1.schema.json#/$defs/operation" },
+    "method": { "$ref": "platform-provider-common.v1.schema.json#/$defs/method" },
+    "status": { "enum": ["accepted", "rejected", "unavailable"] },
+    "resultSchema": { "$ref": "platform-provider-common.v1.schema.json#/$defs/brokerValueSchema" },
+    "value": { "$ref": "platform-provider-broker-value.v1.schema.json" },
+    "code": { "enum": ["invalid-request", "method-not-declared", "operation-not-declared", "schema-mismatch", "timeout", "provider-unavailable", "stale-generation", "disposed"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] },
+      "then": {
+        "required": ["resultSchema", "value"],
+        "properties": {
+          "resultSchema": { "$ref": "platform-provider-common.v1.schema.json#/$defs/brokerValueSchema" },
+          "value": { "$ref": "platform-provider-broker-value.v1.schema.json" },
+          "code": false
+        }
+      },
+      "else": {
+        "required": ["code"],
+        "properties": {
+          "resultSchema": false,
+          "value": false,
+          "code": { "enum": ["invalid-request", "method-not-declared", "operation-not-declared", "schema-mismatch", "timeout", "provider-unavailable", "stale-generation", "disposed"] }
+        }
+      }
+    }
+  ]
+}

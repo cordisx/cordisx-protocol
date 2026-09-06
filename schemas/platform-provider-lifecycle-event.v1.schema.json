@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-lifecycle-event.v1.schema.json",
+  "title": "CordisX Platform Provider Lifecycle Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "eventId", "sequence", "providerId", "providerGeneration", "session", "turnId", "type", "terminal"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-lifecycle-event.v1.schema.json" },
+    "contract": { "const": "cordisx.platform-provider-lifecycle-event/v1" },
+    "schemaVersion": { "const": 1 },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "providerId": { "$ref": "platform-provider-common.v1.schema.json#/$defs/localId" },
+    "providerGeneration": { "$ref": "platform-provider-common.v1.schema.json#/$defs/generation" },
+    "session": { "$ref": "platform-provider-common.v1.schema.json#/$defs/sessionRef" },
+    "turnId": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "type": { "enum": ["turn.started", "turn.completed", "turn.failed", "approval.required", "approval.resolved"] },
+    "terminal": { "type": "boolean" },
+    "output": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "text"],
+        "properties": {
+          "type": { "const": "text" },
+          "text": { "type": "string", "maxLength": 1000000 }
+        }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "retryable"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "retryable": { "type": "boolean" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approvalId", "kind", "state"],
+      "properties": {
+        "approvalId": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "kind": { "enum": ["command", "file-change", "external-action", "other"] },
+        "state": { "enum": ["pending", "resolved"] },
+        "outcome": { "enum": ["approved", "denied", "expired", "cancelled"] }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "turn.started" } }, "required": ["type"] },
+      "then": {
+        "properties": {
+          "terminal": { "const": false },
+          "output": false,
+          "failure": false,
+          "approval": false
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "turn.completed" } }, "required": ["type"] },
+      "then": {
+        "properties": {
+          "terminal": { "const": true },
+          "failure": false,
+          "approval": false
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "turn.failed" } }, "required": ["type"] },
+      "then": {
+        "required": ["failure"],
+        "properties": {
+          "terminal": { "const": true },
+          "failure": {},
+          "approval": false
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "approval.required" } }, "required": ["type"] },
+      "then": {
+        "required": ["approval"],
+        "properties": {
+          "terminal": { "const": false },
+          "output": false,
+          "failure": false,
+          "approval": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["approvalId", "kind", "state"],
+            "properties": {
+              "approvalId": { "type": "string", "minLength": 1, "maxLength": 512 },
+              "kind": { "enum": ["command", "file-change", "external-action", "other"] },
+              "state": { "const": "pending" },
+              "outcome": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "approval.resolved" } }, "required": ["type"] },
+      "then": {
+        "required": ["approval"],
+        "properties": {
+          "terminal": { "const": false },
+          "output": false,
+          "failure": false,
+          "approval": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["approvalId", "kind", "state", "outcome"],
+            "properties": {
+              "approvalId": { "type": "string", "minLength": 1, "maxLength": 512 },
+              "kind": { "enum": ["command", "file-change", "external-action", "other"] },
+              "state": { "const": "resolved" },
+              "outcome": { "enum": ["approved", "denied", "expired", "cancelled"] }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

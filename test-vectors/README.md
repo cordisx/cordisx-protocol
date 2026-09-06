@@ -32,6 +32,16 @@ authority, and unique names. `platform/model-pages` and
 ids, query binding, model/session provider consistency, and duplicate complete
 reference rejection.
 
+Platform provider v1 vectors live in `platform-provider/valid` and
+`platform-provider/invalid`. They cover manifest/package v9, fixed Host-owned
+configuration declarations, source/generation-bound registration projections,
+composite model mapping, first-terminal lifecycle behavior, and rejection of
+duplicate ids, mixed-case secret/network/filesystem/process fields,
+transport/client/Fleet handles, unbound broker methods and events, schema drift,
+foreign configuration schemas, dynamic application modes, event delivery after
+unsubscribe, disposal before drain, duplicate terminal events, and late
+completion.
+
 Extension-point management v1 suites live in `extension-points/valid` and
 `extension-points/invalid` and cover host descriptors, cross-family identity,
 canonical plugin/point policy, compatible default access, surface command

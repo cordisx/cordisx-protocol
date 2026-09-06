@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-value.v1.schema.json",
+  "title": "CordisX Platform Provider Broker Value v1",
+  "$ref": "platform-provider-common.v1.schema.json#/$defs/safeValue"
+}

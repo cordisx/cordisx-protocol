@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-common.v1.schema.json",
+  "title": "CordisX Platform Provider Common v1",
+  "$defs": {
+    "localId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$"
+    },
+    "generation": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "operation": {
+      "enum": [
+        "models.list",
+        "sessions.list",
+        "sessions.read",
+        "sessions.create",
+        "sessions.control",
+        "turns.submit",
+        "turns.control",
+        "turns.introduce",
+        "approvals.decide"
+      ]
+    },
+    "method": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][A-Za-z0-9]*(?:[./:-][a-z][A-Za-z0-9]*){0,7}$"
+    },
+    "brokerValueSchema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-value.v1.schema.json"
+    },
+    "forbiddenAuthorityField": {
+      "type": "string",
+      "pattern": "[sS][eE][cC][rR][eE][tT]|[pP][aA][sS][sS][wW][oO][rR][dD]|[tT][oO][kK][eE][nN]|[cC][rR][eE][dD][eE][nN][tT][iI][aA][lL]|[pP][aA][tT][hH]|[dD][iI][rR][eE][cC][tT][oO][rR][yY]|[dD][aA][tT][aA][dD][iI][rR]|[cC][wW][dD]|[eE][xX][eE][cC][uU][tT][aA][bB][lL][eE]|[pP][rR][oO][cC][eE][sS][sS]|[eE][nN][vV]|[tT][rR][aA][nN][sS][pP][oO][rR][tT]|[cC][lL][iI][eE][nN][tT]|[fF][lL][eE][eE][tT]|[eE][nN][dD][pP][oO][iI][nN][tT]|[uU][rR][lL]|[hH][oO][sS][tT]|[hH][eE][aA][dD][eE][rR]|[aA][uU][tT][hH]|[cC][oO][oO][kK][iI][eE]"
+    },
+    "safeValue": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string", "maxLength": 4096 },
+        { "type": "array", "maxItems": 512, "items": { "$ref": "#/$defs/safeValue" } },
+        { "$ref": "#/$defs/safeObject" }
+      ]
+    },
+    "safeObject": {
+      "type": "object",
+      "maxProperties": 512,
+      "propertyNames": { "not": { "$ref": "#/$defs/forbiddenAuthorityField" } },
+      "additionalProperties": { "$ref": "#/$defs/safeValue" }
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ownerHandle", "pluginId", "serviceId", "sourceDigest", "hostGeneration", "pluginGeneration"],
+      "properties": {
+        "ownerHandle": { "type": "string", "pattern": "^ppo_[A-Za-z0-9._:-]{1,128}$" },
+        "pluginId": { "$ref": "#/$defs/localId" },
+        "serviceId": { "$ref": "#/$defs/localId" },
+        "sourceDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "hostGeneration": { "$ref": "#/$defs/generation" },
+        "pluginGeneration": { "$ref": "#/$defs/generation" }
+      }
+    },
+    "sessionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "remoteSessionId"],
+      "properties": {
+        "providerId": { "$ref": "#/$defs/localId" },
+        "remoteSessionId": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    }
+  }
+}

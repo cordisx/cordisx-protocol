@@ -1,0 +1,20 @@
+{
+  "case": "lifecycle-state",
+  "value": {
+    "providerId": "gateway-a",
+    "providerGeneration": "provider-1",
+    "actions": [
+      {
+        "action": "accept",
+        "operationId": "operation-1",
+        "turnId": "turn-1"
+      },
+      {
+        "action": "unsubscribe"
+      },
+      {
+        "action": "dispose"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "case": "manifest-v9",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v9.schema.json",
+    "schemaVersion": 9,
+    "id": "cli-proxy-api",
+    "capabilities": [],
+    "services": [
+      {
+        "id": "providers-runtime",
+        "kind": "platform-provider",
+        "owner": "plugin",
+        "schema": "https://example.com/provider.schema.json",
+        "applicationMode": "dynamic",
+        "entry": "/private/provider.mjs",
+        "fleet": true
+      }
+    ]
+  }
+}
