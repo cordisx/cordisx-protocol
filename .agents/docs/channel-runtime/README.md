@@ -198,6 +198,15 @@ attachment quarantine handles, secret-handle operations, and health snapshots.
 It supplies no renderer/DOM, CDP, raw bridge, generic app-server RPC, provider
 process handle, task gateway, or exported secret value.
 
+`ctx.channel.configuration.revision` is the read-only configuration revision
+stamped by the Host for the current service child context. An adapter copies
+that exact value into its descriptor when registering a connection. The plugin
+cannot supply or replace the context projection, derive the value from its
+package generation, or reset it to `1`; the Host uses it to reject stale
+replacement attempts against durable last-good state. No configuration value,
+path, secret reference, profile id, or service generation is exposed beside
+the revision.
+
 Service activation is staged. A candidate generation starts and validates
 before becoming current; failure retains the last-good generation. Replacement
 fences old claims and then calls its bounded dispose path. Restart recovers

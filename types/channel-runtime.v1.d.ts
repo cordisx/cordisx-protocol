@@ -182,7 +182,13 @@ export interface ChannelDeliveryHandle {
   cancel(): Promise<'cancelled' | 'irreversible' | 'not-found'>
 }
 
+/** Host-stamped service configuration fence. Callers can observe but never replace it. */
+export interface ChannelRuntimeConfigurationV1 {
+  readonly revision: number
+}
+
 export interface ChannelRuntimeV1 {
+  readonly configuration: ChannelRuntimeConfigurationV1
   readonly connections: {
     list(): Promise<readonly ChannelRuntimeAccountSnapshot[]>
   }
