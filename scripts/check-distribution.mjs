@@ -4,7 +4,6 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'n
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedExports = [
@@ -41,6 +40,7 @@ const expectedExports = [
   './connector-service/v1',
   './host-dom/v1',
   './manager-collection/v1',
+  './manager-settings-navigation/v1',
   './manager-content-navigation/v1',
   './manager-content-navigation/v2',
   './manager-content-navigation/v3',
@@ -98,6 +98,7 @@ const expectedFiles = [
   'types/connector-service.v1.d.ts',
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
+  'types/manager-settings-navigation.v1.d.ts',
   'types/manager-content-navigation.v1.d.ts',
   'types/manager-content-navigation.v2.d.ts',
   'types/manager-content-navigation.v3.d.ts',
@@ -121,7 +122,6 @@ const frozenAgentLoopFiles = [
   'types/agent-loop.v3.d.ts',
 ].sort()
 const frozenAgentLoopDigest = '8eff903c47166aa358d31cce8d9d8a1cfe693f3fe6558ac332006fe71cb6f852'
-
 function run(command, arguments_, cwd = root) {
   const result = spawnSync(command, arguments_, { cwd, encoding: 'utf8' })
   if (result.status !== 0) {
@@ -198,6 +198,7 @@ import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, 
 import type { AgentLoopApprovalDecisionResult as AgentLoopApprovalDecisionResultV4, AgentLoopApprovalDecisionUnavailableCode as AgentLoopApprovalDecisionUnavailableCodeV4, AgentLoopCancelMemberSelfIntroductionResult as AgentLoopCancelMemberSelfIntroductionResultV4, AgentLoopCommand as AgentLoopCommandV4, AgentLoopCreateOrBindResult as AgentLoopCreateOrBindResultV4, AgentLoopEvent as AgentLoopEventV4, AgentLoopMemberSelfIntroductionUnavailableCode as AgentLoopMemberSelfIntroductionUnavailableCodeV4, AgentLoopRequestMemberSelfIntroductionResult as AgentLoopRequestMemberSelfIntroductionResultV4, AgentLoopSendResult as AgentLoopSendResultV4, AgentLoopTaskBinding as AgentLoopTaskBindingV4, BoundAgentLoopClient as BoundAgentLoopClientV4 } from '@cordisx/protocol/agent-loop/v4'
 import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
 import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
+import type { ManagerSettingsNavigationGroupCatalogV1 } from '@cordisx/protocol/manager-settings-navigation/v1'
 import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 } from '@cordisx/protocol/manager-content-navigation/v3'
 import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, ManagerContentNavigationDeclarationV4, ManagerContentProjectionV3 } from '@cordisx/protocol/manager-content-navigation/v4'
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
@@ -277,10 +278,8 @@ declare const pageCommandsV2: AgentPageComposerCommandAdapterV2
 declare const pageCommandRequestV2: AgentPageComposerCommandRequestV2
 declare const pageCommandContextV2: AgentPageComposerCommandContextV2
 declare const freshRoomNavigation: AgentPageFreshRoomNavigationService
-declare const agent: Agent
-declare const leadAgent: Agent
-declare const session: Session
-declare const userMessage: UserMessage
+declare const agent: Agent, leadAgent: Agent
+declare const session: Session, userMessage: UserMessage
 declare const entityBoundEvent: EntityDefinitionBoundSessionEvent
 declare const managerNavigationV3: ManagerContentNavigationDeclarationV3
 declare const managerProjectionV2: ManagerContentProjectionV2

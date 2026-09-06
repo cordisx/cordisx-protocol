@@ -222,3 +222,10 @@ Version 8 additionally fails closed on DOM callbacks, raw script or style,
 unknown canvas kinds, out-of-range duration, and unknown reduced-motion
 behavior. Canvas program code exists only in the separately isolated Worker
 artifact; it is not surface contribution data.
+
+Version 9 additionally gives `manager.settings.navigation-items` payload v2 an
+optional `navigationGroup` reference to the Host catalog. Unknown ids,
+plugin-supplied group labels/order, or reuse of the legacy envelope insertion
+`group` as a visual group fail closed. Surface v1-v8 stay frozen; absent or
+legacy visual group assignments resolve through the separately specified
+`other` compatibility fallback.

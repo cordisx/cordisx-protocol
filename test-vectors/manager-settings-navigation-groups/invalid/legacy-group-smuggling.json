@@ -1,0 +1,6 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    { "op": "set", "path": "contributions.4.document.item.navigationGroup", "value": { "id": "resources" } }
+  ]
+}

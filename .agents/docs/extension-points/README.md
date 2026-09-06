@@ -62,6 +62,15 @@ Catalog v1/v2/v3 consumers reject v4 rather than guessing at the new point or
 discarding its outlet policy. The top-level navigation rules live in
 [`manager-settings-navigation`](../manager-settings-navigation/README.md).
 
+Catalog version 9 retains the stable `manager.settings.navigation-items` point
+but advertises payload family `manager-settings-navigation-item-v2`. Its
+descriptor carries the exact Host-owned Manager navigation group catalog v1 so
+management UI and consumers observe the same localized labels, orders, and
+fallback identity. Catalog v1-v8 remain frozen; an older consumer rejects v9
+rather than dropping the catalog or flattening grouped entries. The grouping
+and diagnostic projection rules live in
+[`manager-settings-navigation/groups-v1`](../manager-settings-navigation/groups-v1.md).
+
 ## Canonical point-policy identity
 
 A policy record is keyed by the exact ordered tuple:

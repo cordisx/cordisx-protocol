@@ -1,0 +1,6 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    { "op": "set", "path": "contributions.0.document.item.navigationGroup.label", "value": { "key": "forged", "fallback": "Forged" } }
+  ]
+}

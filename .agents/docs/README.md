@@ -68,7 +68,7 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
   queries, structured rows, commands, copy, confirmation, and feedback.
 - [Manager settings tabs](manager-settings-tabs/README.md) and
   [settings navigation](manager-settings-navigation/README.md): structured settings
-  surfaces and Host-owned page chrome.
+  surfaces, Host-owned page chrome, and the versioned visual group catalog.
 - [Visuals](visuals/README.md): owner-local providers, detached immutable data,
   effective theme projection, generation-scoped cleanup, and contained rendering.
 - [Raster images](raster-image/README.md): bounded PNG snapshots after

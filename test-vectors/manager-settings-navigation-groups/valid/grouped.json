@@ -1,0 +1,126 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v1.schema.json",
+    "contract": "cordisx.manager-settings-navigation-groups/v1",
+    "schemaVersion": 1,
+    "groups": [
+      { "id": "resources", "label": { "key": "manager.navigation.resources", "fallback": "Resources" }, "order": 100 },
+      { "id": "development", "label": { "key": "manager.navigation.development", "fallback": "Development" }, "order": 200 },
+      { "id": "collaboration", "label": { "key": "manager.navigation.collaboration", "fallback": "Collaboration" }, "order": 300 },
+      { "id": "other", "label": { "key": "manager.navigation.other", "fallback": "Other" }, "order": 1000 }
+    ],
+    "fallbackGroup": "other"
+  },
+  "extensionCatalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v9.schema.json",
+    "schemaVersion": 9,
+    "points": [{
+      "id": "manager.settings.navigation-items",
+      "kind": "surface",
+      "title": { "key": "manager.navigation.title", "fallback": "Manager navigation items" },
+      "description": { "key": "manager.navigation.description", "fallback": "Structured grouped Manager destinations." },
+      "icon": "host:routes",
+      "payloadFamily": "manager-settings-navigation-item-v2",
+      "maturity": "stable",
+      "adapterSupport": "supported",
+      "navigationGroups": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v1.schema.json",
+        "contract": "cordisx.manager-settings-navigation-groups/v1",
+        "schemaVersion": 1,
+        "groups": [
+          { "id": "resources", "label": { "key": "manager.navigation.resources", "fallback": "Resources" }, "order": 100 },
+          { "id": "development", "label": { "key": "manager.navigation.development", "fallback": "Development" }, "order": 200 },
+          { "id": "collaboration", "label": { "key": "manager.navigation.collaboration", "fallback": "Collaboration" }, "order": 300 },
+          { "id": "other", "label": { "key": "manager.navigation.other", "fallback": "Other" }, "order": 1000 }
+        ],
+        "fallbackGroup": "other"
+      }
+    }]
+  },
+  "contributions": [
+    {
+      "owner": "plugins",
+      "document": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json",
+        "schemaVersion": 9,
+        "id": "plugins",
+        "surface": "manager.settings.navigation-items",
+        "group": "before-settings",
+        "order": 100,
+        "item": { "route": { "id": "plugins" }, "navigationGroup": { "id": "resources" } }
+      }
+    },
+    {
+      "owner": "developer-tools",
+      "document": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json",
+        "schemaVersion": 9,
+        "id": "extension-points",
+        "surface": "manager.settings.navigation-items",
+        "group": "before-settings",
+        "order": 100,
+        "item": { "route": { "id": "extension-points" }, "navigationGroup": { "id": "development" } }
+      }
+    },
+    {
+      "owner": "team",
+      "document": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json",
+        "schemaVersion": 9,
+        "id": "manage-chats",
+        "surface": "manager.settings.navigation-items",
+        "group": "after-settings",
+        "order": 100,
+        "item": { "route": { "id": "manage-chats" }, "navigationGroup": { "id": "collaboration" } }
+      }
+    },
+    {
+      "owner": "misc",
+      "document": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json",
+        "schemaVersion": 9,
+        "id": "status",
+        "surface": "manager.settings.navigation-items",
+        "group": "before-settings",
+        "order": 100,
+        "item": { "route": { "id": "status" } }
+      }
+    },
+    {
+      "owner": "legacy",
+      "document": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v8.schema.json",
+        "schemaVersion": 8,
+        "id": "legacy-page",
+        "surface": "manager.settings.navigation-items",
+        "group": "after-settings",
+        "order": 0,
+        "item": { "route": { "id": "legacy-page" } }
+      }
+    }
+  ],
+  "projection": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-projection.v1.schema.json",
+    "contract": "cordisx.manager-settings-navigation-projection/v1",
+    "schemaVersion": 1,
+    "catalog": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v1.schema.json",
+      "contract": "cordisx.manager-settings-navigation-groups/v1",
+      "schemaVersion": 1,
+      "groups": [
+        { "id": "resources", "label": { "key": "manager.navigation.resources", "fallback": "Resources" }, "order": 100 },
+        { "id": "development", "label": { "key": "manager.navigation.development", "fallback": "Development" }, "order": 200 },
+        { "id": "collaboration", "label": { "key": "manager.navigation.collaboration", "fallback": "Collaboration" }, "order": 300 },
+        { "id": "other", "label": { "key": "manager.navigation.other", "fallback": "Other" }, "order": 1000 }
+      ],
+      "fallbackGroup": "other"
+    },
+    "contributions": [
+      { "owner": "plugins", "id": "plugins", "surfaceSchemaVersion": 9, "insertionGroup": "before-settings", "declaredGroup": "resources", "effectiveGroup": "resources", "assignment": "declared", "order": 100 },
+      { "owner": "developer-tools", "id": "extension-points", "surfaceSchemaVersion": 9, "insertionGroup": "before-settings", "declaredGroup": "development", "effectiveGroup": "development", "assignment": "declared", "order": 100 },
+      { "owner": "team", "id": "manage-chats", "surfaceSchemaVersion": 9, "insertionGroup": "after-settings", "declaredGroup": "collaboration", "effectiveGroup": "collaboration", "assignment": "declared", "order": 100 },
+      { "owner": "misc", "id": "status", "surfaceSchemaVersion": 9, "insertionGroup": "before-settings", "effectiveGroup": "other", "assignment": "unassigned-fallback", "order": 100 },
+      { "owner": "legacy", "id": "legacy-page", "surfaceSchemaVersion": 8, "insertionGroup": "after-settings", "effectiveGroup": "other", "assignment": "legacy-fallback", "order": 0 }
+    ]
+  }
+}
