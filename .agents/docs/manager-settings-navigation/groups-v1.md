@@ -140,22 +140,28 @@ guesses a v5-v8 number.
 The recommended Host assignment demonstrates the grouping contract without
 creating additional Protocol route identities:
 
-- `resources`: one unified **Plugins** destination and **Talent marketplace**;
+- `resources`: Host-owned plugin-management destinations and **Talent marketplace**;
 - `development`: **Extension points** and **Routes**;
 - `collaboration`: **Manage chats** and **Team structure**.
 
-The Host-owned **Plugins** destination is the only first-level entry for plugin
-discovery, installation, and installed-plugin management. This does not absorb
-business surfaces contributed by plugins: a plugin may still register one or
-more independent top-level Manager destinations through the versioned
+The Host owns its built-in plugin-management information architecture. It may,
+for example, expose separate **Plugins** and **Plugin Store** destinations; their
+route identities, division of responsibilities, and compatibility redirects
+are Host implementation details rather than Protocol group or contribution
+identities.
+
+Host-owned plugin-management destinations do not absorb business surfaces
+contributed by plugins. A plugin may still register one or more independent
+top-level Manager destinations through the versioned
 `manager.settings.navigation-items` contract, choose their supported visual
 groups, and have those entries removed through the existing plugin fiber and
 generation lifecycle.
 
 A plugin bundle is only a package and runtime carrier. Installing or discovering
 a bundle does not automatically create a top-level entry; only an explicit,
-authorized navigation contribution does. A bundle or plugin package is managed
-inside the unified Plugins destination and is not a second installation entry.
-A separate plugin store is likewise not a first-level Protocol concept.
-Compatibility redirects from removed Host-owned routes are Host implementation
-details and do not appear in these schemas, group references, or examples.
+authorized navigation contribution does. A bundle or plugin package may be
+managed by the Host's built-in plugin-management IA, but it does not itself
+produce another navigation contribution. A plugin store is likewise not a
+first-level Protocol concept even when the Host exposes a built-in destination
+with that product role. Compatibility redirects from removed Host-owned routes
+do not appear in these schemas, group references, or examples.
