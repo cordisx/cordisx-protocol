@@ -7,6 +7,9 @@ import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedExports = [
+  './extension-point-visual/v1',
+  './plugin-manifest/v10',
+  './plugin-package/v10',
   './visuals/v1',
   './agent-admission/v1',
   './agent-admission/v2',
@@ -62,6 +65,9 @@ const expectedExports = [
   './transient-canvas/v1',
 ].sort()
 const expectedFiles = [
+  'types/extension-point-visual.v1.d.ts',
+  'types/plugin-manifest.v10.d.ts',
+  'types/plugin-package.v10.d.ts',
   'LICENSE',
   'README.md',
   'package.json',
