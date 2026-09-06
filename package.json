@@ -40,6 +40,8 @@
     "types/transient-canvas.v1.d.ts",
     "types/raster-image.v1.d.ts",
     "types/connector-service.v1.d.ts",
+    "types/channel-runtime.v1.d.ts",
+    "types/channel-manager.v2.d.ts",
     "types/host-dom.v1.d.ts",
     "types/agent-loop.v1.d.ts",
     "types/agent-loop.v2.d.ts",
@@ -73,6 +75,8 @@
       "default": "./runtime/agent-avatar.v1.js"
     },
     "./connector-service/v1": "./types/connector-service.v1.d.ts",
+    "./channel-runtime/v1": "./types/channel-runtime.v1.d.ts",
+    "./channel-manager/v2": "./types/channel-manager.v2.d.ts",
     "./agent-conversation-shell/v1": "./types/agent-conversation-shell.v1.d.ts",
     "./agent-conversation-shell/v2": "./types/agent-conversation-shell.v2.d.ts",
     "./agent-conversation-shell/v3": "./types/agent-conversation-shell.v3.d.ts",
@@ -140,15 +144,24 @@
     "lint:staged": "lint-staged --config .lintstagedrc.mjs"
   },
   "devDependencies": {
+    "@cordisx/eslint-config": "github:cordisx/cordisxmono#c63c2e8c2ba7e11502934a52ad2ce3734e804cdc",
+    "@deepseek-ai/cordis": "4.0.1",
+    "@typescript-eslint/parser": "8.69.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "intl-messageformat": "11.2.14",
-    "typescript": "5.9.2",
     "dprint": "0.57.1",
-    "@cordisx/eslint-config": "github:cordisx/cordisxmono#c63c2e8c2ba7e11502934a52ad2ce3734e804cdc",
     "eslint": "9.39.4",
-    "@typescript-eslint/parser": "8.69.0",
-    "lint-staged": "16.2.7"
+    "intl-messageformat": "11.2.14",
+    "lint-staged": "16.2.7",
+    "typescript": "5.9.2"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.1"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=22.19"

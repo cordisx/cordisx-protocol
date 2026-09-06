@@ -1,9 +1,9 @@
 import { spawnSync } from 'node:child_process'
-import { createHash } from 'node:crypto'
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedExports = [
@@ -38,6 +38,8 @@ const expectedExports = [
   './approval/v2',
   './approval/v3',
   './connector-service/v1',
+  './channel-runtime/v1',
+  './channel-manager/v2',
   './host-dom/v1',
   './manager-collection/v1',
   './manager-settings-navigation/v1',
@@ -97,6 +99,8 @@ const expectedFiles = [
   'types/approval.v2.d.ts',
   'types/approval.v3.d.ts',
   'types/connector-service.v1.d.ts',
+  'types/channel-runtime.v1.d.ts',
+  'types/channel-manager.v2.d.ts',
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
   'types/manager-settings-navigation.v1.d.ts',
@@ -130,28 +134,6 @@ function run(command, arguments_, cwd = root) {
     throw new Error(`${command} ${arguments_.join(' ')} failed:\n${result.stdout}\n${result.stderr}`)
   }
   return result.stdout
-}
-
-function packEntries(output) {
-  const parsed = JSON.parse(output)
-  const entries = Array.isArray(parsed) ? parsed : Object.values(parsed)
-  if (
-    entries.length !== 1 || entries[0] === null || typeof entries[0] !== 'object' || !Array.isArray(entries[0].files)
-  ) {
-    throw new Error('expected exactly one npm pack result with a files array')
-  }
-  return entries
-}
-
-function fileDigest(directory, files) {
-  const digest = createHash('sha256')
-  for (const file of files) {
-    digest.update(file)
-    digest.update('\0')
-    digest.update(readFileSync(join(directory, file)))
-    digest.update('\0')
-  }
-  return digest.digest('hex')
 }
 
 if (fileDigest(root, frozenAgentLoopFiles) !== frozenAgentLoopDigest) {
