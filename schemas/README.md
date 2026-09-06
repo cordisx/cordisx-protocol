@@ -11,6 +11,13 @@ its scope are described in [conformance](../conformance/README.md).
 - `visuals-common.v1.schema.json` and `visual-projection.v1.schema.json`:
   owner-local provider ids plus the framework-neutral opaque data and effective
   theme projection supplied to one bounded visual seat;
+- `agent-detail-reference.v1.schema.json`,
+  `agent-session-detail-reference-request.v1.schema.json`,
+  `agent-session-detail-reference-result.v1.schema.json`,
+  `agent-detail-navigation-request.v1.schema.json`, and
+  `agent-detail-navigation-result.v1.schema.json`: current same-owner opaque
+  Agent detail reference projection and Host-owned navigation outcomes without
+  URL, external target, or Agent acquisition;
 - `agent-page-composer-origin.v1.schema.json` and
   `agent-page-composer-command-context.v1.schema.json`,
   `agent-page-composer-command-request.v1.schema.json`, and
