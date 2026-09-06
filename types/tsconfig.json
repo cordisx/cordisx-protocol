@@ -15,6 +15,8 @@
     "manager-collection.v1.test.ts",
     "manager-settings-navigation.v1.d.ts",
     "manager-settings-navigation.v1.test.ts",
+    "manager-settings-navigation.v2.d.ts",
+    "manager-settings-navigation.v2.test.ts",
     "manager-content-navigation.v1.d.ts",
     "manager-content-navigation.v1.test.ts",
     "manager-content-navigation.v2.d.ts",

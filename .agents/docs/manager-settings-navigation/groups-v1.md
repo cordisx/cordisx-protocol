@@ -98,6 +98,43 @@ insertion `group`, and identify the current effective group and fallback reason.
 This is diagnostics only; it exposes no renderer, DOM, route controller, policy
 mutation, or plugin-owned localization seat.
 
+### Public runtime provenance
+
+The public `ctx.slots.register(options, item)` call does not carry the serialized
+surface envelope automatically. A Host that supports navigation item v2 adds
+the exact pair below to `CordisXContributionOptions` for
+`manager.settings.navigation-items`:
+
+```ts
+{
+  $schema:
+    'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json'
+  schemaVersion: 9
+}
+```
+
+Both fields are required together. When present, the Host reconstructs the
+surface-v9 document from `options` and `item`, excluding the runtime-only
+control lease request, and validates it before registration. When both fields
+are absent, the call is `legacy-unversioned` and accepts only the legacy
+route-only Manager navigation item. A half-present pair, another schema URL or
+version, or `navigationGroup` on a legacy-unversioned call fails closed. The
+Host must not infer provenance from TypeScript imports, item shape, registration
+time, plugin version, or a private flag.
+
+The additive `manager-settings-navigation-projection.v2.schema.json` replaces
+the ambiguous v1 numeric `surfaceSchemaVersion` in runtime diagnostics with the
+closed `surfaceProvenance` union:
+
+- `{ kind: "versioned", $schema: <surface-v9>, schemaVersion: 9 }`; or
+- `{ kind: "legacy-unversioned" }`.
+
+Projection v1 remains frozen for serialized ledgers whose exact v5-v9 source
+version is already known. Runtime `ctx.slots.register` diagnostics use
+projection v2. Exact v9 with a group is `declared`; exact v9 without one is
+`unassigned-fallback`; legacy-unversioned is `legacy-fallback`. No runtime path
+guesses a v5-v8 number.
+
 ## Product information architecture
 
 The recommended Host assignment demonstrates the grouping contract without

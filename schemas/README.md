@@ -136,6 +136,8 @@ its scope are described in [conformance](../conformance/README.md).
   Manager navigation visual group ids, localized labels, orders, and fallback;
 - `manager-settings-navigation-projection.v1.schema.json`: Host-generated
   diagnostics for each contribution's declared/effective group and fallback;
+- `manager-settings-navigation-projection.v2.schema.json`: additive runtime
+  diagnostics with exact surface-v9 or legacy-unversioned provenance;
 - `manager-content-config-common.v1.schema.json`,
   `manager-content-config-command.v1.schema.json`, and
   `manager-content-config-result.v1.schema.json`: exact owner/generation/CAS
