@@ -1,0 +1,19 @@
+{
+  "case": "factory-configuration-v2",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-factory-configuration.v2.schema.json",
+    "contract": "cordisx.platform-provider-factory-configuration/v2",
+    "schemaVersion": 2,
+    "configurationRevision": 2,
+    "providerId": "gateway-a",
+    "displayName": "Gateway A",
+    "enabled": true,
+    "requestTimeoutMs": 30000,
+    "mapping": {
+      "models": [
+        { "sourceModelId": "source-a", "modelId": "public-a", "enabled": true, "isDefault": true },
+        { "sourceModelId": "source-a", "modelId": "public-b", "enabled": true, "isDefault": false }
+      ]
+    }
+  }
+}

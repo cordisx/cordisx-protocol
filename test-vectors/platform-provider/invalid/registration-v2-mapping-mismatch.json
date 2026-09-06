@@ -1,0 +1,95 @@
+{
+  "case": "registration-v2",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-registration.v2.schema.json",
+    "contract": "cordisx.platform-provider-registration/v2",
+    "schemaVersion": 2,
+    "registrationId": "ppr_gateway-a-1",
+    "owner": {
+      "ownerHandle": "ppo_owner-1",
+      "pluginId": "cli-proxy-api",
+      "serviceId": "providers-runtime",
+      "sourceDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "hostGeneration": "host-1",
+      "pluginGeneration": "plugin-1"
+    },
+    "descriptor": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-descriptor.v1.schema.json",
+      "contract": "cordisx.platform-provider-descriptor/v1",
+      "schemaVersion": 1,
+      "providerId": "gateway-a",
+      "displayName": "Gateway A",
+      "implementationStatus": "experimental",
+      "operations": [
+        "models.list",
+        "sessions.list",
+        "sessions.read",
+        "sessions.create",
+        "sessions.control",
+        "turns.submit",
+        "turns.control"
+      ]
+    },
+    "mapping": {
+      "models": [
+        {
+          "sourceModelId": "remote-model",
+          "modelId": "public-model",
+          "displayName": "Public model",
+          "enabled": true,
+          "isDefault": true
+        }
+      ]
+    },
+    "providerGeneration": "provider-1",
+    "brokerPolicy": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-policy.v1.schema.json",
+      "contract": "cordisx.platform-provider-broker-policy/v1",
+      "schemaVersion": 1,
+      "catalogDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policyDigest": "sha256:e8a622d819ce4db966fb4b902847f40f0fdf7be9aa4b8f0b60df99e90013b2a5",
+      "brokerHandle": "ppb_gateway-a-1",
+      "owner": {
+        "ownerHandle": "ppo_owner-1",
+        "pluginId": "cli-proxy-api",
+        "serviceId": "providers-runtime",
+        "sourceDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "hostGeneration": "host-1",
+        "pluginGeneration": "plugin-1"
+      },
+      "providerId": "gateway-a",
+      "providerGeneration": "provider-1",
+      "bindings": [
+        {
+          "operation": "models.list",
+          "direction": "request",
+          "method": "model/list",
+          "requestSchema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-value.v1.schema.json",
+          "resultSchema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-value.v1.schema.json"
+        }
+      ]
+    },
+    "configuration": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-factory-configuration.v2.schema.json",
+      "contract": "cordisx.platform-provider-factory-configuration/v2",
+      "schemaVersion": 2,
+      "configurationRevision": 1,
+      "providerId": "gateway-a",
+      "displayName": "Gateway A",
+      "enabled": true,
+      "requestTimeoutMs": 30000,
+      "mapping": {
+        "models": [
+          {
+            "sourceModelId": "remote-model",
+            "modelId": "different-public-id",
+            "displayName": "Public model",
+            "enabled": true,
+            "isDefault": true
+          }
+        ]
+      }
+    },
+    "state": "active"
+  }
+}

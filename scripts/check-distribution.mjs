@@ -41,6 +41,7 @@ const expectedExports = [
   './channel-runtime/v1',
   './channel-manager/v2',
   './platform-provider/v1',
+  './platform-provider/v2',
   './host-dom/v1',
   './manager-collection/v1',
   './manager-settings-navigation/v1',
@@ -105,6 +106,7 @@ const expectedFiles = [
   'types/channel-runtime.v1.d.ts',
   'types/channel-manager.v2.d.ts',
   'types/platform-provider.v1.d.ts',
+  'types/platform-provider.v2.d.ts',
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
   'types/manager-settings-navigation.v1.d.ts',
@@ -176,6 +178,7 @@ try {
 import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'
 import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'
 import type { PlatformProviderDefinitionV1, PlatformProvidersV1 } from '@cordisx/protocol/platform-provider/v1'
+import type { PlatformProviderDefinitionV2, PlatformProvidersV2 } from '@cordisx/protocol/platform-provider/v2'
 import type { AgentConversationParticipant as AgentConversationParticipantV1, AgentConversationShellSource as AgentConversationShellSourceV1 } from '@cordisx/protocol/agent-conversation-shell/v1'
 import type { AgentConversationActiveRunDescriptor, AgentConversationItem, AgentConversationMemberPresenceItem, AgentConversationParticipant, AgentConversationReaction, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v2'
 import type { AgentConversationApprovalAction, AgentConversationApprovalItem, AgentConversationMessageItem as AgentConversationMessageItemV3, AgentConversationMessageSemantic, AgentConversationParticipant as AgentConversationParticipantV3, AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef, AgentConversationRoomDescription, AgentConversationRoomSettingsUpdateRequest, AgentConversationRoomSettingsUpdateResult, AgentConversationSelection as AgentConversationSelectionV3, AgentConversationShellCommandContext as AgentConversationShellCommandContextV3, AgentConversationShellSource as AgentConversationShellSourceV3 } from '@cordisx/protocol/agent-conversation-shell/v3'
@@ -226,6 +229,7 @@ declare const presence: AgentConversationMemberPresenceItem
 declare const reaction: AgentConversationReaction
 declare const connector: BoundConnectorClient
 declare const platformProviders: PlatformProvidersV1, platformProviderDefinition: PlatformProviderDefinitionV1
+declare const platformProvidersV2: PlatformProvidersV2, platformProviderDefinitionV2: PlatformProviderDefinitionV2
 declare const shell: AgentConversationShellSource
 declare const legacyShell: AgentConversationShellSourceV1
 declare const shellV3: AgentConversationShellSourceV3
@@ -893,6 +897,7 @@ agentLoop.openTaskDetails
 const roots = await hostDom.catalog()
 roots.authority satisfies 'host'
 void platformProviders.register(platformProviderDefinition)
+void platformProvidersV2.register(platformProviderDefinitionV2)
 void canonical
 void cloned
 void effective

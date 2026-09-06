@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-registration.v2.schema.json",
+  "title": "CordisX Platform Provider Registration Projection v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "registrationId", "owner", "descriptor", "mapping", "providerGeneration", "brokerPolicy", "configuration", "state"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-registration.v2.schema.json" },
+    "contract": { "const": "cordisx.platform-provider-registration/v2" },
+    "schemaVersion": { "const": 2 },
+    "registrationId": { "type": "string", "pattern": "^ppr_[A-Za-z0-9._:-]{1,128}$" },
+    "owner": { "$ref": "platform-provider-common.v1.schema.json#/$defs/owner" },
+    "descriptor": { "$ref": "platform-provider-descriptor.v1.schema.json" },
+    "mapping": { "$ref": "platform-provider-registration.v1.schema.json#/$defs/mapping" },
+    "providerGeneration": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "brokerPolicy": { "$ref": "platform-provider-broker-policy.v1.schema.json" },
+    "configuration": { "$ref": "platform-provider-factory-configuration.v2.schema.json" },
+    "state": { "enum": ["staged", "ready", "active", "draining", "failed", "disposed"] }
+  }
+}

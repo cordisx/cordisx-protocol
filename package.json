@@ -45,6 +45,7 @@
     "types/channel-runtime.v1.d.ts",
     "types/channel-manager.v2.d.ts",
     "types/platform-provider.v1.d.ts",
+    "types/platform-provider.v2.d.ts",
     "types/host-dom.v1.d.ts",
     "types/agent-loop.v1.d.ts",
     "types/agent-loop.v2.d.ts",
@@ -127,7 +128,8 @@
     "./agent-page-admission/v1": "./types/agent-page-admission.v1.d.ts",
     "./agent-page-admission/v2": "./types/agent-page-admission.v2.d.ts",
     "./agent-conversation-shell/v8": "./types/agent-conversation-shell.v8.d.ts",
-    "./agent-conversation-shell/v9": "./types/agent-conversation-shell.v9.d.ts"
+    "./agent-conversation-shell/v9": "./types/agent-conversation-shell.v9.d.ts",
+    "./platform-provider/v2": "./types/platform-provider.v2.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
