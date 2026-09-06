@@ -42,6 +42,24 @@ const actionRequest = {
   target: { kind: 'connection', connectionToken: 'chm1_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' },
 } satisfies ChannelManagerRequestV2
 
+const logQueryRequest = {
+  contract: 'cordisx.channel-manager-request/v2',
+  schemaVersion: 2,
+  requestId: 'logs-query-1',
+  expectedRevision: snapshot.revision,
+  profileId: snapshot.profileId,
+  hostGeneration: snapshot.hostGeneration,
+  operation: 'logs.query',
+  target: { kind: 'log', connectionToken: 'chm1_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' },
+  query: { limit: 100 },
+} satisfies Extract<ChannelManagerRequestV2, { operation: 'logs.query' }>
+
+const logExportRequest = {
+  ...logQueryRequest,
+  requestId: 'logs-export-1',
+  operation: 'logs.export',
+} satisfies Extract<ChannelManagerRequestV2, { operation: 'logs.export' }>
+
 declare const context: Context
 const manager: ChannelManagerV2 = context.channelManager
 
@@ -50,6 +68,14 @@ async function useManager() {
   if (issued.status === 'applied') void issued.target
   const result = await manager.execute(actionRequest)
   void result.revision
+  const logs = await manager.queryLogs(logQueryRequest)
+  void logs.entries
+  const exported = await manager.exportLogs(logExportRequest)
+  void exported.status
+  // @ts-expect-error Export requests cannot enter the log-query method.
+  void manager.queryLogs(logExportRequest)
+  // @ts-expect-error Query requests cannot enter the log-export method.
+  void manager.exportLogs(logQueryRequest)
   const dispose = manager.subscribe(() => void manager.snapshot())
   dispose.dispose()
 }
