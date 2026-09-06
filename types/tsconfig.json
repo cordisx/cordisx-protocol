@@ -53,6 +53,8 @@
     "channel-manager.v2.test.ts",
     "platform-provider.v1.d.ts",
     "platform-provider.v1.test.ts",
+    "platform-provider.v2.d.ts",
+    "platform-provider.v2.test.ts",
     "agent-loop.v1.d.ts",
     "agent-loop.v1.test.ts",
     "agent-loop.v2.d.ts",

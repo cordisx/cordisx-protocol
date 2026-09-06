@@ -18,6 +18,10 @@ its scope are described in [conformance](../conformance/README.md).
 - `platform-provider-factory-configuration.v1.schema.json`: closed safe factory
   input with revision, provider identity/display name, enabled state, and
   request timeout only;
+- `platform-provider-factory-configuration.v2.schema.json`: v2 safe factory
+  projection with the service-owned model mapping;
+- `platform-provider-registration.v2.schema.json`: v2 registration projection
+  bound to factory configuration v2;
 - `platform-provider-common.v1.schema.json`,
   `platform-provider-broker-value.v1.schema.json`,
   `platform-provider-broker-policy.v1.schema.json`,
