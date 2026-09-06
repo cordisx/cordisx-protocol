@@ -1,0 +1,7 @@
+{
+  "case": "safe-value",
+  "value": {
+    "timeoutMs": 30000,
+    "models": [{ "sourceModelId": "remote", "modelId": "public" }]
+  }
+}

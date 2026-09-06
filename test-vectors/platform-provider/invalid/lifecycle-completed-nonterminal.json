@@ -1,0 +1,19 @@
+{
+  "case": "lifecycle-event",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-lifecycle-event.v1.schema.json",
+    "contract": "cordisx.platform-provider-lifecycle-event/v1",
+    "schemaVersion": 1,
+    "eventId": "event-invalid",
+    "sequence": 1,
+    "providerId": "gateway-a",
+    "providerGeneration": "provider-1",
+    "session": {
+      "providerId": "gateway-a",
+      "remoteSessionId": "session-1"
+    },
+    "turnId": "turn-1",
+    "type": "turn.completed",
+    "terminal": false
+  }
+}

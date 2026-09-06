@@ -40,6 +40,7 @@ const expectedExports = [
   './connector-service/v1',
   './channel-runtime/v1',
   './channel-manager/v2',
+  './platform-provider/v1',
   './host-dom/v1',
   './manager-collection/v1',
   './manager-settings-navigation/v1',
@@ -53,8 +54,10 @@ const expectedExports = [
   './plugin-manifest/v6',
   './plugin-manifest/v7',
   './plugin-manifest/v8',
+  './plugin-manifest/v9',
   './plugin-generation-artifact/v1',
   './plugin-package/v8',
+  './plugin-package/v9',
   './raster-image/v1',
   './transient-canvas/v1',
 ].sort()
@@ -101,6 +104,7 @@ const expectedFiles = [
   'types/connector-service.v1.d.ts',
   'types/channel-runtime.v1.d.ts',
   'types/channel-manager.v2.d.ts',
+  'types/platform-provider.v1.d.ts',
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
   'types/manager-settings-navigation.v1.d.ts',
@@ -114,8 +118,10 @@ const expectedFiles = [
   'types/plugin-manifest.v6.d.ts',
   'types/plugin-manifest.v7.d.ts',
   'types/plugin-manifest.v8.d.ts',
+  'types/plugin-manifest.v9.d.ts',
   'types/plugin-generation-artifact.v1.d.ts',
   'types/plugin-package.v8.d.ts',
+  'types/plugin-package.v9.d.ts',
   'types/raster-image.v1.d.ts',
   'types/transient-canvas.v1.d.ts',
 ].sort()
@@ -169,6 +175,7 @@ try {
     `import { cloneVisualData, parseVisualProviderId, type VisualData, type VisualProjection, type VisualTheme } from '@cordisx/protocol/visuals/v1'
 import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'
 import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'
+import type { PlatformProviderDefinitionV1, PlatformProvidersV1 } from '@cordisx/protocol/platform-provider/v1'
 import type { AgentConversationParticipant as AgentConversationParticipantV1, AgentConversationShellSource as AgentConversationShellSourceV1 } from '@cordisx/protocol/agent-conversation-shell/v1'
 import type { AgentConversationActiveRunDescriptor, AgentConversationItem, AgentConversationMemberPresenceItem, AgentConversationParticipant, AgentConversationReaction, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v2'
 import type { AgentConversationApprovalAction, AgentConversationApprovalItem, AgentConversationMessageItem as AgentConversationMessageItemV3, AgentConversationMessageSemantic, AgentConversationParticipant as AgentConversationParticipantV3, AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef, AgentConversationRoomDescription, AgentConversationRoomSettingsUpdateRequest, AgentConversationRoomSettingsUpdateResult, AgentConversationSelection as AgentConversationSelectionV3, AgentConversationShellCommandContext as AgentConversationShellCommandContextV3, AgentConversationShellSource as AgentConversationShellSourceV3 } from '@cordisx/protocol/agent-conversation-shell/v3'
@@ -218,6 +225,7 @@ declare const item: AgentConversationItem
 declare const presence: AgentConversationMemberPresenceItem
 declare const reaction: AgentConversationReaction
 declare const connector: BoundConnectorClient
+declare const platformProviders: PlatformProvidersV1, platformProviderDefinition: PlatformProviderDefinitionV1
 declare const shell: AgentConversationShellSource
 declare const legacyShell: AgentConversationShellSourceV1
 declare const shellV3: AgentConversationShellSourceV3
@@ -884,6 +892,7 @@ agentLoop.resolveTaskPresentation
 agentLoop.openTaskDetails
 const roots = await hostDom.catalog()
 roots.authority satisfies 'host'
+void platformProviders.register(platformProviderDefinition)
 void canonical
 void cloned
 void effective
@@ -928,6 +937,10 @@ void semanticlessMessageV3
 void forgedChatroomMessageV3
 `,
   )
+  writeFileSync(
+    join(consumer, 'cordis-peer.d.ts'),
+    "declare module '@deepseek-ai/cordis' { export interface Context {} }\n",
+  )
   run(process.execPath, [
     join(root, 'node_modules/typescript/bin/tsc'),
     '--noEmit',
@@ -938,6 +951,7 @@ void forgedChatroomMessageV3
     'NodeNext',
     '--target',
     'ES2023',
+    join(consumer, 'cordis-peer.d.ts'),
     join(consumer, 'consumer.ts'),
   ], consumer)
   writeFileSync(

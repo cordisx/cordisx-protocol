@@ -1,0 +1,49 @@
+{
+  "case": "broker-event",
+  "value": {
+    "descriptorOperations": [
+      "approvals.decide"
+    ],
+    "policy": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-policy.v1.schema.json",
+      "contract": "cordisx.platform-provider-broker-policy/v1",
+      "schemaVersion": 1,
+      "catalogDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policyDigest": "sha256:09a81cc207da96585b0c707f9a368cf836ea1f24e33fdde99813813fceeb60e2",
+      "brokerHandle": "ppb_gateway-a-1",
+      "owner": {
+        "ownerHandle": "ppo_owner-1",
+        "pluginId": "cli-proxy-api",
+        "serviceId": "providers-runtime",
+        "sourceDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "hostGeneration": "host-1",
+        "pluginGeneration": "plugin-1"
+      },
+      "providerId": "gateway-a",
+      "providerGeneration": "provider-1",
+      "bindings": [
+        {
+          "operation": "approvals.decide",
+          "direction": "event",
+          "method": "item/requestApproval",
+          "eventSchema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-value.v1.schema.json",
+          "responseSchema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-value.v1.schema.json"
+        }
+      ]
+    },
+    "event": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-event.v1.schema.json",
+      "contract": "cordisx.platform-provider-broker-event/v1",
+      "schemaVersion": 1,
+      "eventId": "event-1",
+      "sequence": 1,
+      "operation": "approvals.decide",
+      "method": "item/deleteEverything",
+      "eventSchema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-value.v1.schema.json",
+      "payload": {
+        "approvalId": "approval-1"
+      },
+      "responseRequired": false
+    }
+  }
+}

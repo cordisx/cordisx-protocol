@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-policy.v1.schema.json",
+  "title": "CordisX Platform Provider Broker Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "catalogDigest", "policyDigest", "brokerHandle", "owner", "providerId", "providerGeneration", "bindings"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-broker-policy.v1.schema.json" },
+    "contract": { "const": "cordisx.platform-provider-broker-policy/v1" },
+    "schemaVersion": { "const": 1 },
+    "catalogDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "policyDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "brokerHandle": { "type": "string", "pattern": "^ppb_[A-Za-z0-9._:-]{1,128}$" },
+    "owner": { "$ref": "platform-provider-common.v1.schema.json#/$defs/owner" },
+    "providerId": { "$ref": "platform-provider-common.v1.schema.json#/$defs/localId" },
+    "providerGeneration": { "$ref": "platform-provider-common.v1.schema.json#/$defs/generation" },
+    "bindings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/binding" }
+    }
+  },
+  "$defs": {
+    "requestBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "direction", "method", "requestSchema", "resultSchema"],
+      "properties": {
+        "operation": { "$ref": "platform-provider-common.v1.schema.json#/$defs/operation" },
+        "direction": { "const": "request" },
+        "method": { "$ref": "platform-provider-common.v1.schema.json#/$defs/method" },
+        "requestSchema": { "$ref": "platform-provider-common.v1.schema.json#/$defs/brokerValueSchema" },
+        "resultSchema": { "$ref": "platform-provider-common.v1.schema.json#/$defs/brokerValueSchema" }
+      }
+    },
+    "eventBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "direction", "method", "eventSchema", "responseSchema"],
+      "properties": {
+        "operation": { "$ref": "platform-provider-common.v1.schema.json#/$defs/operation" },
+        "direction": { "const": "event" },
+        "method": { "$ref": "platform-provider-common.v1.schema.json#/$defs/method" },
+        "eventSchema": { "$ref": "platform-provider-common.v1.schema.json#/$defs/brokerValueSchema" },
+        "responseSchema": { "$ref": "platform-provider-common.v1.schema.json#/$defs/brokerValueSchema" }
+      }
+    },
+    "binding": {
+      "oneOf": [
+        { "$ref": "#/$defs/requestBinding" },
+        { "$ref": "#/$defs/eventBinding" }
+      ]
+    }
+  }
+}

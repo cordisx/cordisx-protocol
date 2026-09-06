@@ -125,6 +125,20 @@ Runtime manifest v7 adds one closed execution declaration for the isolated
 or add a DOM capability. Package v7 is the first package contract allowed to
 reference manifest v7; older versions remain frozen.
 
+## Runtime and package manifest v9
+
+Runtime manifest v9 preserves the v8 capability and Channel service families
+and adds the `platform-provider` Node service. Its declaration fixes the Host
+configuration owner, canonical Protocol schema, application mode, and
+package-relative entry before activation. The matching public service is
+specified in [Platform provider service v1](../platform-provider/README.md).
+
+Package v9 preserves the package-v8 distribution, integrity, dependency,
+runtime-ABI, path, optional `entityTemplates`, and separately digested
+runtime-manifest boundaries. Its schema and public TypeScript declaration both
+accept manifest v1-v5, v8, or v9. Package and manifest v1 through v8 remain
+byte-for-byte frozen.
+
 ## Built module graph is separately versioned
 
 Package manifests continue to name one source `entry`; they do not enumerate

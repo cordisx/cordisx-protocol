@@ -211,6 +211,14 @@ Service configuration conformance covers plugin/service ownership, form-safe
 schema projection, exact CAS/generation scope, fixed service/app restart
 planes, desired-versus-active startup state, CLIProxy composite-provider model
 mapping, and complete secret-reference removal from renderer-safe documents.
+Platform provider conformance freezes manifest/package v1-v8 bytes and checks
+the additive v9 service, Host-stamped registration identity, redacted factory
+configuration, unique model mappings, source/generation fences, frozen
+operation/method/schema broker policy, and executable first-terminal lifecycle
+delivery through unsubscribe, drain, and disposal. It rejects mixed-case
+secret, endpoint, URL, host, path, executable, process, environment, transport,
+raw-client, and Fleet leakage. This is Protocol-only evidence and does not prove
+Host Provider Fleet adoption.
 Plugin lifecycle conformance covers package/runtime identity, exact and acyclic
 dependency graphs, enabled dependency readiness, activation/last-good ordering,
 explicit local directory/package/downloaded-tarball input boundaries, separate

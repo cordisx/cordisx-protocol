@@ -7,7 +7,7 @@ ESM graph built from a plugin package entry for one module generation. It is a
 Host-produced artifact document, not an authoring manifest, permission request,
 network capability, update transport, or filesystem projection.
 
-Frozen `plugin-package.v1` through `plugin-package.v8` documents keep their
+Frozen `plugin-package.v1` through `plugin-package.v9` documents keep their
 existing meaning. Their `entry` remains the single package-relative source
 entry inspected and built by the Host. A producer may represent a legacy
 single `module.js` artifact as a version-1 graph containing only that module;

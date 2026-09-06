@@ -1,0 +1,13 @@
+{
+  "case": "factory-configuration",
+  "value": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-factory-configuration.v1.schema.json",
+    "contract": "cordisx.platform-provider-factory-configuration/v1",
+    "schemaVersion": 1,
+    "configurationRevision": 1,
+    "providerId": "gateway-a",
+    "displayName": "Gateway A",
+    "enabled": true,
+    "requestTimeoutMs": 30000
+  }
+}

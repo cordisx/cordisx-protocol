@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-descriptor.v1.schema.json",
+  "title": "CordisX Platform Provider Descriptor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "providerId", "displayName", "implementationStatus", "operations"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-descriptor.v1.schema.json" },
+    "contract": { "const": "cordisx.platform-provider-descriptor/v1" },
+    "schemaVersion": { "const": 1 },
+    "providerId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$"
+    },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "implementationStatus": { "enum": ["implemented", "verified", "experimental", "unavailable"] },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 9,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "models.list",
+          "sessions.list",
+          "sessions.read",
+          "sessions.create",
+          "sessions.control",
+          "turns.submit",
+          "turns.control",
+          "turns.introduce",
+          "approvals.decide"
+        ]
+      }
+    }
+  }
+}
