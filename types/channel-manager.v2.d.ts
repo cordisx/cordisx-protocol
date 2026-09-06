@@ -218,7 +218,12 @@ export type ChannelManagerRequestV2 = ChannelManagerFenceV2 & {
     readonly target: Extract<ChannelManagerTargetV2, { kind: 'binding' }>
   }
   | {
-    readonly operation: 'logs.query' | 'logs.export'
+    readonly operation: 'logs.query'
+    readonly target: Extract<ChannelManagerTargetV2, { kind: 'log' }>
+    readonly query: ChannelManagerLogQueryV2
+  }
+  | {
+    readonly operation: 'logs.export'
     readonly target: Extract<ChannelManagerTargetV2, { kind: 'log' }>
     readonly query: ChannelManagerLogQueryV2
   }
