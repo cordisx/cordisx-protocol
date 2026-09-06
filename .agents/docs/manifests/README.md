@@ -148,3 +148,7 @@ Host may build that source into a
 document containing one entry plus confined ESM chunks, styles, and static
 assets. The artifact format is independently versioned so frozen package
 manifests and runtime permission declarations are not reinterpreted.
+
+## Runtime and package manifest v10
+
+The [controlled visual successor](../extension-point-visuals/README.md) adds exact extension-point interaction declarations. Package v10 adds the digest-pinned manifest v10 reference; previous package semantics remain unchanged.

@@ -229,3 +229,7 @@ plugin-supplied group labels/order, or reuse of the legacy envelope insertion
 `group` as a visual group fail closed. Surface v1-v8 stay frozen; absent or
 legacy visual group assignments resolve through the separately specified
 `other` compatibility fallback.
+
+## Version 10 controlled visuals
+
+The [visual seats successor](../extension-point-visuals/README.md) adds primary-action visual and frame overlay seats with semantic state and separately authorized interaction.
