@@ -9,19 +9,100 @@ permissions:
   contents: read
 
 jobs:
+  scope:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - id: scope
+        name: Classify the base/head diff
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git diff --name-only --diff-filter=ACMRT "$BASE_SHA...$HEAD_SHA" > "$RUNNER_TEMP/changed-files"
+          docs_only=true
+          while IFS= read -r file; do
+            case "$file" in
+              *.md|*.markdown) ;;
+              *) docs_only=false ;;
+            esac
+            case "$file" in
+              AGENTS.md|CONTRIBUTING.md|.agents/*|schemas/*|types/*|runtime/*|test-vectors/*|conformance/*|package.json|package-lock.json|.github/*|scripts/*)
+                docs_only=false
+                ;;
+            esac
+          done < "$RUNNER_TEMP/changed-files"
+          test -s "$RUNNER_TEMP/changed-files" || docs_only=false
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
+          {
+            echo '### Protocol pull-request scope'
+            echo
+            echo "- base: \`$BASE_SHA\`"
+            echo "- head: \`$HEAD_SHA\`"
+            echo "- non-normative docs only: \`$docs_only\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   conformance:
+    if: always() && (github.event_name == 'push' || needs.scope.outputs.docs_only != 'true')
+    needs: scope
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - id: result-cache
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@v4
+        with:
+          path: .ci-results/full.json
+          key: protocol-pr-full-v1-${{ github.event.pull_request.base.sha }}-${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v7
+        if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
         with:
           node-version: 22
           cache: npm
-      - run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
-      - run: npm install --global npm@12.0.2 --registry=https://registry.npmjs.org
-      - run: test "$(npm --version)" = "12.0.2"
-      - run: npm ci
-      - run: npm run check
-      - run: npm run check:distribution
+      - if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+      - if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        run: npm install --global npm@12.0.2 --registry=https://registry.npmjs.org
+      - if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        run: test "$(npm --version)" = "12.0.2"
+      - if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Start complete-gate timer
+        if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        run: date +%s > "$RUNNER_TEMP/protocol-gate-start"
+      - if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        run: npm run check
+      - if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        run: npm run check:distribution
+      - name: Record complete-gate metadata
+        if: github.event_name == 'push' || steps.result-cache.outputs.cache-hit != 'true'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          start=$(cat "$RUNNER_TEMP/protocol-gate-start")
+          elapsed=$(($(date +%s) - start))
+          mkdir -p .ci-results
+          printf '{"base":"%s","head":"%s","phase":"full","seconds":%s,"cache":false}\n' "$BASE_SHA" "$HEAD_SHA" "$elapsed" > .ci-results/full.json
+          echo "Complete Protocol gate: ${elapsed}s" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/cache/save@v4
+        if: github.event_name == 'pull_request' && steps.result-cache.outputs.cache-hit != 'true'
+        with:
+          path: .ci-results/full.json
+          key: protocol-pr-full-v1-${{ github.event.pull_request.base.sha }}-${{ github.event.pull_request.head.sha }}
+      - name: Report exact-SHA reuse
+        if: github.event_name == 'pull_request'
+        run: |
+          if [[ '${{ steps.result-cache.outputs.cache-hit }}' == 'true' ]]; then
+            echo '- exact-SHA cache: `hit`' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo '- exact-SHA cache: `miss`' >> "$GITHUB_STEP_SUMMARY"
+          fi

@@ -7,6 +7,10 @@
 - Accompany deterministic serialization and signature formats with test vectors.
 - Require explicit security analysis for capabilities, trust, isolation, signing, and activation changes.
 - Record breaking changes here before or alongside compatible implementation changes in `cordisx/cordisx`.
+- Non-normative documentation may use changed-file formatting review. Every
+  schema, type, runtime, normative-document, test-vector, conformance,
+  dependency, packaging, or release change retains the complete Protocol gate;
+  a later consumer compiles against the formally merged Protocol revision.
 
 ## Reading and changing a contract
 
