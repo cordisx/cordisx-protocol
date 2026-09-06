@@ -1,5 +1,10 @@
 # Manager settings navigation protocol
 
+This document remains normative for the original flat projection. The additive
+Host-owned visual grouping successor is specified in
+[`groups-v1.md`](./groups-v1.md); it uses surface contribution v9 and Host
+extension-point catalog v9 without changing v5-v8 documents.
+
 This specification is normative for plugin-contributed top-level destinations
 in the CordisX Manager's settings-adjacent navigation group. It is
 distinct from the tabs that switch content inside Settings, specified by

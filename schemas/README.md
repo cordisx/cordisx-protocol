@@ -132,6 +132,10 @@ its scope are described in [conformance](../conformance/README.md).
   `plugin-config-descriptor.v3.schema.json`: the additive Host-form projection
   successor carrying exact scalar choice values with localized labels and a
   mandatory fallback, without changing the value ledger;
+- `manager-settings-navigation-groups.v1.schema.json`: the exact Host-owned
+  Manager navigation visual group ids, localized labels, orders, and fallback;
+- `manager-settings-navigation-projection.v1.schema.json`: Host-generated
+  diagnostics for each contribution's declared/effective group and fallback;
 - `manager-content-config-common.v1.schema.json`,
   `manager-content-config-command.v1.schema.json`, and
   `manager-content-config-result.v1.schema.json`: exact owner/generation/CAS
@@ -523,8 +527,12 @@ its scope are described in [conformance](../conformance/README.md).
   integrity, closed shared Host imports, and initial-versus-lazy resource edges;
 - `surface-contribution.v8.schema.json`: structured isolated transient-canvas
   presentation metadata;
+- `surface-contribution.v9.schema.json`: the frozen v8 families plus an optional
+  Host-catalog group reference on Manager navigation item v2;
 - `host-extension-point-catalog.v8.schema.json`: catalog v7 plus the
   experimental composer submit effects point;
+- `host-extension-point-catalog.v9.schema.json`: catalog v8 plus the Host-owned
+  Manager navigation group catalog and item-v2 payload family;
 - `transient-canvas-registration.v1.schema.json`: bounded Worker-local canvas
   program metadata; callbacks never cross the document;
 - `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or

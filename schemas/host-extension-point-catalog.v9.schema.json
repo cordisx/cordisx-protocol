@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v9.schema.json",
+  "title": "CordisX Host Extension Point Catalog v9",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "points"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v9.schema.json" },
+    "schemaVersion": { "const": 9 },
+    "points": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "oneOf": [
+          { "$ref": "host-extension-point-catalog.v7.schema.json#/$defs/sessionBackdropDescriptor" },
+          { "$ref": "host-extension-point-catalog.v8.schema.json#/$defs/transientCanvasDescriptor" },
+          { "$ref": "#/$defs/managerSettingsNavigationDescriptor" },
+          {
+            "allOf": [
+              { "$ref": "host-extension-point-catalog.v6.schema.json#/$defs/descriptor" },
+              {
+                "not": {
+                  "type": "object",
+                  "properties": { "id": { "const": "manager.settings.navigation-items" } },
+                  "required": ["id"]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "descriptorText": {
+      "allOf": [
+        { "$ref": "ui-common.v1.schema.json#/$defs/localizedText" },
+        { "type": "object", "required": ["fallback"], "properties": { "fallback": true } }
+      ]
+    },
+    "managerSettingsNavigationDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "icon",
+        "payloadFamily",
+        "maturity",
+        "adapterSupport",
+        "navigationGroups"
+      ],
+      "properties": {
+        "id": { "const": "manager.settings.navigation-items" },
+        "kind": { "const": "surface" },
+        "title": { "$ref": "#/$defs/descriptorText" },
+        "description": { "$ref": "#/$defs/descriptorText" },
+        "icon": { "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken" },
+        "payloadFamily": { "const": "manager-settings-navigation-item-v2" },
+        "maturity": { "const": "stable" },
+        "adapterSupport": { "const": "supported" },
+        "navigationGroups": { "$ref": "manager-settings-navigation-groups.v1.schema.json" }
+      }
+    }
+  }
+}

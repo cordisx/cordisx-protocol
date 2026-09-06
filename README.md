@@ -18,6 +18,13 @@ repository `main`; select the tag or commit matching a pinned dependency when
 checking its exact contract. Package publication and Host support are separate
 from a contract's presence in this repository.
 
+Manager Settings navigation groups v1 defines the Host-owned `resources`,
+`development`, `collaboration`, and fallback `other` sections for structured
+top-level Manager destinations. Surface contribution v9 lets an item reference
+one group without supplying labels, layout, or DOM; Host extension-point catalog
+v9 publishes the authoritative labels and order. See
+`.agents/docs/manager-settings-navigation/groups-v1.md`.
+
 ## For maintainers
 
 Read [AGENTS.md](https://github.com/cordisx/cordisx-protocol/blob/main/AGENTS.md)

@@ -110,6 +110,12 @@ same-owner route-v2/page-v3 wiring, pending dependencies, standard page
 chrome, generation-fenced origins, close/reopen selection, and cleanup to the
 Host Settings fallback.
 
+Manager Settings visual grouping suites live in
+`manager-settings-navigation-groups/valid` and
+`manager-settings-navigation-groups/invalid`. They cover the exact Host catalog,
+surface-v9 references, catalog-v9 payload family, legacy/unassigned `other`
+fallback, canonical ordering, and Host-generated extension-point diagnostics.
+
 Generic Manager content navigation suites live in
 `manager-content-navigation/valid` and
 `manager-content-navigation/invalid`. They cover same-owner subroute and

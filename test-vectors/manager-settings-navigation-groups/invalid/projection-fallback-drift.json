@@ -1,0 +1,6 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    { "op": "set", "path": "projection.contributions.3.effectiveGroup", "value": "development" }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-projection.v1.schema.json",
+  "title": "CordisX Manager Settings Navigation Group Projection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "catalog", "contributions"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-projection.v1.schema.json"
+    },
+    "contract": { "const": "cordisx.manager-settings-navigation-projection/v1" },
+    "schemaVersion": { "const": 1 },
+    "catalog": { "$ref": "manager-settings-navigation-groups.v1.schema.json" },
+    "contributions": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/contribution" }
+    }
+  },
+  "$defs": {
+    "contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "id",
+        "surfaceSchemaVersion",
+        "insertionGroup",
+        "effectiveGroup",
+        "assignment",
+        "order"
+      ],
+      "properties": {
+        "owner": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "id": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+        "surfaceSchemaVersion": { "enum": [5, 6, 7, 8, 9] },
+        "insertionGroup": { "enum": ["before-settings", "after-settings"] },
+        "declaredGroup": { "$ref": "manager-settings-navigation-groups.v1.schema.json#/$defs/groupId" },
+        "effectiveGroup": { "$ref": "manager-settings-navigation-groups.v1.schema.json#/$defs/groupId" },
+        "assignment": { "enum": ["declared", "legacy-fallback", "unassigned-fallback"] },
+        "order": { "type": "integer", "minimum": -100000, "maximum": 100000 }
+      }
+    }
+  }
+}

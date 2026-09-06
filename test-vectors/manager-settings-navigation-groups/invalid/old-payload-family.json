@@ -1,0 +1,6 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    { "op": "set", "path": "extensionCatalog.points.0.payloadFamily", "value": "manager-settings-navigation-item" }
+  ]
+}
