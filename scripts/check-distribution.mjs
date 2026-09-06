@@ -41,6 +41,7 @@ const expectedExports = [
   './host-dom/v1',
   './manager-collection/v1',
   './manager-settings-navigation/v1',
+  './manager-settings-navigation/v2',
   './manager-content-navigation/v1',
   './manager-content-navigation/v2',
   './manager-content-navigation/v3',
@@ -99,6 +100,7 @@ const expectedFiles = [
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
   'types/manager-settings-navigation.v1.d.ts',
+  'types/manager-settings-navigation.v2.d.ts',
   'types/manager-content-navigation.v1.d.ts',
   'types/manager-content-navigation.v2.d.ts',
   'types/manager-content-navigation.v3.d.ts',
@@ -199,6 +201,7 @@ import type { AgentLoopApprovalDecisionResult as AgentLoopApprovalDecisionResult
 import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
 import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
 import type { ManagerSettingsNavigationGroupCatalogV1 } from '@cordisx/protocol/manager-settings-navigation/v1'
+import type { ManagerSettingsNavigationProjectionV2 } from '@cordisx/protocol/manager-settings-navigation/v2'
 import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 } from '@cordisx/protocol/manager-content-navigation/v3'
 import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, ManagerContentNavigationDeclarationV4, ManagerContentProjectionV3 } from '@cordisx/protocol/manager-content-navigation/v4'
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
@@ -248,12 +251,9 @@ declare const agentLoopV4: BoundAgentLoopClientV4
 declare const bindingV4: AgentLoopTaskBindingV4
 declare const agents: AgentRegistry
 declare const entityAgents: EntityBackedAgentRegistry
-declare const entities: EntityRegistry
-declare const sessions: SessionRegistry
-declare const approvals: ApprovalService
-declare const approvalsV2: ApprovalServiceV2
-declare const approvalsV3: ApprovalServiceV3
-declare const bootstrapRouteDeclarations: AgentAdmissionBootstrapRouteDeclarationService
+declare const entities: EntityRegistry, sessions: SessionRegistry
+declare const approvals: ApprovalService, approvalsV2: ApprovalServiceV2
+declare const approvalsV3: ApprovalServiceV3, bootstrapRouteDeclarations: AgentAdmissionBootstrapRouteDeclarationService
 declare const bootstrapRouteReservations: AgentAdmissionBootstrapRouteReservationService
 declare const bootstrapRouteClaims: AgentAdmissionBootstrapRouteClaimService
 declare const bootstrapRouteDeclaration: AgentAdmissionBootstrapRouteDeclarationRequest

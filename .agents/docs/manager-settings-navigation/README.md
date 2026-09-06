@@ -3,7 +3,9 @@
 This document remains normative for the original flat projection. The additive
 Host-owned visual grouping successor is specified in
 [`groups-v1.md`](./groups-v1.md); it uses surface contribution v9 and Host
-extension-point catalog v9 without changing v5-v8 documents.
+extension-point catalog v9 without changing v5-v8 documents. That specification
+also defines the exact version pair for public Slot registration and the
+additive runtime-provenance projection v2.
 
 This specification is normative for plugin-contributed top-level destinations
 in the CordisX Manager's settings-adjacent navigation group. It is

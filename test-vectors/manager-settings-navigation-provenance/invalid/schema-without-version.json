@@ -1,0 +1,4 @@
+{
+  "base": "valid/runtime.json",
+  "operations": [{ "op": "delete", "path": "registrations.0.options.schemaVersion" }]
+}

@@ -1,0 +1,4 @@
+{
+  "base": "valid/runtime.json",
+  "operations": [{ "op": "set", "path": "projection.contributions.2.surfaceProvenance", "value": { "kind": "versioned", "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json", "schemaVersion": 9 } }]
+}

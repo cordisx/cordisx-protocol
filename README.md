@@ -24,6 +24,8 @@ top-level Manager destinations. Surface contribution v9 lets an item reference
 one group without supplying labels, layout, or DOM; Host extension-point catalog
 v9 publishes the authoritative labels and order. See
 `.agents/docs/manager-settings-navigation/groups-v1.md`.
+The v2 public entrypoint adds exact surface-v9 versus legacy-unversioned
+provenance for `ctx.slots.register` and Host diagnostics.
 
 ## For maintainers
 

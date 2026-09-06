@@ -1,0 +1,4 @@
+{
+  "base": "valid/runtime.json",
+  "operations": [{ "op": "set", "path": "registrations.2.item.navigationGroup", "value": { "id": "resources" } }]
+}

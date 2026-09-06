@@ -118,6 +118,10 @@ Manager Settings navigation groups v1 conformance checks the exact Host-owned
 group tuple, surface-v9 item references, catalog-v9 payload advertisement,
 legacy/unassigned fallback, canonical grouped ordering, and renderer-free
 extension-point diagnostics.
+Manager Settings navigation runtime provenance conformance distinguishes an
+exact surface-v9 Slot option pair from a fully omitted legacy identity, rejects
+half-versioned or shape-inferred registration, and validates the additive
+projection-v2 provenance/assignment union.
 Channel runtime conformance covers manifest-v2 compatibility, manifest-v3
 service configuration declarations, capability identity/family scopes,
 sourced user-only input, complete binding lineage, redacted runtime and config

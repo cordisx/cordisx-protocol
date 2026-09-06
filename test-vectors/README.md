@@ -115,6 +115,10 @@ Manager Settings visual grouping suites live in
 `manager-settings-navigation-groups/invalid`. They cover the exact Host catalog,
 surface-v9 references, catalog-v9 payload family, legacy/unassigned `other`
 fallback, canonical ordering, and Host-generated extension-point diagnostics.
+Runtime provenance vectors live in
+`manager-settings-navigation-provenance/valid` and
+`manager-settings-navigation-provenance/invalid`. They cover exact paired
+surface-v9 options, legacy-unversioned calls, and projection-v2 assignments.
 
 Generic Manager content navigation suites live in
 `manager-content-navigation/valid` and
