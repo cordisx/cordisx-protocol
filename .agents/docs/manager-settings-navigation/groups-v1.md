@@ -144,9 +144,18 @@ creating additional Protocol route identities:
 - `development`: **Extension points** and **Routes**;
 - `collaboration`: **Manage chats** and **Team structure**.
 
-Plugins are the only first-level installation and management concept. A plugin
-package is an installation carrier or special plugin handled inside the unified
-Plugins page; it is not a second top-level destination. A separate plugin store
-is likewise not a first-level Protocol concept. Compatibility redirects from
-removed Host-owned routes are Host implementation details and do not appear in
-these schemas, group references, or examples.
+The Host-owned **Plugins** destination is the only first-level entry for plugin
+discovery, installation, and installed-plugin management. This does not absorb
+business surfaces contributed by plugins: a plugin may still register one or
+more independent top-level Manager destinations through the versioned
+`manager.settings.navigation-items` contract, choose their supported visual
+groups, and have those entries removed through the existing plugin fiber and
+generation lifecycle.
+
+A plugin bundle is only a package and runtime carrier. Installing or discovering
+a bundle does not automatically create a top-level entry; only an explicit,
+authorized navigation contribution does. A bundle or plugin package is managed
+inside the unified Plugins destination and is not a second installation entry.
+A separate plugin store is likewise not a first-level Protocol concept.
+Compatibility redirects from removed Host-owned routes are Host implementation
+details and do not appear in these schemas, group references, or examples.
