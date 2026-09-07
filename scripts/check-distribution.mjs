@@ -8,6 +8,7 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedExports = [
   './extension-point-visual/v1',
+  './extension-point-visual/v2',
   './plugin-manifest/v10',
   './plugin-package/v10',
   './visuals/v1',
@@ -66,6 +67,7 @@ const expectedExports = [
 ].sort()
 const expectedFiles = [
   'types/extension-point-visual.v1.d.ts',
+  'types/extension-point-visual.v2.d.ts',
   'types/plugin-manifest.v10.d.ts',
   'types/plugin-package.v10.d.ts',
   'LICENSE',
