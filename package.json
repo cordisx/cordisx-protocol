@@ -70,7 +70,8 @@
     "types/extension-point-visual.v1.d.ts",
     "types/plugin-manifest.v10.d.ts",
     "types/plugin-package.v10.d.ts",
-    "types/extension-point-visual.v2.d.ts"
+    "types/extension-point-visual.v2.d.ts",
+    "types/extension-point-drag.v1.d.ts"
   ],
   "exports": {
     "./visuals/v1": {
@@ -135,7 +136,8 @@
     "./extension-point-visual/v1": "./types/extension-point-visual.v1.d.ts",
     "./plugin-manifest/v10": "./types/plugin-manifest.v10.d.ts",
     "./plugin-package/v10": "./types/plugin-package.v10.d.ts",
-    "./extension-point-visual/v2": "./types/extension-point-visual.v2.d.ts"
+    "./extension-point-visual/v2": "./types/extension-point-visual.v2.d.ts",
+    "./extension-point-drag/v1": "./types/extension-point-drag.v1.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
