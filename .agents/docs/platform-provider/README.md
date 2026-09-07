@@ -145,3 +145,23 @@ Manifest and package v1 through v8 remain frozen. Manifest v9 adds only the
 and Channel service declarations. Package v9 adds manifest v9 to the closed
 runtime-manifest reference list. Older Hosts reject v9 rather than dropping its
 service declaration.
+
+## Factory configuration v2
+
+`platform-provider/v2` is the additive successor for services whose safe model
+mapping comes from Host-validated service configuration. It reuses the v1
+owner, descriptor, broker, adapter, workspace, result, and lifecycle contracts.
+It replaces only the factory configuration, registration projection, factory
+input, definition, registration handle, service input, and service apply types.
+
+`platform-provider-factory-configuration/v2` adds one required closed `mapping`
+field with the same model mapping shape and duplicate/default invariants as the
+registration projection. The Host derives it from the validated owner service
+document, strips endpoint and credential authority, and passes the exact frozen
+mapping to the plugin. The plugin supplies that same mapping in its definition;
+the Host rejects any mismatch before opening a broker or factory.
+
+The v1 schema and `platform-provider/v1` entrypoint remain frozen. A v1 Host
+rejects the v2 factory and registration schemas. A v2 Host may continue to run a
+v1 service when it does not need configuration-derived mappings; it must not
+silently erase a v2 mapping or downgrade a v2 service to v1.

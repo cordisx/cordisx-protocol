@@ -28,7 +28,9 @@ const validators = {
   manifest: validator('plugin-manifest.v9.schema.json'),
   package: validator('plugin-package.v9.schema.json'),
   registration: validator('platform-provider-registration.v1.schema.json'),
+  registrationV2: validator('platform-provider-registration.v2.schema.json'),
   factoryConfiguration: validator('platform-provider-factory-configuration.v1.schema.json'),
+  factoryConfigurationV2: validator('platform-provider-factory-configuration.v2.schema.json'),
   safeValue: validator('platform-provider-broker-value.v1.schema.json'),
   brokerPolicy: validator('platform-provider-broker-policy.v1.schema.json'),
   brokerRequest: validator('platform-provider-broker-request.v1.schema.json'),
@@ -45,8 +47,10 @@ const frozenFiles = [
   'types/plugin-manifest.v7.d.ts',
   'types/plugin-manifest.v8.d.ts',
   'types/plugin-package.v8.d.ts',
+  ...schemaNames.filter(name => /^platform-provider-.*\.v1\.schema\.json$/.test(name)).map(name => `schemas/${name}`),
+  'types/platform-provider.v1.d.ts',
 ].sort()
-const frozenDigest = 'a0be43e32c9736dd32218f7d25c91b8b4d9ed71732011422e3098602ee7f2cb5'
+const frozenDigest = '22460708cea1a327a96a81e0376a7e2fd701db5e88cb639d7d7164fcd602de44'
 
 async function digest(files) {
   const hash = createHash('sha256')
@@ -97,8 +101,8 @@ function inspectSafeValue(value, errors, location = 'value') {
   }
 }
 
-function validateRegistration(value) {
-  if (!validators.registration(value)) return schemaErrors(validators.registration)
+function validateRegistrationWith(value, validate) {
+  if (!validate(value)) return schemaErrors(validate)
   const errors = []
   const mappings = value.mapping.models
   for (const id of duplicates(mappings.map(item => item.sourceModelId))) {
@@ -129,8 +133,44 @@ function validateRegistration(value) {
   return errors
 }
 
+function validateRegistration(value) {
+  return validateRegistrationWith(value, validators.registration)
+}
+
+function validateRegistrationV2(value) {
+  const errors = validateRegistrationWith(value, validators.registrationV2)
+  const mappingFingerprint = mapping =>
+    JSON.stringify(mapping.models.map(item => [
+      item.sourceModelId,
+      item.modelId,
+      item.displayName ?? null,
+      item.enabled,
+      item.isDefault,
+    ]))
+  if (errors.length === 0 && mappingFingerprint(value.mapping) !== mappingFingerprint(value.configuration.mapping)) {
+    errors.push('factory configuration mapping differs from registration mapping')
+  }
+  return errors
+}
+
 function validateFactoryConfiguration(value) {
   return validators.factoryConfiguration(value) ? [] : schemaErrors(validators.factoryConfiguration)
+}
+
+function validateFactoryConfigurationV2(value) {
+  if (!validators.factoryConfigurationV2(value)) return schemaErrors(validators.factoryConfigurationV2)
+  const errors = []
+  const mappings = value.mapping.models
+  for (const id of duplicates(mappings.map(item => item.sourceModelId))) {
+    errors.push(`duplicate source model id: ${id}`)
+  }
+  for (const id of duplicates(mappings.map(item => item.modelId))) {
+    errors.push(`duplicate public model id: ${id}`)
+  }
+  if (mappings.filter(item => item.enabled && item.isDefault).length > 1) {
+    errors.push('multiple enabled default model mappings')
+  }
+  return errors
 }
 
 function validateSafeValue(value) {
@@ -290,7 +330,9 @@ const caseValidators = {
   'manifest-v9': validateManifest,
   'package-v9': validatePackage,
   registration: validateRegistration,
+  'registration-v2': validateRegistrationV2,
   'factory-configuration': validateFactoryConfiguration,
+  'factory-configuration-v2': validateFactoryConfigurationV2,
   'safe-value': validateSafeValue,
   'broker-exchange': validateBrokerExchange,
   'broker-event': validateBrokerEvent,
@@ -308,7 +350,7 @@ async function vectorFiles(expected) {
 
 let failures = 0
 if (await digest(frozenFiles) !== frozenDigest) {
-  console.error('plugin manifest/package v1-v8 frozen bytes drifted')
+  console.error('frozen manifest/package and Platform provider v1 bytes drifted')
   failures += 1
 }
 

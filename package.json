@@ -45,6 +45,7 @@
     "types/channel-runtime.v1.d.ts",
     "types/channel-manager.v2.d.ts",
     "types/platform-provider.v1.d.ts",
+    "types/platform-provider.v2.d.ts",
     "types/host-dom.v1.d.ts",
     "types/agent-loop.v1.d.ts",
     "types/agent-loop.v2.d.ts",
@@ -137,7 +138,8 @@
     "./plugin-manifest/v10": "./types/plugin-manifest.v10.d.ts",
     "./plugin-package/v10": "./types/plugin-package.v10.d.ts",
     "./extension-point-visual/v2": "./types/extension-point-visual.v2.d.ts",
-    "./extension-point-drag/v1": "./types/extension-point-drag.v1.d.ts"
+    "./extension-point-drag/v1": "./types/extension-point-drag.v1.d.ts",
+    "./platform-provider/v2": "./types/platform-provider.v2.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",

@@ -1,3 +1,4 @@
+import { expectedExports } from './distribution-public-exports.mjs'
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -6,66 +7,8 @@ import { fileURLToPath } from 'node:url'
 import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
-const expectedExports = [
-  './extension-point-visual/v1',
-  './extension-point-visual/v2',
-  './plugin-manifest/v10',
-  './plugin-package/v10',
-  './visuals/v1',
-  './agent-admission/v1',
-  './agent-admission/v2',
-  './agent-admission/v3',
-  './agent-admission/v4',
-  './agent-admission/v5',
-  './agent-admission/v6',
-  './agent-detail-navigation/v1',
-  './agent-page-admission/v1',
-  './agent-page-admission/v2',
-  './agent-avatar/v1',
-  './agent-conversation-shell/v1',
-  './agent-conversation-shell/v2',
-  './agent-conversation-shell/v3',
-  './agent-conversation-shell/v4',
-  './agent-conversation-shell/v5',
-  './agent-conversation-shell/v6',
-  './agent-conversation-shell/v7',
-  './agent-conversation-shell/v8',
-  './agent-conversation-shell/v9',
-  './agent-loop/v1',
-  './agent-loop/v2',
-  './agent-loop/v3',
-  './agent-loop/v4',
-  './agents/v1',
-  './entities/v1',
-  './sessions/v1',
-  './approval/v1',
-  './approval/v2',
-  './approval/v3',
-  './connector-service/v1',
-  './channel-runtime/v1',
-  './channel-manager/v2',
-  './platform-provider/v1',
-  './host-dom/v1',
-  './manager-collection/v1',
-  './manager-settings-navigation/v1',
-  './manager-settings-navigation/v2',
-  './manager-content-navigation/v1',
-  './manager-content-navigation/v2',
-  './manager-content-navigation/v3',
-  './manager-content-navigation/v4',
-  './manager-content-navigation/v5',
-  './navigation-collection-actions/v1',
-  './plugin-manifest/v6',
-  './plugin-manifest/v7',
-  './plugin-manifest/v8',
-  './plugin-manifest/v9',
-  './plugin-generation-artifact/v1',
-  './plugin-package/v8',
-  './plugin-package/v9',
-  './raster-image/v1',
-  './transient-canvas/v1',
-].sort()
 const expectedFiles = [
+  'types/extension-point-drag.v1.d.ts',
   'types/extension-point-visual.v1.d.ts',
   'types/extension-point-visual.v2.d.ts',
   'types/plugin-manifest.v10.d.ts',
@@ -113,6 +56,7 @@ const expectedFiles = [
   'types/channel-runtime.v1.d.ts',
   'types/channel-manager.v2.d.ts',
   'types/platform-provider.v1.d.ts',
+  'types/platform-provider.v2.d.ts',
   'types/host-dom.v1.d.ts',
   'types/manager-collection.v1.d.ts',
   'types/manager-settings-navigation.v1.d.ts',
@@ -184,6 +128,7 @@ try {
 import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'
 import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'
 import type { PlatformProviderDefinitionV1, PlatformProvidersV1 } from '@cordisx/protocol/platform-provider/v1'
+import type { PlatformProviderDefinitionV2, PlatformProvidersV2 } from '@cordisx/protocol/platform-provider/v2'
 import type { AgentConversationParticipant as AgentConversationParticipantV1, AgentConversationShellSource as AgentConversationShellSourceV1 } from '@cordisx/protocol/agent-conversation-shell/v1'
 import type { AgentConversationActiveRunDescriptor, AgentConversationItem, AgentConversationMemberPresenceItem, AgentConversationParticipant, AgentConversationReaction, AgentConversationShellSource } from '@cordisx/protocol/agent-conversation-shell/v2'
 import type { AgentConversationApprovalAction, AgentConversationApprovalItem, AgentConversationMessageItem as AgentConversationMessageItemV3, AgentConversationMessageSemantic, AgentConversationParticipant as AgentConversationParticipantV3, AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef, AgentConversationRoomDescription, AgentConversationRoomSettingsUpdateRequest, AgentConversationRoomSettingsUpdateResult, AgentConversationSelection as AgentConversationSelectionV3, AgentConversationShellCommandContext as AgentConversationShellCommandContextV3, AgentConversationShellSource as AgentConversationShellSourceV3 } from '@cordisx/protocol/agent-conversation-shell/v3'
@@ -234,6 +179,7 @@ declare const presence: AgentConversationMemberPresenceItem
 declare const reaction: AgentConversationReaction
 declare const connector: BoundConnectorClient
 declare const platformProviders: PlatformProvidersV1, platformProviderDefinition: PlatformProviderDefinitionV1
+declare const platformProvidersV2: PlatformProvidersV2, platformProviderDefinitionV2: PlatformProviderDefinitionV2
 declare const shell: AgentConversationShellSource
 declare const legacyShell: AgentConversationShellSourceV1
 declare const shellV3: AgentConversationShellSourceV3
@@ -901,6 +847,7 @@ agentLoop.openTaskDetails
 const roots = await hostDom.catalog()
 roots.authority satisfies 'host'
 void platformProviders.register(platformProviderDefinition)
+void platformProvidersV2.register(platformProviderDefinitionV2)
 void canonical
 void cloned
 void effective

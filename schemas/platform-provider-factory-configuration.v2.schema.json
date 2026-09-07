@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-factory-configuration.v2.schema.json",
+  "title": "CordisX Platform Provider Factory Configuration v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "configurationRevision", "providerId", "displayName", "enabled", "requestTimeoutMs", "mapping"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/platform-provider-factory-configuration.v2.schema.json" },
+    "contract": { "const": "cordisx.platform-provider-factory-configuration/v2" },
+    "schemaVersion": { "const": 2 },
+    "configurationRevision": { "type": "integer", "minimum": 0 },
+    "providerId": { "$ref": "platform-provider-common.v1.schema.json#/$defs/localId" },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "enabled": { "type": "boolean" },
+    "requestTimeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000 },
+    "mapping": { "$ref": "platform-provider-registration.v1.schema.json#/$defs/mapping" }
+  }
+}
