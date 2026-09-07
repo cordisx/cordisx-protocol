@@ -109,6 +109,8 @@
     "agent-admission.v6.test.ts",
     "agent-detail-navigation.v1.d.ts",
     "agent-detail-navigation.v1.test.ts",
+    "agent-detail-navigation.v2.d.ts",
+    "agent-detail-navigation.v2.test.ts",
     "agent-page-admission.v1.d.ts",
     "agent-page-admission.v1.test.ts",
     "agent-page-admission.v2.d.ts",
