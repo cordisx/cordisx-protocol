@@ -11,7 +11,7 @@ import type {
 } from './agent-conversation-shell.v11.js'
 export * from './agent-conversation-shell.v11.js'
 
-/** Persisted Room association whose Session is not loaded; running/recovery status is unknown. */
+/** Persisted association not loaded by this Room source; Host-global loading, running and recovery status are unknown. */
 export interface AgentConversationAssociatedSession {
   readonly participantId: string
   readonly memberId: string

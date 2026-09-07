@@ -447,8 +447,9 @@ The additive [v12 declarations](../../../types/agent-conversation-shell.v12.d.ts
 and [snapshot schema](../../../schemas/agent-conversation-shell-snapshot.v12.schema.json)
 retain v11 messages and v9 composer/admission behavior. An optional Room
 `associatedSessions` array exposes exact persisted participant/member/run/Session
-associations when those Sessions are not loaded. `state: unloaded` asserts only
-that absence of a loaded Session; it does not assert the native task is stopped,
+associations when this Room source has no loaded Session projection.
+`state: unloaded` describes only that source-local absence; it does not assert
+Host-global Session loading or that the native task is stopped,
 running, resumable, or missing. The Host labels that uncertainty separately from
 live `activeRuns`. An empty live projection is not proof of no persisted history.
 
