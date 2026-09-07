@@ -6,6 +6,12 @@ The [TypeScript index](../types/INDEX.md) maps public imports; [test vectors](..
 describe example coverage. These are protocol checks, separate from Host
 interoperability, package publication, and consumer acceptance.
 
+Agent task v1: `node conformance/agent-task.mjs` validates closed request/result
+shapes and a reference model for validation-before-create, pre-submit binding,
+concurrent durable idempotency, conflict, partial/uncertain outcomes, restart,
+owner isolation, early reports and runtime-only execution observations. This
+model does not establish native adapter feasibility or adoption.
+
 Implementation-independent compatibility fixtures and expected outcomes belong here.
 
 The Agent Loop v3/v4 and Conversation Shell v3 entry scripts run scenario

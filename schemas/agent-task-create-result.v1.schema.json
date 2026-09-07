@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-create-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "operationId",
+        "disposition",
+        "task"
+      ],
+      "properties": {
+        "status": {
+          "const": "accepted"
+        },
+        "operationId": {
+          "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+        },
+        "disposition": {
+          "enum": [
+            "created",
+            "replayed"
+          ]
+        },
+        "task": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sessionId",
+            "messageId",
+            "context",
+            "detail"
+          ],
+          "properties": {
+            "sessionId": {
+              "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+            },
+            "messageId": {
+              "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+            },
+            "context": {
+              "$ref": "agent-task-common.v1.schema.json#/$defs/resolvedContext"
+            },
+            "detail": {
+              "$ref": "agent-detail-reference.v1.schema.json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "operationId",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "const": "unavailable"
+        },
+        "operationId": {
+          "type": "string"
+        },
+        "code": {
+          "enum": [
+            "invalid-input",
+            "permission-denied",
+            "operation-conflict",
+            "context-required",
+            "context-unavailable",
+            "project-unavailable",
+            "directory-unavailable",
+            "definition-unavailable",
+            "tool-unavailable",
+            "create-failed",
+            "submit-failed",
+            "reconciliation-required",
+            "host-unavailable",
+            "unsupported"
+          ]
+        },
+        "sessionId": {
+          "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+        }
+      }
+    }
+  ]
+}

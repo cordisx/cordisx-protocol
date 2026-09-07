@@ -1,5 +1,6 @@
 // Public import coverage for the packed consumer smoke test.
 export const expectedExports = [
+  './agent-task/v1',
   './agent-tools/v1',
   './agent-conversation-shell/v10',
   './extension-point-drag/v1',

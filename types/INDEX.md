@@ -85,6 +85,11 @@ not require a Host shell service; see the topic's ownership statement.
 | `plugin-package/v9`             | [plugin-package.v9.d.ts](plugin-package.v9.d.ts)                         | [Manifest v9 package successor](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v9)      |
 | `plugin-generation-artifact/v1` | [plugin-generation-artifact.v1.d.ts](plugin-generation-artifact.v1.d.ts) | [Immutable browser ESM graph](../.agents/docs/plugin-generation-artifact/README.md)                       |
 
+## Agent task creation
+
+- [`agent-task/v1`](agent-task.v1.d.ts): optional `AgentTasks` create/query service;
+  [normative contract](../.agents/docs/agent-task/README.md).
+
 ## Repository-only declarations
 
 [icon-theme.v1.d.ts](icon-theme.v1.d.ts) accompanies the

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-create-request.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "operationId",
+    "definition",
+    "context",
+    "text",
+    "tool"
+  ],
+  "properties": {
+    "operationId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "definition": {
+      "$ref": "agents-common.v1.schema.json#/$defs/definitionIdentity"
+    },
+    "context": {
+      "$ref": "agent-task-common.v1.schema.json#/$defs/context"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "options": {
+      "$ref": "agents-common.v1.schema.json#/$defs/agentOptions"
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commandId",
+        "scope"
+      ],
+      "properties": {
+        "commandId": {
+          "$ref": "session-common.v1.schema.json#/$defs/identifier"
+        },
+        "scope": {
+          "$ref": "session-common.v1.schema.json#/$defs/jsonValue"
+        }
+      }
+    }
+  }
+}

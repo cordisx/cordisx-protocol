@@ -33,6 +33,8 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 
 - [Agent and Session runtime](agent-runtime/README.md): Agent handles, persistent
   SessionEvent facts, approvals, and the versioned admission entrypoints.
+- [Agent tasks](agent-task/README.md): context-validated, owner-scoped durable
+  create-and-submit with pre-bound tools and read-only reconciliation queries.
 - [Agent detail navigation](agent-detail-navigation/README.md): read-only
   current Session-to-detail reference projection and Host-owned opaque detail
   navigation without raw URLs or Agent acquisition.

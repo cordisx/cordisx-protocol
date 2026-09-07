@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-common.v1.schema.json",
+  "$defs": {
+    "context": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "cwd"
+          ],
+          "properties": {
+            "kind": {
+              "const": "directory"
+            },
+            "cwd": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "projectId"
+          ],
+          "properties": {
+            "kind": {
+              "const": "project"
+            },
+            "projectId": {
+              "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+            },
+            "cwd": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "sessionId"
+          ],
+          "properties": {
+            "kind": {
+              "const": "inherit"
+            },
+            "sessionId": {
+              "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+            }
+          }
+        }
+      ]
+    },
+    "resolvedContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cwd"
+      ],
+      "properties": {
+        "cwd": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "projectId": {
+          "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+        }
+      }
+    },
+    "execution": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "value"
+          ],
+          "properties": {
+            "status": {
+              "const": "available"
+            },
+            "value": {
+              "enum": [
+                "idle",
+                "running"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "code"
+          ],
+          "properties": {
+            "status": {
+              "const": "unavailable"
+            },
+            "code": {
+              "enum": [
+                "whole-agent-idle-unobservable",
+                "agent-replaced",
+                "plugin-generation-replaced",
+                "connection-replaced",
+                "host-unavailable"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
