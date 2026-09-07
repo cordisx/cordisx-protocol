@@ -70,7 +70,8 @@
     "types/agent-conversation-shell.v9.d.ts",
     "types/agent-tools.v1.d.ts",
     "types/agent-conversation-shell.v10.d.ts",
-    "types/agent-conversation-shell.v11.d.ts"
+    "types/agent-conversation-shell.v11.d.ts",
+    "types/agent-conversation-shell.v12.d.ts"
   ],
   "exports": {
     "./visuals/v1": {
