@@ -129,6 +129,12 @@
     "entity-settings-navigation.v1.d.ts",
     "route-link-resolution.v1.d.ts",
     "controlled-markdown-editor.v1.d.ts",
-    "navigation-parity.v1.test.ts"
+    "navigation-parity.v1.test.ts",
+    "extension-point-interactions.v1.d.ts",
+    "extension-point-interactions.v1.test.ts",
+    "usage.v1.d.ts",
+    "usage.v1.test.ts",
+    "plugin-manifest.v11.d.ts",
+    "plugin-package.v11.d.ts"
   ]
 }

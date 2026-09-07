@@ -106,3 +106,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Entity settings navigation](entity-settings-navigation/README.md): exact definition settings availability and opening.
 - [Route link resolution](route-link-resolution/README.md): authenticated canonical route links.
 - [Controlled Markdown editor](controlled-markdown-editor/README.md): controlled editing and selection capability.
+
+- [Local usage v1](usage-v1.md): profile-scoped durable usage and manifest/package v11.

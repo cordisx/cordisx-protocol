@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v6.schema.json",
+  "title": "CordisX Usage Permission Decision v6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "origin",
+    "planId",
+    "operation",
+    "profileId",
+    "identity",
+    "binding",
+    "decisions"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v6.schema.json"
+    },
+    "schemaVersion": {
+      "const": 6
+    },
+    "origin": {
+      "const": "explicit-user"
+    },
+    "planId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "operation": {
+      "enum": [
+        "install",
+        "update",
+        "enable",
+        "runtime"
+      ]
+    },
+    "profileId": {
+      "$ref": "permission-common.v5.schema.json#/$defs/profileId"
+    },
+    "identity": {
+      "$ref": "permission-common.v5.schema.json#/$defs/identity"
+    },
+    "binding": {
+      "$ref": "permission-common.v5.schema.json#/$defs/binding"
+    },
+    "decisions": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capability",
+          "scope",
+          "securityFingerprint",
+          "decision"
+        ],
+        "properties": {
+          "capability": {
+            "const": "usage.read"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "profile"
+            ],
+            "properties": {
+              "profile": {
+                "const": "current"
+              }
+            }
+          },
+          "securityFingerprint": {
+            "$ref": "permission-common.v5.schema.json#/$defs/securityFingerprint"
+          },
+          "decision": {
+            "enum": [
+              "allow-once",
+              "deny-once"
+            ]
+          }
+        }
+      },
+      "minItems": 1
+    }
+  }
+}
