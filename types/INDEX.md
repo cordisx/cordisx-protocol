@@ -121,3 +121,11 @@ the specification and [schema index](../schemas/README.md).
 - `agent-conversation-shell/v10`: [declarations](agent-conversation-shell.v10.d.ts), [authenticated plugin command messages](../.agents/docs/agent-conversation-shell/README.md#v10-authenticated-plugin-command-messages).
 
 - [Visual interactions v1](../.agents/docs/extension-point-interactions-v1.md): independent entity drag and controlled menus.
+
+## Additive presentation capabilities
+
+| Import                          | Types                                                                    | Contract                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `entity-settings-navigation/v1` | [entity-settings-navigation.v1.d.ts](entity-settings-navigation.v1.d.ts) | [Exact settings target](../.agents/docs/entity-settings-navigation/v1.md) |
+| `route-link-resolution/v1`      | [route-link-resolution.v1.d.ts](route-link-resolution.v1.d.ts)           | [Canonical route links](../.agents/docs/route-link-resolution/v1.md)      |
+| `controlled-markdown-editor/v1` | [controlled-markdown-editor.v1.d.ts](controlled-markdown-editor.v1.d.ts) | [Controlled editor](../.agents/docs/controlled-markdown-editor/v1.md)     |

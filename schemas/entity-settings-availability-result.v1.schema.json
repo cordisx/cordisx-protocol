@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-settings-availability-result.v1.schema.json",
+  "title": "entity-settings-availability-result v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "const": "available"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "const": "unavailable"
+        },
+        "code": {
+          "enum": [
+            "invalid-identity",
+            "target-unavailable",
+            "caller-unavailable",
+            "host-unavailable"
+          ]
+        }
+      }
+    }
+  ]
+}
