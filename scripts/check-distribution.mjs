@@ -42,6 +42,7 @@ const expectedFiles = [
   'types/agent-admission.v5.d.ts',
   'types/agent-admission.v6.d.ts',
   'types/agent-detail-navigation.v1.d.ts',
+  'types/agent-detail-navigation.v2.d.ts',
   'types/agent-page-admission.v1.d.ts',
   'types/agent-page-admission.v2.d.ts',
   'types/agent-tools.v1.d.ts',

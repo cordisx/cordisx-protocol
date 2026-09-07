@@ -45,3 +45,18 @@ The index listed isolated execution, remote distribution, publisher-key
 registration UX, activation-registry deployment, transparency, and public
 marketplace activation as planned areas. This is retained as historical context;
 it is not a current availability matrix or an instruction to implement them.
+
+## Conversation renderer retirement preparation, 2026-09-08
+
+[Chatroom #74](https://github.com/cordisx/plugin-chatroom/issues/74) prepares a
+plugin-owned replacement for the Host business renderer. The
+[Host bounded consumer audit](https://github.com/cordisx/cordisx/blob/6536b5157f63a7a891e818ca7265541e857712e5/.agents/docs/conversation-ui-boundary.md)
+records exact fetched plugin revisions and the replacement gate. It is a
+preparation candidate, not a Host removal or accepted native preview.
+
+Renderer retirement does not remove frozen Shell schema/type exports. Current
+Agent execution code and Chatroom still reuse historical item and command
+contexts; their compatibility is distinct from UI ownership. No Shell version
+is added for the new product layout. The historical unloaded-session navigation
+gap is isolated in [detail navigation v2](../docs/agent-detail-navigation/v2.md),
+with explicit new methods and the v1 current-only methods preserved.
