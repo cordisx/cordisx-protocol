@@ -8,6 +8,10 @@ package imports. A schema version belongs to that document; it need not equal
 the version of a service or entrypoint that reuses it. Validation behavior and
 its scope are described in [conformance](../conformance/README.md).
 
+- `agent-task-approval-binding.v1.schema.json`: detached Host-frozen operation
+  and tool-scope correlation for existing approval callbacks. Live callbacks and
+  AgentHandle acquisition have no serialized representation.
+
 - `agent-task-common.v1.schema.json`, `agent-task-create-request.v1.schema.json`,
   `agent-task-create-result.v1.schema.json`, `agent-task-query-request.v1.schema.json`,
   and `agent-task-query-result.v1.schema.json`: new-task execution contexts,

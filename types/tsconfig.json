@@ -123,6 +123,8 @@
     "plugin-package.v10.d.ts",
     "extension-point-visual.v2.d.ts",
     "agent-task.v1.d.ts",
-    "agent-task.v1.test.ts"
+    "agent-task.v1.test.ts",
+    "agent-task-binding.v1.d.ts",
+    "agent-task-binding.v1.test.ts"
   ]
 }

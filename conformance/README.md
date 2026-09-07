@@ -6,6 +6,11 @@ The [TypeScript index](../types/INDEX.md) maps public imports; [test vectors](..
 describe example coverage. These are protocol checks, separate from Host
 interoperability, package publication, and consumer acceptance.
 
+Agent task binding v1: `node conformance/agent-task-binding.mjs` checks required
+approval installation, durable binding policy, partial cleanup, late fences,
+explicit same-Session recovery and accepted-only runtime ownership. Native
+approval decisions and actual page continuation remain Host/consumer evidence.
+
 Agent task v1: `node conformance/agent-task.mjs` validates closed request/result
 shapes and a reference model for validation-before-create, pre-submit binding,
 concurrent durable idempotency, conflict, partial/uncertain outcomes, restart,
