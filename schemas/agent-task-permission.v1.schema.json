@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-permission.v1.schema.json",
+  "title": "CordisX Agent task permission declarations v1",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/requestCapability"
+    },
+    {
+      "$ref": "#/$defs/answerCapability"
+    }
+  ],
+  "$defs": {
+    "commandScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "commandId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "agent-task-command"
+        },
+        "commandId": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localId"
+        }
+      }
+    },
+    "requestCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "required",
+        "scope"
+      ],
+      "properties": {
+        "name": {
+          "const": "approvals.request"
+        },
+        "required": {
+          "const": false
+        },
+        "rationale": {
+          "$ref": "plugin-manifest.v5.schema.json#/$defs/rationale"
+        },
+        "security": {
+          "$ref": "plugin-manifest.v5.schema.json#/$defs/securityDeclaration"
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "task"
+          ],
+          "properties": {
+            "task": {
+              "$ref": "#/$defs/commandScope"
+            },
+            "sessionIds": {
+              "$ref": "plugin-manifest.v8.schema.json#/$defs/hostRouteSessionScopeBinding"
+            }
+          }
+        }
+      }
+    },
+    "answerCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "required",
+        "scope"
+      ],
+      "properties": {
+        "name": {
+          "const": "approvals.answer"
+        },
+        "required": {
+          "const": false
+        },
+        "rationale": {
+          "$ref": "plugin-manifest.v5.schema.json#/$defs/rationale"
+        },
+        "security": {
+          "$ref": "plugin-manifest.v5.schema.json#/$defs/securityDeclaration"
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskRequester"
+          ],
+          "properties": {
+            "taskRequester": {
+              "$ref": "#/$defs/commandScope"
+            },
+            "authorityRequester": {
+              "$ref": "plugin-manifest.v8.schema.json#/$defs/approvalAuthorityRequesterRouteScope/properties/authorityRequester"
+            }
+          }
+        }
+      }
+    }
+  }
+}

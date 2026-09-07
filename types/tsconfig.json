@@ -135,6 +135,10 @@
     "usage.v1.d.ts",
     "usage.v1.test.ts",
     "plugin-manifest.v11.d.ts",
-    "plugin-package.v11.d.ts"
+    "plugin-package.v11.d.ts",
+    "agent-task-permission.v1.d.ts",
+    "plugin-manifest.v12.d.ts",
+    "plugin-package.v12.d.ts",
+    "agent-task-permission.v1.test.ts"
   ]
 }
