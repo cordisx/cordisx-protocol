@@ -581,3 +581,5 @@ its scope are described in [conformance](../conformance/README.md).
   formatted row text, and bounded consumption summaries;
 - `plugin-console-page.v1.schema.json`: one owner- and generation-bounded
   in-memory Console projection with an explicit partial-observability marker.
+
+- [Agent tool resources v1](agent-tools.v1.schema.json): package-contained Skill and CLI declarations.

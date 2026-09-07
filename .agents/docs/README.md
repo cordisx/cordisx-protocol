@@ -89,3 +89,5 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 [dated adoption notes](../maintainers/adoption-notes.md) are outside the normative
 specification layer. They record repository operations and historical handoffs;
 contract availability here does not establish deployment or consumer acceptance.
+
+- [Plugin Agent tools](agent-tools/README.md): generation-bound Skill resources and restricted CLI invocation.

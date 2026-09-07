@@ -92,3 +92,5 @@ not require a Host shell service; see the topic's ownership statement.
 currently listed in the package export map; this index does not invent an npm
 subpath for it. Its semantic catalog and compatibility requirements remain in
 the specification and [schema index](../schemas/README.md).
+
+- `agent-tools/v1`: [declarations](agent-tools.v1.d.ts), [plugin Agent tools](../.agents/docs/agent-tools/README.md).
