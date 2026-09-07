@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-approval-binding.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "operationId",
+    "toolScope"
+  ],
+  "properties": {
+    "operationId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "toolScope": {
+      "$ref": "session-common.v1.schema.json#/$defs/jsonValue"
+    }
+  }
+}
