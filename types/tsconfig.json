@@ -116,6 +116,7 @@
     "extension-point-visual.v1.d.ts",
     "extension-point-visual.v1.test.ts",
     "plugin-manifest.v10.d.ts",
-    "plugin-package.v10.d.ts"
+    "plugin-package.v10.d.ts",
+    "extension-point-visual.v2.d.ts"
   ]
 }

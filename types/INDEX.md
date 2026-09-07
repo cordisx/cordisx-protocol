@@ -98,3 +98,5 @@ the specification and [schema index](../schemas/README.md).
 - [plugin-manifest/v10](plugin-manifest.v10.d.ts) — exact interaction capability declarations.
 
 - [plugin-package/v10](plugin-package.v10.d.ts) — digest-pinned manifest v10 packaging.
+
+- Composer dictation status: [`extension-point-visual.v2.d.ts`](extension-point-visual.v2.d.ts), optional successor to v1.

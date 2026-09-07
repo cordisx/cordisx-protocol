@@ -102,3 +102,21 @@ subscriptions as well as already mounted visuals.
 - [Catalog successor](../../../schemas/host-extension-point-catalog.v10.schema.json)
 - [Public types](../../../types/extension-point-visual.v1.d.ts)
 - [Conformance](../../../conformance/extension-point-visuals.mjs)
+
+## Optional dictation snapshot v2
+
+The [v2 snapshot schema](../../../schemas/extension-point-visual.v2.schema.json)
+and [TypeScript projection](../../../types/extension-point-visual.v2.d.ts) add
+an independent `dictation` status. Primary `action`, enabled and busy semantics
+remain unchanged. A renderer must explicitly opt into v2 through its Host's
+versioned renderer integration; v1 consumers continue receiving the frozen v1
+shape. A Host without v2 support must not imply dictation observation.
+
+States are `idle`, `starting`, `recording`, `transcribing`, `retry`, and
+`unavailable`. Unavailable means the Host cannot uniquely identify a supported
+status, including absent or ambiguous controls; it does not mean idle. A Host
+must use semantic evidence, not infer recording from a disabled send button.
+No transcript, microphone samples, amplitude, recording identifiers, or start/
+stop controls are exposed. The render grant exposes status only; it grants no
+microphone access or recording authority. Visuals must cease status updates on
+withdrawal through the existing generation lifecycle.

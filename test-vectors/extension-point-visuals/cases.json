@@ -676,5 +676,190 @@
       "services": []
     },
     "valid": true
+  },
+  {
+    "name": "v2 dictation unavailable",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "unavailable"
+    }
+  },
+  {
+    "name": "v2 dictation idle",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "idle"
+    }
+  },
+  {
+    "name": "v2 dictation starting",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "starting"
+    }
+  },
+  {
+    "name": "v2 dictation recording",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "recording"
+    }
+  },
+  {
+    "name": "v2 dictation transcribing",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "transcribing"
+    }
+  },
+  {
+    "name": "v2 dictation retry",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "retry"
+    }
+  },
+  {
+    "name": "v2 rejects transcript disclosure",
+    "schema": "extension-point-visual.v2",
+    "valid": false,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "recording",
+      "transcript": "not allowed"
+    }
+  },
+  {
+    "name": "v1 rejects v2 dictation field",
+    "schema": "extension-point-visual.v1",
+    "valid": false,
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "recording"
+    }
   }
 ]

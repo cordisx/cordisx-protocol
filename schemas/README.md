@@ -581,3 +581,5 @@ its scope are described in [conformance](../conformance/README.md).
 ## Controlled visuals successor
 
 See [Extension point visuals v1](../.agents/docs/extension-point-visuals/README.md) for surface/catalog v10, manifest v10, snapshot v1, permission common/policy/plan/decision v5 and capability catalog v4.
+
+- Composer dictation status: [`extension-point-visual.v2.schema.json`](extension-point-visual.v2.schema.json), optional successor to v1.
