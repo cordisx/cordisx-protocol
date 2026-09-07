@@ -166,7 +166,12 @@ assert.deepEqual(uncertain.effects, before)
 
 // Root self-authority and child -> Leader remain existing approval question /
 // answer exchanges. Only an explicit human outcome resolves this model's wait.
-for (const [requester, outcome] of [['leader', 'rejected'], ['child', 'allowed-once']]) {
+for (
+  const [requester, outcome] of [['leader', 'rejected'], ['leader', 'allowed-once'], ['child', 'rejected'], [
+    'child',
+    'allowed-once',
+  ]]
+) {
   const approval = fixture()
   const decision = deferred()
   let routingQuestion, authorityQuestion, capturedBinding, signal
@@ -211,3 +216,27 @@ assert.equal(await answer, 'unavailable', 'late answer cannot escape its revoked
 console.log(
   'agent-task-binding/v1 conformance: required approval lifecycle, policy, same-Session recovery and genuine accepted ownership passed',
 )
+
+const invocationScoped = fixture()
+const decisions = [deferred(), deferred()]
+const sources = [new AbortController(), new AbortController()]
+const signals = []
+invocationScoped.model.register('owner', 'chatroom', {
+  ...handlers,
+  answerAuthority: (question, binding, signal) => {
+    signals.push(signal)
+    return decisions[question.index].promise
+  },
+})
+await invocationScoped.model.create('owner', request)
+const resource = invocationScoped.resources.find(item => item.name === 'answerAuthority')
+const first = resource.invoke({ index: 0 }, sources[0].signal)
+const second = resource.invoke({ index: 1 }, sources[1].signal)
+sources[0].abort()
+assert.equal(signals[0].aborted, true, 'exact approval close must abort a still-pending callback promptly')
+assert.equal(signals[1].aborted, false, 'one approval close must not close a sibling invocation')
+decisions[0].resolve('allowed-once')
+decisions[1].resolve('rejected')
+assert.equal(await first, 'unavailable')
+assert.equal(await second, 'rejected')
+assert.equal(signals[1].aborted, true, 'settled invocation has no remaining callback lifetime')

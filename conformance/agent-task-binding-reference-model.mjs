@@ -89,10 +89,20 @@ export class TaskBindingModel {
         if (!registration.active) throw new Error('registration replaced')
         const handler = registration.handlers[name]
         if (!handler) continue
-        const resource = await this.adapter.install(name, row.sessionId, async question => {
-          if (!registration.active) return 'unavailable'
-          const answer = await handler(question, binding, registration.abort.signal)
-          return registration.active ? answer : 'unavailable'
+        const resource = await this.adapter.install(name, row.sessionId, async (question, sourceSignal) => {
+          const invocation = new AbortController()
+          const signal = AbortSignal.any([
+            registration.abort.signal,
+            invocation.signal,
+            ...(sourceSignal ? [sourceSignal] : []),
+          ])
+          try {
+            if (!registration.active || signal.aborted) return 'unavailable'
+            const answer = await handler(question, binding, signal)
+            return registration.active && !signal.aborted ? answer : 'unavailable'
+          } finally {
+            invocation.abort()
+          }
         })
         if (!registration.active) {
           resource.close()
