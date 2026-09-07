@@ -16,6 +16,7 @@ export const expectedExports = [
   './agent-admission/v5',
   './agent-admission/v6',
   './agent-detail-navigation/v1',
+  './agent-detail-navigation/v2',
   './agent-page-admission/v1',
   './agent-page-admission/v2',
   './agent-avatar/v1',

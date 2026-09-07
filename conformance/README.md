@@ -261,3 +261,7 @@ provider-id grammar and isolation, detached deep immutability, and rejection of
 callable, cyclic, sparse, accessor-backed, non-finite, and non-plain data.
 
 `node conformance/extension-point-visuals.mjs` checks the controlled visual successor schemas and exact scope rejection vectors.
+
+Agent detail navigation [v2](../.agents/docs/agent-detail-navigation/v2.md) adds
+`node conformance/agent-detail-navigation-v2.mjs` for closed forms and historical
+capability ownership/lifetime behavior; v1 conformance remains unchanged.

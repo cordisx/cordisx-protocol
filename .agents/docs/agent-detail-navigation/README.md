@@ -1,5 +1,8 @@
 # Agent detail navigation v1
 
+V1 remains current-only. See [v2](v2.md) for the explicit additive historical
+Session capability methods; the v1 behavior below is unchanged.
+
 `agent-detail-navigation/v1` lets a product page open the Host-owned details
 view for one current Agent without receiving a URL, an Agent handle, or a
 private navigator.

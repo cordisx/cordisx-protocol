@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-detail-navigation-result.v2.schema.json",
+  "title": "CordisX agent detail navigation result v2",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "const": "accepted"
+        },
+        "code": {
+          "const": "opened"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "const": "denied"
+        },
+        "code": {
+          "enum": [
+            "permission-denied",
+            "ambiguous-detail"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "const": "unavailable"
+        },
+        "code": {
+          "enum": [
+            "unknown-detail",
+            "stale-reference",
+            "generation-replaced",
+            "connection-replaced",
+            "host-unavailable",
+            "unsupported"
+          ]
+        }
+      }
+    }
+  ]
+}
