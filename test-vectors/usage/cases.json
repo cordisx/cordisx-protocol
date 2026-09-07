@@ -1,0 +1,353 @@
+[
+  {
+    "name": "ready local aggregate",
+    "schema": "usage-snapshot.v1",
+    "valid": true,
+    "value": {
+      "schemaVersion": 1,
+      "status": "ready",
+      "scopeId": "profile-a",
+      "sourceId": "local-a",
+      "epoch": "epoch-a",
+      "revision": 1,
+      "policyId": "codex-local-input-output-v1",
+      "eligibleTokens": 1000,
+      "inputTokens": 800,
+      "outputTokens": 200,
+      "enabledAt": 1,
+      "observedThrough": 2,
+      "coverage": "partial",
+      "diagnostics": []
+    }
+  },
+  {
+    "name": "unavailable has no fabricated counters",
+    "schema": "usage-snapshot.v1",
+    "valid": true,
+    "value": {
+      "schemaVersion": 1,
+      "status": "unavailable",
+      "reason": "store-unavailable",
+      "diagnostics": []
+    }
+  },
+  {
+    "name": "reject fake zero unavailable",
+    "schema": "usage-snapshot.v1",
+    "valid": false,
+    "value": {
+      "schemaVersion": 1,
+      "status": "unavailable",
+      "reason": "store-unavailable",
+      "diagnostics": [],
+      "eligibleTokens": 0
+    }
+  },
+  {
+    "name": "reject raw path",
+    "schema": "usage-snapshot.v1",
+    "valid": false,
+    "value": {
+      "schemaVersion": 1,
+      "status": "ready",
+      "scopeId": "profile-a",
+      "sourceId": "local-a",
+      "epoch": "epoch-a",
+      "revision": 1,
+      "policyId": "codex-local-input-output-v1",
+      "eligibleTokens": 1000,
+      "inputTokens": 800,
+      "outputTokens": 200,
+      "enabledAt": 1,
+      "observedThrough": 2,
+      "coverage": "partial",
+      "diagnostics": [],
+      "path": "/private/source"
+    }
+  },
+  {
+    "name": "reject negative counter",
+    "schema": "usage-snapshot.v1",
+    "valid": false,
+    "value": {
+      "schemaVersion": 1,
+      "status": "ready",
+      "scopeId": "profile-a",
+      "sourceId": "local-a",
+      "epoch": "epoch-a",
+      "revision": 1,
+      "policyId": "codex-local-input-output-v1",
+      "eligibleTokens": 1000,
+      "inputTokens": -1,
+      "outputTokens": 200,
+      "enabledAt": 1,
+      "observedThrough": 2,
+      "coverage": "partial",
+      "diagnostics": []
+    }
+  },
+  {
+    "name": "narrow usage declaration",
+    "schema": "plugin-manifest.v11",
+    "valid": true,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v11.schema.json",
+      "schemaVersion": 11,
+      "id": "pet",
+      "capabilities": [
+        {
+          "name": "usage.read",
+          "required": false,
+          "scope": {
+            "profile": "current"
+          }
+        }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "foreign profile rejected",
+    "schema": "plugin-manifest.v11",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v11.schema.json",
+      "schemaVersion": 11,
+      "id": "pet",
+      "capabilities": [
+        {
+          "name": "usage.read",
+          "required": false,
+          "scope": {
+            "profile": "other"
+          }
+        }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "explicit plan",
+    "schema": "permission-authorization-plan.v6",
+    "valid": true,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v6.schema.json",
+      "schemaVersion": 6,
+      "planId": "usage-1",
+      "operation": "runtime",
+      "profileId": "test",
+      "identity": {
+        "source": "file:///pet.js",
+        "pluginId": "pet"
+      },
+      "catalogVersion": "local-usage-v1",
+      "binding": {
+        "operationId": "usage-1",
+        "runtimeGeneration": "runtime",
+        "moduleGeneration": "module",
+        "requestId": "usage-1"
+      },
+      "declarations": [
+        {
+          "capability": "usage.read",
+          "required": false,
+          "scope": {
+            "profile": "current"
+          },
+          "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "ask",
+          "decisionRequired": true,
+          "authorizationMode": "explicit-user",
+          "resourceClass": "non-dom",
+          "certifiedImplicitApproval": false,
+          "sensitivity": "general",
+          "persistentAllow": false,
+          "persistentDeny": false,
+          "allowedDecisions": [
+            "allow-once",
+            "deny-once"
+          ],
+          "defaultDecision": "deny-once",
+          "presentation": {
+            "name": {
+              "namespace": "permission",
+              "key": "permission.usage.read.name",
+              "fallback": "Usage"
+            },
+            "description": {
+              "namespace": "permission",
+              "key": "permission.usage.read.description",
+              "fallback": "Usage"
+            },
+            "risk": {
+              "namespace": "permission",
+              "key": "permission.usage.read.risk",
+              "fallback": "Usage"
+            },
+            "limitation": {
+              "namespace": "permission",
+              "key": "permission.usage.read.limitation",
+              "fallback": "Usage"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "generation decision",
+    "schema": "permission-authorization-decision.v6",
+    "valid": true,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v6.schema.json",
+      "schemaVersion": 6,
+      "origin": "explicit-user",
+      "planId": "usage-1",
+      "operation": "runtime",
+      "profileId": "test",
+      "identity": {
+        "source": "file:///pet.js",
+        "pluginId": "pet"
+      },
+      "binding": {
+        "operationId": "usage-1",
+        "runtimeGeneration": "runtime",
+        "moduleGeneration": "module",
+        "requestId": "usage-1"
+      },
+      "decisions": [
+        {
+          "capability": "usage.read",
+          "scope": {
+            "profile": "current"
+          },
+          "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "decision": "allow-once"
+        }
+      ]
+    }
+  },
+  {
+    "name": "persistent forbidden",
+    "schema": "permission-authorization-decision.v6",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v6.schema.json",
+      "schemaVersion": 6,
+      "origin": "explicit-user",
+      "planId": "usage-1",
+      "operation": "runtime",
+      "profileId": "test",
+      "identity": {
+        "source": "file:///pet.js",
+        "pluginId": "pet"
+      },
+      "binding": {
+        "operationId": "usage-1",
+        "runtimeGeneration": "runtime",
+        "moduleGeneration": "module",
+        "requestId": "usage-1"
+      },
+      "decisions": [
+        {
+          "capability": "usage.read",
+          "scope": {
+            "profile": "current"
+          },
+          "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "decision": "allow-persistent"
+        }
+      ]
+    }
+  },
+  {
+    "name": "other capability forbidden",
+    "schema": "permission-authorization-decision.v6",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v6.schema.json",
+      "schemaVersion": 6,
+      "origin": "explicit-user",
+      "planId": "usage-1",
+      "operation": "runtime",
+      "profileId": "test",
+      "identity": {
+        "source": "file:///pet.js",
+        "pluginId": "pet"
+      },
+      "binding": {
+        "operationId": "usage-1",
+        "runtimeGeneration": "runtime",
+        "moduleGeneration": "module",
+        "requestId": "usage-1"
+      },
+      "decisions": [
+        {
+          "capability": "agent.history.read",
+          "scope": {
+            "profile": "current"
+          },
+          "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "decision": "allow-once"
+        }
+      ]
+    }
+  },
+  {
+    "name": "other scope forbidden",
+    "schema": "permission-authorization-decision.v6",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-decision.v6.schema.json",
+      "schemaVersion": 6,
+      "origin": "explicit-user",
+      "planId": "usage-1",
+      "operation": "runtime",
+      "profileId": "test",
+      "identity": {
+        "source": "file:///pet.js",
+        "pluginId": "pet"
+      },
+      "binding": {
+        "operationId": "usage-1",
+        "runtimeGeneration": "runtime",
+        "moduleGeneration": "module",
+        "requestId": "usage-1"
+      },
+      "decisions": [
+        {
+          "capability": "usage.read",
+          "scope": {
+            "profile": "foreign"
+          },
+          "securityFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "decision": "allow-once"
+        }
+      ]
+    }
+  },
+  {
+    "name": "empty plan forbidden",
+    "schema": "permission-authorization-plan.v6",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/permission-authorization-plan.v6.schema.json",
+      "schemaVersion": 6,
+      "planId": "usage-1",
+      "operation": "runtime",
+      "profileId": "test",
+      "identity": {
+        "source": "file:///pet.js",
+        "pluginId": "pet"
+      },
+      "catalogVersion": "local-usage-v1",
+      "binding": {
+        "operationId": "usage-1",
+        "runtimeGeneration": "runtime",
+        "moduleGeneration": "module",
+        "requestId": "usage-1"
+      },
+      "declarations": []
+    }
+  }
+]
