@@ -131,3 +131,7 @@ the specification and [schema index](../schemas/README.md).
 | `controlled-markdown-editor/v1` | [controlled-markdown-editor.v1.d.ts](controlled-markdown-editor.v1.d.ts) | [Controlled editor](../.agents/docs/controlled-markdown-editor/v1.md)     |
 
 - [Local usage v1](../.agents/docs/usage-v1.md): profile-scoped durable usage and manifest/package v11.
+
+- [`agent-task-permission/v1`](agent-task-permission.v1.d.ts): Host-only task source and accepted-routing authority lease; [normative contract](../.agents/docs/agent-task-permission/README.md).
+- [`plugin-manifest/v12`](plugin-manifest.v12.d.ts): task approval scopes with independent optional existing route scopes.
+- [`plugin-package/v12`](plugin-package.v12.d.ts): digest-pinned runtime manifest v12 packaging.

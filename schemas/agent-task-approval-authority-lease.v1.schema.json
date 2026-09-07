@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-approval-authority-lease.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "leaseId",
+    "taskSource",
+    "routingId",
+    "registrationId",
+    "requester",
+    "authority"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-approval-authority-lease.v1.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.agent-task-approval-authority-lease/v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "leaseId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "taskSource": {
+      "$ref": "agent-task-permission-source.v1.schema.json"
+    },
+    "routingId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "registrationId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "requester": {
+      "$ref": "approval-common.v2.schema.json#/$defs/agentBinding"
+    },
+    "authority": {
+      "$ref": "approval-common.v2.schema.json#/$defs/agentBinding"
+    }
+  }
+}

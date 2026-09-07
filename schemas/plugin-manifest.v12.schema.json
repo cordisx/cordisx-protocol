@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v12.schema.json",
+  "title": "CordisX Runtime Plugin Manifest v12",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "id",
+    "capabilities",
+    "services"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v12.schema.json"
+    },
+    "schemaVersion": {
+      "const": 12
+    },
+    "id": {
+      "$ref": "plugin-manifest.v11.schema.json#/properties/id"
+    },
+    "name": {
+      "$ref": "plugin-manifest.v11.schema.json#/properties/name"
+    },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 37,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "plugin-manifest.v11.schema.json#/properties/capabilities/items"
+          },
+          {
+            "$ref": "agent-task-permission.v1.schema.json"
+          }
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "const": "approvals.request"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "const": "approvals.answer"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        }
+      ]
+    },
+    "services": {
+      "$ref": "plugin-manifest.v11.schema.json#/properties/services"
+    }
+  }
+}

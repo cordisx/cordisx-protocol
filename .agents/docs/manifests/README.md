@@ -152,3 +152,7 @@ manifests and runtime permission declarations are not reinterpreted.
 ## Runtime and package manifest v10
 
 The [controlled visual successor](../extension-point-visuals/README.md) adds exact extension-point interaction declarations. Package v10 adds the digest-pinned manifest v10 reference; previous package semantics remain unchanged.
+
+## Runtime and package manifest v12
+
+[Agent task permission v1](../agent-task-permission/README.md) adds command-bounded task approval sources alongside independent existing route scopes. V12 preserves all v11 families, including [usage v1](../usage-v1.md). Package v12 adds the digest-pinned runtime manifest v12 reference. V1-v11 remain frozen.

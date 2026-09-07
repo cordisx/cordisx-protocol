@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-permission-source.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "kind",
+    "owner",
+    "operationId",
+    "commandId",
+    "sessionId",
+    "definition",
+    "taskRegistrationId",
+    "connectionGeneration"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-permission-source.v1.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.agent-task-permission-source/v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "kind": {
+      "const": "host-agent-task"
+    },
+    "owner": {
+      "$ref": "session-common.v1.schema.json#/$defs/pluginOwner"
+    },
+    "operationId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "commandId": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localId"
+    },
+    "sessionId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "definition": {
+      "$ref": "approval-common.v2.schema.json#/$defs/exactDefinitionIdentity"
+    },
+    "taskRegistrationId": {
+      "$ref": "session-common.v1.schema.json#/$defs/opaqueId"
+    },
+    "connectionGeneration": {
+      "$ref": "session-common.v1.schema.json#/$defs/generation"
+    }
+  }
+}
