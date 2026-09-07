@@ -48,4 +48,5 @@ for (
 const old = ajv.compile({ $ref: prefix + 'agent-conversation-shell-snapshot.v7.schema.json#/$defs/messageItem' })
 assert.equal(old(item), false)
 assert.ok(ajv.getSchema(prefix + 'agent-conversation-shell-snapshot.v10.schema.json'))
+assert.ok(ajv.getSchema(prefix + 'agent-conversation-shell-page.v10.schema.json'))
 console.log('Shell v10 plugin command message conformance passed')

@@ -43,14 +43,7 @@
       "type": "array",
       "maxItems": 500,
       "items": {
-        "anyOf": [
-          {
-            "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/item"
-          },
-          {
-            "$ref": "agent-conversation-plugin-command-message.v1.schema.json"
-          }
-        ]
+        "$ref": "#/$defs/item"
       }
     },
     "composer": {
@@ -62,6 +55,18 @@
       "items": {
         "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/action"
       }
+    }
+  },
+  "$defs": {
+    "item": {
+      "anyOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/item"
+        },
+        {
+          "$ref": "agent-conversation-plugin-command-message.v1.schema.json"
+        }
+      ]
     }
   }
 }
