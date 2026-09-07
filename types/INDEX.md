@@ -103,3 +103,7 @@ the specification and [schema index](../schemas/README.md).
 - Composer dictation status: [`extension-point-visual.v2.d.ts`](extension-point-visual.v2.d.ts), optional successor to v1.
 
 - [Visual drag v1](../.agents/docs/extension-point-drag-v1.md): optional generation-scoped drag handle.
+
+- `agent-tools/v1`: [declarations](agent-tools.v1.d.ts), [plugin Agent tools](../.agents/docs/agent-tools/README.md).
+
+- `agent-conversation-shell/v10`: [declarations](agent-conversation-shell.v10.d.ts), [authenticated plugin command messages](../.agents/docs/agent-conversation-shell/README.md#v10-authenticated-plugin-command-messages).

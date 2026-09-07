@@ -587,3 +587,7 @@ its scope are described in [conformance](../conformance/README.md).
 See [Extension point visuals v1](../.agents/docs/extension-point-visuals/README.md) for surface/catalog v10, manifest v10, snapshot v1, permission common/policy/plan/decision v5 and capability catalog v4.
 
 - Composer dictation status: [`extension-point-visual.v2.schema.json`](extension-point-visual.v2.schema.json), optional successor to v1.
+
+- [Agent tool resources v1](agent-tools.v1.schema.json): package-contained Skill and CLI declarations.
+
+- [Shell v10 snapshot](agent-conversation-shell-snapshot.v10.schema.json) and [plugin command message v1](agent-conversation-plugin-command-message.v1.schema.json): persisted Room command facts without fabricated SessionEvents.
