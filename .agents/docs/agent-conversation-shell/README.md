@@ -391,3 +391,27 @@ command issued before a Room target run exists. Its use is defined by
 These successors preserve the earlier wire families and do not grant plugins
 authority to manufacture origins. Their origin boundaries are checked by
 [admission conformance](../../../conformance/agent-admission.mjs).
+
+## v10 authenticated plugin command messages
+
+The additive [v10 declarations](../../../types/agent-conversation-shell.v10.d.ts)
+and [snapshot](../../../schemas/agent-conversation-shell-snapshot.v10.schema.json)
+retain v9 composer/admission and v7 approval behavior. They add a conversation
+message whose `source.kind` is `plugin-command`; earlier versions reject this
+source and must never be fed a fabricated SessionEvent or acknowledgement.
+
+This source projects a committed plugin-owned Room message produced by a real
+handler after authenticated Agent tool invocation. It contains the original
+Room/message/Session/participant/member/run/operation ids and durable Room
+sequence. `source.messageId` equals the outer message id, `source.participantId`
+equals the Agent author, and `source.roomId` equals the selected Room. A replay
+keeps the original message id, timestamp and source sequence. The outer item
+sequence may interleave other timeline items. The source is presentation data,
+not an authorization credential; the plugin must validate membership on write.
+The Host validates association and uses existing message body, avatar, menu,
+reaction and timestamp rendering. It does not generate SessionEvents or append
+Room data. A history entry need not remain the current active run to be visible.
+
+Plugins unable to register v10 must report CLI message projection unavailable;
+they cannot relabel the fact for a predecessor. Subscription/close/binding
+semantics are inherited; the v10 runtime page/update types carry the new item.

@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-plugin-command-message.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "itemId",
+    "messageId",
+    "sequence",
+    "source",
+    "semantic",
+    "author",
+    "body",
+    "reactions",
+    "timestamp",
+    "deliveryState",
+    "runState",
+    "ariaLive",
+    "actions"
+  ],
+  "properties": {
+    "kind": {
+      "const": "message"
+    },
+    "itemId": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId"
+    },
+    "messageId": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/messageId"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "roomId",
+        "messageId",
+        "sessionId",
+        "participantId",
+        "memberId",
+        "runId",
+        "operationId",
+        "sequence"
+      ],
+      "properties": {
+        "kind": {
+          "const": "plugin-command"
+        },
+        "roomId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "sessionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "participantId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "memberId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "runId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "semantic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose"
+      ],
+      "properties": {
+        "purpose": {
+          "const": "conversation"
+        },
+        "correlation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requestMessageId"
+          ],
+          "properties": {
+            "requestMessageId": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "author": {
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/participant"
+        },
+        {
+          "type": "object",
+          "required": [
+            "role"
+          ],
+          "properties": {
+            "role": {
+              "const": "agent"
+            }
+          }
+        }
+      ]
+    },
+    "body": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/textBlock"
+      }
+    },
+    "reactions": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/reaction"
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deliveryState": {
+      "enum": [
+        "pending",
+        "sent",
+        "delivered",
+        "failed"
+      ]
+    },
+    "runState": {
+      "enum": [
+        "idle",
+        "running",
+        "stopped",
+        "failed"
+      ]
+    },
+    "ariaLive": {
+      "enum": [
+        "off",
+        "polite"
+      ]
+    },
+    "actions": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/action"
+      }
+    }
+  }
+}
