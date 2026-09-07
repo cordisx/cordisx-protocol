@@ -585,3 +585,5 @@ its scope are described in [conformance](../conformance/README.md).
 - [Agent tool resources v1](agent-tools.v1.schema.json): package-contained Skill and CLI declarations.
 
 - [Shell v10 snapshot](agent-conversation-shell-snapshot.v10.schema.json) and [plugin command message v1](agent-conversation-plugin-command-message.v1.schema.json): persisted Room command facts without fabricated SessionEvents.
+
+- [Shell v11 snapshot](agent-conversation-shell-snapshot.v11.schema.json), [page](agent-conversation-shell-page.v11.schema.json), and [Room human message v1](agent-conversation-room-user-message.v1.schema.json): persisted human input without fabricated SessionEvents.

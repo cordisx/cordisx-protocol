@@ -415,3 +415,28 @@ Room data. A history entry need not remain the current active run to be visible.
 Plugins unable to register v10 must report CLI message projection unavailable;
 they cannot relabel the fact for a predecessor. Subscription/close/binding
 semantics are inherited; the v10 runtime page/update types carry the new item.
+
+## v11 persisted Room human input
+
+The additive [v11 declarations](../../../types/agent-conversation-shell.v11.d.ts)
+and [snapshot schema](../../../schemas/agent-conversation-shell-snapshot.v11.schema.json)
+inherit v10 sources and v9 composer/admission behavior. They add
+`room-user-message` for a persisted human Room message, independently of whether
+its original SessionEvent ledger is available. This source carries only the
+original Room id, message id and Room sequence. Its author must be human and
+its semantic purpose must be conversation. Source message id equals the outer
+message id; source Room id equals the selected Room. The outer presentation
+sequence may interleave other sources.
+
+This is a Room storage/submission fact, not proof of Agent execution or an
+acknowledgement. Do not invent an event sequence, change an existing record's
+source, or synthesize an old SessionEvent to display it. A consumer may project
+`sent` when a verified accepted admission link supports that status, without
+claiming execution completed or rewriting a persisted legacy pending field.
+
+Use exact existing admission associations to deduplicate against an authentic
+Session projection. When the original SessionEvent is unavailable, the durable
+Room item can remain visible; when it arrives, show one representation of that
+same linked input. Text similarity or matching Room ids across different stores
+is not a deduplication or merge authority. Earlier source versions reject the
+new kind; missing support must not trigger relabelling as an Agent or ack fact.
