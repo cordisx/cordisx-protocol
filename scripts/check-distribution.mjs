@@ -8,6 +8,7 @@ import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedFiles = [
+  'types/agent-task.v1.d.ts',
   'types/extension-point-drag.v1.d.ts',
   'types/extension-point-visual.v1.d.ts',
   'types/extension-point-visual.v2.d.ts',
@@ -142,6 +143,7 @@ import type { AgentLoopCommand as AgentLoopCommandV1, BoundAgentLoopClient as Bo
 import type { AgentDefinition, AgentLoopCreateOrBindUnavailableCode, AgentLoopDelivery, AgentLoopDeliveryDisposition, AgentLoopEvent as AgentLoopEventV2, AgentLoopOperationId, AgentLoopOperationUnavailableCode, BoundAgentLoopClient } from '@cordisx/protocol/agent-loop/v2'
 import type { AgentLoopApprovalDecision, AgentLoopApprovalDecisionConflictCode, AgentLoopApprovalDecisionUnavailableCode, AgentLoopCancelMemberSelfIntroductionResult, AgentLoopCommand as AgentLoopCommandV3, AgentLoopEvent as AgentLoopEventV3, AgentLoopMemberSelfIntroductionConflictCode, AgentLoopMemberSelfIntroductionIntent, AgentLoopMemberSelfIntroductionUnavailableCode, AgentLoopRequestMemberSelfIntroductionResult, AgentLoopTaskBinding as AgentLoopTaskBindingV3, BoundAgentLoopClient as BoundAgentLoopClientV3 } from '@cordisx/protocol/agent-loop/v3'
 import type { AgentLoopApprovalDecisionResult as AgentLoopApprovalDecisionResultV4, AgentLoopApprovalDecisionUnavailableCode as AgentLoopApprovalDecisionUnavailableCodeV4, AgentLoopCancelMemberSelfIntroductionResult as AgentLoopCancelMemberSelfIntroductionResultV4, AgentLoopCommand as AgentLoopCommandV4, AgentLoopCreateOrBindResult as AgentLoopCreateOrBindResultV4, AgentLoopEvent as AgentLoopEventV4, AgentLoopMemberSelfIntroductionUnavailableCode as AgentLoopMemberSelfIntroductionUnavailableCodeV4, AgentLoopRequestMemberSelfIntroductionResult as AgentLoopRequestMemberSelfIntroductionResultV4, AgentLoopSendResult as AgentLoopSendResultV4, AgentLoopTaskBinding as AgentLoopTaskBindingV4, BoundAgentLoopClient as BoundAgentLoopClientV4 } from '@cordisx/protocol/agent-loop/v4'
+import type { AgentTasks, AgentTaskCreateRequest, AgentTaskQueryResult } from '@cordisx/protocol/agent-task/v1'
 import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
 import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
 import type { ManagerSettingsNavigationGroupCatalogV1 } from '@cordisx/protocol/manager-settings-navigation/v1'
@@ -195,6 +197,9 @@ declare const agentLoopV3: BoundAgentLoopClientV3
 declare const approvalBindingV3: AgentLoopTaskBindingV3
 declare const agentLoopV4: BoundAgentLoopClientV4
 declare const bindingV4: AgentLoopTaskBindingV4
+declare const tasks: AgentTasks, taskRequest: AgentTaskCreateRequest
+tasks.createAndSubmit(taskRequest)
+tasks.query({ operationId: taskRequest.operationId }).then(result => { result satisfies AgentTaskQueryResult })
 declare const agents: AgentRegistry
 declare const entityAgents: EntityBackedAgentRegistry
 declare const entities: EntityRegistry, sessions: SessionRegistry

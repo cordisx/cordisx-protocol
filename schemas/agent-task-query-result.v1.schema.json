@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-task-query-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "result",
+        "execution"
+      ],
+      "properties": {
+        "status": {
+          "const": "found"
+        },
+        "result": {
+          "$ref": "agent-task-create-result.v1.schema.json"
+        },
+        "execution": {
+          "$ref": "agent-task-common.v1.schema.json#/$defs/execution"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "const": "not-found"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "const": "unavailable"
+        },
+        "code": {
+          "enum": [
+            "permission-denied",
+            "host-unavailable"
+          ]
+        }
+      }
+    }
+  ]
+}
