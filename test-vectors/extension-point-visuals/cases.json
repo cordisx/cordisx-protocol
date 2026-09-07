@@ -1,0 +1,865 @@
+[
+  {
+    "name": "voice",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "send",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "send",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "stop",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "stop",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "cancel",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "cancel",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "queue",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "queue",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "steer",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "steer",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "resume",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "resume",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "end-voice",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "end-voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "reject draft",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "draft": "private"
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject pointer",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": {
+        "x": 2,
+        "y": 0,
+        "inside": true
+      },
+      "events": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject action",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "guess",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject bounds",
+    "schema": "extension-point-visual.v1",
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": -1,
+        "height": 28
+      },
+      "pointer": null,
+      "events": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "manifest",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.interact",
+          "required": false,
+          "scope": {
+            "extensionPoints": [
+              "composer.frame.overlay"
+            ],
+            "events": [
+              "pointer.observe"
+            ]
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "reject scope {}",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.interact",
+          "required": false,
+          "scope": {}
+        }
+      ],
+      "services": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject scope {'extensionPoints': ['*'], 'events': ['pointer.observe']}",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.interact",
+          "required": false,
+          "scope": {
+            "extensionPoints": [
+              "*"
+            ],
+            "events": [
+              "pointer.observe"
+            ]
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject scope {'extensionPoints': ['composer.frame.overlay']}",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.interact",
+          "required": false,
+          "scope": {
+            "extensionPoints": [
+              "composer.frame.overlay"
+            ]
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject scope {'extensionPoints': ['composer.frame.overlay'], 'events': []}",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.interact",
+          "required": false,
+          "scope": {
+            "extensionPoints": [
+              "composer.frame.overlay"
+            ],
+            "events": []
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject scope {'extensionPoints': ['composer.frame.overlay'], 'events': ['pointermove']}",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.interact",
+          "required": false,
+          "scope": {
+            "extensionPoints": [
+              "composer.frame.overlay"
+            ],
+            "events": [
+              "pointermove"
+            ]
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "reject scope {'extensionPoints': ['composer.frame.overlay'], 'events': ['pointer.observe'], 'operations': ['read']}",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.interact",
+          "required": false,
+          "scope": {
+            "extensionPoints": [
+              "composer.frame.overlay"
+            ],
+            "events": [
+              "pointer.observe"
+            ],
+            "operations": [
+              "read"
+            ]
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "composer.primary-action.visual",
+    "schema": "surface-contribution.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "surface": "composer.primary-action.visual",
+      "item": {
+        "renderer": {
+          "id": "animal"
+        },
+        "events": [
+          "pointer.observe"
+        ]
+      }
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "no selector composer.primary-action.visual",
+    "schema": "surface-contribution.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "surface": "composer.primary-action.visual",
+      "item": {
+        "renderer": {
+          "id": "animal"
+        },
+        "events": [
+          "pointer.observe"
+        ],
+        "selector": "button"
+      }
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "no activation proxy",
+    "schema": "surface-contribution.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "surface": "composer.primary-action.visual",
+      "item": {
+        "renderer": {
+          "id": "animal"
+        },
+        "events": [
+          "activate"
+        ]
+      }
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "composer.frame.overlay",
+    "schema": "surface-contribution.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "surface": "composer.frame.overlay",
+      "item": {
+        "renderer": {
+          "id": "animal"
+        },
+        "events": [
+          "pointer.observe"
+        ]
+      }
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "no selector composer.frame.overlay",
+    "schema": "surface-contribution.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "surface": "composer.frame.overlay",
+      "item": {
+        "renderer": {
+          "id": "animal"
+        },
+        "events": [
+          "pointer.observe"
+        ],
+        "selector": "button"
+      }
+    },
+    "valid": false,
+    "fragment": ""
+  },
+  {
+    "name": "future overlay drag",
+    "schema": "surface-contribution.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "surface": "composer.frame.overlay",
+      "item": {
+        "renderer": {
+          "id": "animal"
+        },
+        "events": [
+          "drag"
+        ]
+      }
+    },
+    "valid": true,
+    "fragment": ""
+  },
+  {
+    "name": "scope fence ui.extension-points.interactTrue",
+    "schema": "permission-common.v5",
+    "value": {
+      "capability": "ui.extension-points.interact",
+      "scope": {
+        "extensionPoints": [
+          "composer.frame.overlay"
+        ],
+        "events": [
+          "pointer.observe"
+        ]
+      }
+    },
+    "valid": true,
+    "fragment": "#/$defs/capabilityScopeFence"
+  },
+  {
+    "name": "scope fence ui.extension-points.interactFalse",
+    "schema": "permission-common.v5",
+    "value": {
+      "capability": "ui.extension-points.interact",
+      "scope": {
+        "extensionPoints": [
+          "composer.frame.overlay"
+        ]
+      }
+    },
+    "valid": false,
+    "fragment": "#/$defs/capabilityScopeFence"
+  },
+  {
+    "name": "scope fence ui.extension-points.renderFalse",
+    "schema": "permission-common.v5",
+    "value": {
+      "capability": "ui.extension-points.render",
+      "scope": {
+        "extensionPoints": [
+          "composer.frame.overlay"
+        ],
+        "events": [
+          "pointer.observe"
+        ]
+      }
+    },
+    "valid": false,
+    "fragment": "#/$defs/capabilityScopeFence"
+  },
+  {
+    "name": "scope fence ui.extension-points.renderTrue",
+    "schema": "permission-common.v5",
+    "value": {
+      "capability": "ui.extension-points.render",
+      "scope": {
+        "extensionPoints": [
+          "composer.frame.overlay"
+        ]
+      }
+    },
+    "valid": true,
+    "fragment": "#/$defs/capabilityScopeFence"
+  },
+  {
+    "name": "scope fence models.readFalse",
+    "schema": "permission-common.v5",
+    "value": {
+      "capability": "models.read",
+      "scope": {
+        "extensionPoints": [
+          "composer.frame.overlay"
+        ],
+        "events": [
+          "pointer.observe"
+        ]
+      }
+    },
+    "valid": false,
+    "fragment": "#/$defs/capabilityScopeFence"
+  },
+  {
+    "name": "explicit visual rendering declaration",
+    "schema": "plugin-manifest.v10",
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v10.schema.json",
+      "schemaVersion": 10,
+      "id": "animal",
+      "capabilities": [
+        {
+          "name": "ui.extension-points.render",
+          "required": true,
+          "scope": {
+            "extensionPoints": [
+              "composer.primary-action.visual",
+              "composer.frame.overlay"
+            ]
+          }
+        }
+      ],
+      "services": []
+    },
+    "valid": true
+  },
+  {
+    "name": "v2 dictation unavailable",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "unavailable"
+    }
+  },
+  {
+    "name": "v2 dictation idle",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "idle"
+    }
+  },
+  {
+    "name": "v2 dictation starting",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "starting"
+    }
+  },
+  {
+    "name": "v2 dictation recording",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "recording"
+    }
+  },
+  {
+    "name": "v2 dictation transcribing",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "transcribing"
+    }
+  },
+  {
+    "name": "v2 dictation retry",
+    "schema": "extension-point-visual.v2",
+    "valid": true,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "retry"
+    }
+  },
+  {
+    "name": "v2 rejects transcript disclosure",
+    "schema": "extension-point-visual.v2",
+    "valid": false,
+    "value": {
+      "schemaVersion": 2,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "recording",
+      "transcript": "not allowed"
+    }
+  },
+  {
+    "name": "v1 rejects v2 dictation field",
+    "schema": "extension-point-visual.v1",
+    "valid": false,
+    "value": {
+      "schemaVersion": 1,
+      "sequence": 0,
+      "action": "voice",
+      "enabled": true,
+      "busy": false,
+      "draftEmpty": true,
+      "accessibleLabel": "Start voice chat",
+      "theme": "dark",
+      "reducedMotion": false,
+      "bounds": {
+        "width": 28,
+        "height": 28
+      },
+      "pointer": null,
+      "events": [],
+      "dictation": "recording"
+    }
+  }
+]

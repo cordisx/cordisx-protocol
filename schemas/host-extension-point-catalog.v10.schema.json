@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v10.schema.json",
+  "title": "CordisX Host Extension Point Catalog v10",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "points"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v10.schema.json"
+    },
+    "schemaVersion": {
+      "const": 10
+    },
+    "points": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "host-extension-point-catalog.v7.schema.json#/$defs/sessionBackdropDescriptor"
+          },
+          {
+            "$ref": "host-extension-point-catalog.v8.schema.json#/$defs/transientCanvasDescriptor"
+          },
+          {
+            "$ref": "#/$defs/managerSettingsNavigationDescriptor"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "host-extension-point-catalog.v6.schema.json#/$defs/descriptor"
+              },
+              {
+                "not": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "const": "manager.settings.navigation-items"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "$ref": "#/$defs/composerVisualDescriptor"
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "descriptorText": {
+      "allOf": [
+        {
+          "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        {
+          "type": "object",
+          "required": [
+            "fallback"
+          ],
+          "properties": {
+            "fallback": true
+          }
+        }
+      ]
+    },
+    "managerSettingsNavigationDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "icon",
+        "payloadFamily",
+        "maturity",
+        "adapterSupport",
+        "navigationGroups"
+      ],
+      "properties": {
+        "id": {
+          "const": "manager.settings.navigation-items"
+        },
+        "kind": {
+          "const": "surface"
+        },
+        "title": {
+          "$ref": "#/$defs/descriptorText"
+        },
+        "description": {
+          "$ref": "#/$defs/descriptorText"
+        },
+        "icon": {
+          "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken"
+        },
+        "payloadFamily": {
+          "const": "manager-settings-navigation-item-v2"
+        },
+        "maturity": {
+          "const": "stable"
+        },
+        "adapterSupport": {
+          "const": "supported"
+        },
+        "navigationGroups": {
+          "$ref": "manager-settings-navigation-groups.v1.schema.json"
+        }
+      }
+    },
+    "composerVisualDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "icon",
+        "payloadFamily",
+        "maturity",
+        "adapterSupport",
+        "events"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "composer.primary-action.visual",
+            "composer.frame.overlay"
+          ]
+        },
+        "kind": {
+          "const": "surface"
+        },
+        "title": {
+          "$ref": "#/$defs/descriptorText"
+        },
+        "description": {
+          "$ref": "#/$defs/descriptorText"
+        },
+        "icon": {
+          "$ref": "ui-common.v1.schema.json#/$defs/hostIconToken"
+        },
+        "payloadFamily": {
+          "const": "extension-point-visual-v1"
+        },
+        "maturity": {
+          "const": "experimental"
+        },
+        "adapterSupport": {
+          "enum": [
+            "supported",
+            "unverified",
+            "unsupported"
+          ]
+        },
+        "events": {
+          "$ref": "extension-point-visual.v1.schema.json#/$defs/events"
+        }
+      }
+    }
+  }
+}

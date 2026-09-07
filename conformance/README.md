@@ -253,3 +253,5 @@ the acquired canonical root without granting read access.
 Visuals v1 conformance validates the closed light/dark projection, owner-local
 provider-id grammar and isolation, detached deep immutability, and rejection of
 callable, cyclic, sparse, accessor-backed, non-finite, and non-plain data.
+
+`node conformance/extension-point-visuals.mjs` checks the controlled visual successor schemas and exact scope rejection vectors.

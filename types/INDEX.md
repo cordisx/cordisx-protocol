@@ -92,3 +92,14 @@ not require a Host shell service; see the topic's ownership statement.
 currently listed in the package export map; this index does not invent an npm
 subpath for it. Its semantic catalog and compatibility requirements remain in
 the specification and [schema index](../schemas/README.md).
+
+## Controlled visuals successor
+
+- [extension-point-visual/v1](extension-point-visual.v1.d.ts) — [semantic visual seats](../.agents/docs/extension-point-visuals/README.md).
+- [plugin-manifest/v10](plugin-manifest.v10.d.ts) — exact interaction capability declarations.
+
+- [plugin-package/v10](plugin-package.v10.d.ts) — digest-pinned manifest v10 packaging.
+
+- Composer dictation status: [`extension-point-visual.v2.d.ts`](extension-point-visual.v2.d.ts), optional successor to v1.
+
+- [Visual drag v1](../.agents/docs/extension-point-drag-v1.md): optional generation-scoped drag handle.

@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/extension-point-visual.v2.schema.json",
+  "title": "CordisX extension point visual snapshot v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "sequence",
+    "action",
+    "enabled",
+    "busy",
+    "draftEmpty",
+    "accessibleLabel",
+    "theme",
+    "reducedMotion",
+    "bounds",
+    "pointer",
+    "events",
+    "dictation"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "action": {
+      "enum": [
+        "voice",
+        "send",
+        "stop",
+        "cancel",
+        "queue",
+        "steer",
+        "resume",
+        "end-voice"
+      ]
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "busy": {
+      "type": "boolean"
+    },
+    "draftEmpty": {
+      "type": "boolean"
+    },
+    "accessibleLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "theme": {
+      "enum": [
+        "light",
+        "dark"
+      ]
+    },
+    "reducedMotion": {
+      "type": "boolean"
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "number",
+          "minimum": 0
+        },
+        "height": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "pointer": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "y",
+            "inside"
+          ],
+          "properties": {
+            "x": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "y": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "inside": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "events": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence",
+          "kind"
+        ],
+        "properties": {
+          "sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "kind": {
+            "enum": [
+              "submitted",
+              "submit-failed"
+            ]
+          }
+        }
+      }
+    },
+    "dictation": {
+      "enum": [
+        "unavailable",
+        "idle",
+        "starting",
+        "recording",
+        "transcribing",
+        "retry"
+      ]
+    }
+  },
+  "$defs": {
+    "events": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 3,
+      "items": {
+        "enum": [
+          "pointer.observe",
+          "activate",
+          "drag"
+        ]
+      }
+    },
+    "nonemptyEvents": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 3,
+      "items": {
+        "enum": [
+          "pointer.observe",
+          "activate",
+          "drag"
+        ]
+      },
+      "minItems": 1
+    }
+  }
+}

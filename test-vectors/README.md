@@ -270,3 +270,5 @@ selectors, raw nodes/HTML, style/event handlers, scripts, private bridges,
 Official/Certified self-claims, persistent denial, exact artifact/certification
 expiry/revision/digest changes, stale generations/handles, disable, and
 uninstall.
+
+[Controlled visuals](extension-point-visuals/cases.json) cover semantic action snapshots, confined renderer references and interaction scope rejection.
