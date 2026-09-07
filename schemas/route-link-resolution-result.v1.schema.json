@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/route-link-resolution-result.v1.schema.json",
+  "title": "route-link-resolution-result v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "url"
+      ],
+      "properties": {
+        "status": {
+          "const": "accepted"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "const": "unavailable"
+        },
+        "code": {
+          "enum": [
+            "invalid-route",
+            "route-unavailable",
+            "caller-unavailable",
+            "host-unavailable"
+          ]
+        }
+      }
+    }
+  ]
+}

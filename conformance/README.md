@@ -270,3 +270,5 @@ callable, cyclic, sparse, accessor-backed, non-finite, and non-plain data.
 Agent detail navigation [v2](../.agents/docs/agent-detail-navigation/v2.md) adds
 `node conformance/agent-detail-navigation-v2.mjs` for closed forms and historical
 capability ownership/lifetime behavior; v1 conformance remains unchanged.
+
+`node conformance/navigation-parity.mjs` checks closed Settings/link shapes and revalidation semantics; native navigation and editor parity remain Host integration gates.

@@ -8,6 +8,9 @@ import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedFiles = [
+  'types/entity-settings-navigation.v1.d.ts',
+  'types/route-link-resolution.v1.d.ts',
+  'types/controlled-markdown-editor.v1.d.ts',
   'types/agent-task-binding.v1.d.ts',
   'types/agent-task.v1.d.ts',
   'types/extension-point-drag.v1.d.ts',

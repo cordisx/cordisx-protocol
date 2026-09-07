@@ -125,6 +125,10 @@
     "agent-task.v1.d.ts",
     "agent-task.v1.test.ts",
     "agent-task-binding.v1.d.ts",
-    "agent-task-binding.v1.test.ts"
+    "agent-task-binding.v1.test.ts",
+    "entity-settings-navigation.v1.d.ts",
+    "route-link-resolution.v1.d.ts",
+    "controlled-markdown-editor.v1.d.ts",
+    "navigation-parity.v1.test.ts"
   ]
 }

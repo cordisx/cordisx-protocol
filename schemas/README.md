@@ -600,3 +600,6 @@ See [Extension point visuals v1](../.agents/docs/extension-point-visuals/README.
 - [Agent tool resources v1](agent-tools.v1.schema.json): package-contained Skill and CLI declarations.
 
 - [Shell v10 snapshot](agent-conversation-shell-snapshot.v10.schema.json) and [plugin command message v1](agent-conversation-plugin-command-message.v1.schema.json): persisted Room command facts without fabricated SessionEvents.
+
+- `entity-settings-navigation-request.v1.schema.json`, `entity-settings-availability-result.v1.schema.json`, `entity-settings-navigation-result.v1.schema.json`: exact identity settings capability.
+- `route-link-reference.v1.schema.json`, `route-link-resolution-result.v1.schema.json`: canonical route link resolution.

@@ -102,3 +102,7 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Plugin Agent tools](agent-tools/README.md): generation-bound Skill resources and restricted CLI invocation.
 
 - [Visual interactions v1](extension-point-interactions-v1.md): independent entity drag and controlled menus.
+
+- [Entity settings navigation](entity-settings-navigation/README.md): exact definition settings availability and opening.
+- [Route link resolution](route-link-resolution/README.md): authenticated canonical route links.
+- [Controlled Markdown editor](controlled-markdown-editor/README.md): controlled editing and selection capability.
