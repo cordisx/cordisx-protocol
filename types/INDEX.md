@@ -94,3 +94,5 @@ subpath for it. Its semantic catalog and compatibility requirements remain in
 the specification and [schema index](../schemas/README.md).
 
 - `agent-tools/v1`: [declarations](agent-tools.v1.d.ts), [plugin Agent tools](../.agents/docs/agent-tools/README.md).
+
+- `agent-conversation-shell/v10`: [declarations](agent-conversation-shell.v10.d.ts), [authenticated plugin command messages](../.agents/docs/agent-conversation-shell/README.md#v10-authenticated-plugin-command-messages).

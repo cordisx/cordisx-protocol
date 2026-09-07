@@ -583,3 +583,5 @@ its scope are described in [conformance](../conformance/README.md).
   in-memory Console projection with an explicit partial-observability marker.
 
 - [Agent tool resources v1](agent-tools.v1.schema.json): package-contained Skill and CLI declarations.
+
+- [Shell v10 snapshot](agent-conversation-shell-snapshot.v10.schema.json) and [plugin command message v1](agent-conversation-plugin-command-message.v1.schema.json): persisted Room command facts without fabricated SessionEvents.
