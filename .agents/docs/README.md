@@ -97,3 +97,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Visual drag v1](extension-point-drag-v1.md): optional generation-scoped drag handle.
 
 - [Plugin Agent tools](agent-tools/README.md): generation-bound Skill resources and restricted CLI invocation.
+
+- [Visual interactions v1](extension-point-interactions-v1.md): independent entity drag and controlled menus.

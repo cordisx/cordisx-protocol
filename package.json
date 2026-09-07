@@ -74,6 +74,7 @@
     "types/plugin-package.v10.d.ts",
     "types/extension-point-visual.v2.d.ts",
     "types/extension-point-drag.v1.d.ts",
+    "types/extension-point-interactions.v1.d.ts",
     "types/agent-tools.v1.d.ts",
     "types/agent-conversation-shell.v10.d.ts",
     "types/agent-task.v1.d.ts"
@@ -144,6 +145,7 @@
     "./plugin-package/v10": "./types/plugin-package.v10.d.ts",
     "./extension-point-visual/v2": "./types/extension-point-visual.v2.d.ts",
     "./extension-point-drag/v1": "./types/extension-point-drag.v1.d.ts",
+    "./extension-point-interactions/v1": "./types/extension-point-interactions.v1.d.ts",
     "./platform-provider/v2": "./types/platform-provider.v2.d.ts",
     "./agent-tools/v1": "./types/agent-tools.v1.d.ts",
     "./agent-conversation-shell/v10": "./types/agent-conversation-shell.v10.d.ts",
