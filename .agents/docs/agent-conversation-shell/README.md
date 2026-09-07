@@ -440,3 +440,32 @@ Room item can remain visible; when it arrives, show one representation of that
 same linked input. Text similarity or matching Room ids across different stores
 is not a deduplication or merge authority. Earlier source versions reject the
 new kind; missing support must not trigger relabelling as an Agent or ack fact.
+
+## v12 persisted Session associations
+
+The additive [v12 declarations](../../../types/agent-conversation-shell.v12.d.ts)
+and [snapshot schema](../../../schemas/agent-conversation-shell-snapshot.v12.schema.json)
+retain v11 messages and v9 composer/admission behavior. An optional Room
+`associatedSessions` array exposes exact persisted participant/member/run/Session
+associations when this Room source has no loaded Session projection.
+`state: unloaded` describes only that source-local absence; it does not assert
+Host-global Session loading or that the native task is stopped,
+running, resumable, or missing. The Host labels that uncertainty separately from
+live `activeRuns`. An empty live projection is not proof of no persisted history.
+
+Each associated participant must be a current Agent participant with a definition
+identity. Session IDs must be unique and cannot overlap `activeRuns`. The source
+uses its existing Room records; it must not create a second Session ledger or
+create/resume an Agent, send input, replay work, or synthesize events for display.
+`details`, when available, comes from the existing owner-scoped
+`agentSessionDetailReferences.get` service. Navigation uses
+`agentDetailNavigation.open`, with current owner/generation validation at issue
+and open; consumers never construct references or native URLs. Hosts may issue a
+read-only reference from an authenticated persistent mapping without loading the
+Session. Unavailable mapping leaves a visible association without a navigable
+link. Merely displaying a row confers no execution or recovery authority.
+
+v11 and older versions remain frozen and reject the new field. A downgrade omits
+associated rows; it must not encode them as active runs or fabricate lifecycle
+states. Maturity is experimental; this contract does not assert Host adoption,
+publication, native verification, or user acceptance.

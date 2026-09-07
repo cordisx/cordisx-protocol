@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v12.schema.json",
+  "title": "CordisX Agent Conversation Shell Snapshot v12",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "binding",
+    "generation",
+    "snapshotSequence",
+    "selection",
+    "items",
+    "composer",
+    "headerActions"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v12.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.agent-conversation-shell-snapshot/v12"
+    },
+    "schemaVersion": {
+      "const": 12
+    },
+    "binding": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/bindingRef"
+    },
+    "generation": {
+      "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/generation"
+    },
+    "snapshotSequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "selection": {
+      "$ref": "#/$defs/selection"
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "composer": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/composer"
+    },
+    "headerActions": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/action"
+      }
+    }
+  },
+  "$defs": {
+    "item": {
+      "anyOf": [
+        {
+          "$ref": "agent-conversation-shell-snapshot.v10.schema.json#/$defs/item"
+        },
+        {
+          "$ref": "agent-conversation-room-user-message.v1.schema.json"
+        }
+      ]
+    },
+    "selection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "no-room"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "roomId",
+            "title",
+            "multiParticipant",
+            "participantPresentation",
+            "participants"
+          ],
+          "properties": {
+            "kind": {
+              "const": "room"
+            },
+            "roomId": {
+              "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId"
+            },
+            "title": {
+              "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/displayText"
+            },
+            "description": {
+              "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/roomDescription"
+            },
+            "secondary": {
+              "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/displayText"
+            },
+            "multiParticipant": {
+              "type": "boolean"
+            },
+            "participantPresentation": {
+              "enum": [
+                "none",
+                "host-initials"
+              ]
+            },
+            "participants": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/participant"
+              }
+            },
+            "activeRuns": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/agent-conversation-shell-snapshot.v7.schema.json#/$defs/activeRun"
+              }
+            },
+            "associatedSessions": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "$ref": "#/$defs/associatedSession"
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "multiParticipant": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "multiParticipant"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "participantPresentation": {
+                    "const": "none"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "associatedSession": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "participantId",
+        "memberId",
+        "runId",
+        "sessionId",
+        "state"
+      ],
+      "properties": {
+        "participantId": {
+          "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId"
+        },
+        "memberId": {
+          "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId"
+        },
+        "runId": {
+          "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/opaqueId"
+        },
+        "sessionId": {
+          "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/sessionId"
+        },
+        "details": {
+          "$ref": "agent-conversation-shell-common.v7.schema.json#/$defs/agentDetailReference"
+        },
+        "state": {
+          "const": "unloaded"
+        }
+      }
+    }
+  }
+}
