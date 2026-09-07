@@ -1,0 +1,22 @@
+[
+  {
+    "name": "exact markers are explained without authorization",
+    "capabilities": [
+      { "name": "tasks.create", "required": false, "scope": { "runtime": "exact-request" } },
+      { "name": "turns.control", "required": false, "scope": { "runtime": "exact-request" } }
+    ],
+    "authorizationDeclarations": [],
+    "runtimeExplanations": ["tasks.create", "turns.control"],
+    "runtimeMarkerBlocksActivation": false
+  },
+  {
+    "name": "static declaration remains authorizable",
+    "capabilities": [
+      { "name": "models.read", "required": false, "scope": { "providers": ["codex"] } },
+      { "name": "tasks.content.read", "required": false, "scope": { "runtime": "exact-request" } }
+    ],
+    "authorizationDeclarations": ["models.read"],
+    "runtimeExplanations": ["tasks.content.read"],
+    "runtimeMarkerBlocksActivation": false
+  }
+]

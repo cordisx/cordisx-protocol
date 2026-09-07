@@ -138,6 +138,15 @@ required declaration keeps the candidate inactive and reports the real blocked
 reason. Optional denial keeps the plugin active with the declared feature
 degradation.
 
+For manifest v13, “every declaration” separates authorizable static
+declarations from exact-request markers. Static declarations remain in the
+existing plan and decision exactly once. An exact-request marker has no concrete
+scope or fingerprint yet, so it is excluded from both and shown exactly once as
+a Host-rendered, read-only “authorized at use” explanation. It cannot create an
+install-time policy, ticket, or grant, and its optional unresolved state does
+not block activation. See
+[runtime exact-request Platform scope](runtime-exact-request-v13.md#host-materialization).
+
 Runtime prompts are reserved for undecided policy, dynamic scope, scope
 expansion, expired transaction authority, or catalog-required high-risk
 reconfirmation. Availability and policy remain orthogonal: unavailable

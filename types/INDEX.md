@@ -76,15 +76,17 @@ not require a Host shell service; see the topic's ownership statement.
 
 ## Package documents
 
-| Public subpath                  | Declaration                                                              | Specification or wire definition                                                                          |
-| ------------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `plugin-manifest/v6`            | [plugin-manifest.v6.d.ts](plugin-manifest.v6.d.ts)                       | [Specification](../.agents/docs/manifests/README.md)                                                      |
-| `plugin-manifest/v7`            | [plugin-manifest.v7.d.ts](plugin-manifest.v7.d.ts)                       | [Specification](../.agents/docs/manifests/README.md)                                                      |
-| `plugin-manifest/v8`            | [plugin-manifest.v8.d.ts](plugin-manifest.v8.d.ts)                       | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-manifest.v8.schema.json) |
-| `plugin-manifest/v9`            | [plugin-manifest.v9.d.ts](plugin-manifest.v9.d.ts)                       | [Platform provider service successor](../.agents/docs/platform-provider/README.md)                        |
-| `plugin-package/v8`             | [plugin-package.v8.d.ts](plugin-package.v8.d.ts)                         | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-package.v8.schema.json)  |
-| `plugin-package/v9`             | [plugin-package.v9.d.ts](plugin-package.v9.d.ts)                         | [Manifest v9 package successor](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v9)      |
-| `plugin-generation-artifact/v1` | [plugin-generation-artifact.v1.d.ts](plugin-generation-artifact.v1.d.ts) | [Immutable browser ESM graph](../.agents/docs/plugin-generation-artifact/README.md)                       |
+| Public subpath                  | Declaration                                                              | Specification or wire definition                                                                             |
+| ------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `plugin-manifest/v6`            | [plugin-manifest.v6.d.ts](plugin-manifest.v6.d.ts)                       | [Specification](../.agents/docs/manifests/README.md)                                                         |
+| `plugin-manifest/v7`            | [plugin-manifest.v7.d.ts](plugin-manifest.v7.d.ts)                       | [Specification](../.agents/docs/manifests/README.md)                                                         |
+| `plugin-manifest/v8`            | [plugin-manifest.v8.d.ts](plugin-manifest.v8.d.ts)                       | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-manifest.v8.schema.json)    |
+| `plugin-manifest/v9`            | [plugin-manifest.v9.d.ts](plugin-manifest.v9.d.ts)                       | [Platform provider service successor](../.agents/docs/platform-provider/README.md)                           |
+| `plugin-manifest/v13`           | [plugin-manifest.v13.d.ts](plugin-manifest.v13.d.ts)                     | [Host-bound runtime exact-request scope](../.agents/docs/platform-capabilities/runtime-exact-request-v13.md) |
+| `plugin-package/v8`             | [plugin-package.v8.d.ts](plugin-package.v8.d.ts)                         | [v8 schema; see the manifests topic for predecessor semantics](../schemas/plugin-package.v8.schema.json)     |
+| `plugin-package/v9`             | [plugin-package.v9.d.ts](plugin-package.v9.d.ts)                         | [Manifest v9 package successor](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v9)         |
+| `plugin-package/v13`            | [plugin-package.v13.d.ts](plugin-package.v13.d.ts)                       | [Digest-pinned manifest v13 packaging](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v13) |
+| `plugin-generation-artifact/v1` | [plugin-generation-artifact.v1.d.ts](plugin-generation-artifact.v1.d.ts) | [Immutable browser ESM graph](../.agents/docs/plugin-generation-artifact/README.md)                          |
 
 ## Agent task approval binding
 

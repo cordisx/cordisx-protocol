@@ -230,6 +230,14 @@ delivery through unsubscribe, drain, and disposal. It rejects mixed-case
 secret, endpoint, URL, host, path, executable, process, environment, transport,
 raw-client, and Fleet leakage. This is Protocol-only evidence and does not prove
 Host Provider Fleet adoption.
+Platform runtime exact-request v13 conformance validates the closed optional
+declaration, duplicate-name rejection across static and runtime forms, frozen
+package-v12 rejection of manifest v13, package-v13 digest references, exact
+read-only activation explanation separation, canonical provider/CWD
+materialization for task creation, exact complete-Session materialization for
+content/control/turn calls, concrete-scope fingerprint separation, and
+fail-closed missing or malformed targets. It does not establish Host adoption
+or authorize a call.
 Plugin lifecycle conformance covers package/runtime identity, exact and acyclic
 dependency graphs, enabled dependency readiness, activation/last-good ordering,
 explicit local directory/package/downloaded-tarball input boundaries, separate

@@ -15,6 +15,8 @@ export const expectedExports = [
   './usage/v1',
   './plugin-manifest/v11',
   './plugin-package/v11',
+  './plugin-manifest/v13',
+  './plugin-package/v13',
   './extension-point-visual/v1',
   './extension-point-visual/v2',
   './plugin-manifest/v10',
