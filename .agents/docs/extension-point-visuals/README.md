@@ -120,3 +120,16 @@ No transcript, microphone samples, amplitude, recording identifiers, or start/
 stop controls are exposed. The render grant exposes status only; it grants no
 microphone access or recording authority. Visuals must cease status updates on
 withdrawal through the existing generation lifecycle.
+
+## Explicit local development sessions
+
+A Host may authorize declared visual rendering and pointer observation without
+an interactive prompt for artifacts explicitly loaded by its trusted local
+development launcher. This exception requires Host-verified provenance bound
+to the exact source and plugin identity for that development session; a plugin
+manifest, a file URL, or a development-looking profile name is insufficient.
+The Host must preserve exact scope, supported events, generation retirement,
+availability and explicit revocation. Installed artifacts retain ordinary
+review. Development authority is not an explicit-user decision document or
+certified approval, and must not be persisted or exported as either. This
+exception grants no audio capture, native action control or other capabilities.
