@@ -1,0 +1,136 @@
+[
+  {
+    "name": "create derives exact provider and cwd",
+    "platform": "posix",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "/workspace/project" },
+    "scope": { "providers": ["cli-proxy"], "cwdRoots": ["/workspace/project"] }
+  },
+  {
+    "name": "create canonicalizes dot segments",
+    "platform": "posix",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "/workspace/project/../secret" },
+    "scope": { "providers": ["cli-proxy"], "cwdRoots": ["/workspace/secret"] }
+  },
+  {
+    "name": "content read derives exact session",
+    "platform": "posix",
+    "capability": "tasks.content.read",
+    "request": { "session": { "providerId": "cli-proxy", "remoteSessionId": "thread-1" } },
+    "scope": { "sessions": [{ "providerId": "cli-proxy", "remoteSessionId": "thread-1" }] }
+  },
+  {
+    "name": "task control derives exact session",
+    "platform": "posix",
+    "capability": "tasks.control",
+    "request": { "session": { "providerId": "codex", "remoteSessionId": "thread-2" }, "action": "archive" },
+    "scope": { "sessions": [{ "providerId": "codex", "remoteSessionId": "thread-2" }] }
+  },
+  {
+    "name": "turn submit derives exact session",
+    "platform": "posix",
+    "capability": "turns.submit",
+    "request": { "session": { "providerId": "codex", "remoteSessionId": "thread-3" }, "message": "Continue" },
+    "scope": { "sessions": [{ "providerId": "codex", "remoteSessionId": "thread-3" }] }
+  },
+  {
+    "name": "turn control derives exact session",
+    "platform": "posix",
+    "capability": "turns.control",
+    "request": { "session": { "providerId": "codex", "remoteSessionId": "thread-4" }, "action": "interrupt" },
+    "scope": { "sessions": [{ "providerId": "codex", "remoteSessionId": "thread-4" }] }
+  },
+  {
+    "name": "missing create cwd fails closed",
+    "platform": "posix",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" } },
+    "scope": null
+  },
+  {
+    "name": "relative create cwd fails closed",
+    "platform": "posix",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "workspace/project" },
+    "scope": null
+  },
+  {
+    "name": "invalid create provider fails closed",
+    "platform": "posix",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "*", "modelId": "gpt-5" }, "cwd": "/workspace/project" },
+    "scope": null
+  },
+  {
+    "name": "missing session fails closed",
+    "platform": "posix",
+    "capability": "turns.submit",
+    "request": { "message": "Continue" },
+    "scope": null
+  },
+  {
+    "name": "invalid session fails closed",
+    "platform": "posix",
+    "capability": "tasks.content.read",
+    "request": { "session": { "providerId": "codex", "remoteSessionId": "" } },
+    "scope": null
+  },
+  {
+    "name": "different session remains a different scope fingerprint input",
+    "platform": "posix",
+    "capability": "tasks.content.read",
+    "request": { "session": { "providerId": "codex", "remoteSessionId": "thread-9" } },
+    "scope": { "sessions": [{ "providerId": "codex", "remoteSessionId": "thread-9" }] },
+    "differentFingerprintFrom": "content read derives exact session"
+  },
+  {
+    "name": "Windows canonicalizes drive-qualified dot segments",
+    "platform": "win32",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "C:\\workspace\\project\\..\\secret" },
+    "scope": { "providers": ["cli-proxy"], "cwdRoots": ["C:\\workspace\\secret"] }
+  },
+  {
+    "name": "Windows rejects current-drive-root path",
+    "platform": "win32",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "\\workspace\\project" },
+    "scope": null
+  },
+  {
+    "name": "Windows canonicalizes complete UNC path",
+    "platform": "win32",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "\\\\server\\share\\project\\..\\secret" },
+    "scope": { "providers": ["cli-proxy"], "cwdRoots": ["\\\\server\\share\\secret"] }
+  },
+  {
+    "name": "Windows rejects device path namespace",
+    "platform": "win32",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "\\\\?\\C:\\workspace\\secret" },
+    "scope": null
+  },
+  {
+    "name": "Windows rejects device pipe namespace",
+    "platform": "win32",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "\\\\.\\pipe\\name" },
+    "scope": null
+  },
+  {
+    "name": "POSIX rejects Windows drive path",
+    "platform": "posix",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "C:\\workspace\\project" },
+    "scope": null
+  },
+  {
+    "name": "Windows rejects POSIX root path",
+    "platform": "win32",
+    "capability": "tasks.create",
+    "request": { "model": { "providerId": "cli-proxy", "modelId": "gpt-5" }, "cwd": "/workspace/project" },
+    "scope": null
+  }
+]

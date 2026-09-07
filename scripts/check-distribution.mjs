@@ -21,6 +21,8 @@ const expectedFiles = [
   'types/usage.v1.d.ts',
   'types/plugin-manifest.v11.d.ts',
   'types/plugin-package.v11.d.ts',
+  'types/plugin-manifest.v13.d.ts',
+  'types/plugin-package.v13.d.ts',
   'types/extension-point-visual.v1.d.ts',
   'types/extension-point-visual.v2.d.ts',
   'types/plugin-manifest.v10.d.ts',
@@ -174,6 +176,8 @@ import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 
 import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, ManagerContentNavigationDeclarationV4, ManagerContentProjectionV3 } from '@cordisx/protocol/manager-content-navigation/v4'
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
 import type { PluginManifestHostRouteSessionScopeBindingV6, PluginRuntimeManifestV6 } from '@cordisx/protocol/plugin-manifest/v6'
+import type { PluginManifestRuntimeExactCapabilityDeclarationV13, PluginRuntimeManifestV13 } from '@cordisx/protocol/plugin-manifest/v13'
+import type { PluginRuntimePackageV13 } from '@cordisx/protocol/plugin-package/v13'
 import type { PluginRuntimeManifestV7 } from '@cordisx/protocol/plugin-manifest/v7'
 import type { PluginGenerationArtifactV1 } from '@cordisx/protocol/plugin-generation-artifact/v1'
 import type { TransientCanvasPluginContextV1, TransientCanvasRegistrationV1 } from '@cordisx/protocol/transient-canvas/v1'
@@ -282,6 +286,10 @@ localizedChoice.value satisfies string | number | boolean | null
 const installedApprovalRouteScope = { kind: 'host-route-param', routeId: 'room-session-detail', param: 'sessionId' } satisfies PluginManifestHostRouteSessionScopeBindingV6
 const installedManifestV6 = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v6.schema.json', schemaVersion: 6, id: 'chatroom', capabilities: [{ name: 'approvals.request', required: false, scope: { sessionIds: installedApprovalRouteScope } }], services: [] } satisfies PluginRuntimeManifestV6
 installedManifestV6.schemaVersion satisfies 6
+const installedRuntimeExactCapability = { name: 'tasks.content.read', required: false, scope: { runtime: 'exact-request' } } satisfies PluginManifestRuntimeExactCapabilityDeclarationV13
+const installedManifestV13 = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json', schemaVersion: 13, id: 'cli-proxy-api', capabilities: [installedRuntimeExactCapability], services: [] } satisfies PluginRuntimeManifestV13
+const installedPackageV13 = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v13.schema.json', schemaVersion: 13, id: installedManifestV13.id, version: '0.1.0', entry: './dist/runtime/module.js', distribution: { mode: 'explicit-local-v1', signature: 'unsupported' }, compatibility: { runtimeAbi: 1, protocolSchemas: [installedManifestV13.$schema] }, dependencies: [], runtimeManifest: { path: './runtime-manifest.json', schema: installedManifestV13.$schema, digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' } } satisfies PluginRuntimePackageV13
+installedPackageV13.runtimeManifest.schema satisfies typeof installedManifestV13.$schema
 declare const managerConfigCommand: ManagerContentConfigCommandV1
 managerConfigSource.execute(managerConfigCommand)
 managerConfigSourceV2.execute(managerConfigCommand)

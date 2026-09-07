@@ -25,7 +25,8 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
   Host-owned Fleet publication.
 - [Platform capabilities](platform-capabilities/README.md): portable provider,
   model, Session, identity, and permission contracts, with versioned permission
-  successors and a separately authorized Host DOM bridge.
+  successors, [runtime exact-request scopes](platform-capabilities/runtime-exact-request-v13.md),
+  and a separately authorized Host DOM bridge.
 - [Publisher grants](publisher-grants.md): external-publisher commerce descriptors,
   signed statements, device binding, and activation-registry boundaries.
 

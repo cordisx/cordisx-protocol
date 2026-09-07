@@ -203,6 +203,9 @@ its scope are described in [conformance](../conformance/README.md).
   scopes; frozen manifest v1-v4 remain unchanged;
 - `plugin-manifest.v6.schema.json`: additive complete Agent-runtime capability
   declarations with exact SessionId lists or same-owner Host route-param scope;
+- `plugin-manifest.v13.schema.json`: additive optional exact-request marker for
+  five sensitive non-DOM Platform capabilities, with call targets materialized
+  by the Host before authorization and dispatch;
 - `permission-common.v4.schema.json`, `permission-policy.v4.schema.json`,
   `permission-authorization-plan.v4.schema.json`, and
   `permission-authorization-decision.v4.schema.json`: Host DOM root/operation
@@ -558,6 +561,8 @@ its scope are described in [conformance](../conformance/README.md).
   plus the isolated transient-canvas Worker execution declaration;
 - `plugin-package.v7.schema.json`: package-v6 boundaries plus a closed runtime
   manifest-v7 reference;
+- `plugin-package.v13.schema.json`: package-v12 boundaries plus the closed,
+  separately digested runtime manifest-v13 reference;
 - `plugin-generation-artifact.v1.schema.json`: one immutable, path-confined
   browser ESM module graph with exact module/style/asset inventory, per-file
   integrity, closed shared Host imports, and initial-versus-lazy resource edges;

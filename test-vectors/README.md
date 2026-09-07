@@ -32,6 +32,12 @@ authority, and unique names. `platform/model-pages` and
 ids, query binding, model/session provider consistency, and duplicate complete
 reference rejection.
 
+Platform runtime exact-request v13 vectors cover its closed optional manifest
+marker, package-v13 reference boundary, static/runtime duplicate rejection,
+separate non-authorizing activation explanations, canonical Host-derived exact
+provider/CWD and Session scopes, scope-fingerprint separation, and missing or
+malformed target failure.
+
 Platform provider v1 vectors live in `platform-provider/valid` and
 `platform-provider/invalid`. They cover manifest/package v9, fixed Host-owned
 configuration declarations, source/generation-bound registration projections,

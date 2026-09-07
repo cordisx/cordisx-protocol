@@ -1,0 +1,175 @@
+[
+  {
+    "name": "all exact-request declarations",
+    "schema": "plugin-manifest.v13",
+    "valid": true,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "cli-proxy-api",
+      "capabilities": [
+        { "name": "tasks.content.read", "required": false, "scope": { "runtime": "exact-request" } },
+        { "name": "tasks.create", "required": false, "scope": { "runtime": "exact-request" } },
+        { "name": "tasks.control", "required": false, "scope": { "runtime": "exact-request" } },
+        { "name": "turns.submit", "required": false, "scope": { "runtime": "exact-request" } },
+        { "name": "turns.control", "required": false, "scope": { "runtime": "exact-request" } }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "v13 composes v12 task permission with exact request",
+    "schema": "plugin-manifest.v13",
+    "valid": true,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "chatroom-provider",
+      "capabilities": [
+        {
+          "name": "approvals.request",
+          "required": false,
+          "scope": { "task": { "kind": "agent-task-command", "commandId": "create-provider-task" } }
+        },
+        { "name": "tasks.create", "required": false, "scope": { "runtime": "exact-request" } }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "required exact-request rejected",
+    "schema": "plugin-manifest.v13",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "blocking-control",
+      "capabilities": [
+        { "name": "tasks.control", "required": true, "scope": { "runtime": "exact-request" } }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "catalog read exact-request rejected",
+    "schema": "plugin-manifest.v13",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "catalog-reader",
+      "capabilities": [
+        { "name": "tasks.catalog.read", "required": false, "scope": { "runtime": "exact-request" } }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "caller scope field rejected",
+    "schema": "plugin-manifest.v13",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "scope-smuggler",
+      "capabilities": [
+        {
+          "name": "turns.submit",
+          "required": false,
+          "scope": { "runtime": "exact-request", "sessions": [{ "providerId": "codex", "remoteSessionId": "s1" }] }
+        }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "duplicate static and exact declaration rejected",
+    "schema": "plugin-manifest.v13",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "duplicate-create",
+      "capabilities": [
+        { "name": "tasks.create", "required": false, "scope": { "providers": ["codex"], "cwdRoots": ["/workspace"] } },
+        { "name": "tasks.create", "required": false, "scope": { "runtime": "exact-request" } }
+      ],
+      "services": []
+    }
+  },
+  {
+    "name": "package v13 pins manifest v13",
+    "schema": "plugin-package.v13",
+    "valid": true,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "cli-proxy-api",
+      "version": "0.1.0",
+      "entry": "./dist/runtime/module.js",
+      "distribution": { "mode": "explicit-local-v1", "signature": "unsupported" },
+      "compatibility": {
+        "runtimeAbi": 1,
+        "protocolSchemas": [
+          "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json"
+        ]
+      },
+      "dependencies": [],
+      "runtimeManifest": {
+        "path": "./runtime-manifest.json",
+        "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  },
+  {
+    "name": "package v13 retains manifest v12",
+    "schema": "plugin-package.v13",
+    "valid": true,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v13.schema.json",
+      "schemaVersion": 13,
+      "id": "usage-reader",
+      "version": "0.1.0",
+      "entry": "./dist/runtime/module.js",
+      "distribution": { "mode": "explicit-local-v1", "signature": "unsupported" },
+      "compatibility": {
+        "runtimeAbi": 1,
+        "protocolSchemas": [
+          "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v12.schema.json"
+        ]
+      },
+      "dependencies": [],
+      "runtimeManifest": {
+        "path": "./runtime-manifest.json",
+        "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v12.schema.json",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  },
+  {
+    "name": "package v12 cannot pin manifest v13",
+    "schema": "plugin-package.v12",
+    "valid": false,
+    "value": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v12.schema.json",
+      "schemaVersion": 12,
+      "id": "cli-proxy-api",
+      "version": "0.1.0",
+      "entry": "./dist/runtime/module.js",
+      "distribution": { "mode": "explicit-local-v1", "signature": "unsupported" },
+      "compatibility": {
+        "runtimeAbi": 1,
+        "protocolSchemas": [
+          "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json"
+        ]
+      },
+      "dependencies": [],
+      "runtimeManifest": {
+        "path": "./runtime-manifest.json",
+        "schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v13.schema.json",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  }
+]

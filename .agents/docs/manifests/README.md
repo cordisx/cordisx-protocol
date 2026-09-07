@@ -153,6 +153,21 @@ manifests and runtime permission declarations are not reinterpreted.
 
 The [controlled visual successor](../extension-point-visuals/README.md) adds exact extension-point interaction declarations. Package v10 adds the digest-pinned manifest v10 reference; previous package semantics remain unchanged.
 
+## Runtime and package manifest v11
+
+Runtime manifest v11 adds the current-profile `usage.read` declaration. Package
+v11 adds its digest-pinned manifest reference and preserves the package-v10
+boundaries. See [Local usage v1](../usage-v1.md).
+
 ## Runtime and package manifest v12
 
 [Agent task permission v1](../agent-task-permission/README.md) adds command-bounded task approval sources alongside independent existing route scopes. V12 preserves all v11 families, including [usage v1](../usage-v1.md). Package v12 adds the digest-pinned runtime manifest v12 reference. V1-v11 remain frozen.
+
+## Runtime and package manifest v13
+
+Runtime manifest v13 adds the closed `runtime: "exact-request"` declaration for
+five sensitive, non-DOM Platform operations. The Host derives the concrete
+provider/workspace or Session scope from each validated call and authorizes it
+before dispatch. Package v13 only adds the digest-pinned manifest v13 reference;
+manifest and package v1-v12 remain frozen. See
+[Runtime exact-request Platform scope](../platform-capabilities/runtime-exact-request-v13.md).

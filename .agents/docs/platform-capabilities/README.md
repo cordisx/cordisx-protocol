@@ -132,6 +132,13 @@ enable/restore flows. It does not itself grant package download, signature,
 filesystem, Marketplace, or code-loading authority; a Host without an
 installer uses it only for already-present packages.
 
+Manifest v13 exact-request markers are the additive exception to the “every
+declaration” planning rule. They have no concrete permission scope at install,
+update, or enable time, so they do not enter the authorizable declarations or
+decision. The Host lists each once as a read-only “authorized at use” feature;
+the optional marker cannot block activation. See
+[runtime exact-request Platform scope](runtime-exact-request-v13.md#host-materialization).
+
 ### Upgrade and migration
 
 Policy lookup is exact on the normalized authorization key. Capability or

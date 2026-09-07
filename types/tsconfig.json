@@ -139,6 +139,9 @@
     "agent-task-permission.v1.d.ts",
     "plugin-manifest.v12.d.ts",
     "plugin-package.v12.d.ts",
-    "agent-task-permission.v1.test.ts"
+    "agent-task-permission.v1.test.ts",
+    "plugin-manifest.v13.d.ts",
+    "plugin-package.v13.d.ts",
+    "plugin-manifest.v13.test.ts"
   ]
 }
