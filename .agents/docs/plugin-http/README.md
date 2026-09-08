@@ -27,7 +27,7 @@ Only the declared methods and headers are accepted. Paths start with one slash,
 do not contain backslash, userinfo or fragments and resolve to the exact origin.
 All redirects are refused, including redirects to the same origin. Ambient
 cookies, proxy authentication and user-provided Authorization are not forwarded.
-Request bodies are limited to 256 KiB, responses to 1 MiB. Connections allow at
+Request bodies are limited to 1 MiB, responses to 1 MiB. Connections allow at
 most eight concurrent requests. Deadlines are absolute Unix milliseconds, must
 be in the future, and are capped at 30 seconds by the Host. Abort, deadline,
 revocation, owner retirement and Host disposal cancel the underlying transport;
@@ -49,3 +49,7 @@ command bridge. A missing consent UI, secret backend or launcher transport yield
 `unsupported`/`host-unavailable`, never a renderer fetch fallback. DNS and IP
 addresses may vary within an explicitly authorized hostname; deployments that
 need address pinning must enforce that additional network policy at their Host.
+
+Bearer connections require HTTPS, except exact loopback development origins.
+Transient connections require reauthorization after reload; Host retirement or
+disposal aborts requests and removes their Keychain entries.
