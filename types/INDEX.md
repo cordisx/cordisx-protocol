@@ -139,3 +139,5 @@ the specification and [schema index](../schemas/README.md).
 - [`plugin-package/v12`](plugin-package.v12.d.ts): digest-pinned runtime manifest v12 packaging.
 
 - [Visual interactions v2](../.agents/docs/extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.
+
+- [Entity execution context v1](entity-execution-context.v1.d.ts): owned project/projectless bindings and task context resolution.

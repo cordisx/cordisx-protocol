@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-execution-binding-write.v1.schema.json",
+  "type": "object",
+  "properties": {
+    "identity": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "required": [
+        "agentId",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "expectedRevision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mutationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "binding": {
+      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-execution-binding.v1.schema.json"
+    }
+  },
+  "required": [
+    "identity",
+    "expectedRevision",
+    "mutationId",
+    "binding"
+  ],
+  "additionalProperties": false
+}
