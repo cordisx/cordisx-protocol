@@ -116,3 +116,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Local usage v1](usage-v1.md): profile-scoped durable usage and manifest/package v11.
 
 - [Visual interactions v2](extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.
+
+- [Restricted content](restricted-content.md): bounded declarative scenes and owner-bound action dispatch.

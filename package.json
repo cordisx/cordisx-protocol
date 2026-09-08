@@ -92,7 +92,8 @@
     "types/plugin-package.v13.d.ts",
     "types/extension-point-interactions.v2.d.ts",
     "types/plugin-http.v1.d.ts",
-    "types/agent-loop-control.v1.d.ts"
+    "types/agent-loop-control.v1.d.ts",
+    "types/restricted-content.v1.d.ts"
   ],
   "exports": {
     "./visuals/v1": {
@@ -179,7 +180,8 @@
     "./plugin-package/v13": "./types/plugin-package.v13.d.ts",
     "./extension-point-interactions/v2": "./types/extension-point-interactions.v2.d.ts",
     "./plugin-http/v1": "./types/plugin-http.v1.d.ts",
-    "./agent-loop-control/v1": "./types/agent-loop-control.v1.d.ts"
+    "./agent-loop-control/v1": "./types/agent-loop-control.v1.d.ts",
+    "./restricted-content/v1": "./types/restricted-content.v1.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
