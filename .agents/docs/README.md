@@ -112,3 +112,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Controlled Markdown editor](controlled-markdown-editor/README.md): controlled editing and selection capability.
 
 - [Local usage v1](usage-v1.md): profile-scoped durable usage and manifest/package v11.
+
+- [Visual interactions v2](extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.

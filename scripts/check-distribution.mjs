@@ -18,6 +18,7 @@ const expectedFiles = [
   'types/agent-task.v1.d.ts',
   'types/extension-point-drag.v1.d.ts',
   'types/extension-point-interactions.v1.d.ts',
+  'types/extension-point-interactions.v2.d.ts',
   'types/usage.v1.d.ts',
   'types/plugin-manifest.v11.d.ts',
   'types/plugin-package.v11.d.ts',
