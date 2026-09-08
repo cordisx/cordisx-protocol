@@ -30,6 +30,8 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 - [Publisher grants](publisher-grants.md): external-publisher commerce descriptors,
   signed statements, device binding, and activation-registry boundaries.
 
+- [Plugin HTTP](plugin-http/README.md): exact-origin consent, opaque credentials and cancellable bounded requests.
+
 ## Agent, Session, and external services
 
 - [Agent and Session runtime](agent-runtime/README.md): Agent handles, persistent

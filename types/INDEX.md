@@ -139,3 +139,7 @@ the specification and [schema index](../schemas/README.md).
 - [`plugin-package/v12`](plugin-package.v12.d.ts): digest-pinned runtime manifest v12 packaging.
 
 - [Visual interactions v2](../.agents/docs/extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.
+
+| `plugin-http/v1` | [plugin-http.v1.d.ts](plugin-http.v1.d.ts) | [Specification](../.agents/docs/plugin-http/README.md) |
+
+| `agent-loop-control/v1` | [agent-loop-control.v1.d.ts](agent-loop-control.v1.d.ts) | [Specification](../.agents/docs/agent-loop/control-v1.md) |

@@ -331,3 +331,5 @@ approval decision or create a second introduction.
 
 Schemas, vectors, and local conformance do not prove Host wiring, Chatroom
 consumption, production renderer behavior, publication, or API readiness.
+
+- [Control v1](control-v1.md): ordinary turn submission, exact cancellation and Host deadlines over v4 bindings.
