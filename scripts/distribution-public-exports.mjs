@@ -12,6 +12,7 @@ export const expectedExports = [
   './agent-conversation-shell/v10',
   './extension-point-drag/v1',
   './extension-point-interactions/v1',
+  './extension-point-interactions/v2',
   './usage/v1',
   './plugin-manifest/v11',
   './plugin-package/v11',
