@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-execution-binding.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "projectless"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "project"
+        },
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "cwd": {
+          "type": "string",
+          "pattern": "^/",
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "kind",
+        "projectId"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

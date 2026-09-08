@@ -8,6 +8,7 @@ import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedFiles = [
+  'types/entity-execution-context.v1.d.ts',
   'types/agent-task-permission.v1.d.ts',
   'types/plugin-manifest.v12.d.ts',
   'types/plugin-package.v12.d.ts',
@@ -170,6 +171,9 @@ void [taskPermissionSource, taskPermissionLease, taskManifest, taskPackage, task
 import type { AgentTaskApprovals, AgentTaskApprovalHandlers, AgentTaskOwnership } from '@cordisx/protocol/agent-task-binding/v1'
 import type { AgentTasks, AgentTaskCreateRequest, AgentTaskQueryResult } from '@cordisx/protocol/agent-task/v1'
 import type { Agent, AgentRegistry } from '@cordisx/protocol/agents/v1'
+import type { EntityExecutionContexts } from '@cordisx/protocol/entity-execution-context/v1'
+declare const entityContexts: EntityExecutionContexts
+void entityContexts.resolve({ identity: { agentId: 'leader', revision: 'exact' }, operationId: 'first' })
 import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
 import type { ManagerSettingsNavigationGroupCatalogV1 } from '@cordisx/protocol/manager-settings-navigation/v1'
 import type { ManagerSettingsNavigationProjectionV2 } from '@cordisx/protocol/manager-settings-navigation/v2'
