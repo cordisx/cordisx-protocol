@@ -38,8 +38,13 @@ export interface HttpClientV1 {
   /** Host-owned consent and optional masked bearer-token capture. Never accepts a token. */
   authorize(input: { readonly origin: string; readonly credential: 'none' | 'bearer' }): Promise<HttpResultV1<HttpConnectionV1>>
   request(input: HttpRequestV1): Promise<HttpResultV1<HttpResponseV1>>
+  /** POST on the same authorized origin; Host removes the top-level token field before returning JSON. */
+  exchange(input: Omit<HttpRequestV1, 'method'> & { readonly credentialField: string }): Promise<HttpResultV1<{
+    readonly connection: HttpConnectionV1
+    readonly response: HttpResponseV1
+  }>>
   /** Revokes this connection, aborts its requests and removes its stored credential. */
   revoke(connection: HttpConnectionV1): Promise<HttpResultV1<null>>
-  /** Revokes runtime authority and aborts requests; durable secret removal requires revoke. */
+  /** Revokes runtime authority, aborts requests and removes transient stored credentials. */
   dispose(): void
 }

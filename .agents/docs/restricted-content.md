@@ -17,8 +17,12 @@ nonfinite numbers, accessors and non-plain objects are invalid.
 A mounted seat receives `{sequence, payload: scene | null}`. Sequence is a
 nonnegative safe integer and strictly increases. Null clears the view. Newer invalid or rate-limited updates invalidate previous controls and consume
 the sequence. The caller must publish a fresh sequence to recover. At most 30
-new snapshots per second are accepted; each accepted sequence permits one
-action, disabling all controls synchronously before dispatch. Buttons report `{sequence, payload: action}`
+new snapshots per second are accepted; controls are disabled synchronously during dispatch. A callback resolves
+`accepted`, `rejected`, or `uncertain`. Only explicit rejection restores the
+original enabled states, and only if owner, revision and sequence are still
+current. Accepted actions remain locked until a fresh sequence. Uncertain,
+throwing or invalid callback outcomes remain locked; the caller recovers with
+the same idempotency key or disposes the seat. Buttons report `{sequence, payload: action}`
 for the current view only. Detached or replaced controls cannot dispatch; owner
 retirement and disposal remove content and listeners. The caller associates the
 action with its authoritative player and room version. Author JSON is data, never

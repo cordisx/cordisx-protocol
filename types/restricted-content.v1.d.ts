@@ -35,7 +35,7 @@ export interface RestrictedContentV1 {
   mount(input: {
     readonly element: HTMLElement
     /** The caller supplies authoritative identity; author action data never carries Host authority. */
-    readonly onAction: (action: RestrictedContentActionV1) => void
+    readonly onAction: (action: RestrictedContentActionV1) => Promise<{ readonly status: 'accepted' | 'rejected' | 'uncertain' }>
     readonly onUnavailable?: (code: RestrictedContentFailureV1) => void
   }): Promise<RestrictedContentResultV1<RestrictedContentSeatV1>>
   dispose(): void

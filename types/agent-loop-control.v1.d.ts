@@ -1,4 +1,4 @@
-import type { AgentLoopTaskBinding, AgentLoopContentPart } from './agent-loop.v4.js'
+import type { AgentLoopTaskBinding, AgentLoopContentPart, BoundAgentLoopClient, AgentLoopCreateOrBindResult } from './agent-loop.v4.js'
 
 export interface AgentLoopControlledTurnV1 {
   readonly contract: 'cordisx.agent-loop-controlled-turn/v1'
@@ -16,6 +16,8 @@ export type AgentLoopControlResultV1<T> =
   | { readonly status: 'unavailable'; readonly code: AgentLoopControlFailureV1 }
 export interface AgentLoopControlV1 {
   readonly contract: 'cordisx.agent-loop-control/v1'
+  /** Creates a user Agent in a fresh Host-owned game working directory; does not sandbox built-in tools. */
+  create(command: Parameters<BoundAgentLoopClient['createOrBind']>[0] & { readonly target: { readonly mode: 'create' } }): Promise<AgentLoopCreateOrBindResult>
   /** Ordinary user-owned agent execution; does not promise a tool or filesystem sandbox. */
   submit(input: {
     readonly commandId: string

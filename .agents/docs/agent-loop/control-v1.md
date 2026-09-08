@@ -36,3 +36,9 @@ may advertise a separate strict data-only mode, but must report unsupported
 when its provider cannot enforce that mode. Lack of strict mode does not disable
 this ordinary user-owned execution path. Usage is not inferred from profile
 aggregate differences or an interrupted turn's elapsed time.
+
+`create` accepts a v4 create command, returning the v4 binding and task details.
+It creates a user Agent in a Host-generated game working directory, unique to
+owner and command ID. It inherits ordinary provider permission and approval
+behavior; independent cwd is not a filesystem or tool sandbox. General v4
+create behavior remains unchanged.

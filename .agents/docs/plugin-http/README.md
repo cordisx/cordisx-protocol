@@ -53,3 +53,10 @@ need address pinning must enforce that additional network policy at their Host.
 Bearer connections require HTTPS, except exact loopback development origins.
 Transient connections require reauthorization after reload; Host retirement or
 disposal aborts requests and removes their Keychain entries.
+
+`exchange` POSTs through an existing connection on its same origin. The caller
+selects a top-level JSON credential field; Host captures that value directly
+into a derived opaque connection and removes the field from the returned
+response. There is no public secret-string input or cross-origin destination.
+The endpoint must put the token only in that field; duplicated or encoded
+secrets elsewhere in a server response are outside this extraction guarantee.
