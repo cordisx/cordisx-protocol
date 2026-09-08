@@ -89,7 +89,8 @@
     "types/plugin-manifest.v12.d.ts",
     "types/plugin-package.v12.d.ts",
     "types/plugin-manifest.v13.d.ts",
-    "types/plugin-package.v13.d.ts"
+    "types/plugin-package.v13.d.ts",
+    "types/extension-point-interactions.v2.d.ts"
   ],
   "exports": {
     "./visuals/v1": {
@@ -173,7 +174,8 @@
     "./plugin-manifest/v12": "./types/plugin-manifest.v12.d.ts",
     "./plugin-package/v12": "./types/plugin-package.v12.d.ts",
     "./plugin-manifest/v13": "./types/plugin-manifest.v13.d.ts",
-    "./plugin-package/v13": "./types/plugin-package.v13.d.ts"
+    "./plugin-package/v13": "./types/plugin-package.v13.d.ts",
+    "./extension-point-interactions/v2": "./types/extension-point-interactions.v2.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
