@@ -8,6 +8,7 @@ import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedFiles = [
+  'types/usage.v2.d.ts',
   'types/restricted-content.v1.d.ts',
   'types/agent-loop-control.v1.d.ts',
   'types/plugin-http.v1.d.ts',

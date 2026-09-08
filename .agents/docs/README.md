@@ -118,3 +118,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Visual interactions v2](extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.
 
 - [Restricted content](restricted-content.md): bounded declarative scenes and owner-bound action dispatch.
+
+- [Work usage v2](usage-work-v2.md): independent work ledger with Host game task exclusion.

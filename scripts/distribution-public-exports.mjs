@@ -17,6 +17,7 @@ export const expectedExports = [
   './extension-point-interactions/v1',
   './extension-point-interactions/v2',
   './usage/v1',
+  './usage/v2',
   './plugin-manifest/v11',
   './plugin-package/v11',
   './plugin-manifest/v13',
