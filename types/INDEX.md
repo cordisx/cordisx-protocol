@@ -149,3 +149,5 @@ the specification and [schema index](../schemas/README.md).
 - [Entity execution context v2](entity-execution-context.v2.d.ts): explicit per-operation projectless intent.
 
 - [Notifications v1](notifications.v1.d.ts): owner-bound user notifications and dismiss handles.
+
+- [Dialogs v1](dialogs.v1.d.ts): modal handles, body mounts and structured actions.

@@ -126,3 +126,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Explicit projectless context v2](entity-execution-context/v2.md): no-project conversations independent of saved Entity defaults.
 
 - [Notifications v1](notifications-v1.md): owner-bound messages, actions and user suppression policy.
+
+- [Dialogs v1](dialogs-v1.md): owner-bound modal bodies with structured Host chrome.

@@ -97,7 +97,8 @@
     "types/usage.v2.d.ts",
     "types/entity-execution-context.v1.d.ts",
     "types/entity-execution-context.v2.d.ts",
-    "types/notifications.v1.d.ts"
+    "types/notifications.v1.d.ts",
+    "types/dialogs.v1.d.ts"
   ],
   "exports": {
     "./visuals/v1": {
@@ -193,7 +194,8 @@
     "./entity-execution-context/v2": {
       "types": "./types/entity-execution-context.v2.d.ts"
     },
-    "./notifications/v1": "./types/notifications.v1.d.ts"
+    "./notifications/v1": "./types/notifications.v1.d.ts",
+    "./dialogs/v1": "./types/dialogs.v1.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
