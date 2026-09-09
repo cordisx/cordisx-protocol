@@ -116,3 +116,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Visual interactions v2](extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.
 
 - [Entity execution context v1](entity-execution-context/README.md): projectless/default project bindings without changing existing Sessions.
+
+- [Explicit projectless context v2](entity-execution-context/v2.md): no-project conversations independent of saved Entity defaults.

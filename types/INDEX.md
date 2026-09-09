@@ -141,3 +141,5 @@ the specification and [schema index](../schemas/README.md).
 - [Visual interactions v2](../.agents/docs/extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.
 
 - [Entity execution context v1](entity-execution-context.v1.d.ts): owned project/projectless bindings and task context resolution.
+
+- [Entity execution context v2](entity-execution-context.v2.d.ts): explicit per-operation projectless intent.

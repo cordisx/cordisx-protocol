@@ -62,3 +62,5 @@ Types: [entity-execution-context/v1](../../../types/entity-execution-context.v1.
 Schemas: [binding](../../../schemas/entity-execution-binding.v1.schema.json),
 [write](../../../schemas/entity-execution-binding-write.v1.schema.json), and
 [resolve](../../../schemas/entity-execution-context-request.v1.schema.json).
+
+[Explicit projectless v2](v2.md) adds a per-operation no-project selection without changing saved defaults.
