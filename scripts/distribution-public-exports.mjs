@@ -53,6 +53,8 @@ export const expectedExports = [
   './agent-loop/v4',
   './agents/v1',
   './entities/v1',
+  './entity-execution-context/v1',
+  './entity-execution-context/v2',
   './sessions/v1',
   './approval/v1',
   './approval/v2',

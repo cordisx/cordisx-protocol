@@ -120,3 +120,7 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Restricted content](restricted-content.md): bounded declarative scenes and owner-bound action dispatch.
 
 - [Work usage v2](usage-work-v2.md): independent work ledger with Host game task exclusion.
+
+- [Entity execution context v1](entity-execution-context/README.md): projectless/default project bindings without changing existing Sessions.
+
+- [Explicit projectless context v2](entity-execution-context/v2.md): no-project conversations independent of saved Entity defaults.
