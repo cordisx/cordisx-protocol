@@ -72,3 +72,9 @@ test('maintenance rules retain complete validation', () => {
 test('scope failure cannot skip the complete gate', () => {
   assert.ok(workflow.includes("needs.scope.result != 'success'"))
 })
+
+test('complete jobs honor cancellation so superseded PR runs release their slot', () => {
+  const source = readFileSync(new URL('../.github/workflows/check.yml', import.meta.url), 'utf8')
+  assert.ok(source.includes('    if: ${{ !cancelled() && '))
+  assert.ok(!source.includes('    if: always() && '))
+})
