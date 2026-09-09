@@ -8,6 +8,7 @@ import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedFiles = [
+  'types/notifications.v1.d.ts',
   'types/usage.v2.d.ts',
   'types/restricted-content.v1.d.ts',
   'types/agent-loop-control.v1.d.ts',
@@ -148,7 +149,10 @@ try {
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
   writeFileSync(
     join(consumer, 'consumer.ts'),
-    `import { cloneVisualData, parseVisualProviderId, type VisualData, type VisualProjection, type VisualTheme } from '@cordisx/protocol/visuals/v1'
+    `import type { NotificationsV1 } from '@cordisx/protocol/notifications/v1'
+declare const notifications: NotificationsV1
+notifications.show({ kind: 'connection.failed', type: 'error', message: 'Connection failed' }).dismiss()
+import { cloneVisualData, parseVisualProviderId, type VisualData, type VisualProjection, type VisualTheme } from '@cordisx/protocol/visuals/v1'
 import { canonicalizeAgentAvatarSeed, cloneAgentAvatarRef, createGeneratedAgentAvatarRef, resolveAgentDefinitionAvatar, type AgentAvatarRef, type AgentAvatarResolutionResult } from '@cordisx/protocol/agent-avatar/v1'
 import type { BoundConnectorClient } from '@cordisx/protocol/connector-service/v1'
 import type { PlatformProviderDefinitionV1, PlatformProvidersV1 } from '@cordisx/protocol/platform-provider/v1'

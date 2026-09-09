@@ -74,6 +74,7 @@ export const expectedExports = [
   './manager-content-navigation/v4',
   './manager-content-navigation/v5',
   './navigation-collection-actions/v1',
+  './notifications/v1',
   './plugin-manifest/v6',
   './plugin-manifest/v7',
   './plugin-manifest/v8',
