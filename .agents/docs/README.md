@@ -124,3 +124,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Entity execution context v1](entity-execution-context/README.md): projectless/default project bindings without changing existing Sessions.
 
 - [Explicit projectless context v2](entity-execution-context/v2.md): no-project conversations independent of saved Entity defaults.
+
+- [Notifications v1](notifications-v1.md): owner-bound messages, actions and user suppression policy.

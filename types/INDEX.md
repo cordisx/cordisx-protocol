@@ -147,3 +147,5 @@ the specification and [schema index](../schemas/README.md).
 - [Entity execution context v1](entity-execution-context.v1.d.ts): owned project/projectless bindings and task context resolution.
 
 - [Entity execution context v2](entity-execution-context.v2.d.ts): explicit per-operation projectless intent.
+
+- [Notifications v1](notifications.v1.d.ts): owner-bound user notifications and dismiss handles.
