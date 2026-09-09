@@ -55,7 +55,10 @@ try {
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
   writeFileSync(
     join(consumer, 'consumer.ts'),
-    `import type { NotificationsV1 } from '@cordisx/protocol/notifications/v1'
+    `import type { DialogsV1 } from '@cordisx/protocol/dialogs/v1'
+declare const dialogs: DialogsV1
+dialogs.confirm({ kind: 'leave', title: 'Leave room?', confirmLabel: 'Leave', run: async () => {} }).then(result => result.status)
+import type { NotificationsV1 } from '@cordisx/protocol/notifications/v1'
 declare const notifications: NotificationsV1
 notifications.show({ kind: 'connection.failed', type: 'error', message: 'Connection failed' }).dismiss()
 import { cloneVisualData, parseVisualProviderId, type VisualData, type VisualProjection, type VisualTheme } from '@cordisx/protocol/visuals/v1'

@@ -76,6 +76,7 @@ export const expectedExports = [
   './manager-content-navigation/v5',
   './navigation-collection-actions/v1',
   './notifications/v1',
+  './dialogs/v1',
   './plugin-manifest/v6',
   './plugin-manifest/v7',
   './plugin-manifest/v8',
@@ -89,6 +90,7 @@ export const expectedExports = [
 
 export const expectedFiles = [
   'types/notifications.v1.d.ts',
+  'types/dialogs.v1.d.ts',
   'types/usage.v2.d.ts',
   'types/restricted-content.v1.d.ts',
   'types/agent-loop-control.v1.d.ts',
