@@ -30,9 +30,10 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          git diff --name-only --diff-filter=ACMRT "$BASE_SHA...$HEAD_SHA" > "$RUNNER_TEMP/changed-files"
+          # Include deletions and both rename paths; preserve unusual filenames.
+          git diff --no-renames --name-only -z "$BASE_SHA...$HEAD_SHA" > "$RUNNER_TEMP/changed-files"
           docs_only=true
-          while IFS= read -r file; do
+          while IFS= read -r -d '' file; do
             case "$file" in
               *.md|*.markdown) ;;
               *) docs_only=false ;;
@@ -52,9 +53,11 @@ jobs:
             echo "- head: \`$HEAD_SHA\`"
             echo "- non-normative docs only: \`$docs_only\`"
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Check scope regression cases
+        run: node --test scripts/ci-scope.test.mjs
 
   conformance:
-    if: always() && (github.event_name == 'push' || needs.scope.outputs.docs_only != 'true')
+    if: always() && (github.event_name == 'push' || needs.scope.result != 'success' || needs.scope.outputs.docs_only != 'true')
     needs: scope
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -93,7 +96,7 @@ jobs:
           cache=$([[ "$CACHE_HIT" == 'true' ]] && echo hit || echo miss)
           evidence="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           jq -n --arg schema 'cordisx/ci-job-result/v1' --arg repo "$GITHUB_REPOSITORY" \
-            --arg head "$HEAD_SHA" --arg base "$BASE_SHA" --arg gateVersion 'protocol-check-v2' \
+            --arg head "$HEAD_SHA" --arg base "$BASE_SHA" --arg gateVersion 'protocol-check-v3' \
             --arg classification 'full' --arg job "$GITHUB_JOB" --arg startedAt "$STARTED_AT" \
             --arg completedAt "$completed_at" --arg cache "$cache" --arg result "$RESULT" \
             --arg environment 'github-hosted/ubuntu-latest/node22' \
