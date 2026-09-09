@@ -9,6 +9,7 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const expectedFiles = [
   'types/entity-execution-context.v1.d.ts',
+  'types/entity-execution-context.v2.d.ts',
   'types/agent-task-permission.v1.d.ts',
   'types/plugin-manifest.v12.d.ts',
   'types/plugin-package.v12.d.ts',
