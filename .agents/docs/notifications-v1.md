@@ -20,7 +20,11 @@ with a letter or digit. They identify a semantic message category, never a
 request ID or translated message. Message/description/details/action label are
 bounded to 500/2000/16000/64 characters. Invalid input throws TypeError.
 
-Same-owner, same-kind active notifications coalesce. Different owners cannot
+Same-owner, same-kind active notifications coalesce with the latest descriptor
+and a repeat count. All handles for a coalesced group address that group. A new
+notice arriving while its predecessor is running an action is a separate card;
+completion of the older action must not dismiss the newer notice. Use recovery
+actions that remain meaningful for the whole category. Different owners cannot
 coalesce or dismiss each other's cards. Suppressed, disposed, inactive or
 capacity-limited submissions return an inert handle. Host bounds queue and
 presentation capacity and does not store notification content as history.
