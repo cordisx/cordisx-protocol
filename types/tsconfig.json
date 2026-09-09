@@ -144,6 +144,8 @@
     "plugin-package.v13.d.ts",
     "plugin-manifest.v13.test.ts",
     "extension-point-interactions.v2.d.ts",
-    "extension-point-interactions.v2.test.ts"
+    "extension-point-interactions.v2.test.ts",
+    "dialogs.v1.d.ts",
+    "dialogs.v1.test.ts"
   ]
 }
