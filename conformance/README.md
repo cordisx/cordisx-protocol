@@ -282,3 +282,6 @@ capability ownership/lifetime behavior; v1 conformance remains unchanged.
 `node conformance/navigation-parity.mjs` checks closed Settings/link shapes and revalidation semantics; native navigation and editor parity remain Host integration gates.
 
 Agent task permission v1: `node conformance/agent-task-permission.mjs` checks v12 shape closure, old route coexistence, sticky required-task provenance, Host registration readback, root and child routing, independent exact request/answer policy gates, revocation and late-answer fencing. The reference model is not Host/native adoption evidence.
+
+- `plugin-http.mjs`: connection shape and owner/origin boundaries.
+- `agent-loop-control.mjs`: deadline, completion and failed interruption outcomes.

@@ -611,4 +611,6 @@ See [Extension point visuals v1](../.agents/docs/extension-point-visuals/README.
 
 Agent task permission v1: [declarations](agent-task-permission.v1.schema.json), [Host task source](agent-task-permission-source.v1.schema.json), and [authority lease](agent-task-approval-authority-lease.v1.schema.json). [Runtime manifest v12](plugin-manifest.v12.schema.json) adds the closed task branches to v11; [package v12](plugin-package.v12.schema.json) adds its digest-pinned reference. See the [normative contract](../.agents/docs/agent-task-permission/README.md).
 
+- `http-connection.v1.schema.json`: owner-bound opaque HTTP connection descriptor.
+
 - Entity execution context v1: `entity-execution-binding.v1.schema.json`, `entity-execution-binding-write.v1.schema.json`, `entity-execution-context-request.v1.schema.json`.

@@ -30,6 +30,8 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 - [Publisher grants](publisher-grants.md): external-publisher commerce descriptors,
   signed statements, device binding, and activation-registry boundaries.
 
+- [Plugin HTTP](plugin-http/README.md): exact-origin consent, opaque credentials and cancellable bounded requests.
+
 ## Agent, Session, and external services
 
 - [Agent and Session runtime](agent-runtime/README.md): Agent handles, persistent
@@ -114,6 +116,10 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Local usage v1](usage-v1.md): profile-scoped durable usage and manifest/package v11.
 
 - [Visual interactions v2](extension-point-interactions-v2.md): bounded icon menus and keyboard submenus.
+
+- [Restricted content](restricted-content.md): bounded declarative scenes and owner-bound action dispatch.
+
+- [Work usage v2](usage-work-v2.md): independent work ledger with Host game task exclusion.
 
 - [Entity execution context v1](entity-execution-context/README.md): projectless/default project bindings without changing existing Sessions.
 
