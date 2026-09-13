@@ -159,6 +159,9 @@
     "plugin-http.v2.test.ts",
     "managed-source.v1.d.ts",
     "plugin-http.v3.d.ts",
-    "plugin-http.v3.test.ts"
+    "plugin-http.v3.test.ts",
+    "local-wallet.v1.d.ts",
+    "plugin-http.v4.d.ts",
+    "plugin-http.v4.test.ts"
   ]
 }

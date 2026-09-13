@@ -56,6 +56,17 @@ try {
   writeFileSync(
     join(consumer, 'consumer.ts'),
     `import type { HttpClientV3 } from '@cordisx/protocol/plugin-http/v3'
+import type { HttpClientV4 } from '@cordisx/protocol/plugin-http/v4'
+import { localWalletBytes } from '@cordisx/protocol/local-wallet/v1'
+declare const localHttp: HttpClientV4
+declare const localConnection: Parameters<HttpClientV4['enrollLocalWallet']>[0]['connection']
+const localBinding = { origin: 'http://127.0.0.1:3000', sourceId: 'source', instanceId: 'instance', audience: 'local-wallet' } as const
+localHttp.connectLocalAccount(localBinding)
+localHttp.enrollLocalWallet({ binding: { ...localBinding, audience: 'local-wallet-enrollment' }, connection: localConnection })
+localHttp.submitLocalWorkUsage({ ...localBinding, audience: 'local-work-income', baseline: true })
+// @ts-expect-error callers cannot pick an account
+localHttp.connectLocalAccount({ ...localBinding, accountId: 'forged' })
+localWalletBytes(localBinding)
 declare const managedHttp: HttpClientV3
 const managedBinding = { origin: 'http://127.0.0.1:3000', sourceId: 'source', instanceId: 'instance', audience: 'source-account' } as const
 managedHttp.connectAccount(managedBinding)

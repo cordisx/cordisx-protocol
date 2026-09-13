@@ -135,3 +135,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Isolated game UI v1](isolated-game-ui.md): experimental HTML resource and snapshot/action bridge, with explicit trust limitations.
 
 - [Managed local sources and HTTP v3](plugin-http/v3.md): pinned local source identity and classified work submission.
+
+- [Plugin HTTP v4: Host-profile local wallet authority](plugin-http/v4.md)

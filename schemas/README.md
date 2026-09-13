@@ -623,3 +623,7 @@ Agent task permission v1: [declarations](agent-task-permission.v1.schema.json), 
 - [HTTP session scope v2](http-session-scope.v2.schema.json): [secure retained sessions](../.agents/docs/plugin-http/v2.md).
 
 - `managed-source.v1.schema.json`: closed signed challenge/assertion/work/result payload shapes; canonical origins, times, signatures and binding checks also require conformance.
+
+## Host-profile local wallet v1
+
+`local-wallet.v1.schema.json` closes enrollment, local assertions, classified work observations, challenges and results. See [HTTP v4](../.agents/docs/plugin-http/v4.md) for signing and ownership requirements.

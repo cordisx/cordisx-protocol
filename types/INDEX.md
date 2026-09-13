@@ -164,3 +164,6 @@ the specification and [schema index](../schemas/README.md).
 
 - `plugin-http/v3`: [types](plugin-http.v3.d.ts), [specification](../.agents/docs/plugin-http/v3.md).
 - `managed-source/v1`: [types](managed-source.v1.d.ts), [canonical runtime](../runtime/managed-source.v1.js), [specification](../.agents/docs/plugin-http/v3.md). This runtime serializes signed payloads; it does not provide signing authority.
+
+| `local-wallet/v1` | `local-wallet.v1.d.ts` | Host-profile local wallet enrollment, signatures and classified work |
+| `plugin-http/v4` | `plugin-http.v4.d.ts` | Fresh original-account enrollment and local wallet operations |
