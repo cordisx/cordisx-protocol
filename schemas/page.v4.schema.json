@@ -246,10 +246,7 @@
             ],
             "properties": {
               "presentation": {
-                "enum": [
-                  "primary",
-                  "text"
-                ]
+                "const": "primary"
               }
             }
           },
@@ -260,6 +257,30 @@
               ],
               "properties": {
                 "visual": {}
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "presentation"
+            ],
+            "properties": {
+              "presentation": {
+                "const": "text"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "visual": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "image"
+                  }
+                }
               }
             }
           }

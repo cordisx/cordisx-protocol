@@ -54,3 +54,12 @@ const textOutlined: PageHeaderActionV4 = { ...balance, presentation: 'text', var
 // @ts-expect-error menu triggers cannot use text presentation
 const textMenu: PageHeaderActionV4 = { ...guest, presentation: 'text' }
 void [balance, textAvatar, textOutlined, textMenu]
+
+const balanceImage: PageHeaderActionV4 = {
+  ...balance,
+  presentation: 'text',
+  visual: { kind: 'image', src: 'data:image/png;base64,AAAA' },
+}
+// @ts-expect-error text image visuals require the same bounded source field
+const missingTextImage: PageHeaderActionV4 = { ...balance, presentation: 'text', visual: { kind: 'image' } }
+void [balanceImage, missingTextImage]

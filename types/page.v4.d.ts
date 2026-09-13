@@ -29,7 +29,7 @@ export interface PageHeaderCommandV4 {
 export type PageHeaderActionV4 =
   | (PageHeaderCommandV4 & { readonly visual?: PageHeaderVisualV4; readonly menu?: never; readonly presentation?: 'icon'; readonly variant?: never })
   | (PageHeaderCommandV4 & { readonly visual?: never; readonly menu?: never; readonly presentation: 'primary'; readonly variant?: 'outlined' })
-  | (PageHeaderCommandV4 & { readonly visual?: never; readonly menu?: never; readonly presentation: 'text'; readonly variant?: never })
+  | (PageHeaderCommandV4 & { readonly visual?: Extract<PageHeaderVisualV4, { readonly kind: 'image' }>; readonly menu?: never; readonly presentation: 'text'; readonly variant?: never })
   | (Omit<PageHeaderCommandV4, 'command'> & {
     readonly command?: never
     readonly presentation?: never

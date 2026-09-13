@@ -153,7 +153,7 @@ command's localized label with an optional Host icon. Its idle surface remains
 transparent, with the shared compact height, typography, bounded ellipsis,
 hover, tooltip, focus and pending behavior. Text commands retain array order
 and the 12-action maximum; they do not count toward the single primary command.
-Menus and identity visuals cannot use text presentation, and `variant` remains
+Menus and avatar visuals cannot use text presentation, and `variant` remains
 exclusive to primary commands. Earlier experimental Hosts and frozen versions
 1–3 reject the new presentation; consumers targeting those Hosts omit it.
 
@@ -177,3 +177,17 @@ Older Hosts may omit the method; feature-check it and retain the declared label.
 The controls type belongs to the `cordisx` SDK, as for visual and breadcrumb
 updates; this Protocol types-only page subpath describes metadata. This adds no
 DOM handle, HTML, native account access or new command authority.
+
+### Leading images on text commands
+
+Matching unreleased v4 Hosts allow `presentation: 'text'` with
+`visual: { kind: 'image', src }`. The image replaces the optional icon and
+appears before the visible localized label. It reuses the existing bounded
+inline PNG/JPEG/WebP source rules and decorative image semantics; avatars,
+menus and primary variants remain forbidden on text commands. The Host owns
+the compact image size and spacing. A failed image uses the existing neutral
+action icon while preserving the label. Mounted visual and label updates retain
+the trigger, focus, command identity and pending state. This adds no service,
+permission or account authority. Earlier experimental v4 Hosts reject this
+combination; omit `visual` and retain the numeric/text label when targeting them.
+Frozen versions 1–3 remain unchanged.

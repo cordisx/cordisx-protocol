@@ -114,3 +114,33 @@ assert.equal(
   false,
 )
 console.log('page v4 text: ordinary labeled commands alongside one primary; identity/menu/variant and v3 rejected')
+
+for (const format of ['png', 'jpeg', 'webp']) {
+  assert.equal(
+    validate({
+      ...page,
+      headerActions: [{
+        ...command,
+        presentation: 'text',
+        visual: { kind: 'image', src: `data:image/${format};base64,AAAA` },
+      }],
+    }),
+    true,
+  )
+}
+for (
+  const action of [
+    { ...command, presentation: 'text', visual: { kind: 'image' } },
+    { ...command, presentation: 'text', visual: { kind: 'image', src: 'https://example.test/coin.png' } },
+    { ...command, presentation: 'text', visual: { kind: 'image', src: 'data:image/svg+xml;base64,AAAA' } },
+    { ...command, presentation: 'text', visual: { kind: 'image', src: `data:image/png;base64,${'A'.repeat(262144)}` } },
+    {
+      ...command,
+      presentation: 'text',
+      icon: 'host:more',
+      visual: { kind: 'image', src: 'data:image/png;base64,AAAA' },
+    },
+    { ...command, presentation: 'primary', visual: { kind: 'image', src: 'data:image/png;base64,AAAA' } },
+  ]
+) assert.equal(validate({ ...page, headerActions: [action] }), false)
+console.log('page v4 text leading image: bounded raster-only, no icon/avatar/primary promotion passed')
