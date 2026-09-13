@@ -282,3 +282,5 @@ uninstall.
 Managed source signing vectors are in [conformance/managed-source.mjs](../conformance/managed-source.mjs).
 
 Local wallet signed payload vectors: [local-wallet.v1.json](local-wallet.v1.json), exercised by `conformance/local-wallet.mjs`.
+
+- `local-work-settlement.v1.json` covers the closed durable signed snapshot and forbidden caller fields.

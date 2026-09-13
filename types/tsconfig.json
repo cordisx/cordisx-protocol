@@ -162,6 +162,8 @@
     "plugin-http.v3.test.ts",
     "local-wallet.v1.d.ts",
     "plugin-http.v4.d.ts",
-    "plugin-http.v4.test.ts"
+    "plugin-http.v4.test.ts",
+    "local-work-settlement.v1.d.ts",
+    "local-work-settlement.v1.test.ts"
   ]
 }

@@ -298,3 +298,5 @@ behavior require Host evidence.
 - `plugin-http-v2.mjs`: public session partitions reject secrets and caller native identities.
 
 `managed-source.mjs` checks canonical payload bytes, strict binding, expiry and Ed25519 pin separation. Host-owned actual Native identity, provisioning and usage ledger reading require Host evidence.
+
+- `node conformance/local-work-settlement.mjs` checks durable payload version isolation, signatures and exact receipt pins.

@@ -627,3 +627,5 @@ Agent task permission v1: [declarations](agent-task-permission.v1.schema.json), 
 ## Host-profile local wallet v1
 
 `local-wallet.v1.schema.json` closes enrollment, local assertions, classified work observations, challenges and results. See [HTTP v4](../.agents/docs/plugin-http/v4.md) for signing and ownership requirements.
+
+- [Durable work settlement v1](local-work-settlement.v1.schema.json): closed Host-signed admitted snapshot; independent of leased local wallet work.

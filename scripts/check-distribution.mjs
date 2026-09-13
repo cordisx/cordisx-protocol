@@ -57,6 +57,13 @@ try {
     join(consumer, 'consumer.ts'),
     `import type { HttpClientV3 } from '@cordisx/protocol/plugin-http/v3'
 import type { HttpClientV4 } from '@cordisx/protocol/plugin-http/v4'
+import type { LocalWorkSettlementV1 } from '@cordisx/protocol/local-work-settlement/v1'
+import { localWorkSettlementReceipt } from '@cordisx/protocol/local-work-settlement/v1'
+declare const settlement: LocalWorkSettlementV1
+settlement.settle({origin:'http://127.0.0.1:3000',sourceId:'source',instanceId:'instance',audience:'local-work-income'})
+// @ts-expect-error No leased baseline in durable settlement
+settlement.settle({origin:'http://127.0.0.1:3000',sourceId:'source',instanceId:'instance',audience:'local-work-income',baseline:true})
+void localWorkSettlementReceipt
 import { localWalletBytes } from '@cordisx/protocol/local-wallet/v1'
 declare const localHttp: HttpClientV4
 declare const localConnection: Parameters<HttpClientV4['enrollLocalWallet']>[0]['connection']

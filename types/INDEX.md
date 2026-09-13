@@ -167,3 +167,5 @@ the specification and [schema index](../schemas/README.md).
 
 | `local-wallet/v1` | `local-wallet.v1.d.ts` | Host-profile local wallet enrollment, signatures and classified work |
 | `plugin-http/v4` | `plugin-http.v4.d.ts` | Fresh original-account enrollment and local wallet operations |
+
+- `local-work-settlement/v1`: [types](local-work-settlement.v1.d.ts), [specification](../.agents/docs/local-work-settlement/v1.md), [receipt pin validation](../runtime/local-work-settlement.v1.js).

@@ -137,3 +137,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Managed local sources and HTTP v3](plugin-http/v3.md): pinned local source identity and classified work submission.
 
 - [Plugin HTTP v4: Host-profile local wallet authority](plugin-http/v4.md)
+
+- [Durable admitted work settlement v1](local-work-settlement/v1.md)
