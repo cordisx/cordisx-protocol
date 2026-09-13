@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/isolated-game-ui-snapshot.v1.schema.json",
+  "title": "Isolated game UI snapshot v1",
+  "$comment": "Semantic checks: at most 262144 UTF8 bytes, finite JSON, depth <=16, unique participant seatIndex values. Match cannot change or sequence regress; equal sequence permits only theme changes. Owner flags are presentation only. Avatar decoding failure requires a UI fallback, never external fetching.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["matchId", "sequence", "observation", "status", "canAct", "readOnly", "theme"],
+  "properties": {
+    "matchId": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "sequence": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+    "observation": { "$ref": "isolated-game-ui-request.v1.schema.json#/$defs/json" },
+    "status": { "type": "string" },
+    "canAct": { "type": "boolean" },
+    "readOnly": { "type": "boolean" },
+    "theme": { "enum": ["light", "dark"] },
+    "roomActions": {
+      "type": "array",
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": { "enum": ["ready", "cancel-ready", "start", "funding", "next-round"] }
+    },
+    "participants": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["seatIndex", "name", "kind", "isOwner"],
+        "properties": {
+          "seatIndex": { "type": "integer", "minimum": 0, "maximum": 31 },
+          "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+          "kind": { "enum": ["human", "agent", "bot"] },
+          "isOwner": { "type": "boolean" },
+          "avatar": {
+            "type": "string",
+            "maxLength": 65536,
+            "pattern": "^data:image/(?:png|jpeg|webp);base64,(?=[A-Za-z0-9+/])(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?(?![\\s\\S])"
+          }
+        }
+      }
+    }
+  }
+}

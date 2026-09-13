@@ -60,3 +60,8 @@ into a derived opaque connection and removes the field from the returned
 response. There is no public secret-string input or cross-origin destination.
 The endpoint must put the token only in that field; duplicated or encoded
 secrets elsewhere in a server response are outside this extraction guarantee.
+
+The successor [Plugin HTTP v2](v2.md) adds opt-in secure session retention.
+V1 lifecycle and reauthorization semantics remain unchanged.
+
+See [v2 retained sessions](v2.md) and [v3 managed local sources](v3.md). v1/v2 remain frozen.

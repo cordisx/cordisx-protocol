@@ -55,7 +55,38 @@ try {
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
   writeFileSync(
     join(consumer, 'consumer.ts'),
-    `import type { DialogsV1 } from '@cordisx/protocol/dialogs/v1'
+    `import type { HttpClientV3 } from '@cordisx/protocol/plugin-http/v3'
+declare const managedHttp: HttpClientV3
+const managedBinding = { origin: 'http://127.0.0.1:3000', sourceId: 'source', instanceId: 'instance', audience: 'source-account' } as const
+managedHttp.connectAccount(managedBinding)
+managedHttp.submitWorkUsage({ ...managedBinding, audience: 'work-income', baseline: true })
+// @ts-expect-error usage/amount cannot be submitted by a page
+managedHttp.submitWorkUsage({ ...managedBinding, audience: 'work-income', amount: 123 })
+import { managedSourceBytes } from '@cordisx/protocol/managed-source/v1'
+managedSourceBytes(managedBinding)
+import type { PageHeaderActionV4 } from '@cordisx/protocol/page/v4'
+import type { CurrentUserProfileV1, CurrentUserV1 } from '@cordisx/protocol/current-user/v1'
+const localUserProfile = { subject: 'host:opaque', displayName: 'Player' } satisfies CurrentUserProfileV1
+declare const currentUser: CurrentUserV1
+currentUser.read().then(result => result.status === 'available' ? result.profile.subject : result.reason)
+currentUser.subscribe(result => result.status)
+// @ts-expect-error native credentials never appear in the display profile
+const tokenUserProfile = { ...localUserProfile, accessToken: 'private' } satisfies CurrentUserProfileV1
+void tokenUserProfile
+import type { GameUiClientV1, GameUiParticipantV1, GameUiSeatV1, GameUiSnapshotV1 } from '@cordisx/protocol/isolated-game-ui/v1'
+const gameParticipant = { seatIndex: 0, name: 'Player', kind: 'human', isOwner: true } satisfies GameUiParticipantV1
+const gameSnapshot = { matchId: 'match', sequence: 0, observation: {}, status: 'waiting', canAct: false, readOnly: false, theme: 'light', participants: [gameParticipant] } satisfies GameUiSnapshotV1
+declare const gameSeat: GameUiSeatV1
+gameSeat.publish(gameSnapshot)
+declare const gameClient: GameUiClientV1
+gameClient.subscribe(snapshot => snapshot.participants?.[0].seatIndex satisfies number | undefined)
+// @ts-expect-error participant metadata excludes account identity
+const privateGameParticipant = { ...gameParticipant, accountId: 'private' } satisfies GameUiParticipantV1
+void privateGameParticipant
+import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'
+declare const form: SchemaFormOptionsV1
+form.onChange({ value: {}, valid: true, issues: [] })
+import type { DialogsV1 } from '@cordisx/protocol/dialogs/v1'
 declare const dialogs: DialogsV1
 dialogs.confirm({ kind: 'leave', title: 'Leave room?', confirmLabel: 'Leave', run: async () => {} }).then(result => result.status)
 import type { NotificationsV1 } from '@cordisx/protocol/notifications/v1'
@@ -206,6 +237,11 @@ rasterImage.mediaType satisfies 'image/png'
 generationArtifact.format satisfies 'browser-esm-graph'
 const localizedChoice = { value: 'mod-enter', label: { key: 'composer.shortcut.mod-enter', fallback: 'Command/Ctrl+Enter sends' } } satisfies ManagerContentPluginConfigLocalizedChoiceV2
 localizedChoice.value satisfies string | number | boolean | null
+const installedOutlinedAction = { id: 'create', label: { key: 'create' }, command: { id: 'create' }, presentation: 'primary', variant: 'outlined' } satisfies PageHeaderActionV4
+installedOutlinedAction.variant satisfies 'outlined'
+// @ts-expect-error outlined styling requires explicit primary presentation
+const invalidOutlinedIcon = { id: 'x', label: { key: 'x' }, command: { id: 'x' }, variant: 'outlined' } satisfies PageHeaderActionV4
+void invalidOutlinedIcon
 const installedApprovalRouteScope = { kind: 'host-route-param', routeId: 'room-session-detail', param: 'sessionId' } satisfies PluginManifestHostRouteSessionScopeBindingV6
 const installedManifestV6 = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v6.schema.json', schemaVersion: 6, id: 'chatroom', capabilities: [{ name: 'approvals.request', required: false, scope: { sessionIds: installedApprovalRouteScope } }], services: [] } satisfies PluginRuntimeManifestV6
 installedManifestV6.schemaVersion satisfies 6

@@ -128,3 +128,10 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Notifications v1](notifications-v1.md): owner-bound messages, actions and user suppression policy.
 
 - [Dialogs v1](dialogs-v1.md): owner-bound modal bodies with structured Host chrome.
+
+- [Embedded schema form](schema-form.md): shared controlled form bodies.
+- [Current user display profile v1](current-user.md): bounded read-only display metadata and opaque local subject, with no credential or identity attestation.
+
+- [Isolated game UI v1](isolated-game-ui.md): experimental HTML resource and snapshot/action bridge, with explicit trust limitations.
+
+- [Managed local sources and HTTP v3](plugin-http/v3.md): pinned local source identity and classified work submission.

@@ -278,3 +278,5 @@ expiry/revision/digest changes, stale generations/handles, disable, and
 uninstall.
 
 [Controlled visuals](extension-point-visuals/cases.json) cover semantic action snapshots, confined renderer references and interaction scope rejection.
+
+Managed source signing vectors are in [conformance/managed-source.mjs](../conformance/managed-source.mjs).

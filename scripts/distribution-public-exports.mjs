@@ -1,9 +1,15 @@
 import { readdirSync } from 'node:fs'
 // Public import coverage for the packed consumer smoke test.
 export const expectedExports = [
+  './current-user/v1',
+  './page/v4',
   './agent-loop-control/v1',
   './plugin-http/v1',
+  './plugin-http/v2',
+  './plugin-http/v3',
+  './managed-source/v1',
   './restricted-content/v1',
+  './isolated-game-ui/v1',
   './agent-task-permission/v1',
   './plugin-manifest/v12',
   './plugin-package/v12',
@@ -77,6 +83,7 @@ export const expectedExports = [
   './navigation-collection-actions/v1',
   './notifications/v1',
   './dialogs/v1',
+  './schema-form/v1',
   './plugin-manifest/v6',
   './plugin-manifest/v7',
   './plugin-manifest/v8',
@@ -89,12 +96,20 @@ export const expectedExports = [
 ].sort()
 
 export const expectedFiles = [
+  'types/current-user.v1.d.ts',
+  'types/page.v4.d.ts',
   'types/notifications.v1.d.ts',
   'types/dialogs.v1.d.ts',
+  'types/schema-form.v1.d.ts',
+  'types/isolated-game-ui.v1.d.ts',
   'types/usage.v2.d.ts',
   'types/restricted-content.v1.d.ts',
   'types/agent-loop-control.v1.d.ts',
   'types/plugin-http.v1.d.ts',
+  'types/plugin-http.v2.d.ts',
+  'types/plugin-http.v3.d.ts',
+  'types/managed-source.v1.d.ts',
+  'runtime/managed-source.v1.js',
   'types/entity-execution-context.v1.d.ts',
   'types/entity-execution-context.v2.d.ts',
   'types/agent-task-permission.v1.d.ts',

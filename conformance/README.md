@@ -1,5 +1,8 @@
 # Conformance
 
+`current-user.mjs` checks the bounded display-only current-user result schema;
+native source, account-switch fencing, subject scope and lifecycle require Host tests.
+
 Start with the [specification topics](../.agents/docs/README.md) and their version
 maps to select a contract, then use its schemas, fixtures, and conformance suite.
 The [TypeScript index](../types/INDEX.md) maps public imports; [test vectors](../test-vectors/README.md)
@@ -285,3 +288,13 @@ Agent task permission v1: `node conformance/agent-task-permission.mjs` checks v1
 
 - `plugin-http.mjs`: connection shape and owner/origin boundaries.
 - `agent-loop-control.mjs`: deadline, completion and failed interruption outcomes.
+
+`node conformance/isolated-game-ui.mjs` checks HTML bridge request shapes;
+Host/browser tests additionally enforce execution and lifecycle boundaries.
+`node conformance/page-v4.mjs` checks closed header image/menu shapes, bounds,
+version rejection and duplicate-id semantics; native keyboard and lifecycle
+behavior require Host evidence.
+
+- `plugin-http-v2.mjs`: public session partitions reject secrets and caller native identities.
+
+`managed-source.mjs` checks canonical payload bytes, strict binding, expiry and Ed25519 pin separation. Host-owned actual Native identity, provisioning and usage ledger reading require Host evidence.

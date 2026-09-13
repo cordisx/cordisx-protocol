@@ -146,6 +146,19 @@
     "extension-point-interactions.v2.d.ts",
     "extension-point-interactions.v2.test.ts",
     "dialogs.v1.d.ts",
-    "dialogs.v1.test.ts"
+    "dialogs.v1.test.ts",
+    "schema-form.v1.d.ts",
+    "schema-form.v1.test.ts",
+    "isolated-game-ui.v1.d.ts",
+    "current-user.v1.d.ts",
+    "current-user.v1.test.ts",
+    "isolated-game-ui.v1.test.ts",
+    "page.v4.d.ts",
+    "page.v4.test.ts",
+    "plugin-http.v2.d.ts",
+    "plugin-http.v2.test.ts",
+    "managed-source.v1.d.ts",
+    "plugin-http.v3.d.ts",
+    "plugin-http.v3.test.ts"
   ]
 }
