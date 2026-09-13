@@ -146,9 +146,7 @@
         "disabled": {
           "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/disabled"
         },
-        "visual": {
-          "$ref": "#/$defs/visual"
-        },
+        "visual": {},
         "menu": {
           "type": "array",
           "minItems": 1,
@@ -166,6 +164,9 @@
         },
         "variant": {
           "const": "outlined"
+        },
+        "tooltip": {
+          "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
         }
       },
       "oneOf": [
@@ -275,13 +276,16 @@
           "then": {
             "properties": {
               "visual": {
-                "type": "object",
-                "properties": {
-                  "kind": {
-                    "const": "image"
-                  }
-                }
+                "$ref": "#/$defs/textImageVisual"
               }
+            }
+          },
+          "else": {
+            "properties": {
+              "visual": {
+                "$ref": "#/$defs/visual"
+              },
+              "tooltip": false
             }
           }
         },
@@ -387,6 +391,29 @@
           }
         }
       ]
+    },
+    "textImageVisual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "src"
+      ],
+      "properties": {
+        "kind": {
+          "const": "image"
+        },
+        "src": {
+          "$ref": "#/$defs/visual/properties/src"
+        },
+        "position": {
+          "enum": [
+            "leading",
+            "trailing"
+          ],
+          "default": "leading"
+        }
+      }
     }
   }
 }

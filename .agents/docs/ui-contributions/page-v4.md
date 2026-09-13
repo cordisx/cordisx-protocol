@@ -158,7 +158,7 @@ exclusive to primary commands. Earlier experimental Hosts and frozen versions
 1–3 reject the new presentation; consumers targeting those Hosts omit it.
 
 The matching public Host SDK exposes
-`CordisXPageControls.setHeaderActionLabel(actionId: string, label: CordisXLocalizedText): boolean`.
+`CordisXPageControls.setHeaderActionLabel(actionId: string, label: CordisXLocalizedText, ariaLabel?: CordisXLocalizedText): boolean`.
 It changes an already declared top-level command or menu trigger label in the
 current mounted standard header. Primary and text commands show it; icon commands use
 it for their accessible name and tooltip. Menu triggers also update an open
@@ -191,3 +191,31 @@ the trigger, focus, command identity and pending state. This adds no service,
 permission or account authority. Earlier experimental v4 Hosts reject this
 combination; omit `visual` and retain the numeric/text label when targeting them.
 Frozen versions 1–3 remain unchanged.
+
+### Text image position, independent tooltip and accessible label updates
+
+A text command image may declare `position: 'leading' | 'trailing'` within
+`visual: { kind: 'image', src, position }`. Omission retains the leading image.
+Trailing places the decorative image after the localized visible label; image
+failure and mounted visual updates retain that declared position. Position is
+metadata, not a new updater: visual updates may omit it or repeat the declared
+value, and a conflicting position is rejected. Other image/avatar commands,
+menu triggers and menu items retain their existing visual shape.
+
+Only text commands may declare `tooltip?: LocalizedText`. When enabled, the
+Host resolves it independently from the visible label and `ariaLabel`. A
+specified disabled reason still takes precedence; omission preserves the
+existing accessible-label tooltip. The tooltip is ordinary localized text,
+never HTML, and locale changes rerender it.
+
+The existing mounted label updater accepts an optional third `ariaLabel`.
+When provided, Host validates and clones both messages before updating either;
+each keeps the existing 16KiB UTF-8 JSON and finite scalar limits. The third
+message becomes the current accessible override. Omission retains the previous
+or declared override, and without an override the accessible name follows the
+visible label as before. This supports a numeric visible label, a complete
+localized accessible amount with its unit, and an independent action tooltip,
+without Host currency logic. Focus, pending state, command identity and owner
+lifecycle remain unchanged. Invalid accessible input leaves both labels intact.
+Earlier experimental Hosts require omitting the new metadata and third argument;
+frozen versions 1–3 and all other header presentations are unchanged.

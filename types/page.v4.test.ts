@@ -63,3 +63,26 @@ const balanceImage: PageHeaderActionV4 = {
 // @ts-expect-error text image visuals require the same bounded source field
 const missingTextImage: PageHeaderActionV4 = { ...balance, presentation: 'text', visual: { kind: 'image' } }
 void [balanceImage, missingTextImage]
+
+const trailingBalance: PageHeaderActionV4 = {
+  ...balanceImage,
+  presentation: 'text',
+  tooltip: { key: 'details', fallback: 'View details' },
+  visual: { kind: 'image', src: 'data:image/png;base64,AAAA', position: 'trailing' },
+}
+const menuPosition: PageHeaderActionV4 = {
+  ...guest,
+  // @ts-expect-error image position belongs only to text commands
+  visual: { kind: 'image', src: 'data:image/png;base64,AAAA', position: 'trailing' },
+}
+const invalidPosition: PageHeaderActionV4 = {
+  ...balanceImage,
+  presentation: 'text',
+  // @ts-expect-error text image position is bounded
+  visual: { kind: 'image', src: 'data:image/png;base64,AAAA', position: 'below' },
+}
+// @ts-expect-error independent tooltip belongs only to text commands
+const menuTooltip: PageHeaderActionV4 = { ...guest, tooltip: { key: 'details' } }
+// @ts-expect-error independent tooltip belongs only to text commands
+const primaryTooltip: PageHeaderActionV4 = { ...primary, presentation: 'primary', tooltip: { key: 'details' } }
+void [trailingBalance, menuPosition, invalidPosition, menuTooltip, primaryTooltip]

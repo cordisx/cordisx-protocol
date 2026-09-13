@@ -17,6 +17,7 @@ export type Condition =
 export type PageHeaderVisualV4 =
   | { readonly kind: 'avatar'; readonly src?: string }
   | { readonly kind: 'image'; readonly src: string }
+export type PageHeaderTextVisualV4 = Extract<PageHeaderVisualV4, { readonly kind: 'image' }> & { readonly position?: 'leading' | 'trailing' }
 export interface PageHeaderCommandV4 {
   readonly id: string
   readonly label: LocalizedText
@@ -27,13 +28,14 @@ export interface PageHeaderCommandV4 {
   readonly disabled?: { readonly value: boolean; readonly reason?: LocalizedText }
 }
 export type PageHeaderActionV4 =
-  | (PageHeaderCommandV4 & { readonly visual?: PageHeaderVisualV4; readonly menu?: never; readonly presentation?: 'icon'; readonly variant?: never })
-  | (PageHeaderCommandV4 & { readonly visual?: never; readonly menu?: never; readonly presentation: 'primary'; readonly variant?: 'outlined' })
-  | (PageHeaderCommandV4 & { readonly visual?: Extract<PageHeaderVisualV4, { readonly kind: 'image' }>; readonly menu?: never; readonly presentation: 'text'; readonly variant?: never })
+  | (PageHeaderCommandV4 & { readonly visual?: PageHeaderVisualV4; readonly menu?: never; readonly presentation?: 'icon'; readonly variant?: never; readonly tooltip?: never })
+  | (PageHeaderCommandV4 & { readonly visual?: never; readonly menu?: never; readonly presentation: 'primary'; readonly variant?: 'outlined'; readonly tooltip?: never })
+  | (PageHeaderCommandV4 & { readonly visual?: PageHeaderTextVisualV4; readonly menu?: never; readonly presentation: 'text'; readonly variant?: never; readonly tooltip?: LocalizedText })
   | (Omit<PageHeaderCommandV4, 'command'> & {
     readonly command?: never
     readonly presentation?: never
     readonly variant?: never
+    readonly tooltip?: never
     readonly visual?: PageHeaderVisualV4
     readonly menu: readonly PageHeaderCommandV4[]
   })

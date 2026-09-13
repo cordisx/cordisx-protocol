@@ -144,3 +144,38 @@ for (
   ]
 ) assert.equal(validate({ ...page, headerActions: [action] }), false)
 console.log('page v4 text leading image: bounded raster-only, no icon/avatar/primary promotion passed')
+
+for (const position of [undefined, 'leading', 'trailing']) {
+  assert.equal(
+    validate({
+      ...page,
+      headerActions: [{
+        ...command,
+        presentation: 'text',
+        ariaLabel: { key: 'amount', fallback: '0 Token' },
+        tooltip: { key: 'details', fallback: 'View details' },
+        visual: { kind: 'image', src: 'data:image/png;base64,AAAA', ...(position === undefined ? {} : { position }) },
+      }],
+    }),
+    true,
+    JSON.stringify(validate.errors),
+  )
+}
+for (
+  const action of [
+    {
+      ...command,
+      presentation: 'text',
+      visual: { kind: 'image', src: 'data:image/png;base64,AAAA', position: 'below' },
+    },
+    { ...command, presentation: 'text', tooltip: 'View details' },
+    { ...command, presentation: 'primary', tooltip: label },
+    { ...command, presentation: 'icon', tooltip: label },
+    { ...page.headerActions[0], tooltip: label },
+    { ...page.headerActions[0], visual: { kind: 'image', src: 'data:image/png;base64,AAAA', position: 'trailing' } },
+    { ...command, visual: { kind: 'image', src: 'data:image/png;base64,AAAA', position: 'trailing' } },
+    { ...command, presentation: 'text', visual: { kind: 'avatar', position: 'trailing' } },
+    { ...page.headerActions[0], menu: [{ ...command, tooltip: label }] },
+  ]
+) assert.equal(validate({ ...page, headerActions: [action] }), false, JSON.stringify(action).slice(0, 200))
+console.log('page v4 text image position and independent localized tooltip: defaults preserved, other actions rejected')
