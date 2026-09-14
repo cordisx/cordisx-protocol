@@ -55,7 +55,14 @@ try {
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
   writeFileSync(
     join(consumer, 'consumer.ts'),
-    `import type { HttpClientV3 } from '@cordisx/protocol/plugin-http/v3'
+    `import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
+declare const walletSpend: WalletSpendV1
+walletSpend.reserve({source:{serviceOrigin:'https://game.example',serverId:'game',servicePublicKey:'public'},terms:'{}',requestId:'spend:1',deadline:1})
+// @ts-expect-error No arbitrary signer
+walletSpend.sign({bytes:'anything'})
+// @ts-expect-error No caller approval/amount
+walletSpend.reserve({source:{serviceOrigin:'https://game.example',serverId:'game',servicePublicKey:'public'},terms:'{}',requestId:'spend:1',deadline:1,approved:true,amount:100})
+import type { HttpClientV3 } from '@cordisx/protocol/plugin-http/v3'
 import type { HttpClientV4 } from '@cordisx/protocol/plugin-http/v4'
 import type { LocalWorkSettlementV1 } from '@cordisx/protocol/local-work-settlement/v1'
 import { localWorkSettlementReceipt } from '@cordisx/protocol/local-work-settlement/v1'

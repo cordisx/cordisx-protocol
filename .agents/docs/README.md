@@ -139,3 +139,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Plugin HTTP v4: Host-profile local wallet authority](plugin-http/v4.md)
 
 - [Durable admitted work settlement v1](local-work-settlement/v1.md)
+
+- [Local wallet spend v1](wallet-spend/v1.md): native exact-terms authorization, bounded consumption and local commerce.

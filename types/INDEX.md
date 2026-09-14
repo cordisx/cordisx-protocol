@@ -169,3 +169,5 @@ the specification and [schema index](../schemas/README.md).
 | `plugin-http/v4` | `plugin-http.v4.d.ts` | Fresh original-account enrollment and local wallet operations |
 
 - `local-work-settlement/v1`: [types](local-work-settlement.v1.d.ts), [specification](../.agents/docs/local-work-settlement/v1.md), [receipt pin validation](../runtime/local-work-settlement.v1.js).
+
+- `wallet-spend/v1`: [types](wallet-spend.v1.d.ts), [specification](../.agents/docs/wallet-spend/v1.md), [fixture](../test-vectors/wallet-spend.v1.json).

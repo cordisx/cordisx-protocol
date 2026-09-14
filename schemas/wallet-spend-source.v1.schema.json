@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/wallet-spend-source.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "serviceOrigin",
+    "servicePublicKey",
+    "serverId"
+  ],
+  "properties": {
+    "serviceOrigin": {
+      "type": "string",
+      "pattern": "^(https://[^/?#@]+|http://(localhost|127\\.0\\.0\\.1|\\[::1\\])(:[0-9]+)?)$"
+    },
+    "servicePublicKey": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{59}$"
+    },
+    "serverId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    }
+  }
+}
