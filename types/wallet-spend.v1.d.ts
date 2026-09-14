@@ -43,7 +43,7 @@ export interface WalletPurchaseInputV1 extends WalletPurchaseOperationV1 {
 export interface WalletSpendV1 {
   readonly contract: 'cordisx.wallet-spend/v1'
   identity(): Promise<WalletSpendResultV1<WalletSpendIdentityV1>>
-  /** HTTPS metadata then native origin/key approval. Does not select a wallet or funding authority. */
+  /** HTTPS metadata/native onboarding; existing exact active owner operator loopback HTTP pins can be reverified, never added or rotated. No wallet/funding authority selection. */
   authorizeSource(input: {
     readonly serviceOrigin: string
     readonly deadline: number
