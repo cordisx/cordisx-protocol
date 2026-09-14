@@ -25,8 +25,10 @@ function text(value) {
 export function managedSourceBinding(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('invalid managed source binding')
   const origin = text(value.origin), url = new URL(origin)
-  if (url.origin !== origin || url.protocol !== 'http:' || !['127.0.0.1', '[::1]'].includes(url.hostname)) {
-    throw new Error('managed source must be a canonical pinned local origin')
+  const local = url.protocol === 'http:' && ['127.0.0.1', '[::1]'].includes(url.hostname)
+  const remoteAccount = url.protocol === 'https:' && value.audience === 'source-account'
+  if (url.origin !== origin || (!local && !remoteAccount)) {
+    throw new Error('managed source requires pinned loopback or HTTPS account origin')
   }
   if (!['source-account', 'work-income'].includes(value.audience)) throw new Error('invalid managed source audience')
   return { origin, sourceId: text(value.sourceId), instanceId: text(value.instanceId), audience: value.audience }

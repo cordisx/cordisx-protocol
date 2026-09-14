@@ -47,3 +47,19 @@ assert.equal(verify(null, bytes, key.publicKey, signature), true)
 assert.equal(verify(null, managedSourceBytes({ ...challenge, sourceId: 'other' }), key.publicKey, signature), false)
 assert.equal(verify(null, bytes, generateKeyPairSync('ed25519').publicKey, signature), false)
 console.log('Managed source binding, canonicalization, signature and expiry vectors passed')
+const remote = { ...binding, origin: 'https://game.example' }
+assert.deepEqual(managedSourceBinding(remote), remote)
+assert.equal(validate({ ...challenge, ...remote }), true)
+for (
+  const origin of [
+    'http://game.example',
+    'https://game.example/',
+    'https://user@game.example',
+    'https://game.example?x=1',
+  ]
+) {
+  assert.throws(() => managedSourceBinding({ ...remote, origin }))
+}
+assert.throws(() => managedSourceBinding({ ...remote, audience: 'work-income' }))
+assert.equal(validate({ ...challenge, ...remote, audience: 'work-income' }), false)
+assert.throws(() => managedSourceChallenge({ ...challenge, ...remote }, binding, 10000))
