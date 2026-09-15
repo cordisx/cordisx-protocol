@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-oauth-status.v1.schema.json",
+  "title": "CordisX CLIProxyAPI OAuth Session Status v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "sessionId", "state"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-oauth-status.v1.schema.json"
+    },
+    "contract": { "const": "cordisx.managed-service-cli-proxy-oauth-status/v1" },
+    "schemaVersion": { "const": 1 },
+    "binding": { "$ref": "managed-service-common.v1.schema.json#/$defs/binding" },
+    "sessionId": { "$ref": "managed-service-common.v1.schema.json#/$defs/opaqueId" },
+    "state": {
+      "type": "string",
+      "enum": ["pending", "wait", "completed", "error", "cancelled", "unknown"]
+    },
+    "error": { "$ref": "managed-service-common.v1.schema.json#/$defs/diagnostic" },
+    "sequence": { "$ref": "managed-service-common.v1.schema.json#/$defs/sequence" }
+  }
+}

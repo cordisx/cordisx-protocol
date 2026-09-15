@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-projection.v3.schema.json",
+  "title": "CordisX Manager Settings Navigation Group Projection v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "catalog",
+    "contributions"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-projection.v3.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.manager-settings-navigation-projection/v3"
+    },
+    "schemaVersion": {
+      "const": 3
+    },
+    "catalog": {
+      "$ref": "manager-settings-navigation-groups.v2.schema.json"
+    },
+    "contributions": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "$ref": "#/$defs/contribution"
+      }
+    }
+  },
+  "$defs": {
+    "versionedV9": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "$schema",
+        "schemaVersion"
+      ],
+      "properties": {
+        "kind": {
+          "const": "versioned"
+        },
+        "$schema": {
+          "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json"
+        },
+        "schemaVersion": {
+          "const": 9
+        }
+      }
+    },
+    "legacyUnversioned": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "const": "legacy-unversioned"
+        }
+      }
+    },
+    "contributionBase": {
+      "type": "object",
+      "required": [
+        "owner",
+        "id",
+        "surfaceProvenance",
+        "insertionGroup",
+        "effectiveGroup",
+        "assignment",
+        "order"
+      ],
+      "properties": {
+        "owner": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localId"
+        },
+        "id": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localId"
+        },
+        "surfaceProvenance": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/versionedV9"
+            },
+            {
+              "$ref": "#/$defs/versionedV11"
+            },
+            {
+              "$ref": "#/$defs/legacyUnversioned"
+            }
+          ]
+        },
+        "insertionGroup": {
+          "enum": [
+            "before-settings",
+            "after-settings"
+          ]
+        },
+        "declaredGroup": true,
+        "effectiveGroup": {
+          "$ref": "manager-settings-navigation-groups.v2.schema.json#/$defs/groupId"
+        },
+        "assignment": {
+          "enum": [
+            "declared",
+            "legacy-fallback",
+            "unassigned-fallback"
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "minimum": -100000,
+          "maximum": 100000
+        }
+      }
+    },
+    "unassignedContribution": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/contributionBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner",
+            "id",
+            "surfaceProvenance",
+            "insertionGroup",
+            "effectiveGroup",
+            "assignment",
+            "order"
+          ],
+          "properties": {
+            "owner": true,
+            "id": true,
+            "surfaceProvenance": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/versionedV9"
+                },
+                {
+                  "$ref": "#/$defs/versionedV11"
+                }
+              ]
+            },
+            "insertionGroup": true,
+            "declaredGroup": false,
+            "effectiveGroup": {
+              "const": "other"
+            },
+            "assignment": {
+              "const": "unassigned-fallback"
+            },
+            "order": true
+          }
+        }
+      ]
+    },
+    "legacyContribution": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/contributionBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner",
+            "id",
+            "surfaceProvenance",
+            "insertionGroup",
+            "effectiveGroup",
+            "assignment",
+            "order"
+          ],
+          "properties": {
+            "owner": true,
+            "id": true,
+            "surfaceProvenance": {
+              "$ref": "#/$defs/legacyUnversioned"
+            },
+            "insertionGroup": true,
+            "declaredGroup": false,
+            "effectiveGroup": {
+              "const": "other"
+            },
+            "assignment": {
+              "const": "legacy-fallback"
+            },
+            "order": true
+          }
+        }
+      ]
+    },
+    "contribution": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/declaredV9Contribution"
+        },
+        {
+          "$ref": "#/$defs/declaredV11Contribution"
+        },
+        {
+          "$ref": "#/$defs/unassignedContribution"
+        },
+        {
+          "$ref": "#/$defs/legacyContribution"
+        }
+      ]
+    },
+    "versionedV11": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "$schema",
+        "schemaVersion"
+      ],
+      "properties": {
+        "kind": {
+          "const": "versioned"
+        },
+        "$schema": {
+          "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v11.schema.json"
+        },
+        "schemaVersion": {
+          "const": 11
+        }
+      }
+    },
+    "declaredV9Contribution": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/contributionBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner",
+            "id",
+            "surfaceProvenance",
+            "insertionGroup",
+            "declaredGroup",
+            "effectiveGroup",
+            "assignment",
+            "order"
+          ],
+          "properties": {
+            "owner": true,
+            "id": true,
+            "surfaceProvenance": {
+              "$ref": "#/$defs/versionedV9"
+            },
+            "insertionGroup": true,
+            "declaredGroup": {
+              "$ref": "manager-settings-navigation-groups.v1.schema.json#/$defs/groupId"
+            },
+            "effectiveGroup": {
+              "$ref": "manager-settings-navigation-groups.v1.schema.json#/$defs/groupId"
+            },
+            "assignment": {
+              "const": "declared"
+            },
+            "order": true
+          }
+        }
+      ]
+    },
+    "declaredV11Contribution": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/contributionBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner",
+            "id",
+            "surfaceProvenance",
+            "insertionGroup",
+            "declaredGroup",
+            "effectiveGroup",
+            "assignment",
+            "order"
+          ],
+          "properties": {
+            "owner": true,
+            "id": true,
+            "surfaceProvenance": {
+              "$ref": "#/$defs/versionedV11"
+            },
+            "insertionGroup": true,
+            "declaredGroup": {
+              "$ref": "manager-settings-navigation-groups.v2.schema.json#/$defs/groupId"
+            },
+            "effectiveGroup": {
+              "$ref": "manager-settings-navigation-groups.v2.schema.json#/$defs/groupId"
+            },
+            "assignment": {
+              "const": "declared"
+            },
+            "order": true
+          }
+        }
+      ]
+    }
+  }
+}

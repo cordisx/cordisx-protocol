@@ -1,11 +1,11 @@
 # Manager settings navigation protocol
 
 This document remains normative for the original flat projection. The additive
-Host-owned visual grouping successor is specified in
-[`groups-v1.md`](./groups-v1.md); it uses surface contribution v9 and Host
-extension-point catalog v9 without changing v5-v8 documents. That specification
-also defines the exact version pair for public Slot registration and the
-additive runtime-provenance projection v2.
+Host-owned visual grouping successors are specified in
+[`groups-v1.md`](./groups-v1.md) and [`groups-v2.md`](./groups-v2.md). Groups v1
+uses surface contribution v9 and catalog v9 for the frozen four-group catalog.
+Groups v2 adds `external-accounts` through surface contribution v11, catalog
+v11, and runtime-provenance projection v3 without changing older documents.
 
 This specification is normative for plugin-contributed top-level destinations
 in the CordisX Manager's settings-adjacent navigation group. It is

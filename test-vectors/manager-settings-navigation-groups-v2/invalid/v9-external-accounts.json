@@ -1,0 +1,10 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    {
+      "op": "set",
+      "path": "registrations.0.item.navigationGroup.id",
+      "value": "external-accounts"
+    }
+  ]
+}

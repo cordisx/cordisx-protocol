@@ -132,7 +132,9 @@ extension-point diagnostics.
 Manager Settings navigation runtime provenance conformance distinguishes an
 exact surface-v9 Slot option pair from a fully omitted legacy identity, rejects
 half-versioned or shape-inferred registration, and validates the additive
-projection-v2 provenance/assignment union.
+projection-v2 provenance/assignment union. Groups v2 conformance adds the exact
+five-group order, surface-v11 `external-accounts` acceptance, continued v9
+rejection, and projection-v3 v9/v11/legacy provenance and fallback behavior.
 Channel runtime conformance covers manifest-v2 compatibility, manifest-v3
 service configuration declarations, capability identity/family scopes,
 sourced user-only input, complete binding lineage, redacted runtime and config
@@ -280,6 +282,7 @@ Agent detail navigation [v2](../.agents/docs/agent-detail-navigation/v2.md) adds
 capability ownership/lifetime behavior; v1 conformance remains unchanged.
 
 `node conformance/navigation-parity.mjs` checks closed Settings/link shapes and revalidation semantics; native navigation and editor parity remain Host integration gates.
+`node conformance/manager-self-configuration.mjs` checks owner-derived eligibility, caller and generation revalidation, receiver failure, and no successful stale dispatch; Manager rendering remains a Host integration gate.
 
 Agent task permission v1: `node conformance/agent-task-permission.mjs` checks v12 shape closure, old route coexistence, sticky required-task provenance, Host registration readback, root and child routing, independent exact request/answer policy gates, revocation and late-answer fencing. The reference model is not Host/native adoption evidence.
 

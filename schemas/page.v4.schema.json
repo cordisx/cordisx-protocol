@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v4.schema.json",
+  "title": "CordisX Page Metadata v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "id",
+    "title",
+    "description"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/page.v4.schema.json"
+    },
+    "schemaVersion": {
+      "const": 4
+    },
+    "id": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localId"
+    },
+    "title": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+    },
+    "description": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+    },
+    "icon": {
+      "$ref": "brand-icon.v1.schema.json"
+    },
+    "chrome": {
+      "enum": [
+        "standard",
+        "body-only"
+      ],
+      "default": "standard"
+    },
+    "breadcrumbs": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+      }
+    },
+    "tabs": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "ui-common.v1.schema.json#/$defs/localId"
+          },
+          "label": {
+            "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+          },
+          "icon": {
+            "$ref": "ui-common.v1.schema.json#/$defs/iconToken"
+          }
+        }
+      }
+    },
+    "headerActions": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "$ref": "#/$defs/headerAction"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "chrome": {
+            "const": "body-only"
+          }
+        },
+        "required": [
+          "chrome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "breadcrumbs": false,
+          "tabs": false,
+          "headerActions": false
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "headerAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "command"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localId"
+        },
+        "label": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        "ariaLabel": {
+          "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        "icon": {
+          "$ref": "ui-common.v1.schema.json#/$defs/iconToken"
+        },
+        "command": {
+          "$ref": "ui-common.v1.schema.json#/$defs/commandReference"
+        },
+        "when": {
+          "$ref": "ui-common.v1.schema.json#/$defs/condition"
+        },
+        "disabled": {
+          "$ref": "ui-common.v1.schema.json#/$defs/disabled"
+        }
+      }
+    }
+  }
+}

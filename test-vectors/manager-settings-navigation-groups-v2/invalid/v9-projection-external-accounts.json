@@ -1,0 +1,15 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    {
+      "op": "set",
+      "path": "projection.contributions.0.declaredGroup",
+      "value": "external-accounts"
+    },
+    {
+      "op": "set",
+      "path": "projection.contributions.0.effectiveGroup",
+      "value": "external-accounts"
+    }
+  ]
+}
