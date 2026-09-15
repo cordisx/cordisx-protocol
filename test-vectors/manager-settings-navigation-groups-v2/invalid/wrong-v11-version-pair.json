@@ -1,0 +1,10 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    {
+      "op": "set",
+      "path": "registrations.1.options.schemaVersion",
+      "value": 10
+    }
+  ]
+}

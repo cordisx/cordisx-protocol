@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v14.schema.json",
+  "title": "CordisX Explicit Local Plugin Package Manifest v14",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "version", "entry", "distribution", "compatibility", "dependencies", "runtimeManifest"],
+  "properties": {
+    "$schema": { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-package.v14.schema.json" },
+    "schemaVersion": { "const": 14 },
+    "id": { "$ref": "plugin-package.v13.schema.json#/properties/id" },
+    "version": { "$ref": "plugin-package.v13.schema.json#/properties/version" },
+    "entry": { "$ref": "plugin-package.v13.schema.json#/properties/entry" },
+    "readme": { "$ref": "plugin-package.v13.schema.json#/properties/readme" },
+    "canonicalSource": { "$ref": "plugin-package.v13.schema.json#/properties/canonicalSource" },
+    "distribution": { "$ref": "plugin-package.v13.schema.json#/properties/distribution" },
+    "compatibility": { "$ref": "plugin-package.v13.schema.json#/properties/compatibility" },
+    "dependencies": { "$ref": "plugin-package.v13.schema.json#/properties/dependencies" },
+    "runtimeManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema", "digest"],
+      "properties": {
+        "path": { "$ref": "plugin-package.v13.schema.json#/properties/runtimeManifest/properties/path" },
+        "schema": {
+          "oneOf": [
+            { "$ref": "plugin-package.v13.schema.json#/properties/runtimeManifest/properties/schema" },
+            { "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v14.schema.json" }
+          ]
+        },
+        "digest": { "$ref": "plugin-package.v13.schema.json#/properties/runtimeManifest/properties/digest" }
+      }
+    },
+    "entityTemplates": { "$ref": "plugin-package.v13.schema.json#/properties/entityTemplates" }
+  }
+}

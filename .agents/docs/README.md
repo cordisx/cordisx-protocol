@@ -63,9 +63,12 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
   binding identities, redacted state, and launcher-side dispatch authorization.
 - [Connector service](connector-service/README.md): descriptors, bound public
   clients, authorization, ordered subscriptions, and disposal.
+- [Managed service](managed-service/README.md): owner-bound projections,
+  explicit-click login/logout controls, definition actions, and compatibility.
 
 ## UI contracts
 
+- [Model Providers V1](model-providers-v1.md): experimental provider catalog and supplemental selector contributions.
 - [Structured UI](ui-contributions/README.md): contributions, commands, routes,
   pages, outlets, and their compatibility boundaries.
 - [Extension points](extension-points/README.md),
@@ -87,6 +90,8 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
   effective theme projection, generation-scoped cleanup, and contained rendering.
 - [Raster images](raster-image/README.md): bounded PNG snapshots after
   product-specific composition, without URL, SVG, DOM, callback, or product semantics.
+- [Brand icons](brand-icon/README.md): Host semantic tokens or structured,
+  validated raster-image/v1 snapshots for Host-owned branded surfaces.
 - [Icon themes](icon-theme/README.md),
   [reasoning presentation](reasoning-intensity-presentation/README.md),
   [session backdrops](session-backdrop-presentation/README.md), and
@@ -110,6 +115,7 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Visual interactions v1](extension-point-interactions-v1.md): independent entity drag and controlled menus.
 
 - [Entity settings navigation](entity-settings-navigation/README.md): exact definition settings availability and opening.
+- [Manager self-configuration](manager-self-configuration/README.md): owner-derived opening of a plugin's own actionable configuration.
 - [Route link resolution](route-link-resolution/README.md): authenticated canonical route links.
 - [Controlled Markdown editor](controlled-markdown-editor/README.md): controlled editing and selection capability.
 

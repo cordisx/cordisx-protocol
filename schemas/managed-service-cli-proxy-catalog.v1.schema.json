@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-catalog.v1.schema.json",
+  "title": "CordisX Renderer-safe CLIProxyAPI Provider Catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "sequence", "observedAt", "revision", "serviceGeneration", "providers"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-catalog.v1.schema.json"
+    },
+    "contract": { "const": "cordisx.managed-service-cli-proxy-catalog/v1" },
+    "schemaVersion": { "const": 1 },
+    "binding": { "$ref": "managed-service-common.v1.schema.json#/$defs/binding" },
+    "sequence": { "$ref": "managed-service-common.v1.schema.json#/$defs/sequence" },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "revision": { "$ref": "managed-service-common.v1.schema.json#/$defs/revision" },
+    "serviceGeneration": { "$ref": "managed-service-common.v1.schema.json#/$defs/generation" },
+    "providers": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "displayName", "enabled", "endpoint", "health", "auth", "models"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$" },
+          "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "enabled": { "type": "boolean" },
+          "endpoint": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["origin", "secretConfigured"],
+            "properties": {
+              "origin": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "secretConfigured": { "type": "boolean" }
+            }
+          },
+          "health": { "$ref": "managed-service-common.v1.schema.json#/$defs/healthLevel" },
+          "auth": { "$ref": "managed-service-common.v1.schema.json#/$defs/authState" },
+          "lastError": { "$ref": "managed-service-common.v1.schema.json#/$defs/diagnostic" },
+          "models": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["mappings"],
+            "properties": {
+              "mappings": {
+                "type": "array",
+                "maxItems": 256,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["sourceModelId", "modelId", "displayName", "enabled", "isDefault"],
+                  "properties": {
+                    "sourceModelId": { "type": "string", "minLength": 1, "maxLength": 256 },
+                    "modelId": { "type": "string", "minLength": 1, "maxLength": 256 },
+                    "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+                    "enabled": { "type": "boolean" },
+                    "isDefault": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

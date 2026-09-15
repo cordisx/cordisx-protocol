@@ -1,0 +1,10 @@
+{
+  "base": "valid/grouped.json",
+  "operations": [
+    {
+      "op": "set",
+      "path": "catalog.groups.3.order",
+      "value": 401
+    }
+  ]
+}

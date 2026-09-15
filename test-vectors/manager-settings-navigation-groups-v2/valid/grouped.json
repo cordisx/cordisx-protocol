@@ -1,0 +1,297 @@
+{
+  "catalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v2.schema.json",
+    "contract": "cordisx.manager-settings-navigation-groups/v2",
+    "schemaVersion": 2,
+    "groups": [
+      {
+        "id": "resources",
+        "label": {
+          "key": "manager.navigation.resources",
+          "fallback": "Resources"
+        },
+        "order": 100
+      },
+      {
+        "id": "development",
+        "label": {
+          "key": "manager.navigation.development",
+          "fallback": "Development"
+        },
+        "order": 200
+      },
+      {
+        "id": "collaboration",
+        "label": {
+          "key": "manager.navigation.collaboration",
+          "fallback": "Collaboration"
+        },
+        "order": 300
+      },
+      {
+        "id": "external-accounts",
+        "label": {
+          "key": "manager.navigation.external-accounts",
+          "fallback": "External accounts"
+        },
+        "order": 400
+      },
+      {
+        "id": "other",
+        "label": {
+          "key": "manager.navigation.other",
+          "fallback": "Other"
+        },
+        "order": 1000
+      }
+    ],
+    "fallbackGroup": "other"
+  },
+  "extensionCatalog": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/host-extension-point-catalog.v11.schema.json",
+    "schemaVersion": 11,
+    "points": [
+      {
+        "id": "manager.settings.navigation-items",
+        "kind": "surface",
+        "title": {
+          "key": "manager.navigation.title",
+          "fallback": "Manager navigation items"
+        },
+        "description": {
+          "key": "manager.navigation.description",
+          "fallback": "Structured grouped Manager destinations."
+        },
+        "icon": "host:routes",
+        "payloadFamily": "manager-settings-navigation-item-v2",
+        "maturity": "stable",
+        "adapterSupport": "supported",
+        "navigationGroups": {
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v2.schema.json",
+          "contract": "cordisx.manager-settings-navigation-groups/v2",
+          "schemaVersion": 2,
+          "groups": [
+            {
+              "id": "resources",
+              "label": {
+                "key": "manager.navigation.resources",
+                "fallback": "Resources"
+              },
+              "order": 100
+            },
+            {
+              "id": "development",
+              "label": {
+                "key": "manager.navigation.development",
+                "fallback": "Development"
+              },
+              "order": 200
+            },
+            {
+              "id": "collaboration",
+              "label": {
+                "key": "manager.navigation.collaboration",
+                "fallback": "Collaboration"
+              },
+              "order": 300
+            },
+            {
+              "id": "external-accounts",
+              "label": {
+                "key": "manager.navigation.external-accounts",
+                "fallback": "External accounts"
+              },
+              "order": 400
+            },
+            {
+              "id": "other",
+              "label": {
+                "key": "manager.navigation.other",
+                "fallback": "Other"
+              },
+              "order": 1000
+            }
+          ],
+          "fallbackGroup": "other"
+        }
+      }
+    ]
+  },
+  "registrations": [
+    {
+      "owner": "legacy-v9",
+      "options": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json",
+        "schemaVersion": 9,
+        "name": "manager.settings.navigation-items",
+        "id": "plugins",
+        "group": "before-settings",
+        "order": 100
+      },
+      "item": {
+        "route": {
+          "id": "plugins"
+        },
+        "navigationGroup": {
+          "id": "resources"
+        }
+      }
+    },
+    {
+      "owner": "accounts",
+      "options": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v11.schema.json",
+        "schemaVersion": 11,
+        "name": "manager.settings.navigation-items",
+        "id": "manager",
+        "group": "before-settings",
+        "order": 200
+      },
+      "item": {
+        "route": {
+          "id": "manager"
+        },
+        "navigationGroup": {
+          "id": "external-accounts"
+        }
+      }
+    },
+    {
+      "owner": "unassigned",
+      "options": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v11.schema.json",
+        "schemaVersion": 11,
+        "name": "manager.settings.navigation-items",
+        "id": "status",
+        "group": "after-settings",
+        "order": 50
+      },
+      "item": {
+        "route": {
+          "id": "status"
+        }
+      }
+    },
+    {
+      "owner": "legacy",
+      "options": {
+        "name": "manager.settings.navigation-items",
+        "id": "legacy-page",
+        "group": "after-settings",
+        "order": 0
+      },
+      "item": {
+        "route": {
+          "id": "legacy-page"
+        }
+      }
+    }
+  ],
+  "projection": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-projection.v3.schema.json",
+    "contract": "cordisx.manager-settings-navigation-projection/v3",
+    "schemaVersion": 3,
+    "catalog": {
+      "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v2.schema.json",
+      "contract": "cordisx.manager-settings-navigation-groups/v2",
+      "schemaVersion": 2,
+      "groups": [
+        {
+          "id": "resources",
+          "label": {
+            "key": "manager.navigation.resources",
+            "fallback": "Resources"
+          },
+          "order": 100
+        },
+        {
+          "id": "development",
+          "label": {
+            "key": "manager.navigation.development",
+            "fallback": "Development"
+          },
+          "order": 200
+        },
+        {
+          "id": "collaboration",
+          "label": {
+            "key": "manager.navigation.collaboration",
+            "fallback": "Collaboration"
+          },
+          "order": 300
+        },
+        {
+          "id": "external-accounts",
+          "label": {
+            "key": "manager.navigation.external-accounts",
+            "fallback": "External accounts"
+          },
+          "order": 400
+        },
+        {
+          "id": "other",
+          "label": {
+            "key": "manager.navigation.other",
+            "fallback": "Other"
+          },
+          "order": 1000
+        }
+      ],
+      "fallbackGroup": "other"
+    },
+    "contributions": [
+      {
+        "owner": "legacy-v9",
+        "id": "plugins",
+        "surfaceProvenance": {
+          "kind": "versioned",
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v9.schema.json",
+          "schemaVersion": 9
+        },
+        "insertionGroup": "before-settings",
+        "declaredGroup": "resources",
+        "effectiveGroup": "resources",
+        "assignment": "declared",
+        "order": 100
+      },
+      {
+        "owner": "accounts",
+        "id": "manager",
+        "surfaceProvenance": {
+          "kind": "versioned",
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v11.schema.json",
+          "schemaVersion": 11
+        },
+        "insertionGroup": "before-settings",
+        "declaredGroup": "external-accounts",
+        "effectiveGroup": "external-accounts",
+        "assignment": "declared",
+        "order": 200
+      },
+      {
+        "owner": "legacy",
+        "id": "legacy-page",
+        "surfaceProvenance": {
+          "kind": "legacy-unversioned"
+        },
+        "insertionGroup": "after-settings",
+        "effectiveGroup": "other",
+        "assignment": "legacy-fallback",
+        "order": 0
+      },
+      {
+        "owner": "unassigned",
+        "id": "status",
+        "surfaceProvenance": {
+          "kind": "versioned",
+          "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/surface-contribution.v11.schema.json",
+          "schemaVersion": 11
+        },
+        "insertionGroup": "after-settings",
+        "effectiveGroup": "other",
+        "assignment": "unassigned-fallback",
+        "order": 50
+      }
+    ]
+  }
+}

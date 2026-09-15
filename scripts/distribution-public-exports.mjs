@@ -1,6 +1,7 @@
 import { readdirSync } from 'node:fs'
 // Public import coverage for the packed consumer smoke test.
 export const expectedExports = [
+  './model-providers/v1',
   './agent-loop-control/v1',
   './plugin-http/v1',
   './restricted-content/v1',
@@ -8,6 +9,7 @@ export const expectedExports = [
   './plugin-manifest/v12',
   './plugin-package/v12',
   './entity-settings-navigation/v1',
+  './manager-self-configuration/v1',
   './route-link-resolution/v1',
   './controlled-markdown-editor/v1',
   './agent-task-binding/v1',
@@ -22,6 +24,7 @@ export const expectedExports = [
   './plugin-manifest/v11',
   './plugin-package/v11',
   './plugin-manifest/v13',
+  './plugin-manifest/v14',
   './plugin-package/v13',
   './extension-point-visual/v1',
   './extension-point-visual/v2',
@@ -69,6 +72,7 @@ export const expectedExports = [
   './manager-collection/v1',
   './manager-settings-navigation/v1',
   './manager-settings-navigation/v2',
+  './manager-settings-navigation/v3',
   './manager-content-navigation/v1',
   './manager-content-navigation/v2',
   './manager-content-navigation/v3',
@@ -85,10 +89,17 @@ export const expectedExports = [
   './plugin-package/v8',
   './plugin-package/v9',
   './raster-image/v1',
+  './brand-icon/v1',
   './transient-canvas/v1',
+  './managed-service/v1',
+  './managed-service-ui/v1',
+  './managed-service-context/v1',
+  './managed-service-runtime/v1',
+  './plugin-package/v14',
 ].sort()
 
 export const expectedFiles = [
+  'types/model-providers.v1.d.ts',
   'types/notifications.v1.d.ts',
   'types/dialogs.v1.d.ts',
   'types/usage.v2.d.ts',
@@ -101,6 +112,7 @@ export const expectedFiles = [
   'types/plugin-manifest.v12.d.ts',
   'types/plugin-package.v12.d.ts',
   'types/entity-settings-navigation.v1.d.ts',
+  'types/manager-self-configuration.v1.d.ts',
   'types/route-link-resolution.v1.d.ts',
   'types/controlled-markdown-editor.v1.d.ts',
   'types/agent-task-binding.v1.d.ts',
@@ -121,6 +133,7 @@ export const expectedFiles = [
   'README.md',
   'package.json',
   'runtime/agent-avatar.v1.js',
+  'runtime/brand-icon.v1.js',
   'runtime/visuals.v1.js',
   'schemas/README.md',
   ...readdirSync(new URL('../schemas/', import.meta.url), { withFileTypes: true })
@@ -168,6 +181,7 @@ export const expectedFiles = [
   'types/manager-collection.v1.d.ts',
   'types/manager-settings-navigation.v1.d.ts',
   'types/manager-settings-navigation.v2.d.ts',
+  'types/manager-settings-navigation.v3.d.ts',
   'types/manager-content-navigation.v1.d.ts',
   'types/manager-content-navigation.v2.d.ts',
   'types/manager-content-navigation.v3.d.ts',
@@ -182,5 +196,12 @@ export const expectedFiles = [
   'types/plugin-package.v8.d.ts',
   'types/plugin-package.v9.d.ts',
   'types/raster-image.v1.d.ts',
+  'types/brand-icon.v1.d.ts',
   'types/transient-canvas.v1.d.ts',
+  'types/managed-service.v1.d.ts',
+  'types/managed-service-ui.v1.d.ts',
+  'types/managed-service-context.v1.d.ts',
+  'types/managed-service-runtime.v1.d.ts',
+  'types/plugin-manifest.v14.d.ts',
+  'types/plugin-package.v14.d.ts',
 ].sort()

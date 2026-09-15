@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-subscription-page.v1.schema.json",
+  "title": "CordisX Managed Service Subscription Page v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscription", "phase", "updates", "nextAfterSequence", "hasMore"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-subscription-page.v1.schema.json"
+    },
+    "contract": { "const": "cordisx.managed-service-subscription-page/v1" },
+    "schemaVersion": { "const": 1 },
+    "subscription": { "$ref": "managed-service-subscription.v1.schema.json" },
+    "phase": { "enum": ["replay", "live"] },
+    "updates": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "sequence", "projection"],
+            "properties": {
+              "kind": { "const": "snapshot-replaced" },
+              "sequence": { "$ref": "managed-service-common.v1.schema.json#/$defs/sequence" },
+              "projection": { "$ref": "managed-service-projection.v1.schema.json" }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "sequence", "delta"],
+            "properties": {
+              "kind": { "const": "state-changed" },
+              "sequence": { "$ref": "managed-service-common.v1.schema.json#/$defs/sequence" },
+              "delta": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "readiness": { "$ref": "managed-service-common.v1.schema.json#/$defs/readiness" },
+                  "auth": { "$ref": "managed-service-projection.v1.schema.json#/properties/auth" },
+                  "health": { "$ref": "managed-service-projection.v1.schema.json#/properties/health" },
+                  "diagnostics": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": { "$ref": "managed-service-common.v1.schema.json#/$defs/diagnostic" }
+                  },
+                  "userAction": { "$ref": "managed-service-common.v1.schema.json#/$defs/loginAction" }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "nextAfterSequence": { "$ref": "managed-service-common.v1.schema.json#/$defs/sequence" },
+    "hasMore": { "type": "boolean" }
+  }
+}

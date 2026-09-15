@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-accounts.v1.schema.json",
+  "title": "CordisX Renderer-safe CLIProxyAPI Account Subscriptions v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "binding", "sequence", "observedAt", "revision", "serviceGeneration", "accounts"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-accounts.v1.schema.json"
+    },
+    "contract": { "const": "cordisx.managed-service-cli-proxy-accounts/v1" },
+    "schemaVersion": { "const": 1 },
+    "binding": { "$ref": "managed-service-common.v1.schema.json#/$defs/binding" },
+    "sequence": { "$ref": "managed-service-common.v1.schema.json#/$defs/sequence" },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "revision": { "$ref": "managed-service-common.v1.schema.json#/$defs/revision" },
+    "serviceGeneration": { "$ref": "managed-service-common.v1.schema.json#/$defs/generation" },
+    "accounts": {
+      "type": "array",
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/account" }
+    }
+  },
+  "$defs": {
+    "provider": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "oneOf": [
+        { "enum": ["anthropic", "codex", "antigravity", "kimi", "xai"] },
+        { "pattern": "^(plugin|custom):[a-z0-9][a-z0-9._-]{0,55}$" }
+      ]
+    },
+    "accountId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "accountStatus": {
+      "type": "string",
+      "enum": ["active", "disabled", "unavailable"]
+    },
+    "authKind": {
+      "type": "string",
+      "enum": ["oauth", "api-key", "file", "plugin-virtual", "unknown"]
+    },
+    "sourceKind": {
+      "type": "string",
+      "enum": ["file", "memory", "plugin"]
+    },
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accountId", "authIndex", "provider", "label", "status", "disabled", "authKind", "sourceKind", "runtimeOnly"],
+      "properties": {
+        "accountId": { "$ref": "#/$defs/accountId" },
+        "authIndex": { "type": "string", "maxLength": 64 },
+        "provider": { "$ref": "#/$defs/provider" },
+        "label": { "type": "string", "maxLength": 200 },
+        "status": { "$ref": "#/$defs/accountStatus" },
+        "statusMessage": { "type": "string", "maxLength": 512 },
+        "disabled": { "type": "boolean" },
+        "unavailable": { "type": "boolean" },
+        "authKind": { "$ref": "#/$defs/authKind" },
+        "sourceKind": { "$ref": "#/$defs/sourceKind" },
+        "runtimeOnly": { "type": "boolean" },
+        "email": { "type": "string", "maxLength": 200 },
+        "projectId": { "type": "string", "maxLength": 200 },
+        "accountType": { "type": "string", "maxLength": 64 },
+        "account": { "type": "string", "maxLength": 200 },
+        "note": { "type": "string", "maxLength": 500 },
+        "priority": { "type": "integer", "minimum": 0, "maximum": 10000 },
+        "weight": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "websockets": { "type": "boolean" },
+        "requestRetry": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "success": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "lastRefreshAt": { "type": "string", "format": "date-time" },
+        "nextRetryAfter": { "type": "string", "format": "date-time" },
+        "models": {
+          "type": "array",
+          "maxItems": 512,
+          "items": { "$ref": "#/$defs/modelRef" }
+        },
+        "quotaSignals": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "maxLength": 200 }
+        }
+      }
+    },
+    "modelRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "displayName": { "type": "string", "maxLength": 200 },
+        "type": { "type": "string", "maxLength": 64 },
+        "ownedBy": { "type": "string", "maxLength": 120 }
+      }
+    }
+  }
+}

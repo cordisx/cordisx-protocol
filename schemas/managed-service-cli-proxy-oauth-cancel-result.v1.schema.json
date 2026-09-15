@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-oauth-cancel-result.v1.schema.json",
+  "title": "CordisX CLIProxyAPI OAuth Cancel Result v1",
+  "oneOf": [
+    { "$ref": "#/$defs/accepted" },
+    { "$ref": "#/$defs/failed" }
+  ],
+  "$defs": {
+    "accepted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "binding", "status", "sessionId", "cancelled", "sequence"],
+      "properties": {
+        "$schema": {
+          "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-oauth-cancel-result.v1.schema.json"
+        },
+        "contract": { "const": "cordisx.managed-service-cli-proxy-oauth-cancel-result/v1" },
+        "schemaVersion": { "const": 1 },
+        "requestId": { "$ref": "managed-service-common.v1.schema.json#/$defs/opaqueId" },
+        "binding": { "$ref": "managed-service-common.v1.schema.json#/$defs/binding" },
+        "status": { "const": "accepted" },
+        "sessionId": { "$ref": "managed-service-common.v1.schema.json#/$defs/opaqueId" },
+        "cancelled": { "type": "boolean" },
+        "sequence": { "$ref": "managed-service-common.v1.schema.json#/$defs/sequence" }
+      }
+    },
+    "failed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "contract", "schemaVersion", "requestId", "binding", "status", "error"],
+      "properties": {
+        "$schema": {
+          "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-oauth-cancel-result.v1.schema.json"
+        },
+        "contract": { "const": "cordisx.managed-service-cli-proxy-oauth-cancel-result/v1" },
+        "schemaVersion": { "const": 1 },
+        "requestId": { "$ref": "managed-service-common.v1.schema.json#/$defs/opaqueId" },
+        "binding": { "$ref": "managed-service-common.v1.schema.json#/$defs/binding" },
+        "status": { "enum": ["denied", "failed", "unavailable"] },
+        "error": { "$ref": "managed-service-common.v1.schema.json#/$defs/diagnostic" }
+      }
+    }
+  }
+}

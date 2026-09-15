@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-materialization-request.v1.schema.json",
+  "title": "CordisX Managed Backend Service Materialization Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "target",
+    "revision",
+    "sources",
+    "bindings"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-materialization-request.v1.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.managed-service-materialization-request/v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "target": {
+      "$ref": "managed-service-common.v1.schema.json#/$defs/binding"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "lease"
+        ],
+        "properties": {
+          "lease": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "leaseHandle",
+              "binding",
+              "brokerHandle",
+              "operations"
+            ],
+            "properties": {
+              "leaseHandle": {
+                "type": "string",
+                "pattern": "^msl_[A-Za-z0-9._:-]{1,128}$"
+              },
+              "binding": {
+                "$ref": "managed-service-common.v1.schema.json#/$defs/binding"
+              },
+              "brokerHandle": {
+                "type": "string",
+                "pattern": "^msb_[A-Za-z0-9._:-]{1,128}$"
+              },
+              "operations": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 32,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+                }
+              }
+            }
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+          }
+        }
+      }
+    },
+    "bindings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "targetSlot",
+          "source"
+        ],
+        "properties": {
+          "targetSlot": {
+            "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+          },
+          "source": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "source",
+                  "origin"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "source-origin"
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+                  },
+                  "origin": {
+                    "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "source"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "source-authorization"
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "source",
+                  "invocationHandle",
+                  "pointer"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "invocation-value"
+                  },
+                  "invocationHandle": {
+                    "type": "string",
+                    "pattern": "^msi_[A-Za-z0-9._:-]{1,128}$"
+                  },
+                  "pointer": {
+                    "type": "string",
+                    "pattern": "^(?:/(?:[^~/]|~0|~1)*)+$",
+                    "maxLength": 512
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "safe-literal"
+                  },
+                  "value": {
+                    "$ref": "managed-service-common.v1.schema.json#/$defs/safeValue"
+                  }
+                }
+              }
+            ]
+          },
+          "targetPointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~/]|~0|~1)*)+$",
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "revision": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}

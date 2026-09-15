@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v2.schema.json",
+  "title": "CordisX Manager Settings Navigation Groups v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "groups",
+    "fallbackGroup"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-settings-navigation-groups.v2.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.manager-settings-navigation-groups/v2"
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "groups": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/resourcesGroup"
+        },
+        {
+          "$ref": "#/$defs/developmentGroup"
+        },
+        {
+          "$ref": "#/$defs/collaborationGroup"
+        },
+        {
+          "$ref": "#/$defs/externalAccountsGroup"
+        },
+        {
+          "$ref": "#/$defs/otherGroup"
+        }
+      ],
+      "items": false
+    },
+    "fallbackGroup": {
+      "const": "other"
+    }
+  },
+  "$defs": {
+    "groupId": {
+      "enum": [
+        "resources",
+        "development",
+        "collaboration",
+        "external-accounts",
+        "other"
+      ]
+    },
+    "displayText": {
+      "allOf": [
+        {
+          "$ref": "ui-common.v1.schema.json#/$defs/localizedText"
+        },
+        {
+          "type": "object",
+          "required": [
+            "fallback"
+          ],
+          "properties": {
+            "fallback": true
+          }
+        }
+      ]
+    },
+    "resourcesGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "order"
+      ],
+      "properties": {
+        "id": {
+          "const": "resources"
+        },
+        "label": {
+          "$ref": "#/$defs/displayText"
+        },
+        "order": {
+          "const": 100
+        }
+      }
+    },
+    "developmentGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "order"
+      ],
+      "properties": {
+        "id": {
+          "const": "development"
+        },
+        "label": {
+          "$ref": "#/$defs/displayText"
+        },
+        "order": {
+          "const": 200
+        }
+      }
+    },
+    "collaborationGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "order"
+      ],
+      "properties": {
+        "id": {
+          "const": "collaboration"
+        },
+        "label": {
+          "$ref": "#/$defs/displayText"
+        },
+        "order": {
+          "const": 300
+        }
+      }
+    },
+    "externalAccountsGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "order"
+      ],
+      "properties": {
+        "id": {
+          "const": "external-accounts"
+        },
+        "label": {
+          "$ref": "#/$defs/displayText"
+        },
+        "order": {
+          "const": 400
+        }
+      }
+    },
+    "otherGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "order"
+      ],
+      "properties": {
+        "id": {
+          "const": "other"
+        },
+        "label": {
+          "$ref": "#/$defs/displayText"
+        },
+        "order": {
+          "const": 1000
+        }
+      }
+    }
+  }
+}
