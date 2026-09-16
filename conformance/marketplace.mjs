@@ -5,10 +5,10 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchemas = [1, 2, 3, 4].map(async version =>
+const pluginSchemas = [1, 2, 3, 4, 5].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8'))
 )
-const feedSchemas = [1, 2, 3, 4].map(async version =>
+const feedSchemas = [1, 2, 3, 4, 5].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8'))
 )
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
@@ -144,6 +144,11 @@ export function projectFeedName(feed, currentLocale) {
   )
 }
 
+export function projectFeedDescription(feed, currentLocale) {
+  if (feed.schemaVersion < 5) return undefined
+  return localizedField(feed.description, feed.localizations, 'description', currentLocale, feed.fallbackLocale)
+}
+
 export function validatePlugin(plugin) {
   const validatePluginSchema = pluginValidators.get(plugin?.schemaVersion)
   if (validatePluginSchema === undefined || !validatePluginSchema(plugin)) {
@@ -277,6 +282,18 @@ if (
   || fallbackProjection.description !== 'Shows structured CordisX extension points.'
 ) {
   console.error('marketplace v2 fallback projection is incorrect', fallbackProjection)
+  failures += 1
+}
+
+const describedFeed = JSON.parse(
+  await readFile(path.join(root, 'test-vectors/marketplace/feeds/valid-source-description-v5.json'), 'utf8'),
+)
+if (
+  projectFeedName(describedFeed, 'zh-CN') !== '示例插件商店'
+  || projectFeedDescription(describedFeed, 'zh-CN') !== '提供内部插件与版本更新。'
+  || projectFeedDescription(describedFeed, 'fr-FR') !== 'Official internal plugins and updates.'
+) {
+  console.error('marketplace v5 source metadata projection is incorrect')
   failures += 1
 }
 
