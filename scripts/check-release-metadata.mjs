@@ -1,27 +1,43 @@
+import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { resolveRelease } from './resolve-release.mjs'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+const lock = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8'))
 
-const approvedReleaseMetadata = new Map([
-  ['0.1.0-alpha.0', 'bootstrap'],
-  ['0.1.0-beta.3', 'beta'],
-])
-
-const expectedTag = approvedReleaseMetadata.get(manifest.version)
-if (expectedTag === undefined) {
-  throw new Error(`unapproved release metadata version: ${manifest.version}`)
-}
 if (manifest.publishConfig?.registry !== 'https://registry.npmjs.org' || manifest.publishConfig?.access !== 'public') {
   throw new Error('release metadata registry or access drifted')
 }
-if (manifest.publishConfig?.tag !== expectedTag) {
-  throw new Error(`release metadata tag drifted: expected ${expectedTag}, got ${manifest.publishConfig?.tag}`)
+if (Object.hasOwn(manifest.publishConfig ?? {}, 'tag')) {
+  throw new Error('publishConfig must not pin a release channel')
 }
-if (manifest.version === '0.1.0-alpha.0' && ['latest', 'beta'].includes(manifest.publishConfig.tag)) {
-  throw new Error('bootstrap release must not be assigned a consumer dist-tag')
+if (lock.version !== manifest.version || lock.packages?.['']?.version !== manifest.version) {
+  throw new Error('package and lockfile versions drifted')
 }
 
-console.log(JSON.stringify({ package: manifest.name, version: manifest.version, tag: manifest.publishConfig.tag }))
+const validCases = [
+  ['v1.2.3', '1.2.3', 'latest'],
+  ['v1.2.3-alpha.4', '1.2.3-alpha.4', 'alpha'],
+  ['v1.2.3-beta.4', '1.2.3-beta.4', 'beta'],
+  ['v1.2.3-rc.4', '1.2.3-rc.4', 'rc'],
+]
+for (const [gitTag, version, npmTag] of validCases) {
+  assert.deepEqual(resolveRelease(gitTag, version), { gitTag, version, npmTag })
+}
+
+const invalidCases = [
+  ['1.2.3', '1.2.3'],
+  ['v01.2.3', '01.2.3'],
+  ['v1.2.3-01', '1.2.3-01'],
+  ['v1.2.3-preview.1', '1.2.3-preview.1'],
+  ['v1.2.3', '1.2.4'],
+]
+for (const [gitTag, version] of invalidCases) {
+  assert.throws(() => resolveRelease(gitTag, version))
+}
+
+const release = resolveRelease('v' + manifest.version, manifest.version)
+console.log(JSON.stringify({ package: manifest.name, version: release.version, tag: release.npmTag }))

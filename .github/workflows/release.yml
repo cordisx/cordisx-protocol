@@ -1,0 +1,42 @@
+name: Release npm package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: protocol-npm-release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: npm-release
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - id: release
+        run: node scripts/resolve-release.mjs --tag "$GITHUB_REF_NAME" --github-output "$GITHUB_OUTPUT"
+      - run: |
+          test "$(git rev-parse "refs/tags/${{ steps.release.outputs.git_tag }}^{commit}")" = "$(git rev-parse HEAD)"
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor HEAD origin/main
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2 --registry=https://registry.npmjs.org
+      - run: npm ci --ignore-scripts --registry=https://registry.npmjs.org
+      - run: npm run check
+      - run: npm run check:distribution
+      - run: npm publish --provenance --access public --tag "${{ steps.release.outputs.npm_tag }}" --registry=https://registry.npmjs.org
+      - run: EXPECT_GIT_HEAD="$(git rev-parse HEAD)" npm run verify:registry-release -- --version "${{ steps.release.outputs.version }}"

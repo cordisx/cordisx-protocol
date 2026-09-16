@@ -4,6 +4,7 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSyn
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { resolveRelease } from './resolve-release.mjs'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -78,25 +79,11 @@ if (JSON.stringify(Object.keys(manifest.exports).sort()) !== JSON.stringify(expe
 }
 const arguments_ = process.argv.slice(2)
 if (arguments_.length !== 0 && (arguments_.length !== 2 || arguments_[0] !== '--version')) {
-  throw new Error('usage: verify-registry-beta.mjs [--version <exact-prerelease>]')
+  throw new Error('usage: verify-registry-release.mjs [--version <exact-version>]')
 }
 const version = arguments_.length === 0 ? manifest.version : arguments_[1]
-const exactPrereleasePattern =
-  /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)$/
-const versionMatch = exactPrereleasePattern.exec(version ?? '')
-if (
-  versionMatch === null
-  || versionMatch[1].split('.').some(identifier =>
-    /^[0-9]+$/.test(identifier) && identifier.length > 1 && identifier.startsWith('0')
-  )
-) {
-  throw new Error(
-    'version must be one exact prerelease, not a range, tag, git/file/link/workspace selector, or stable version',
-  )
-}
-if (version !== manifest.version) {
-  throw new Error(`local package version ${manifest.version} does not match requested registry version ${version}`)
-}
+const release = resolveRelease('v' + version, manifest.version)
+const npmTag = release.npmTag
 const npm = [process.execPath, process.env.npm_execpath ?? 'node_modules/npm/bin/npm-cli.js']
 
 function run(arguments_, cwd = root) {
@@ -117,12 +104,12 @@ const published = JSON.parse(
     '--registry=https://registry.npmjs.org',
   ]),
 )
-const beta = JSON.parse(
-  run(['view', manifest.name, 'dist-tags.beta', '--json', '--registry=https://registry.npmjs.org']),
+const distTag = JSON.parse(
+  run(['view', manifest.name, 'dist-tags.' + npmTag, '--json', '--registry=https://registry.npmjs.org']),
 )
 const expectedGitHead = process.env.EXPECT_GIT_HEAD
   ?? execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
-if (published.version !== version || beta !== version) throw new Error('registry version or beta tag drift')
+if (published.version !== version || distTag !== version) throw new Error('registry version or derived dist-tag drift')
 if (!published.dist?.integrity || !published.dist?.shasum) throw new Error('registry omitted integrity or shasum')
 if (published.gitHead !== expectedGitHead) throw new Error(`registry gitHead mismatch: ${published.gitHead}`)
 if (!String(published.repository?.url ?? '').includes('github.com/cordisx/cordisx-protocol')) {
@@ -563,7 +550,8 @@ void bindingClosed
   console.log(
     JSON.stringify({
       version,
-      beta,
+      tag: npmTag,
+      distTag,
       integrity: published.dist.integrity,
       shasum: published.dist.shasum,
       gitHead: published.gitHead,
