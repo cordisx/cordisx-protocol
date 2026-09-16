@@ -141,3 +141,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Durable admitted work settlement v1](local-work-settlement/v1.md)
 
 - [Local wallet spend v1](wallet-spend/v1.md): native exact-terms authorization, bounded consumption and local commerce.
+
+- [Wallet pool v1](wallet-pool/v1.md): optional Economy-owned collateral and settlement capability.

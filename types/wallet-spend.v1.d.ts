@@ -1,3 +1,4 @@
+import type { WalletPoolV1 } from './wallet-pool.v1.js'
 /** A separate capability. Frozen HTTP and income contracts are unchanged. */
 export interface WalletSpendSourceV1 {
   readonly serviceOrigin: string
@@ -42,6 +43,8 @@ export interface WalletPurchaseInputV1 extends WalletPurchaseOperationV1 {
 }
 export interface WalletSpendV1 {
   readonly contract: 'cordisx.wallet-spend/v1'
+  /** Absent on older Hosts. Never fall back to ordinary spending for pool collateral. */
+  readonly pool?: WalletPoolV1
   identity(): Promise<WalletSpendResultV1<WalletSpendIdentityV1>>
   /** HTTPS metadata/native onboarding; existing exact active owner operator loopback HTTP pins can be reverified, never added or rotated. No wallet/funding authority selection. */
   authorizeSource(input: {

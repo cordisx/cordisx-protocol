@@ -113,7 +113,8 @@
     "runtime/local-wallet.v1.js",
     "types/local-work-settlement.v1.d.ts",
     "runtime/local-work-settlement.v1.js",
-    "types/wallet-spend.v1.d.ts"
+    "types/wallet-spend.v1.d.ts",
+    "types/wallet-pool.v1.d.ts"
   ],
   "exports": {
     "./current-user/v1": {
@@ -238,6 +239,9 @@
     },
     "./wallet-spend/v1": {
       "types": "./types/wallet-spend.v1.d.ts"
+    },
+    "./wallet-pool/v1": {
+      "types": "./types/wallet-pool.v1.d.ts"
     }
   },
   "publishConfig": {

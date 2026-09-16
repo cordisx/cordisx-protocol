@@ -56,7 +56,16 @@ try {
   writeFileSync(
     join(consumer, 'consumer.ts'),
     `import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
+import type { WalletPoolV1 } from '@cordisx/protocol/wallet-pool/v1'
+declare const walletPool: WalletPoolV1
+walletPool.reserve({source:{serviceOrigin:'https://game.example',serverId:'game',servicePublicKey:'public'},terms:'{}',requestId:'pool:1',deadline:1})
+// @ts-expect-error Consumers cannot supply approval or an unsigned payout amount
+walletPool.applyDecision({source:{serviceOrigin:'https://game.example',serverId:'game',servicePublicKey:'public'},decision:'{}',deadline:1,approved:true,amount:100})
+// @ts-expect-error No arbitrary mint or signer
+walletPool.mint(100)
 declare const walletSpend: WalletSpendV1
+const optionalPool: WalletPoolV1 | undefined = walletSpend.pool
+void optionalPool
 walletSpend.reserve({source:{serviceOrigin:'https://game.example',serverId:'game',servicePublicKey:'public'},terms:'{}',requestId:'spend:1',deadline:1})
 // @ts-expect-error No arbitrary signer
 walletSpend.sign({bytes:'anything'})
