@@ -54,6 +54,9 @@ second lifecycle or renderer wire format. See the
 The [raster-image specification](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/raster-image/README.md)
 defines bounded PNG snapshots after product-specific composition, without
 passing product semantics or renderer authority to the receiving surface.
+The [brand-icon specification](https://github.com/cordisx/cordisx-protocol/blob/main/.agents/docs/brand-icon/README.md)
+keeps `host:*` icons intact while allowing those snapshots in a structured,
+runtime-validated page icon value.
 
 ## Immutable module graphs
 

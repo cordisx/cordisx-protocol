@@ -1,0 +1,983 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-definition.v1.schema.json",
+  "title": "CordisX Managed Backend Service Definition v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schemaVersion",
+    "serviceId",
+    "launch",
+    "protectedBindings",
+    "authentication",
+    "httpAuthentication",
+    "discovery",
+    "operations",
+    "health"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-definition.v1.schema.json"
+    },
+    "contract": {
+      "const": "cordisx.managed-service-definition/v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "serviceId": {
+      "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+    },
+    "launch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "arguments",
+        "startupTimeoutMs"
+      ],
+      "properties": {
+        "executable": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "package-relative"
+                },
+                "path": {
+                  "type": "string",
+                  "pattern": "^\\./(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$",
+                  "maxLength": 512
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "command"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "named-command"
+                },
+                "command": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                }
+              }
+            }
+          ]
+        },
+        "arguments": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "maxLength": 1024
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "serialization"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "host-assigned-loopback"
+                  },
+                  "serialization": {
+                    "enum": [
+                      "origin",
+                      "authority",
+                      "port"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "startupTimeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 120000
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template",
+        "format",
+        "delivery"
+      ],
+      "properties": {
+        "template": {
+          "type": "string",
+          "pattern": "^\\./(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$",
+          "maxLength": 512
+        },
+        "format": {
+          "enum": [
+            "json",
+            "yaml"
+          ]
+        },
+        "delivery": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "argument"
+          ],
+          "properties": {
+            "kind": {
+              "const": "generation-private-process-file"
+            },
+            "argument": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        }
+      }
+    },
+    "protectedBindings": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "slot",
+              "source",
+              "target",
+              "variable"
+            ],
+            "properties": {
+              "slot": {
+                "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+              },
+              "source": {
+                "enum": [
+                  "host-secret",
+                  "generated-local-key",
+                  "composition"
+                ]
+              },
+              "target": {
+                "const": "environment"
+              },
+              "variable": {
+                "type": "string",
+                "pattern": "^[A-Z_][A-Z0-9_]{0,127}$"
+              },
+              "valueSchema": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 512
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "slot",
+              "source",
+              "target",
+              "pointer"
+            ],
+            "properties": {
+              "slot": {
+                "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+              },
+              "source": {
+                "enum": [
+                  "host-secret",
+                  "generated-local-key",
+                  "composition"
+                ]
+              },
+              "target": {
+                "const": "configuration"
+              },
+              "pointer": {
+                "type": "string",
+                "pattern": "^(?:/(?:[^~/]|~0|~1)*)+$",
+                "maxLength": 512
+              },
+              "valueSchema": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 512
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "slot",
+              "source",
+              "target",
+              "pointer",
+              "serialization"
+            ],
+            "properties": {
+              "slot": {
+                "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+              },
+              "source": {
+                "const": "host-assigned-loopback"
+              },
+              "target": {
+                "const": "configuration"
+              },
+              "pointer": {
+                "type": "string",
+                "pattern": "^(?:/(?:[^~/]|~0|~1)*)+$",
+                "maxLength": 512
+              },
+              "serialization": {
+                "enum": [
+                  "origin",
+                  "authority",
+                  "host",
+                  "port"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "authentication": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "const": "none"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "slot"
+          ],
+          "properties": {
+            "mode": {
+              "const": "host-secret"
+            },
+            "slot": {
+              "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "status",
+            "login"
+          ],
+          "properties": {
+            "mode": {
+              "const": "cli"
+            },
+            "status": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "executable",
+                "arguments",
+                "timeoutMs",
+                "outcomes"
+              ],
+              "properties": {
+                "executable": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "path"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "package-relative"
+                        },
+                        "path": {
+                          "type": "string",
+                          "pattern": "^\\./(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$",
+                          "maxLength": 512
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "command"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "named-command"
+                        },
+                        "command": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "arguments": {
+                  "type": "array",
+                  "maxItems": 64,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 1024
+                  }
+                },
+                "timeoutMs": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 300000
+                },
+                "outcomes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "exitCode",
+                      "state"
+                    ],
+                    "properties": {
+                      "exitCode": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 255
+                      },
+                      "state": {
+                        "enum": [
+                          "authenticated",
+                          "authentication-required",
+                          "failed"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "login": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "executable",
+                "arguments",
+                "timeoutMs",
+                "outcomes"
+              ],
+              "properties": {
+                "executable": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "path"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "package-relative"
+                        },
+                        "path": {
+                          "type": "string",
+                          "pattern": "^\\./(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$",
+                          "maxLength": 512
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "command"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "named-command"
+                        },
+                        "command": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "arguments": {
+                  "type": "array",
+                  "maxItems": 64,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 1024
+                  }
+                },
+                "timeoutMs": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 300000
+                },
+                "outcomes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "exitCode",
+                      "state"
+                    ],
+                    "properties": {
+                      "exitCode": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 255
+                      },
+                      "state": {
+                        "enum": [
+                          "authenticated",
+                          "authentication-required",
+                          "failed"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "logout": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "executable",
+                "arguments",
+                "timeoutMs",
+                "outcomes"
+              ],
+              "properties": {
+                "executable": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "path"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "package-relative"
+                        },
+                        "path": {
+                          "type": "string",
+                          "pattern": "^\\./(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$",
+                          "maxLength": 512
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "command"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "named-command"
+                        },
+                        "command": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "arguments": {
+                  "type": "array",
+                  "maxItems": 64,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 1024
+                  }
+                },
+                "timeoutMs": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 300000
+                },
+                "outcomes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "exitCode",
+                      "state"
+                    ],
+                    "properties": {
+                      "exitCode": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 255
+                      },
+                      "state": {
+                        "enum": [
+                          "authenticated",
+                          "authentication-required",
+                          "failed"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "refresh": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "executable",
+                "arguments",
+                "timeoutMs",
+                "outcomes"
+              ],
+              "properties": {
+                "executable": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "path"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "package-relative"
+                        },
+                        "path": {
+                          "type": "string",
+                          "pattern": "^\\./(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$",
+                          "maxLength": 512
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "command"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "named-command"
+                        },
+                        "command": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "arguments": {
+                  "type": "array",
+                  "maxItems": 64,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 1024
+                  }
+                },
+                "timeoutMs": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 300000
+                },
+                "outcomes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "exitCode",
+                      "state"
+                    ],
+                    "properties": {
+                      "exitCode": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 255
+                      },
+                      "state": {
+                        "enum": [
+                          "authenticated",
+                          "authentication-required",
+                          "failed"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "discovery": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "port"
+          ],
+          "properties": {
+            "kind": {
+              "const": "fixed-loopback"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "host-assigned-loopback"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "root",
+            "file",
+            "format"
+          ],
+          "properties": {
+            "kind": {
+              "const": "restricted-port-file"
+            },
+            "root": {
+              "enum": [
+                "package",
+                "service-home"
+              ]
+            },
+            "file": {
+              "type": "string",
+              "pattern": "^\\./(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$",
+              "maxLength": 512
+            },
+            "format": {
+              "const": "decimal-port"
+            }
+          }
+        }
+      ]
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operationId",
+              "method",
+              "path",
+              "responseSchema",
+              "timeoutMs"
+            ],
+            "properties": {
+              "operationId": {
+                "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+              },
+              "method": {
+                "const": "GET"
+              },
+              "path": {
+                "type": "string",
+                "pattern": "^/[A-Za-z0-9._~!$&'()*+,;=:@%/-]{0,255}$"
+              },
+              "requestSchema": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 512
+              },
+              "responseSchema": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 512
+              },
+              "timeoutMs": {
+                "type": "integer",
+                "minimum": 100,
+                "maximum": 30000
+              },
+              "httpAuthentication": {
+                "$ref": "#/$defs/httpAuthentication"
+              },
+              "requestEncoding": {
+                "enum": ["json-body", "query"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operationId",
+              "method",
+              "path",
+              "responseSchema",
+              "timeoutMs",
+              "requestSchema"
+            ],
+            "properties": {
+              "operationId": {
+                "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+              },
+              "method": {
+                "enum": [
+                  "POST",
+                  "PUT",
+                  "PATCH",
+                  "DELETE"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "pattern": "^/[A-Za-z0-9._~!$&'()*+,;=:@%/-]{0,255}$"
+              },
+              "requestSchema": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 512
+              },
+              "responseSchema": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 512
+              },
+              "timeoutMs": {
+                "type": "integer",
+                "minimum": 100,
+                "maximum": 30000
+              },
+              "httpAuthentication": {
+                "$ref": "#/$defs/httpAuthentication"
+              },
+              "requestEncoding": {
+                "enum": ["json-body", "query"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "intervalMs",
+        "timeoutMs"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^/[A-Za-z0-9._~!$&'()*+,;=:@%/-]{0,255}$"
+        },
+        "intervalMs": {
+          "type": "integer",
+          "minimum": 250,
+          "maximum": 60000
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 30000
+        }
+      }
+    },
+    "httpAuthentication": {
+      "$ref": "#/$defs/httpAuthentication"
+    },
+    "compositionOrigins": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "path"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "managed-service-common.v1.schema.json#/$defs/localId"
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^/(?:[A-Za-z0-9_~-]+(?:\\.[A-Za-z0-9_~-]+)*(?:/[A-Za-z0-9_~-]+(?:\\.[A-Za-z0-9_~-]+)*)*)?$",
+            "maxLength": 256
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "variable",
+              "source",
+              "value"
+            ],
+            "properties": {
+              "variable": {
+                "type": "string",
+                "pattern": "^[A-Z_][A-Z0-9_]{0,127}$"
+              },
+              "source": {
+                "const": "literal"
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 4096,
+                "pattern": "^[^\\u0000]*$"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "variable",
+              "source",
+              "path"
+            ],
+            "properties": {
+              "variable": {
+                "type": "string",
+                "pattern": "^[A-Z_][A-Z0-9_]{0,127}$"
+              },
+              "source": {
+                "const": "service-home-relative-path"
+              },
+              "path": {
+                "type": "string",
+                "maxLength": 512,
+                "pattern": "^\\./(?!\\.\\.(?:/|$))(?!.*\\/\\.\\.(?:/|$))[^\\u0000]+$"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "httpAuthentication": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "const": "none" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "scheme", "slot"],
+          "properties": {
+            "mode": { "const": "authorization-header" },
+            "scheme": { "const": "Bearer" },
+            "slot": { "$ref": "managed-service-common.v1.schema.json#/$defs/localId" }
+          }
+        }
+      ]
+    }
+  }
+}

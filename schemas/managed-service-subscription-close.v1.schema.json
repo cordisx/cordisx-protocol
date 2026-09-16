@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-subscription-close.v1.schema.json",
+  "title": "CordisX Managed Service Subscription Close v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "subscription", "closedAt", "reason"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-subscription-close.v1.schema.json"
+    },
+    "contract": { "const": "cordisx.managed-service-subscription-close/v1" },
+    "schemaVersion": { "const": 1 },
+    "subscription": { "$ref": "managed-service-subscription.v1.schema.json" },
+    "closedAt": { "type": "string", "format": "date-time" },
+    "reason": {
+      "enum": ["explicit", "binding-replaced", "generation-replaced", "owner-disposed", "service-disposed"]
+    }
+  }
+}

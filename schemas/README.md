@@ -132,6 +132,8 @@ its scope are described in [conformance](../conformance/README.md).
 - `raster-image-snapshot.v1.schema.json`: one closed, base64-encoded PNG image
   snapshot with bounded declared dimensions; consumers additionally validate
   canonical encoding, PNG structure, dimensions, chunks, and decoded size;
+- `brand-icon.v1.schema.json`: one Host semantic icon token or a structured
+  raster-image/v1 snapshot, excluding raw URL and data strings;
 - `route.v1.schema.json`: one route id/path/outlet/page association;
 - `route.v2.schema.json`: route-v1 navigation fields plus required localized
   product title and description metadata;
@@ -141,6 +143,8 @@ its scope are described in [conformance](../conformance/README.md).
   `body-only` host chrome policy;
 - `page.v3.schema.json`: page-v2 chrome metadata plus a required localized
   product description;
+- `page.v4.schema.json`: page-v3 metadata with a top-level brand-icon/v1
+  semantic Host token or bounded raster image;
 - `manager-content-navigation.v1.schema.json`: a same-owner Manager content
   subroute declaration with an optional parent route, Host-resolved title
   source, and tab-to-route map;
@@ -166,12 +170,16 @@ its scope are described in [conformance](../conformance/README.md).
   `plugin-config-descriptor.v3.schema.json`: the additive Host-form projection
   successor carrying exact scalar choice values with localized labels and a
   mandatory fallback, without changing the value ledger;
-- `manager-settings-navigation-groups.v1.schema.json`: the exact Host-owned
-  Manager navigation visual group ids, localized labels, orders, and fallback;
+- `manager-settings-navigation-groups.v1.schema.json`: the frozen four-group Host-owned
+  Manager navigation catalog;
+- `manager-settings-navigation-groups.v2.schema.json`: the additive five-group catalog
+  with stable `external-accounts` placement before the compatibility fallback;
 - `manager-settings-navigation-projection.v1.schema.json`: Host-generated
   diagnostics for each contribution's declared/effective group and fallback;
 - `manager-settings-navigation-projection.v2.schema.json`: additive runtime
   diagnostics with exact surface-v9 or legacy-unversioned provenance;
+- `manager-settings-navigation-projection.v3.schema.json`: five-group diagnostics
+  with exact surface-v9, surface-v11, or legacy-unversioned provenance;
 - `manager-content-config-common.v1.schema.json`,
   `manager-content-config-command.v1.schema.json`, and
   `manager-content-config-result.v1.schema.json`: exact owner/generation/CAS
@@ -569,11 +577,15 @@ its scope are described in [conformance](../conformance/README.md).
 - `surface-contribution.v8.schema.json`: structured isolated transient-canvas
   presentation metadata;
 - `surface-contribution.v9.schema.json`: the frozen v8 families plus an optional
-  Host-catalog group reference on Manager navigation item v2;
+  four-group Host-catalog reference on Manager navigation item v2;
+- `surface-contribution.v11.schema.json`: the additive surface-v10 successor whose
+  Manager navigation reference accepts the five-group catalog v2;
 - `host-extension-point-catalog.v8.schema.json`: catalog v7 plus the
   experimental composer submit effects point;
-- `host-extension-point-catalog.v9.schema.json`: catalog v8 plus the Host-owned
-  Manager navigation group catalog and item-v2 payload family;
+- `host-extension-point-catalog.v9.schema.json`: catalog v8 plus the frozen
+  four-group Manager navigation catalog and item-v2 payload family;
+- `host-extension-point-catalog.v11.schema.json`: the additive catalog-v10
+  successor advertising Manager navigation catalog v2;
 - `transient-canvas-registration.v1.schema.json`: bounded Worker-local canvas
   program metadata; callbacks never cross the document;
 - `plugin-activation.v1.schema.json`: one profile-scoped active, candidate, or
@@ -610,6 +622,22 @@ See [Extension point visuals v1](../.agents/docs/extension-point-visuals/README.
 - `route-link-reference.v1.schema.json`, `route-link-resolution-result.v1.schema.json`: canonical route link resolution.
 
 Agent task permission v1: [declarations](agent-task-permission.v1.schema.json), [Host task source](agent-task-permission-source.v1.schema.json), and [authority lease](agent-task-approval-authority-lease.v1.schema.json). [Runtime manifest v12](plugin-manifest.v12.schema.json) adds the closed task branches to v11; [package v12](plugin-package.v12.schema.json) adds its digest-pinned reference. See the [normative contract](../.agents/docs/agent-task-permission/README.md).
+
+## Managed service UI contract v1
+
+Renderer-safe, host-neutral projection for plugin Manager pages that declare a
+managed service, including login/detail pages and upstream account catalogs.
+Credentials, full endpoints, raw process handles, and mutable registrars remain
+Host-private.
+
+- `managed-service-common.v1.schema.json`: identity, binding, readiness/auth/health enums, diagnostics, and error codes shared across the managed-service family;
+- `managed-service-projection.v1.schema.json`: one plugin-scoped snapshot describing service readiness, authentication state, health, safe diagnostics, capability flags, and whether an explicit login action is available;
+- `managed-service-login-request.v1.schema.json`: explicit user-gesture-gated `authenticate('login')` request carrying an identity/generation fence and `expectedSequence`;
+- `managed-service-login-result.v1.schema.json`: accepted/denied/failed/unavailable login outcome with bounded error codes;
+- `managed-service-logout-request.v1.schema.json`: distinct owner-bound logout request with literal `action: "logout"`, `expectedSequence`, and an `explicit-click` gesture;
+- `managed-service-logout-result.v1.schema.json`: accepted logout outcome fixed to `stateAt: "logged-out"`, or a denied/failed/unavailable bounded error;
+- `managed-service-subscription.v1.schema.json`, `managed-service-subscription-page.v1.schema.json`, and `managed-service-subscription-close.v1.schema.json`: sequence-fenced subscription descriptor, replay/live page envelope with snapshot-replaced/state-changed updates, and terminal close reason;
+- `managed-service-cli-proxy-catalog.v1.schema.json`: renderer-safe CLIProxyAPI upstream provider catalog with redacted endpoint origins, secret-presence flag, health/auth, and public model mappings.
 
 - `http-connection.v1.schema.json`: owner-bound opaque HTTP connection descriptor.
 

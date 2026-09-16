@@ -28,7 +28,7 @@
       "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/localizedText"
     },
     "icon": {
-      "$ref": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/ui-common.v1.schema.json#/$defs/iconToken"
+      "$ref": "brand-icon.v1.schema.json"
     },
     "chrome": {
       "enum": [

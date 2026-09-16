@@ -7,7 +7,6 @@ import { fileURLToPath } from 'node:url'
 import { fileDigest, packEntries } from './distribution-check-helpers.mjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
-
 const frozenAgentLoopFiles = [
   ...readdirSync(join(root, 'schemas'))
     .filter((name) => /^agent-loop-.*\.v[123]\.schema\.json$/.test(name))
@@ -120,6 +119,9 @@ void privateGameParticipant
 import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'
 declare const form: SchemaFormOptionsV1
 form.onChange({ value: {}, valid: true, issues: [] })
+import type { ModelProvidersV1 } from '@cordisx/protocol/model-providers/v1'
+declare const modelProviders: ModelProvidersV1
+modelProviders.present({ providerId: 'service', title: 'Service', icon: 'host:key' }).dispose()
 import type { DialogsV1 } from '@cordisx/protocol/dialogs/v1'
 declare const dialogs: DialogsV1
 dialogs.confirm({ kind: 'leave', title: 'Leave room?', confirmLabel: 'Leave', run: async () => {} }).then(result => result.status)
@@ -160,6 +162,7 @@ void entityContexts.resolve({ identity: { agentId: 'leader', revision: 'exact' }
 import type { EntityBackedAgentRegistry, EntityDefinitionBoundSessionEvent, EntityFile, EntityRegistry } from '@cordisx/protocol/entities/v1'
 import type { ManagerSettingsNavigationGroupCatalogV1 } from '@cordisx/protocol/manager-settings-navigation/v1'
 import type { ManagerSettingsNavigationProjectionV2 } from '@cordisx/protocol/manager-settings-navigation/v2'
+import type { ManagerSettingsNavigationProjectionV3 } from '@cordisx/protocol/manager-settings-navigation/v3'
 import type { ManagerContentNavigationDeclarationV3, ManagerContentProjectionV2 } from '@cordisx/protocol/manager-content-navigation/v3'
 import type { ManagerContentConfigCommandV1, ManagerContentConfigSourceV1, ManagerContentNavigationDeclarationV4, ManagerContentProjectionV3 } from '@cordisx/protocol/manager-content-navigation/v4'
 import type { ManagerContentConfigSourceV2, ManagerContentNavigationDeclarationV5, ManagerContentPluginConfigLocalizedChoiceV2, ManagerContentProjectionV4 } from '@cordisx/protocol/manager-content-navigation/v5'
@@ -250,6 +253,7 @@ declare const freshRoomNavigation: AgentPageFreshRoomNavigationService
 declare const agent: Agent, leadAgent: Agent
 declare const session: Session, userMessage: UserMessage
 declare const entityBoundEvent: EntityDefinitionBoundSessionEvent
+declare const managerSettingsNavigationProjectionV3: ManagerSettingsNavigationProjectionV3
 declare const managerNavigationV3: ManagerContentNavigationDeclarationV3
 declare const managerProjectionV2: ManagerContentProjectionV2
 declare const managerNavigationV4: ManagerContentNavigationDeclarationV4
@@ -261,6 +265,7 @@ declare const managerConfigSourceV2: ManagerContentConfigSourceV2
 declare const rasterImage: RasterImageSnapshotV1
 const entityFile = { $schema: 'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/entity-file.v1.schema.json', contract: 'cordisx.entity-file/v1', schemaVersion: 1, agentId: 'reviewer', inherit: { promptSections: 'append', rules: 'append', skills: 'append', tools: 'merge', mcpServers: 'merge', runtimeDefaults: 'merge' }, promptSections: [{ sectionId: 'role', kind: 'role', source: { kind: 'markdown', path: './prompts/role.md' } }] } satisfies EntityFile
 entities.get({ agentId: entityFile.agentId, revision: entityBoundEvent.data.resolution.digest })
+managerSettingsNavigationProjectionV3.catalog.groups[3].id satisfies 'external-accounts'
 managerNavigationV3.subject?.kind satisfies 'agent-definition' | undefined
 managerProjectionV2.recordSummary?.leadingVisual.kind satisfies 'agent-avatar' | undefined
 managerNavigationV4.body?.kind satisfies 'plugin-config-form' | undefined

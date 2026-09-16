@@ -4,45 +4,62 @@ This is maintainer guidance for publishing `@cordisx/protocol`, separate from
 [plugin distribution and activation](../docs/distribution/README.md). Follow the
 [maintenance rules](../rules/README.md) and the authorized release scope.
 
-## Release inputs and verification
+## Release model
 
-The configuration below was read from repository commit
-[`be4905a7471e9829d2b834d9c3f17ac2404951f3`](https://github.com/cordisx/cordisx-protocol/tree/be4905a7471e9829d2b834d9c3f17ac2404951f3)
-on 2026-09-05. It records a bootstrap-to-beta procedure, not evidence that the
-registry record, Trusted Publisher binding, or consumer adoption exists.
-Read the current [package metadata](../../package.json),
-[release workflow](../../.github/workflows/release-beta.yml), and registry state
-before carrying out or resuming the procedure.
+Each Protocol package release is identified by one Git tag on the canonical
+repository. The tag has the exact form `v<semver>`, and the version after `v`
+must equal both `package.json` and the root package in `package-lock.json`.
+Create the tag only from a formally merged commit on `main`.
 
-- `npm run check` validates types, release configuration, and protocol conformance.
-- `npm run check:distribution` exercises the packed package and consumer imports;
-  see [check-distribution.mjs](../../scripts/check-distribution.mjs).
-- `npm run verify:registry-beta -- --version <exact-version>` verifies a published
-  beta; the release workflow supplies `EXPECT_GIT_HEAD` for source identity.
-  See [verify-registry-beta.mjs](../../scripts/verify-registry-beta.mjs).
+The single [release workflow](../../.github/workflows/release.yml) derives the
+npm channel from that version:
 
-A local check, formal merge, registry publication, Host interoperability, and
-consumer acceptance are separate results. Record their exact versions and
-source revisions when reporting a release.
+- a stable SemVer publishes to `latest`;
+- an `alpha` prerelease publishes to `alpha`;
+- a `beta` prerelease publishes to `beta`;
+- an `rc` prerelease publishes to `rc`.
+
+Other prerelease identifiers are rejected. A prerelease sequence number is part
+of the immutable package version, not an npm dist-tag. Do not create one workflow
+or one dist-tag per release version.
+
+The workflow uses the protected `npm-release` GitHub environment and npm Trusted
+Publisher binding for `.github/workflows/release.yml`. It publishes with npm 12,
+OIDC provenance, public access, and the channel derived from the Git tag.
+`publishConfig` owns only the public npmjs registry and access mode; it must not
+pin a channel.
+
+## Prepare and publish
+
+1. Update `package.json` and `package-lock.json` to the exact release version.
+2. Run the release metadata and workflow checks, TypeScript build, distribution
+   pack check, and package dry run required for the change.
+3. Merge the release preparation through the normal protected `main` workflow.
+4. Create and push the exact `v<semver>` tag at that canonical merge commit.
+5. The tag push starts `release.yml`. The workflow verifies the tag, package
+   version, tag commit, and membership in `main` before publication.
+6. Verify the published immutable version, derived dist-tag, integrity, shasum,
+   `gitHead`, repository identity, clean registry installation, and provenance
+   with [verify-registry-release.mjs](../../scripts/verify-registry-release.mjs).
+
+A local check, formal merge, Git tag, registry publication, Host
+interoperability, and consumer acceptance are separate results. Record their
+exact versions and source revisions when reporting a release.
 
 ## Registry bootstrap boundary
 
-The first registry record for `@cordisx/protocol` is intentionally limited to
+The first npmjs record for `@cordisx/protocol` was intentionally limited to
 `0.1.0-alpha.0` under the `bootstrap` dist-tag. It exists only so the npm
-organization can bind the canonical repository release workflow as its Trusted
-Publisher. It is not a consumer release: it creates neither a `latest` nor a
-`beta` dist-tag, and no Host, plugin, or other product package may depend on
-it. An explicit version selector can technically retrieve any immutable npm
-record; that does not make this bootstrap record supported or consumable.
+organization can bind the canonical repository workflow as its Trusted
+Publisher. It is not a consumer release, does not claim Trusted Publishing
+provenance, and no Host, plugin, or other product package may depend on it.
 
-The bootstrap package has the same canonical public export inventory and
-distribution checks as the subsequent release. It must be manually published
-with npm 12 only after the organization owner has authenticated with the
-required 2FA. It is deliberately not published by `release-beta.yml` and does
-not claim Trusted Publishing provenance.
+That one bootstrap record was manually published with npm 12 after organization
+owner authentication and 2FA. All subsequent consumer releases use
+`release.yml`, the `npm-release` environment, and tag-derived channels.
 
-After the npm Trusted Publisher has been bound to this repository's protected
-`npm-beta` environment and `release-beta.yml`, the formal package metadata
-returns to `0.1.0-beta.2` with the `beta` dist-tag. Only that successor may be
-dispatched through the OIDC workflow with `--provenance`; consumer packages
-must use that exact beta release rather than the bootstrap record.
+On 2026-09-16, npmjs also assigned `latest` to the first public record despite
+the explicit `--tag bootstrap`. After the first consumer release is published,
+remove that automatic tag if npmjs permits it. If removal is rejected, move
+`latest` to the exact consumer release so it never points to the bootstrap
+alpha. Keep `bootstrap` on `0.1.0-alpha.0`.

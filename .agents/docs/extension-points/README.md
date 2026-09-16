@@ -69,7 +69,7 @@ management UI and consumers observe the same localized labels, orders, and
 fallback identity. Catalog v1-v8 remain frozen; an older consumer rejects v9
 rather than dropping the catalog or flattening grouped entries. The grouping
 and diagnostic projection rules live in
-[`manager-settings-navigation/groups-v1`](../manager-settings-navigation/groups-v1.md).
+[`manager-settings-navigation/groups-v2`](../manager-settings-navigation/groups-v2.md).
 
 ## Canonical point-policy identity
 

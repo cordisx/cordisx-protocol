@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import Ajv from 'ajv/dist/2020.js'
+import addFormats from 'ajv-formats'
 const load = async name =>
   JSON.parse(await readFile(new URL(`../schemas/${name}.schema.json`, import.meta.url), 'utf8'))
 const ajv = new Ajv({ strict: true, allErrors: true, allowUnionTypes: true })
+addFormats(ajv)
 ajv.addSchema(await load('ui-common.v1'))
+ajv.addSchema(await load('raster-image-snapshot.v1'))
+ajv.addSchema(await load('brand-icon.v1'))
 const validate = ajv.compile(await load('page.v4'))
 const old = ajv.compile(await load('page.v3'))
 const label = { key: 'action', fallback: 'Action' }

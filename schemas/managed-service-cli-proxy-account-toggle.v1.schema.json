@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-account-toggle.v1.schema.json",
+  "title": "CordisX CLIProxyAPI Account Enable/Disable Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "contract", "schemaVersion", "requestId", "binding", "accountId", "disabled", "expectedRevision", "userGesture"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-account-toggle.v1.schema.json"
+    },
+    "contract": { "const": "cordisx.managed-service-cli-proxy-account-toggle/v1" },
+    "schemaVersion": { "const": 1 },
+    "requestId": { "$ref": "managed-service-common.v1.schema.json#/$defs/opaqueId" },
+    "binding": { "$ref": "managed-service-common.v1.schema.json#/$defs/binding" },
+    "accountId": { "$ref": "managed-service-cli-proxy-accounts.v1.schema.json#/$defs/accountId" },
+    "authIndex": { "type": "string", "maxLength": 64 },
+    "disabled": { "type": "boolean" },
+    "expectedRevision": { "$ref": "managed-service-common.v1.schema.json#/$defs/revision" },
+    "userGesture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "at"],
+      "properties": {
+        "kind": { "const": "explicit-click" },
+        "at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
