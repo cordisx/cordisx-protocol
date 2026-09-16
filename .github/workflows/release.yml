@@ -38,5 +38,4 @@ jobs:
       - run: npm ci --ignore-scripts --registry=https://registry.npmjs.org
       - run: npm run check
       - run: npm run check:distribution
-      - run: npm publish --provenance --access public --tag "${{ steps.release.outputs.npm_tag }}" --registry=https://registry.npmjs.org
-      - run: EXPECT_GIT_HEAD="$(git rev-parse HEAD)" npm run verify:registry-release -- --version "${{ steps.release.outputs.version }}"
+      - run: EXPECT_GIT_HEAD="$(git rev-parse HEAD)" node scripts/publish-registry-release.mjs --version "${{ steps.release.outputs.version }}" --tag "${{ steps.release.outputs.npm_tag }}"

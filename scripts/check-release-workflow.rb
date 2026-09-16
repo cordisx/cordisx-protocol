@@ -32,8 +32,7 @@ required_release_runs = [
   'npm ci --ignore-scripts --registry=https://registry.npmjs.org',
   'npm run check',
   'npm run check:distribution',
-  'npm publish --provenance --access public --tag "${{ steps.release.outputs.npm_tag }}" --registry=https://registry.npmjs.org',
-  'EXPECT_GIT_HEAD="$(git rev-parse HEAD)" npm run verify:registry-release -- --version "${{ steps.release.outputs.version }}"'
+  'EXPECT_GIT_HEAD="$(git rev-parse HEAD)" node scripts/publish-registry-release.mjs --version "${{ steps.release.outputs.version }}" --tag "${{ steps.release.outputs.npm_tag }}"'
 ]
 release_positions = required_release_runs.map do |required|
   index = runs.index(required)
