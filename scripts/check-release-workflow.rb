@@ -1,26 +1,39 @@
 require 'yaml'
-require 'json'
-require 'open3'
 
 root = File.expand_path('..', __dir__)
-release_source = File.read(File.join(root, '.github/workflows/release-beta.yml'))
+legacy_path = File.join(root, '.github/workflows/release-beta.yml')
+release_path = File.join(root, '.github/workflows/release.yml')
+abort 'legacy beta-specific release workflow still exists' if File.exist?(legacy_path)
+abort 'generic release workflow is missing' unless File.exist?(release_path)
+
+release_source = File.read(release_path)
+abort 'release workflow hardcodes a concrete prerelease version' if release_source.match?(/[0-9]+\.[0-9]+\.[0-9]+-[0-9A-Za-z]/)
 workflow = YAML.safe_load(release_source, aliases: false)
-abort 'release workflow name drifted' unless workflow['name'] == 'Release npm beta'
+abort 'release workflow name drifted' unless workflow['name'] == 'Release npm package'
 
 trigger = workflow['on'] || workflow[true]
-abort 'release workflow must expose required workflow_dispatch version input' unless trigger.dig('workflow_dispatch', 'inputs', 'version', 'required')
+abort 'release workflow must trigger only from v<semver> tag pushes' unless trigger == { 'push' => { 'tags' => ['v*'] } }
 abort 'release workflow OIDC permissions drifted' unless workflow.dig('permissions', 'id-token') == 'write' && workflow.dig('permissions', 'contents') == 'read'
+abort 'release workflow concurrency drifted' unless workflow.dig('concurrency', 'group') == 'protocol-npm-release-${{ github.ref_name }}' && workflow.dig('concurrency', 'cancel-in-progress') == false
+
 publish = workflow.dig('jobs', 'publish')
-abort 'release workflow release boundary drifted' unless publish['environment'] == 'npm-beta' && publish['if'] == "github.ref == 'refs/heads/main'"
-runs = publish['steps'].map { |step| step['run'] }.compact.map(&:chomp)
+abort 'release workflow environment drifted' unless publish['environment'] == 'npm-release'
+steps = publish['steps']
+checkout = steps.find { |step| step['uses'] == 'actions/checkout@v7' }
+setup_node = steps.find { |step| step['uses'] == 'actions/setup-node@v7' }
+abort 'release workflow checkout must use the triggering tag ref' unless checkout&.dig('with', 'ref') == '${{ github.ref }}' && checkout.dig('with', 'fetch-depth') == 0
+abort 'release workflow Node version drifted' unless setup_node&.dig('with', 'node-version') == 24
+
+runs = steps.map { |step| step['run'] }.compact.map(&:chomp)
 required_release_runs = [
+  'node scripts/resolve-release.mjs --tag "$GITHUB_REF_NAME" --github-output "$GITHUB_OUTPUT"',
+  "test \"$(git rev-parse \"refs/tags/${{ steps.release.outputs.git_tag }}^{commit}\")\" = \"$(git rev-parse HEAD)\"\ngit fetch --no-tags origin main\ngit merge-base --is-ancestor HEAD origin/main",
   'npm install --global npm@12.0.2 --registry=https://registry.npmjs.org',
-  "test \"$(node -p \"require('./package.json').version\")\" = \"0.1.0-beta.3\"\ntest \"$(node -p \"require('./package.json').publishConfig.tag\")\" = \"beta\"",
   'npm ci --ignore-scripts --registry=https://registry.npmjs.org',
   'npm run check',
   'npm run check:distribution',
-  'npm publish --provenance --access public --tag beta --registry=https://registry.npmjs.org',
-  'EXPECT_GIT_HEAD="${GITHUB_SHA}" npm run verify:registry-beta -- --version "${{ inputs.version }}"'
+  'npm publish --provenance --access public --tag "${{ steps.release.outputs.npm_tag }}" --registry=https://registry.npmjs.org',
+  'EXPECT_GIT_HEAD="$(git rev-parse HEAD)" npm run verify:registry-release -- --version "${{ steps.release.outputs.version }}"'
 ]
 release_positions = required_release_runs.map do |required|
   index = runs.index(required)
@@ -28,35 +41,6 @@ release_positions = required_release_runs.map do |required|
   index
 end
 abort 'release workflow command order drifted' unless release_positions == release_positions.sort && release_positions.uniq.length == release_positions.length
-
-version_assertion = runs.find { |run| run.include?('${{ inputs.version }}') }
-abort 'release workflow omitted the exact version assertion' unless version_assertion&.include?("node -p \"require('./package.json').version\"")
-expected_version = JSON.parse(File.read(File.join(root, 'package.json')))['version']
-
-beta_release_metadata_assertion = runs.find { |run| run.include?("require('./package.json').publishConfig.tag") }
-abort 'release workflow omitted the beta-only metadata assertion' unless beta_release_metadata_assertion&.include?("require('./package.json').version\")\" = \"0.1.0-beta.3\"") && beta_release_metadata_assertion.include?("require('./package.json').publishConfig.tag\")\" = \"beta\"")
-
-def assert_shell_exit(command, root, expected_success)
-  _stdout, _stderr, status = Open3.capture3('bash', '-n', '-c', command, chdir: root)
-  abort 'release workflow version assertion is not valid Bash' unless status.success?
-  _stdout, _stderr, status = Open3.capture3('bash', '-c', command, chdir: root)
-  abort "release workflow version assertion #{expected_success ? 'failed' : 'accepted a mismatch'}" unless status.success? == expected_success
-end
-
-assert_shell_exit(version_assertion.gsub('${{ inputs.version }}', expected_version), root, true)
-assert_shell_exit(version_assertion.gsub('${{ inputs.version }}', "#{expected_version}-mismatch"), root, false)
-assert_shell_exit(beta_release_metadata_assertion, root, expected_version == '0.1.0-beta.3')
-
-broken_plain_scalar = <<~YAML
-  name: Release npm beta
-  steps:
-    - run: test "${{ inputs.version }}" = "$(node --input-type=module -e \"import manifest from './package.json' with { type: 'json' }; console.log(manifest.version)\")"
-YAML
-begin
-  YAML.safe_load(broken_plain_scalar, aliases: false)
-  abort 'workflow parser regression: the legacy unquoted JSON import scalar was accepted'
-rescue Psych::SyntaxError
-end
 
 check_source = File.read(File.join(root, '.github/workflows/check.yml'))
 check_workflow = YAML.safe_load(check_source, aliases: false)
