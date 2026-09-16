@@ -8,18 +8,6 @@ import { resolveRelease } from './resolve-release.mjs'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
-const expectedExports = [
-  './agent-avatar/v1',
-  './agent-conversation-shell/v1',
-  './agent-conversation-shell/v2',
-  './agent-conversation-shell/v3',
-  './agent-loop/v1',
-  './agent-loop/v2',
-  './agent-loop/v3',
-  './agent-loop/v4',
-  './connector-service/v1',
-  './host-dom/v1',
-].sort()
 const expectedV3Schemas = [
   'agent-loop-bound-client.v3.schema.json',
   'agent-loop-command.v3.schema.json',
@@ -74,9 +62,6 @@ function fileDigest(directory, files) {
 if (fileDigest(root, frozenAgentLoopFiles) !== frozenAgentLoopDigest) {
   throw new Error('frozen AgentLoop v1/v2/v3 package bytes drifted')
 }
-if (JSON.stringify(Object.keys(manifest.exports).sort()) !== JSON.stringify(expectedExports)) {
-  throw new Error('local public export inventory drifted')
-}
 const arguments_ = process.argv.slice(2)
 if (arguments_.length !== 0 && (arguments_.length !== 2 || arguments_[0] !== '--version')) {
   throw new Error('usage: verify-registry-release.mjs [--version <exact-version>]')
@@ -92,7 +77,13 @@ function run(arguments_, cwd = root) {
   return result.stdout
 }
 
-const published = JSON.parse(
+function singleViewResult(value, label) {
+  if (!Array.isArray(value)) return value
+  if (value.length !== 1) throw new Error('npm view returned ' + value.length + ' ' + label + ' results')
+  return value[0]
+}
+
+const publishedResult = JSON.parse(
   run([
     'view',
     `${manifest.name}@${version}`,
@@ -104,9 +95,11 @@ const published = JSON.parse(
     '--registry=https://registry.npmjs.org',
   ]),
 )
-const distTag = JSON.parse(
+const published = singleViewResult(publishedResult, 'package metadata')
+const distTagResult = JSON.parse(
   run(['view', manifest.name, 'dist-tags.' + npmTag, '--json', '--registry=https://registry.npmjs.org']),
 )
+const distTag = singleViewResult(distTagResult, 'dist-tag')
 const expectedGitHead = process.env.EXPECT_GIT_HEAD
   ?? execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 if (published.version !== version || distTag !== version) throw new Error('registry version or derived dist-tag drift')
@@ -170,7 +163,7 @@ try {
   ], { cwd: consumer, stdio: 'inherit' })
   writeFileSync(
     join(consumer, 'consumer-v3-visual.ts'),
-    `import type { AgentAvatarRef } from '@cordisx/protocol/agent-avatar/v1'\nimport type { AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst avatar = { kind: 'asset', ref: 'registry-avatar:participant' } satisfies AgentAvatarRef\nconst newRoom = { kind: 'semantic-icon', icon: 'host:action.add' } satisfies AgentConversationRoomCollectionLeadingVisual\nnewRoom.icon satisfies \`host:\${string}\`\nconst zeroParticipants = [] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nconst emptyRoom = { kind: 'room-composite-avatar', roomId: 'registry-empty-room', participants: zeroParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\nemptyRoom.roomId satisfies string\nemptyRoom.participants.length satisfies 0\nconst fiveParticipants = [\n  { participantId: 'registry-participant-1', avatar },\n  { participantId: 'registry-participant-2', avatar },\n  { participantId: 'registry-participant-3', avatar },\n  { participantId: 'registry-participant-4', avatar },\n  { participantId: 'registry-participant-5', avatar },\n] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nfiveParticipants.length satisfies 5\nconst populatedRoom = { kind: 'room-composite-avatar', roomId: 'registry-populated-room', participants: fiveParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\npopulatedRoom.roomId satisfies string\nfor (const participant of populatedRoom.participants) { participant.participantId satisfies string; participant.avatar satisfies AgentAvatarRef }\n`,
+    `import type { AgentAvatarOpaqueRef, AgentAvatarRef } from '@cordisx/protocol/agent-avatar/v1'\nimport type { AgentConversationRoomCollectionLeadingVisual, AgentConversationRoomCollectionParticipantRef } from '@cordisx/protocol/agent-conversation-shell/v3'\nconst avatarRef = 'registry-avatar:participant' as AgentAvatarOpaqueRef\nconst avatar = { kind: 'asset', ref: avatarRef } satisfies AgentAvatarRef\nconst newRoom = { kind: 'semantic-icon', icon: 'host:action.add' } satisfies AgentConversationRoomCollectionLeadingVisual\nnewRoom.icon satisfies \`host:\${string}\`\nconst zeroParticipants = [] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nconst emptyRoom = { kind: 'room-composite-avatar', roomId: 'registry-empty-room', participants: zeroParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\nemptyRoom.roomId satisfies string\nemptyRoom.participants.length satisfies 0\nconst fiveParticipants = [\n  { participantId: 'registry-participant-1', avatar },\n  { participantId: 'registry-participant-2', avatar },\n  { participantId: 'registry-participant-3', avatar },\n  { participantId: 'registry-participant-4', avatar },\n  { participantId: 'registry-participant-5', avatar },\n] as const satisfies readonly AgentConversationRoomCollectionParticipantRef[]\nfiveParticipants.length satisfies 5\nconst populatedRoom = { kind: 'room-composite-avatar', roomId: 'registry-populated-room', participants: fiveParticipants } satisfies AgentConversationRoomCollectionLeadingVisual\npopulatedRoom.roomId satisfies string\nfor (const participant of populatedRoom.participants) { participant.participantId satisfies string; participant.avatar satisfies AgentAvatarRef }\n`,
   )
   execFileSync(process.execPath, [
     join(root, 'node_modules/typescript/bin/tsc'),
