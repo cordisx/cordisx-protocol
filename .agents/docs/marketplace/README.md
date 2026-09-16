@@ -19,6 +19,9 @@ The machine-readable contracts are:
 - `schemas/marketplace-plugin.v4.schema.json` and
   `schemas/marketplace-feed.v4.schema.json` for optional external-publisher
   commerce descriptors; and
+- `schemas/marketplace-plugin.v5.schema.json` and
+  `schemas/marketplace-feed.v5.schema.json` for a required, localizable
+  feed-level description while retaining version-4 plugin capabilities; and
 - `schemas/marketplace-source.v1.schema.json` for importing one Host-managed
   catalog source; and
 - `schemas/marketplace-official.v1.schema.json` and
@@ -161,7 +164,9 @@ A feed requires `$schema`, `schemaVersion`, `name`, `homepage`, and a
 version-3 feeds also require `fallbackLocale` and may localize their display
 name. Version 3 additionally requires `generatedAt`, explicit protected-merge
 trust metadata, and `official` and `certifications` arrays, including when
-those arrays are empty. Feed generation is deterministic: catalogs sort
+those arrays are empty. Version 5 additionally requires a feed-level
+`description`; both `name` and `description` may be localized independently.
+Feed generation is deterministic: catalogs sort
 entries first by canonical `source`, then by `id`, then by release `version`;
 trust records use their documented exact-identity order.
 
@@ -189,6 +194,12 @@ version-3 trust envelope is not a downgrade-compatible positive claim.
 Version-4 consumers may accept versions 1--3 using their documented discovery
 projections. They must not invent a commerce action for those records. Older
 consumers reject a version-4 feed rather than ignoring `commerce`.
+
+Version-5 consumers may accept versions 1--4 using their documented discovery
+projections. A consumer may derive a neutral source summary when an older feed
+does not provide `description`; it must use the localized description carried
+by a valid version-5 feed when present. Older consumers reject a version-5 feed
+rather than ignoring its source description.
 
 ## Multiple feeds
 
