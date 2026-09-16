@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/isolated-game-ui-request.v1.schema.json",
+  "title": "Isolated game UI request v1",
+  "$comment": "Additional semantic checks: total UTF8 bytes <=8192; payload <=4096 bytes and depth<=16; finite numbers only; reject prototype keys recursively. Match/sequence must equal the authoritative mounted snapshot. Deduplicate requestId with identical content; never dispatch author data as Host authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "type", "requestId", "matchId", "sequence", "kind", "payload"],
+  "properties": {
+    "version": { "const": 1 },
+    "type": { "const": "request" },
+    "requestId": { "type": "string", "pattern": "^[a-zA-Z0-9-]{1,100}$" },
+    "matchId": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "sequence": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+    "kind": { "enum": ["action", "room-action", "exit", "next-round"] },
+    "payload": { "$ref": "#/$defs/json" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "kind": { "const": "room-action" } },
+        "required": ["kind"]
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["operation"],
+            "properties": {
+              "operation": { "enum": ["ready", "cancel-ready", "start", "funding"] }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "json": {
+      "oneOf": [
+        { "type": ["null", "boolean", "number", "string"] },
+        { "type": "array", "items": { "$ref": "#/$defs/json" } },
+        { "type": "object", "propertyNames": { "not": { "enum": ["__proto__", "prototype", "constructor"] } }, "additionalProperties": { "$ref": "#/$defs/json" } }
+      ]
+    }
+  }
+}

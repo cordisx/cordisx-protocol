@@ -1,0 +1,527 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/local-wallet.v1.schema.json",
+  "title": "Host-profile local wallet signed payload v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "origin",
+        "sourceId",
+        "instanceId",
+        "audience",
+        "nonce",
+        "expiresAt"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.local-wallet-challenge/v1"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^http://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "audience": {
+          "enum": [
+            "local-wallet-enrollment",
+            "local-wallet",
+            "local-work-income"
+          ]
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "expiresAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "origin",
+        "sourceId",
+        "instanceId",
+        "audience",
+        "nonce",
+        "expiresAt",
+        "nativeSubject",
+        "subject",
+        "publicKey"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.local-wallet-enrollment/v1"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^http://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "audience": {
+          "const": "local-wallet-enrollment"
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "expiresAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "nativeSubject": {
+          "type": "string",
+          "pattern": "^codex:[A-Za-z0-9_-]{43}$"
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^host-local:[A-Za-z0-9_-]{43}$"
+        },
+        "publicKey": {
+          "type": "string",
+          "pattern": "^MCowBQYDK2VwAyEA[A-Za-z0-9+/]{43}=$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "origin",
+        "sourceId",
+        "instanceId",
+        "audience",
+        "nonce",
+        "expiresAt",
+        "subject"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.local-wallet-assertion/v1"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^http://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "audience": {
+          "const": "local-wallet"
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "expiresAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^host-local:[A-Za-z0-9_-]{43}$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "origin",
+        "sourceId",
+        "instanceId",
+        "audience",
+        "nonce",
+        "expiresAt",
+        "subject",
+        "leaseId",
+        "continuity",
+        "snapshot"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.local-work-observation/v1"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^http://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "audience": {
+          "const": "local-work-income"
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "expiresAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^host-local:[A-Za-z0-9_-]{43}$"
+        },
+        "leaseId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "continuity": {
+          "enum": [
+            "baseline",
+            "continuous"
+          ]
+        },
+        "snapshot": {
+          "$ref": "#/$defs/workSnapshot"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "origin",
+        "sourceId",
+        "instanceId",
+        "audience",
+        "nonce",
+        "subject",
+        "result",
+        "nativeSubject"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.local-wallet-result/v1"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^http://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "audience": {
+          "const": "local-wallet-enrollment"
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^host-local:[A-Za-z0-9_-]{43}$"
+        },
+        "result": {
+          "type": "object"
+        },
+        "nativeSubject": {
+          "type": "string",
+          "pattern": "^codex:[A-Za-z0-9_-]{43}$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "origin",
+        "sourceId",
+        "instanceId",
+        "audience",
+        "nonce",
+        "subject",
+        "result"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.local-wallet-result/v1"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^http://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "audience": {
+          "const": "local-wallet"
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^host-local:[A-Za-z0-9_-]{43}$"
+        },
+        "result": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "origin",
+        "sourceId",
+        "instanceId",
+        "audience",
+        "nonce",
+        "subject",
+        "result"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.local-wallet-result/v1"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^http://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "audience": {
+          "const": "local-work-income"
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^host-local:[A-Za-z0-9_-]{43}$"
+        },
+        "result": {
+          "type": "object"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "workSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "status",
+        "scopeId",
+        "sourceId",
+        "epoch",
+        "revision",
+        "policyId",
+        "eligibleTokens",
+        "inputTokens",
+        "outputTokens",
+        "enabledAt",
+        "observedThrough",
+        "coverage",
+        "diagnostics",
+        "classification"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 2
+        },
+        "status": {
+          "const": "ready"
+        },
+        "scopeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "epoch": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "policyId": {
+          "const": "codex-local-work-input-output-v2"
+        },
+        "eligibleTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "inputTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "outputTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "enabledAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "observedThrough": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "coverage": {
+          "const": "partial"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256,
+                "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            }
+          }
+        },
+        "classification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version",
+            "hostGameTasks",
+            "forksAndSubagents",
+            "unknownSources"
+          ],
+          "properties": {
+            "version": {
+              "const": "host-game-cwd-v1"
+            },
+            "hostGameTasks": {
+              "const": "excluded"
+            },
+            "forksAndSubagents": {
+              "const": "excluded"
+            },
+            "unknownSources": {
+              "const": "excluded"
+            }
+          }
+        }
+      }
+    }
+  }
+}

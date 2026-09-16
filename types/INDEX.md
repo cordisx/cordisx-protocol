@@ -157,3 +157,25 @@ the specification and [schema index](../schemas/README.md).
 - [Notifications v1](notifications.v1.d.ts): owner-bound user notifications and dismiss handles.
 
 - [Dialogs v1](dialogs.v1.d.ts): modal handles, body mounts and structured actions.
+
+- [Embedded schema form v1](schema-form.v1.d.ts): controlled drafts shared across page, panel and dialog bodies.
+- [`current-user/v1`](current-user.v1.d.ts): [current Host user display profile](../.agents/docs/current-user.md), bounded metadata without native credentials.
+
+- [Isolated game UI v1](isolated-game-ui.v1.d.ts): HTML resources and bounded snapshot/action bridge.
+- `page/v4`: [Page v4 types](page.v4.d.ts), [standard header images and menus](../.agents/docs/ui-contributions/page-v4.md).
+
+- [`plugin-http/v2`](plugin-http.v2.d.ts): [explicit secure session retention and recovery](../.agents/docs/plugin-http/v2.md).
+
+## Managed local sources
+
+- `plugin-http/v3`: [types](plugin-http.v3.d.ts), [specification](../.agents/docs/plugin-http/v3.md).
+- `managed-source/v1`: [types](managed-source.v1.d.ts), [canonical runtime](../runtime/managed-source.v1.js), [specification](../.agents/docs/plugin-http/v3.md). This runtime serializes signed payloads; it does not provide signing authority.
+
+| `local-wallet/v1` | `local-wallet.v1.d.ts` | Host-profile local wallet enrollment, signatures and classified work |
+| `plugin-http/v4` | `plugin-http.v4.d.ts` | Fresh original-account enrollment and local wallet operations |
+
+- `local-work-settlement/v1`: [types](local-work-settlement.v1.d.ts), [specification](../.agents/docs/local-work-settlement/v1.md), [receipt pin validation](../runtime/local-work-settlement.v1.js).
+
+- `wallet-spend/v1`: [types](wallet-spend.v1.d.ts), [specification](../.agents/docs/wallet-spend/v1.md), [fixture](../test-vectors/wallet-spend.v1.json).
+
+- `wallet-pool/v1`: [types](wallet-pool.v1.d.ts), [specification](../.agents/docs/wallet-pool/v1.md).

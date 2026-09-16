@@ -1,0 +1,118 @@
+{
+  "source": {
+    "serviceOrigin": "https://game.example",
+    "servicePublicKey": "MCowBQYDK2VwAyEA0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc",
+    "serverId": "server-1"
+  },
+  "identity": {
+    "walletId": "wallet-1",
+    "walletPublicKey": "MCowBQYDK2VwAyEAoJql9HpnWYAv-VX43C0qFKXJnSO-l_hkEn_5ODRVpPA"
+  },
+  "termsHash": "bc8ba1d21b9b4505919eaf913cbd5ccfbee02ab562cf1da764c5a0591605bfc7",
+  "envelopes": {
+    "terms": {
+      "payload": {
+        "contract": "economy.spend-terms/v1",
+        "serviceOrigin": "https://game.example",
+        "servicePublicKey": "MCowBQYDK2VwAyEA0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc",
+        "serverId": "server-1",
+        "matchId": "match-1",
+        "game": {
+          "id": "gomoku",
+          "version": "1",
+          "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "reviewStatus": "unreviewed"
+        },
+        "participants": [
+          {
+            "gameAccountId": "game-account-1",
+            "walletId": "wallet-1",
+            "walletPublicKey": "MCowBQYDK2VwAyEAoJql9HpnWYAv-VX43C0qFKXJnSO-l_hkEn_5ODRVpPA",
+            "amount": 10
+          }
+        ],
+        "policy": "capture-and-release",
+        "acceptBefore": 2000000000000
+      },
+      "signature": "PvWlj56mDfpFDe48j4OG_-o9DMaTjzo71mSNf403JnhHzY032aIJP6mGwD01p6pTo6wOqpPz3jKHSFKXwMVZAg"
+    },
+    "reservation": {
+      "payload": {
+        "contract": "economy.spend-reservation/v1",
+        "serviceOrigin": "https://game.example",
+        "servicePublicKey": "MCowBQYDK2VwAyEA0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc",
+        "serverId": "server-1",
+        "matchId": "match-1",
+        "termsHash": "bc8ba1d21b9b4505919eaf913cbd5ccfbee02ab562cf1da764c5a0591605bfc7",
+        "reservationId": "reservation-1",
+        "nonce": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "gameAccountId": "game-account-1",
+        "walletId": "wallet-1",
+        "walletPublicKey": "MCowBQYDK2VwAyEAoJql9HpnWYAv-VX43C0qFKXJnSO-l_hkEn_5ODRVpPA",
+        "amount": 10
+      },
+      "signature": "K5OJVj6eq8qKk7xAiiCdy0shxIukW1L3J5sJAcYaLymXNs_1ZLaer8ABNYwcPiKF04CCFOT3vAnvh4Q3jvEFCA"
+    },
+    "decision": {
+      "payload": {
+        "contract": "economy.spend-decision/v1",
+        "serviceOrigin": "https://game.example",
+        "servicePublicKey": "MCowBQYDK2VwAyEA0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc",
+        "serverId": "server-1",
+        "matchId": "match-1",
+        "termsHash": "bc8ba1d21b9b4505919eaf913cbd5ccfbee02ab562cf1da764c5a0591605bfc7",
+        "decisionId": "decision:051be2b179376e5a9959ea335408bef26404c735512d536cb185b09d78170a93",
+        "action": "capture",
+        "entries": [
+          {
+            "reservation": {
+              "payload": {
+                "contract": "economy.spend-reservation/v1",
+                "serviceOrigin": "https://game.example",
+                "servicePublicKey": "MCowBQYDK2VwAyEA0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc",
+                "serverId": "server-1",
+                "matchId": "match-1",
+                "termsHash": "bc8ba1d21b9b4505919eaf913cbd5ccfbee02ab562cf1da764c5a0591605bfc7",
+                "reservationId": "reservation-1",
+                "nonce": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "gameAccountId": "game-account-1",
+                "walletId": "wallet-1",
+                "walletPublicKey": "MCowBQYDK2VwAyEAoJql9HpnWYAv-VX43C0qFKXJnSO-l_hkEn_5ODRVpPA",
+                "amount": 10
+              },
+              "signature": "K5OJVj6eq8qKk7xAiiCdy0shxIukW1L3J5sJAcYaLymXNs_1ZLaer8ABNYwcPiKF04CCFOT3vAnvh4Q3jvEFCA"
+            },
+            "captureAmount": 7
+          }
+        ]
+      },
+      "signature": "wycNP0H9hSTsDx-lzViRt2JRCd9J6AgDGpoTeRsAzLT7OAJb77aLV_dRyFfXdDQXtG-_wtEHtXo-pyElZ-MkAw"
+    },
+    "challenge": {
+      "payload": {
+        "contract": "economy.spend-wallet-challenge/v1",
+        "serviceOrigin": "https://game.example",
+        "servicePublicKey": "MCowBQYDK2VwAyEA0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc",
+        "serverId": "server-1",
+        "gameAccountId": "game-account-1",
+        "nonce": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "expiresAt": 2000000000000
+      },
+      "signature": "24G3L-cgMwaKX8IzAn0AB-hCIjc6dysVa2oyQ0IXD7TAxF3CY8lvae6q5nlx3tOfwzy0ACygsIaKvV1jXZ1OAw"
+    },
+    "binding": {
+      "payload": {
+        "contract": "economy.spend-wallet-binding/v1",
+        "serviceOrigin": "https://game.example",
+        "servicePublicKey": "MCowBQYDK2VwAyEA0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc",
+        "serverId": "server-1",
+        "gameAccountId": "game-account-1",
+        "nonce": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "expiresAt": 2000000000000,
+        "walletId": "wallet-1",
+        "walletPublicKey": "MCowBQYDK2VwAyEAoJql9HpnWYAv-VX43C0qFKXJnSO-l_hkEn_5ODRVpPA"
+      },
+      "signature": "8SABADhtUgHgUvsJOsb5qSmjGs3VZplY62viJN2vLHRcHG6wl_JeaiAhtfR9WiVwOq_OXFquQTiiEJJe9UeJCA"
+    }
+  }
+}

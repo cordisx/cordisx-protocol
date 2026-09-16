@@ -1,0 +1,170 @@
+{
+  "valid": [
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-settlement/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-settlement/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      },
+      "baseline": true
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-settlement/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      },
+      "leaseId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-settlement/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      },
+      "accountId": "chosen"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-observation/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      }
+    }
+  ],
+  "canonical": "cordisx.local-wallet/v1\n{\"audience\":\"local-work-income\",\"contract\":\"cordisx.local-work-settlement/v1\",\"expiresAt\":20000,\"instanceId\":\"formal\",\"nonce\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"origin\":\"http://127.0.0.1:3000\",\"snapshot\":{\"classification\":{\"forksAndSubagents\":\"excluded\",\"hostGameTasks\":\"excluded\",\"unknownSources\":\"excluded\",\"version\":\"host-game-cwd-v1\"},\"coverage\":\"partial\",\"diagnostics\":[],\"eligibleTokens\":0,\"enabledAt\":0,\"epoch\":\"value\",\"inputTokens\":0,\"observedThrough\":0,\"outputTokens\":0,\"policyId\":\"codex-local-work-input-output-v2\",\"revision\":0,\"schemaVersion\":2,\"scopeId\":\"value\",\"sourceId\":\"value\",\"status\":\"ready\"},\"sourceId\":\"local\",\"subject\":\"host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+}

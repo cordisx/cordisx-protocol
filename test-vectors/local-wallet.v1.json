@@ -1,0 +1,217 @@
+{
+  "valid": [
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet-enrollment",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-wallet-challenge/v1"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet-enrollment",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-wallet-enrollment/v1",
+      "nativeSubject": "codex:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "publicKey": "MCowBQYDK2VwAyEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-wallet-assertion/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-observation/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "leaseId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "continuity": "baseline",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      }
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet-enrollment",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "contract": "cordisx.local-wallet-result/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "result": {},
+      "nativeSubject": "codex:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "contract": "cordisx.local-wallet-result/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "result": {}
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "contract": "cordisx.local-wallet-result/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "result": {}
+    }
+  ],
+  "invalid": [
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet-enrollment",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-wallet-enrollment/v1",
+      "nativeSubject": "codex:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "publicKey": "MCowBQYDK2VwAyEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "accountId": "forged"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet-enrollment",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-wallet-enrollment/v1",
+      "nativeSubject": "codex:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "publicKey": "private"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-wallet-assertion/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "nativeSubject": "codex:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-observation/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "leaseId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "continuity": "baseline",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      },
+      "amount": 1
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-work-income",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expiresAt": 20000,
+      "contract": "cordisx.local-work-observation/v1",
+      "subject": "codex:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "leaseId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "continuity": "baseline",
+      "snapshot": {
+        "schemaVersion": 2,
+        "status": "ready",
+        "scopeId": "value",
+        "sourceId": "value",
+        "epoch": "value",
+        "revision": 0,
+        "policyId": "codex-local-work-input-output-v2",
+        "eligibleTokens": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "enabledAt": 0,
+        "observedThrough": 0,
+        "coverage": "partial",
+        "diagnostics": [],
+        "classification": {
+          "version": "host-game-cwd-v1",
+          "hostGameTasks": "excluded",
+          "forksAndSubagents": "excluded",
+          "unknownSources": "excluded"
+        }
+      }
+    },
+    {
+      "origin": "http://127.0.0.1:3000",
+      "sourceId": "local",
+      "instanceId": "formal",
+      "audience": "local-wallet-enrollment",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "contract": "cordisx.local-wallet-result/v1",
+      "subject": "host-local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "result": {}
+    }
+  ]
+}

@@ -298,3 +298,6 @@ new structured families, and contextual invocation origin are defined by the
 `surface-contribution.v2` and `surface-contribution.v3`; manager settings is
 added only by `surface-contribution.v4`. None rename or restore a retired
 free-DOM slot.
+
+Page metadata [v4](page-v4.md) adds bounded inline images, anonymous guest avatars
+and Host-owned single-level action menus. Versions 1–3 above remain frozen.

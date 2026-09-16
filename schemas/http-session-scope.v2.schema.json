@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/http-session-scope.v2.schema.json",
+  "title": "HTTP session partition v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "origin",
+    "sourceId",
+    "accountId"
+  ],
+  "properties": {
+    "origin": {
+      "type": "string",
+      "maxLength": 2048,
+      "pattern": "^https?://[^/@?#]+$"
+    },
+    "sourceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+    },
+    "accountId": {
+      "type": "string",
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+    }
+  }
+}

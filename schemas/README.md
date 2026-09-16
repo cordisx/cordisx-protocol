@@ -642,3 +642,18 @@ Host-private.
 - `http-connection.v1.schema.json`: owner-bound opaque HTTP connection descriptor.
 
 - Entity execution context v1: `entity-execution-binding.v1.schema.json`, `entity-execution-binding-write.v1.schema.json`, `entity-execution-context-request.v1.schema.json`.
+
+- [Isolated game UI request v1](isolated-game-ui-request.v1.schema.json), with [normative behavior](../.agents/docs/isolated-game-ui.md).
+- [Current user display profile result v1](current-user-result.v1.schema.json), with [privacy and lifecycle behavior](../.agents/docs/current-user.md).
+- [Isolated game UI snapshot v1](isolated-game-ui-snapshot.v1.schema.json), including optional public participant metadata; seat uniqueness and sequence rules are semantic checks.
+- `page.v4.schema.json`: [page v4](../.agents/docs/ui-contributions/page-v4.md) header raster visuals and bounded menus.
+
+- [HTTP session scope v2](http-session-scope.v2.schema.json): [secure retained sessions](../.agents/docs/plugin-http/v2.md).
+
+- `managed-source.v1.schema.json`: closed signed challenge/assertion/work/result payload shapes; canonical origins, times, signatures and binding checks also require conformance.
+
+## Host-profile local wallet v1
+
+`local-wallet.v1.schema.json` closes enrollment, local assertions, classified work observations, challenges and results. See [HTTP v4](../.agents/docs/plugin-http/v4.md) for signing and ownership requirements.
+
+- [Durable work settlement v1](local-work-settlement.v1.schema.json): closed Host-signed admitted snapshot; independent of leased local wallet work.
