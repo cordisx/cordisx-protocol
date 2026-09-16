@@ -41,8 +41,15 @@ with npm 12 only after the organization owner has authenticated with the
 required 2FA. It is deliberately not published by `release-beta.yml` and does
 not claim Trusted Publishing provenance.
 
+On 2026-09-16, npmjs assigned `latest` to the first public record even though
+the bootstrap publish explicitly used `--tag bootstrap`; an authenticated
+removal attempt returned `E400`. After the first consumer beta is published,
+remove `latest` if the registry allows it. If npmjs still rejects removal, move
+`latest` to the exact consumer beta so it never points to the bootstrap alpha.
+Keep `bootstrap` on `0.1.0-alpha.0` and `beta` on the exact consumer beta.
+
 After the npm Trusted Publisher has been bound to this repository's protected
 `npm-beta` environment and `release-beta.yml`, the formal package metadata
-returns to `0.1.0-beta.2` with the `beta` dist-tag. Only that successor may be
+returns to `0.1.0-beta.3` with the `beta` dist-tag. Only that successor may be
 dispatched through the OIDC workflow with `--provenance`; consumer packages
 must use that exact beta release rather than the bootstrap record.

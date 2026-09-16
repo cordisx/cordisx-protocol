@@ -15,7 +15,7 @@ abort 'release workflow release boundary drifted' unless publish['environment'] 
 runs = publish['steps'].map { |step| step['run'] }.compact.map(&:chomp)
 required_release_runs = [
   'npm install --global npm@12.0.2 --registry=https://registry.npmjs.org',
-  "test \"$(node -p \"require('./package.json').version\")\" = \"0.1.0-beta.2\"\ntest \"$(node -p \"require('./package.json').publishConfig.tag\")\" = \"beta\"",
+  "test \"$(node -p \"require('./package.json').version\")\" = \"0.1.0-beta.3\"\ntest \"$(node -p \"require('./package.json').publishConfig.tag\")\" = \"beta\"",
   'npm ci --ignore-scripts --registry=https://registry.npmjs.org',
   'npm run check',
   'npm run check:distribution',
@@ -34,7 +34,7 @@ abort 'release workflow omitted the exact version assertion' unless version_asse
 expected_version = JSON.parse(File.read(File.join(root, 'package.json')))['version']
 
 beta_release_metadata_assertion = runs.find { |run| run.include?("require('./package.json').publishConfig.tag") }
-abort 'release workflow omitted the beta-only metadata assertion' unless beta_release_metadata_assertion&.include?("require('./package.json').version\")\" = \"0.1.0-beta.2\"") && beta_release_metadata_assertion.include?("require('./package.json').publishConfig.tag\")\" = \"beta\"")
+abort 'release workflow omitted the beta-only metadata assertion' unless beta_release_metadata_assertion&.include?("require('./package.json').version\")\" = \"0.1.0-beta.3\"") && beta_release_metadata_assertion.include?("require('./package.json').publishConfig.tag\")\" = \"beta\"")
 
 def assert_shell_exit(command, root, expected_success)
   _stdout, _stderr, status = Open3.capture3('bash', '-n', '-c', command, chdir: root)
@@ -45,7 +45,7 @@ end
 
 assert_shell_exit(version_assertion.gsub('${{ inputs.version }}', expected_version), root, true)
 assert_shell_exit(version_assertion.gsub('${{ inputs.version }}', "#{expected_version}-mismatch"), root, false)
-assert_shell_exit(beta_release_metadata_assertion, root, expected_version == '0.1.0-beta.2')
+assert_shell_exit(beta_release_metadata_assertion, root, expected_version == '0.1.0-beta.3')
 
 broken_plain_scalar = <<~YAML
   name: Release npm beta

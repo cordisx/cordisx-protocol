@@ -7,7 +7,7 @@ const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 
 const approvedReleaseMetadata = new Map([
   ['0.1.0-alpha.0', 'bootstrap'],
-  ['0.1.0-beta.2', 'beta'],
+  ['0.1.0-beta.3', 'beta'],
 ])
 
 const expectedTag = approvedReleaseMetadata.get(manifest.version)

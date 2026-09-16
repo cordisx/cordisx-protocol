@@ -1,6 +1,6 @@
 {
   "name": "@cordisx/protocol",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-beta.3",
   "type": "module",
   "license": "AGPL-3.0-or-later",
   "repository": {
@@ -245,7 +245,7 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",
-    "tag": "bootstrap"
+    "tag": "beta"
   },
   "scripts": {
     "precheck": "node conformance/raster-image.mjs && node conformance/brand-icon.mjs && node conformance/manager-settings-navigation-provenance.mjs && node conformance/platform-provider.mjs",
