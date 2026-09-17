@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v6.schema.json",
+  "schemaVersion": 6,
+  "id": "noncanonical-inline-png",
+  "fallbackLocale": "en",
+  "name": "Noncanonical Inline PNG",
+  "description": "Inline PNG data must use canonical base64 serialization.",
+  "icon": "data:image/png;base64,iVBORw0KGgoA=",
+  "version": "1.0.0",
+  "source": "https://example.com/noncanonical-inline-png",
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "Example" }]
+}

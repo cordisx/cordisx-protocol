@@ -89,6 +89,9 @@ its scope are described in [conformance](../conformance/README.md).
 - `marketplace-plugin.v5.schema.json` and `marketplace-feed.v5.schema.json`:
   the compatible Marketplace successor with a required, localizable feed-level
   description for source discovery and administration;
+- `marketplace-plugin.v6.schema.json` and `marketplace-feed.v6.schema.json`:
+  the compatible Marketplace successor allowing small PNG icons to be embedded
+  as self-contained base64 data URLs;
 - `ui-common.v1.schema.json`: shared identifiers, command/route references,
   host icon tokens, conditions, and disabled state;
 - `icon-theme-common.v1.schema.json`: 64 closed version-1 semantic icon keys,

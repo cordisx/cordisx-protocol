@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v6.schema.json",
+  "schemaVersion": 6,
+  "id": "inline-icon",
+  "fallbackLocale": "en",
+  "name": "Inline Icon",
+  "description": "A plugin with self-contained PNG artwork.",
+  "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+  "version": "1.0.0",
+  "source": "https://example.com/inline-icon",
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "Example" }]
+}

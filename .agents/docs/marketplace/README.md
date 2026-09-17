@@ -22,6 +22,9 @@ The machine-readable contracts are:
 - `schemas/marketplace-plugin.v5.schema.json` and
   `schemas/marketplace-feed.v5.schema.json` for a required, localizable
   feed-level description while retaining version-4 plugin capabilities; and
+- `schemas/marketplace-plugin.v6.schema.json` and
+  `schemas/marketplace-feed.v6.schema.json` for self-contained PNG artwork in
+  plugin entries while retaining HTTPS icon compatibility; and
 - `schemas/marketplace-source.v1.schema.json` for importing one Host-managed
   catalog source; and
 - `schemas/marketplace-official.v1.schema.json` and
@@ -144,6 +147,11 @@ not localized or inferred from an artifact: purchase, management, and recovery
 URLs belong to the developer, and the signed PublisherGrant remains the sole
 authorization input. Its presence does not establish that a payment happened.
 
+Version 6 may carry `icon` as either the existing HTTPS URL or a self-contained
+`data:image/png;base64,...` URL. Embedded artwork is limited to 32 KiB of
+serialized data and must decode to PNG bytes. Other media types and SVG data
+URLs are invalid.
+
 Host display projection is field-wise and deterministic:
 
 1. the current Host locale when that localized field exists;
@@ -200,6 +208,10 @@ projections. A consumer may derive a neutral source summary when an older feed
 does not provide `description`; it must use the localized description carried
 by a valid version-5 feed when present. Older consumers reject a version-5 feed
 rather than ignoring its source description.
+
+Version-6 consumers may accept versions 1--5 using their documented discovery
+projections. Older consumers reject a version-6 feed rather than interpreting
+or stripping its embedded icon data.
 
 ## Multiple feeds
 
