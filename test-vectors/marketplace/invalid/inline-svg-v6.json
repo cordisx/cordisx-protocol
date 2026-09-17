@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v6.schema.json",
+  "schemaVersion": 6,
+  "id": "inline-svg",
+  "fallbackLocale": "en",
+  "name": "Inline SVG",
+  "description": "SVG data URLs are not accepted as marketplace artwork.",
+  "icon": "data:image/svg+xml;base64,PHN2Zy8+",
+  "version": "1.0.0",
+  "source": "https://example.com/inline-svg",
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "Example" }]
+}

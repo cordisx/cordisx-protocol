@@ -5,10 +5,10 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchemas = [1, 2, 3, 4, 5].map(async version =>
+const pluginSchemas = [1, 2, 3, 4, 5, 6].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8'))
 )
-const feedSchemas = [1, 2, 3, 4, 5].map(async version =>
+const feedSchemas = [1, 2, 3, 4, 5, 6].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8'))
 )
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
@@ -82,6 +82,19 @@ function canonicalLocale(value) {
   const [canonical] = Intl.getCanonicalLocales(value)
   if (canonical === undefined) throw new Error(`invalid locale: ${value}`)
   return canonical
+}
+
+function validateInlinePngIcon(value) {
+  if (typeof value !== 'string' || !value.startsWith('data:')) return []
+  const match = /^data:image\/png;base64,([A-Za-z0-9+/]+={0,2})$/.exec(value)
+  if (match === null) return [{ message: 'icon data URL must contain canonical base64 PNG data' }]
+  const bytes = Buffer.from(match[1], 'base64')
+  if (bytes.toString('base64') !== match[1]) {
+    return [{ message: 'icon data URL must contain canonical base64 PNG data' }]
+  }
+  return bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from('89504e470d0a1a0a', 'hex'))
+    ? []
+    : [{ message: 'icon data URL must decode to PNG bytes' }]
 }
 
 function localeErrors(value, label, authorCount) {
@@ -169,6 +182,7 @@ export function validatePlugin(plugin) {
       errors.push({ message: error instanceof Error ? error.message : String(error) })
     }
   }
+  if (plugin.schemaVersion >= 6) errors.push(...validateInlinePngIcon(plugin.icon))
   if (
     plugin.schemaVersion >= 3 && plugin.artifact !== undefined
     && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)
