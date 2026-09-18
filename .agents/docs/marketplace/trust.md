@@ -1,4 +1,4 @@
-# Marketplace Official Publisher and Certification v1
+# Marketplace Official Publisher and Certification v1/v2
 
 ## Trust boundary
 
@@ -40,6 +40,14 @@ The plugin's version-3 artifact projection must exactly match the official
 record's publisher identity, namespace, and package name. A publisher/source
 mismatch rejects the record rather than silently degrading it to Official.
 
+Version 2 adds one closed ByteDance internal publisher profile. It binds the
+canonical source `https://code.byted.org/fe/cordisx-plugins`, publisher
+`npm:@byted`, namespace `@byted`, and a package named
+`@byted/cordisx-plugin-*`. It does not broaden v1 or let another Codebase
+repository, namespace, or package prefix claim Official identity. Official v2
+retains exactly the same identity-only semantics: it carries no permission or
+capability and never changes a PermissionBroker decision.
+
 ## Exact artifact certification
 
 Certification is an exact-version code-conformance review record issued through the
@@ -68,6 +76,22 @@ pull request or exact commit in `cordisx/marketplace`. Catalogs grant and change
 records only in a CODEOWNERS-protected directory with deterministic CI
 conformance. Package authors cannot grant certification through package or
 manifest metadata.
+
+The v2 internal reviewer authority is
+`byted.cordisx-marketplace.codeowners/v1`. Its evidence reference must identify
+an exact merge request or 40-hex commit in
+`https://code.byted.org/fe/cordisx-marketplace`. An arbitrary Codebase URL,
+branch, tag, package repository, or other project is not review evidence. A
+version-7 feed binds its authority to the matching record version and rejects
+mixed public/internal trust records.
+
+Certification v2 binds the complete installable artifact identity: canonical
+source, plugin id, exact package name, semantic version, exact HTTPS tarball
+download URL, and `sha256` integrity. It also binds formal source evidence from
+`fe/cordisx-plugins`: repository, exact source commit, merge-request URL, and
+exact merge commit. Protected Marketplace review evidence is independent and
+continues to identify the review that issued the certification. Changing any
+artifact or either evidence chain creates a different certified subject.
 
 An official record names the `cordisx-official-publisher` verification policy,
 its verification instant, and its current `active` or `revoked` status. A
@@ -112,12 +136,13 @@ independent information card. Official identity describes publisher/maintainer
 provenance and never changes permission handling.
 
 An active Certified record may produce a Host-owned
-`marketplace-certified-permission-projection.v1` document. That projection is
-an eligibility input, not a grant. It carries exact `source`, `pluginId`,
-`version`, and `sha256` integrity together with review policy, review and expiry
-times, protected evidence, configured feed identity, a deterministic
-fingerprint, and a feed replacement revision. It deliberately carries no
-permission names and no Official field.
+`marketplace-certified-permission-projection.v1` or v2 document matching its
+review authority. That projection is an eligibility input, not a grant. Version
+1 carries its existing exact public artifact fields. Version 2 carries exact
+`canonicalSource`, `pluginId`, `packageName`, `version`, `downloadUrl`,
+`integrity`, and `sourceEvidence` together with review policy, review and expiry
+times, protected Marketplace evidence, configured feed identity, a deterministic
+fingerprint, and a feed replacement revision. It carries no Official field.
 
 The projection `revision` equals `feed.generatedAt`. Its `fingerprint` is the
 lowercase `sha256:` digest of the UTF-8 JSON serialization of this object in
@@ -127,6 +152,31 @@ The nested object order is `reviewPolicy: { id, version }`,
 `evidence: { kind, reference }`, and
 `feed: { generatedAt, root, authority }`. Consumers validate both derived
 fields before treating a projection as eligible.
+
+Projection v2 uses its own canonical fingerprint payload. The lowercase
+`sha256:` digest covers the UTF-8 JSON serialization in this exact property
+order: `canonicalSource`, `pluginId`, `packageName`, `version`, `downloadUrl`,
+`integrity`, `sourceEvidence`, `reviewPolicy`, `reviewedAt`, `expiresAt`,
+`evidence`, `eligibilityCeiling`, `feed`, `revision`. Nested property order is:
+
+- `sourceEvidence: { repository, sourceCommit, mergeRequest, mergeCommit }`;
+- `reviewPolicy: { id, version }`;
+- `evidence: { kind, reference }`;
+- `eligibilityCeiling: { capability, scope: { extensionPoints } }`; and
+- `feed: { generatedAt, root, authority }`.
+
+The only v2 eligibility ceiling is capability
+`ui.extension-points.render`, scoped to the exact ordered extension-point tuple
+`manager.settings.navigation-items`, `manager.content`. This signed/serialized
+ceiling excludes `models.read`, Host DOM access, every side-effect capability,
+and every additional extension point. It is still only the maximum input the
+PermissionBroker may consider. The Host capability catalog, user policy,
+runtime declaration, current trust state, exact scope, and generation fences
+must all authorize the resulting lease; certification never creates a grant.
+
+Changing any artifact field, either evidence chain, the ceiling, feed, or
+revision requires a new fingerprint and invalidates leases derived from the
+prior projection.
 
 Only the PermissionBroker's own versioned capability catalog may decide that a
 specific DOM/rendering capability can omit an explicit confirmation. The

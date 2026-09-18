@@ -25,13 +25,21 @@ The machine-readable contracts are:
 - `schemas/marketplace-plugin.v6.schema.json` and
   `schemas/marketplace-feed.v6.schema.json` for self-contained PNG artwork in
   plugin entries while retaining HTTPS icon compatibility; and
+- `schemas/marketplace-plugin.v7.schema.json` and
+  `schemas/marketplace-feed.v7.schema.json` for authority-bound public or
+  internal trust records while retaining version-6 discovery fields; and
 - `schemas/marketplace-source.v1.schema.json` for importing one Host-managed
   catalog source; and
 - `schemas/marketplace-official.v1.schema.json` and
   `schemas/marketplace-certification.v1.schema.json` for the two independent
-  trust dimensions embedded by a version-3 feed; and
-- `schemas/marketplace-certified-permission-projection.v1.schema.json` for the
-  Host-owned exact Certified input consumed by permission policy.
+  public trust dimensions embedded by a version-3 feed;
+- `schemas/marketplace-official.v2.schema.json` and
+  `schemas/marketplace-certification.v2.schema.json` for the ByteDance internal
+  publisher profile and its protected Codebase Marketplace evidence; and
+- `schemas/marketplace-certified-permission-projection.v1.schema.json` and
+  `schemas/marketplace-certified-permission-projection.v2.schema.json` for the
+  Host-owned public and internal exact Certified inputs consumed by permission
+  policy.
 
 Version 2 adds localization only for human-facing feed metadata. It does not
 define installation, executable package resolution, signatures, provenance,
@@ -152,6 +160,15 @@ Version 6 may carry `icon` as either the existing HTTPS URL or a self-contained
 serialized data and must decode to PNG bytes. Other media types and SVG data
 URLs are invalid.
 
+Version 7 does not add plugin-authored trust fields. Its top-level trust
+authority selects one closed record profile: the existing public CordisX v1
+records or the ByteDance internal v2 records. An internal record binds the
+exact `code.byted.org/fe/cordisx-plugins` source, `npm:@byted` publisher,
+`@byted` namespace, and `@byted/cordisx-plugin-*` package identity. Internal
+Certification v2 additionally binds the exact version, download URL, tarball
+digest, source commit/MR/merge evidence, protected Marketplace review, and the
+closed controlled-rendering eligibility ceiling defined by the trust contract.
+
 Host display projection is field-wise and deterministic:
 
 1. the current Host locale when that localized field exists;
@@ -212,6 +229,10 @@ rather than ignoring its source description.
 Version-6 consumers may accept versions 1--5 using their documented discovery
 projections. Older consumers reject a version-6 feed rather than interpreting
 or stripping its embedded icon data.
+
+Version-7 consumers may accept versions 1--6 using their documented discovery
+and trust projections. Older consumers reject a version-7 feed rather than
+guessing whether a v2 trust record belongs to the public or internal authority.
 
 ## Multiple feeds
 

@@ -1,0 +1,7 @@
+{
+  "case": "models-read-is-outside-certified-v2-ceiling",
+  "eligibilityCeiling": {
+    "capability": "models.read",
+    "scope": {}
+  }
+}

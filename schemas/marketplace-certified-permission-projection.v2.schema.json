@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v2.schema.json",
+  "title": "CordisX Certified Permission Eligibility Projection v2",
+  "description": "Host-owned projection of one active exact-artifact certification. It is a PermissionBroker eligibility input, never a grant, permission list, or plugin-authored claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "kind",
+    "status",
+    "canonicalSource",
+    "pluginId",
+    "packageName",
+    "version",
+    "downloadUrl",
+    "integrity",
+    "sourceEvidence",
+    "reviewPolicy",
+    "reviewedAt",
+    "expiresAt",
+    "evidence",
+    "eligibilityCeiling",
+    "feed",
+    "fingerprint",
+    "revision"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v2.schema.json"
+    },
+    "schemaVersion": { "const": 2 },
+    "kind": { "const": "cordisx-certified-permission-eligibility" },
+    "status": { "const": "active" },
+    "canonicalSource": { "const": "https://code.byted.org/fe/cordisx-plugins" },
+    "pluginId": { "$ref": "ui-common.v1.schema.json#/$defs/localId" },
+    "packageName": {
+      "type": "string",
+      "pattern": "^@byted/cordisx-plugin-[a-z0-9][a-z0-9._-]*$",
+      "maxLength": 214
+    },
+    "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" },
+    "downloadUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^?#]+$",
+      "maxLength": 2048
+    },
+    "integrity": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" },
+    "sourceEvidence": { "$ref": "#/$defs/sourceEvidence" },
+    "reviewPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "cordisx-marketplace-review" },
+        "version": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/semanticVersion" }
+      }
+    },
+    "reviewedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reference"],
+      "properties": {
+        "kind": { "const": "protected-marketplace-review" },
+        "reference": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://code\\.byted\\.org/fe/cordisx-marketplace/(?:merge_requests/[1-9][0-9]*|commit/[a-f0-9]{40})$",
+          "maxLength": 2048
+        }
+      }
+    },
+    "eligibilityCeiling": { "$ref": "#/$defs/eligibilityCeiling" },
+    "feed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generatedAt", "root", "authority"],
+      "properties": {
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "root": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://[^?#]+$",
+          "maxLength": 2048
+        },
+        "authority": { "const": "byted.cordisx-marketplace.codeowners/v1" }
+      }
+    },
+    "fingerprint": { "$ref": "plugin-lifecycle-common.v1.schema.json#/$defs/digest" },
+    "revision": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "sourceCommit", "mergeRequest", "mergeCommit"],
+      "properties": {
+        "repository": { "const": "https://code.byted.org/fe/cordisx-plugins" },
+        "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "mergeRequest": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://code\\.byted\\.org/fe/cordisx-plugins/merge_requests/[1-9][0-9]*$",
+          "maxLength": 2048
+        },
+        "mergeCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+      }
+    },
+    "eligibilityCeiling": {
+      "const": {
+        "capability": "ui.extension-points.render",
+        "scope": {
+          "extensionPoints": ["manager.settings.navigation-items", "manager.content"]
+        }
+      }
+    }
+  }
+}
