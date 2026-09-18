@@ -15,6 +15,12 @@ function commandError(command, arguments_, result) {
   return new Error(`${command} ${arguments_.join(' ')} failed:\n${result.stdout ?? ''}\n${result.stderr ?? ''}`)
 }
 
+function singleViewResult(value, label) {
+  if (!Array.isArray(value)) return value
+  if (value.length !== 1) throw new Error(`registry returned ${value.length} ${label} results`)
+  return value[0]
+}
+
 export async function publishRegistryRelease({
   version,
   npmTag,
@@ -49,7 +55,7 @@ export async function publishRegistryRelease({
 
   if (!missing) {
     if (view.status !== 0) throw commandError('npm', viewArguments, view)
-    if (JSON.parse(view.stdout) !== version) {
+    if (singleViewResult(JSON.parse(view.stdout), 'version') !== version) {
       throw new Error(`registry returned an unexpected version for ${packageName}@${version}`)
     }
     const verification = verify()

@@ -28,6 +28,23 @@ test('skips publish only after an existing immutable release passes strict verif
   assert.deepEqual(calls[1][1], ['run', 'verify:registry-release', '--', '--version', version])
 })
 
+test('accepts the npm 12 single-result version array', async () => {
+  const calls = []
+  const outcome = await publishRegistryRelease({
+    version,
+    npmTag,
+    expectedGitHead,
+    run(command, arguments_) {
+      calls.push([command, arguments_])
+      return calls.length === 1 ? result(0, JSON.stringify([version])) : result(0)
+    },
+  })
+
+  assert.deepEqual(outcome, { published: false })
+  assert.equal(calls.length, 2)
+  assert.equal(calls.some(([, arguments_]) => arguments_[0] === 'publish'), false)
+})
+
 test('retries strict verification while a newly published release propagates', async () => {
   const calls = []
   let verificationAttempts = 0
