@@ -92,6 +92,14 @@ its scope are described in [conformance](../conformance/README.md).
 - `marketplace-plugin.v6.schema.json` and `marketplace-feed.v6.schema.json`:
   the compatible Marketplace successor allowing small PNG icons to be embedded
   as self-contained base64 data URLs;
+- `marketplace-plugin.v7.schema.json` and `marketplace-feed.v7.schema.json`:
+  the compatible Marketplace successor selecting either frozen public v1 trust
+  records or exact ByteDance internal v2 trust records by feed authority;
+- `marketplace-official.v2.schema.json`, `marketplace-certification.v2.schema.json`,
+  and `marketplace-certified-permission-projection.v2.schema.json`: exact
+  `@byted/cordisx-plugin-*` artifact identity, source commit/MR/merge evidence,
+  Codebase Marketplace review evidence, and a fingerprint-bound Certified
+  ceiling limited to controlled rendering at the two Manager extension points;
 - `ui-common.v1.schema.json`: shared identifiers, command/route references,
   host icon tokens, conditions, and disabled state;
 - `icon-theme-common.v1.schema.json`: 64 closed version-1 semantic icon keys,

@@ -1,0 +1,208 @@
+{
+  "case": "internal-aiden-traex-exact-trust",
+  "feed": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v7.schema.json",
+    "schemaVersion": 7,
+    "generatedAt": "2026-09-18T08:00:00.000Z",
+    "trust": {
+      "authority": "byted.cordisx-marketplace.codeowners/v1",
+      "root": "https://lf0-fast-deliver-inner.bytedance.net/obj/eden-internal/cordisx-marketplace/marketplace.json",
+      "grantModel": "protected-merge-chain-v1",
+      "cryptographicAttestation": "unsupported"
+    },
+    "fallbackLocale": "en",
+    "name": "CordisX Internal Marketplace",
+    "description": "Official internal CordisX plugin marketplace for ByteDance.",
+    "homepage": "https://code.byted.org/fe/cordisx-marketplace",
+    "plugins": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v7.schema.json",
+        "schemaVersion": 7,
+        "id": "aiden",
+        "fallbackLocale": "en",
+        "name": "Aiden",
+        "description": "Internal Aiden provider integration.",
+        "version": "0.1.2",
+        "source": "https://code.byted.org/fe/cordisx-plugins",
+        "artifact": {
+          "publisherIdentity": "npm:@byted",
+          "packageNamespace": "@byted",
+          "packageName": "@byted/cordisx-plugin-aiden",
+          "downloadUrl": "https://bnpm.byted.org/@byted/cordisx-plugin-aiden/-/cordisx-plugin-aiden-0.1.2.tgz",
+          "integrity": "sha256:d330c9289d09ecb99ba4a9d38fcd7b2c3671af6cd6f883b51ca713509f35fccf"
+        },
+        "license": "UNLICENSED",
+        "compatibility": { "cordisx": "^0.1.0" },
+        "authors": [{ "name": "CordisX Plugin Team" }]
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v7.schema.json",
+        "schemaVersion": 7,
+        "id": "traex",
+        "fallbackLocale": "en",
+        "name": "TraeX",
+        "description": "Internal TraeX provider integration.",
+        "version": "0.1.1",
+        "source": "https://code.byted.org/fe/cordisx-plugins",
+        "artifact": {
+          "publisherIdentity": "npm:@byted",
+          "packageNamespace": "@byted",
+          "packageName": "@byted/cordisx-plugin-traex",
+          "downloadUrl": "https://bnpm.byted.org/@byted/cordisx-plugin-traex/-/cordisx-plugin-traex-0.1.1.tgz",
+          "integrity": "sha256:3cfa8791f0f5acc925fdd06acbf366042444cce4bce427c0c181a581f936cf39"
+        },
+        "license": "UNLICENSED",
+        "compatibility": { "cordisx": "^0.1.0" },
+        "authors": [{ "name": "CordisX Plugin Team" }]
+      }
+    ],
+    "official": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v2.schema.json",
+        "schemaVersion": 2,
+        "designation": "cordisx-official",
+        "identity": {
+          "pluginId": "aiden",
+          "canonicalSource": "https://code.byted.org/fe/cordisx-plugins",
+          "publisherIdentity": "npm:@byted",
+          "packageNamespace": "@byted",
+          "packageName": "@byted/cordisx-plugin-aiden"
+        },
+        "verificationPolicy": { "id": "cordisx-official-publisher", "version": "1.0.0" },
+        "verifiedAt": "2026-09-18T07:06:37.000Z",
+        "reviewer": {
+          "authority": "byted.cordisx-marketplace.codeowners/v1",
+          "evidenceRef": "https://code.byted.org/fe/cordisx-marketplace/merge_requests/5"
+        },
+        "status": "active",
+        "label": { "key": "official.label", "fallback": "Official" },
+        "description": { "key": "official.description", "fallback": "Maintained by the internal CordisX team." }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-official.v2.schema.json",
+        "schemaVersion": 2,
+        "designation": "cordisx-official",
+        "identity": {
+          "pluginId": "traex",
+          "canonicalSource": "https://code.byted.org/fe/cordisx-plugins",
+          "publisherIdentity": "npm:@byted",
+          "packageNamespace": "@byted",
+          "packageName": "@byted/cordisx-plugin-traex"
+        },
+        "verificationPolicy": { "id": "cordisx-official-publisher", "version": "1.0.0" },
+        "verifiedAt": "2026-09-18T07:06:37.000Z",
+        "reviewer": {
+          "authority": "byted.cordisx-marketplace.codeowners/v1",
+          "evidenceRef": "https://code.byted.org/fe/cordisx-marketplace/merge_requests/5"
+        },
+        "status": "active",
+        "label": { "key": "official.label", "fallback": "Official" },
+        "description": { "key": "official.description", "fallback": "Maintained by the internal CordisX team." }
+      }
+    ],
+    "certifications": [
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certification.v2.schema.json",
+        "schemaVersion": 2,
+        "level": "cordisx-certified",
+        "identity": {
+          "pluginId": "aiden",
+          "canonicalSource": "https://code.byted.org/fe/cordisx-plugins",
+          "packageName": "@byted/cordisx-plugin-aiden",
+          "version": "0.1.2",
+          "downloadUrl": "https://bnpm.byted.org/@byted/cordisx-plugin-aiden/-/cordisx-plugin-aiden-0.1.2.tgz",
+          "integrity": "sha256:d330c9289d09ecb99ba4a9d38fcd7b2c3671af6cd6f883b51ca713509f35fccf",
+          "sourceEvidence": {
+            "repository": "https://code.byted.org/fe/cordisx-plugins",
+            "sourceCommit": "7a7885204c874ff2dddf4288fa98402450f7ff64",
+            "mergeRequest": "https://code.byted.org/fe/cordisx-plugins/merge_requests/4",
+            "mergeCommit": "033b595570f40f9a370f313e86f546bd84637f5d"
+          }
+        },
+        "eligibilityCeiling": {
+          "capability": "ui.extension-points.render",
+          "scope": { "extensionPoints": ["manager.settings.navigation-items", "manager.content"] }
+        },
+        "reviewPolicy": { "id": "cordisx-marketplace-review", "version": "1.0.0" },
+        "reviewedAt": "2026-09-18T07:06:37.000Z",
+        "expiresAt": "2027-09-18T07:06:37.000Z",
+        "reviewer": {
+          "authority": "byted.cordisx-marketplace.codeowners/v1",
+          "evidenceRef": "https://code.byted.org/fe/cordisx-marketplace/merge_requests/5"
+        },
+        "status": "active",
+        "label": { "key": "certified.label", "fallback": "Certified" },
+        "description": { "key": "certified.description", "fallback": "Reviewed exact artifact." }
+      },
+      {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certification.v2.schema.json",
+        "schemaVersion": 2,
+        "level": "cordisx-certified",
+        "identity": {
+          "pluginId": "traex",
+          "canonicalSource": "https://code.byted.org/fe/cordisx-plugins",
+          "packageName": "@byted/cordisx-plugin-traex",
+          "version": "0.1.1",
+          "downloadUrl": "https://bnpm.byted.org/@byted/cordisx-plugin-traex/-/cordisx-plugin-traex-0.1.1.tgz",
+          "integrity": "sha256:3cfa8791f0f5acc925fdd06acbf366042444cce4bce427c0c181a581f936cf39",
+          "sourceEvidence": {
+            "repository": "https://code.byted.org/fe/cordisx-plugins",
+            "sourceCommit": "7a7885204c874ff2dddf4288fa98402450f7ff64",
+            "mergeRequest": "https://code.byted.org/fe/cordisx-plugins/merge_requests/4",
+            "mergeCommit": "033b595570f40f9a370f313e86f546bd84637f5d"
+          }
+        },
+        "eligibilityCeiling": {
+          "capability": "ui.extension-points.render",
+          "scope": { "extensionPoints": ["manager.settings.navigation-items", "manager.content"] }
+        },
+        "reviewPolicy": { "id": "cordisx-marketplace-review", "version": "1.0.0" },
+        "reviewedAt": "2026-09-18T07:06:37.000Z",
+        "expiresAt": "2027-09-18T07:06:37.000Z",
+        "reviewer": {
+          "authority": "byted.cordisx-marketplace.codeowners/v1",
+          "evidenceRef": "https://code.byted.org/fe/cordisx-marketplace/merge_requests/5"
+        },
+        "status": "active",
+        "label": { "key": "certified.label", "fallback": "Certified" },
+        "description": { "key": "certified.description", "fallback": "Reviewed exact artifact." }
+      }
+    ]
+  },
+  "projection": {
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-certified-permission-projection.v2.schema.json",
+    "schemaVersion": 2,
+    "kind": "cordisx-certified-permission-eligibility",
+    "status": "active",
+    "canonicalSource": "https://code.byted.org/fe/cordisx-plugins",
+    "pluginId": "aiden",
+    "packageName": "@byted/cordisx-plugin-aiden",
+    "version": "0.1.2",
+    "downloadUrl": "https://bnpm.byted.org/@byted/cordisx-plugin-aiden/-/cordisx-plugin-aiden-0.1.2.tgz",
+    "integrity": "sha256:d330c9289d09ecb99ba4a9d38fcd7b2c3671af6cd6f883b51ca713509f35fccf",
+    "sourceEvidence": {
+      "repository": "https://code.byted.org/fe/cordisx-plugins",
+      "sourceCommit": "7a7885204c874ff2dddf4288fa98402450f7ff64",
+      "mergeRequest": "https://code.byted.org/fe/cordisx-plugins/merge_requests/4",
+      "mergeCommit": "033b595570f40f9a370f313e86f546bd84637f5d"
+    },
+    "reviewPolicy": { "id": "cordisx-marketplace-review", "version": "1.0.0" },
+    "reviewedAt": "2026-09-18T07:06:37.000Z",
+    "expiresAt": "2027-09-18T07:06:37.000Z",
+    "evidence": {
+      "kind": "protected-marketplace-review",
+      "reference": "https://code.byted.org/fe/cordisx-marketplace/merge_requests/5"
+    },
+    "eligibilityCeiling": {
+      "capability": "ui.extension-points.render",
+      "scope": { "extensionPoints": ["manager.settings.navigation-items", "manager.content"] }
+    },
+    "feed": {
+      "generatedAt": "2026-09-18T08:00:00.000Z",
+      "root": "https://lf0-fast-deliver-inner.bytedance.net/obj/eden-internal/cordisx-marketplace/marketplace.json",
+      "authority": "byted.cordisx-marketplace.codeowners/v1"
+    },
+    "fingerprint": "sha256:70d7b8930625e32a2d6e0a4f04e3759f198a261c322a4f02391ba9613123be65",
+    "revision": "2026-09-18T08:00:00.000Z"
+  }
+}

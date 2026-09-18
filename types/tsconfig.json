@@ -49,6 +49,8 @@
     "raster-image.v1.test.ts",
     "brand-icon.v1.d.ts",
     "brand-icon.v1.test.ts",
+    "marketplace.v7.d.ts",
+    "marketplace.v7.test.ts",
     "icon-theme.v1.d.ts",
     "icon-theme.v1.test.ts",
     "connector-service.v1.d.ts",

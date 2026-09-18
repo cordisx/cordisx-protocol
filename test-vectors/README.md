@@ -17,6 +17,11 @@ exact artifact binding, revocation, expiry, and manifest self-claims. The
 only an active exact Certified record can produce the Host-owned permission
 eligibility input, with all trust and review fields covered by its fingerprint;
 Official and permission allowlists are forbidden from that projection.
+The focused v2 conformance additionally covers the exact Aiden and TraeX
+`@byted` package/version/download/digest identities, source commit/MR/merge
+evidence, the internal Codebase Marketplace evidence allowlist,
+authority-version pairing, and the exact controlled-rendering eligibility
+ceiling. Its invalid vectors reject `models.read` and any expanded render scope.
 
 Structured UI v1 suites live in `ui/valid` and `ui/invalid` and cover commands,
 surface entries, distinct native sidebar menu points, routes, pages, host

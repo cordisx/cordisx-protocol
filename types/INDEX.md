@@ -78,6 +78,7 @@ not require a Host shell service; see the topic's ownership statement.
 | `visuals/v1`                       | [visuals.v1.d.ts](visuals.v1.d.ts)                                             | [Owner-local providers and immutable data/theme projection](../.agents/docs/visuals/README.md)                                                        |
 | `raster-image/v1`                  | [raster-image.v1.d.ts](raster-image.v1.d.ts)                                   | [Bounded PNG snapshot after product-specific composition](../.agents/docs/raster-image/README.md)                                                     |
 | `brand-icon/v1`                    | [brand-icon.v1.d.ts](brand-icon.v1.d.ts)                                       | [Host semantic or bounded raster brand icon](../.agents/docs/brand-icon/README.md)                                                                    |
+| `marketplace/v7`                   | [marketplace.v7.d.ts](marketplace.v7.d.ts)                                     | [Authority-bound v7 discovery and exact v2 trust](../.agents/docs/marketplace/README.md)                                                              |
 
 ## Package documents
 

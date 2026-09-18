@@ -5,10 +5,10 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchemas = [1, 2, 3, 4, 5, 6].map(async version =>
+const pluginSchemas = [1, 2, 3, 4, 5, 6, 7].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8'))
 )
-const feedSchemas = [1, 2, 3, 4, 5, 6].map(async version =>
+const feedSchemas = [1, 2, 3, 4, 5, 6, 7].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8'))
 )
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
@@ -23,7 +23,9 @@ for (
     'ui-common.v1.schema.json',
     'plugin-lifecycle-common.v1.schema.json',
     'marketplace-official.v1.schema.json',
+    'marketplace-official.v2.schema.json',
     'marketplace-certification.v1.schema.json',
+    'marketplace-certification.v2.schema.json',
     'commerce-descriptor.v1.schema.json',
   ]
 ) {

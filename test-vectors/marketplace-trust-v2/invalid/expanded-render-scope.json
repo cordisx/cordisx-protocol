@@ -1,0 +1,9 @@
+{
+  "case": "additional-render-scope-is-outside-certified-v2-ceiling",
+  "eligibilityCeiling": {
+    "capability": "ui.extension-points.render",
+    "scope": {
+      "extensionPoints": ["manager.settings.navigation-items", "manager.content", "workspace.toolbar"]
+    }
+  }
+}

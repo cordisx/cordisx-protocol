@@ -42,6 +42,12 @@ projection, Platform manifest capabilities/scopes, composite model/session
 identity, query-bound pages, declaration fingerprints, host extension-point descriptor
 identity, canonical point policy, surface/outlet/page-header authorization
 origin, and downgrade behavior.
+`node conformance/marketplace-trust-v2.mjs` is the focused internal trust check:
+it freezes v1 rejection, validates exact Aiden/TraeX v2 identities and protected
+Codebase source and Marketplace evidence, rejects Official permission fields,
+models, side effects and expanded scopes, and proves that changed package names,
+versions, URLs, digests, evidence, ceilings, feeds, revisions, or fingerprints
+cannot reuse certification.
 Agent-event conformance additionally covers per-session sequence, stable event
 identity, provenance/source consistency, causal ordering, delivery transitions,
 snapshot pagination, and rejection of host-specific public fields.
