@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v8.schema.json",
+  "schemaVersion": 8,
+  "id": "reserved-name",
+  "fallbackLocale": "en",
+  "name": "Reserved Name",
+  "description": "The reserved npm package name node_modules is invalid.",
+  "version": "1.0.0",
+  "source": "https://github.com/example/reserved-name",
+  "artifact": {
+    "packageName": "node_modules",
+    "downloadUrl": "https://github.com/example/reserved-name/releases/download/v1.0.0/reserved-name-1.0.0.tgz",
+    "integrity": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "Example developer" }]
+}

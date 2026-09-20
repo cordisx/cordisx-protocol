@@ -46,6 +46,7 @@
     "types/raster-image.v1.d.ts",
     "types/brand-icon.v1.d.ts",
     "types/marketplace.v7.d.ts",
+    "types/marketplace.v8.d.ts",
     "types/connector-service.v1.d.ts",
     "types/channel-runtime.v1.d.ts",
     "types/channel-manager.v2.d.ts",
@@ -193,6 +194,7 @@
       "default": "./runtime/brand-icon.v1.js"
     },
     "./marketplace/v7": "./types/marketplace.v7.d.ts",
+    "./marketplace/v8": "./types/marketplace.v8.d.ts",
     "./host-dom/v1": "./types/host-dom.v1.d.ts",
     "./agent-loop/v1": "./types/agent-loop.v1.d.ts",
     "./agent-loop/v2": "./types/agent-loop.v2.d.ts",

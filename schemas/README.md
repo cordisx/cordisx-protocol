@@ -95,6 +95,10 @@ its scope are described in [conformance](../conformance/README.md).
 - `marketplace-plugin.v7.schema.json` and `marketplace-feed.v7.schema.json`:
   the compatible Marketplace successor selecting either frozen public v1 trust
   records or exact ByteDance internal v2 trust records by feed authority;
+- `marketplace-plugin.v8.schema.json` and `marketplace-feed.v8.schema.json`:
+  the compatible Marketplace successor accepting valid scoped or unscoped npm
+  package names independently from publisher identity, with frozen v1/v2 trust
+  record profiles;
 - `marketplace-official.v2.schema.json`, `marketplace-certification.v2.schema.json`,
   and `marketplace-certified-permission-projection.v2.schema.json`: exact
   `@byted/cordisx-plugin-*` artifact identity, source commit/MR/merge evidence,

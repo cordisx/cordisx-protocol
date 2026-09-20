@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-feed.v8.schema.json",
+  "schemaVersion": 8,
+  "generatedAt": "2026-09-20T00:00:00Z",
+  "trust": {
+    "authority": "cordisx.marketplace.codeowners/v1",
+    "root": "https://example.com/marketplace.json",
+    "grantModel": "protected-merge-chain-v1",
+    "cryptographicAttestation": "unsupported"
+  },
+  "fallbackLocale": "en",
+  "name": "Example Marketplace",
+  "description": "A mixed-version feed is invalid.",
+  "homepage": "https://example.com/marketplace",
+  "plugins": [{
+    "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v7.schema.json",
+    "schemaVersion": 7,
+    "id": "animal",
+    "fallbackLocale": "en",
+    "name": "Animal",
+    "description": "A version 7 entry in a version 8 feed.",
+    "version": "0.1.2",
+    "source": "https://github.com/example/plugin-composer-animal",
+    "license": "MIT",
+    "compatibility": { "cordisx": "^0.1.0" },
+    "authors": [{ "name": "Example developer" }]
+  }],
+  "official": [],
+  "certifications": []
+}
