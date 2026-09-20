@@ -28,6 +28,9 @@ The machine-readable contracts are:
 - `schemas/marketplace-plugin.v7.schema.json` and
   `schemas/marketplace-feed.v7.schema.json` for authority-bound public or
   internal trust records while retaining version-6 discovery fields; and
+- `schemas/marketplace-plugin.v8.schema.json` and
+  `schemas/marketplace-feed.v8.schema.json` for scoped or unscoped npm package
+  artifacts without coupling package scope to publisher identity; and
 - `schemas/marketplace-source.v1.schema.json` for importing one Host-managed
   catalog source; and
 - `schemas/marketplace-official.v1.schema.json` and
@@ -89,9 +92,11 @@ source never changes Marketplace trust evaluation or grants permissions.
 
 The Marketplace never owns a plugin's source, bundle, build, or publication.
 Those remain in the plugin's owning repository and package artifact. A
-version-3 feed entry may refer to that external artifact through stable machine
-data: publisher identity, package namespace/name, download URL, and `sha256`
-integrity. This is a reference, not package hosting or code ingestion.
+version-3 through version-7 feed entry may refer to that external artifact
+through stable machine data: publisher identity, package namespace/name,
+download URL, and `sha256` integrity. Version 8 replaces the scoped-only
+namespace/name pair with an npm `packageName` that may be either scoped or
+unscoped. This is a reference, not package hosting or code ingestion.
 
 Feeds must not copy renderer schemas, source trees, or bundle content. Official
 and certification records compose with discovery through an independent trust
@@ -169,6 +174,18 @@ Certification v2 additionally binds the exact version, download URL, tarball
 digest, source commit/MR/merge evidence, protected Marketplace review, and the
 closed controlled-rendering eligibility ceiling defined by the trust contract.
 
+Version 8 removes `packageNamespace` from the artifact shape. `packageName`
+accepts any valid lowercase npm package name in either `name` or `@scope/name`
+form. Optional `publisherIdentity` records an asserted npm account when that
+metadata genuinely exists; consumers validate it when present, never fabricate
+it for a GitHub or other registry-independent artifact, and never treat it as
+authenticity. It is independent of the npm package scope and therefore does not
+have to equal or contain it. A package's scope is not an Official or Certified
+claim, and internal package naming conventions do not constrain third-party
+admission. The Host must still verify the downloaded archive's exact
+`package.json.name` and version before staging. The trust-record schemas and
+their closed identity profiles are unchanged.
+
 Host display projection is field-wise and deterministic:
 
 1. the current Host locale when that localized field exists;
@@ -233,6 +250,19 @@ or stripping its embedded icon data.
 Version-7 consumers may accept versions 1--6 using their documented discovery
 and trust projections. Older consumers reject a version-7 feed rather than
 guessing whether a v2 trust record belongs to the public or internal authority.
+
+Version-8 consumers may accept versions 1--7 using their frozen semantics.
+Older consumers reject a version-8 feed rather than treating its package name
+as a version-7 namespace binding. A publisher may deliberately emit a separate
+version-7 projection only when every artifact is scoped and its publisher,
+namespace, and package-name coupling satisfies the frozen version-7 contract.
+An unscoped artifact has no lossless version-7 projection.
+
+Publishing a version-8 successor does not replace a canonical version-3 through
+version-7 feed while any supported Host still requires that older version. Feed
+operators keep the older canonical endpoint stable, publish version 8 at a
+separate endpoint, and move the canonical endpoint only after a compatible Host
+is available. This rollout rule does not authorize a package release or tag.
 
 ## Multiple feeds
 

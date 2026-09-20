@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v8.schema.json",
+  "schemaVersion": 8,
+  "id": "scoped-example",
+  "fallbackLocale": "en",
+  "name": "Scoped Example",
+  "description": "A scoped package with independent publisher identity.",
+  "version": "1.2.3",
+  "source": "https://github.com/example/scoped-example",
+  "artifact": {
+    "publisherIdentity": "npm:example-developer",
+    "packageName": "@another-scope/scoped-example",
+    "downloadUrl": "https://registry.npmjs.org/@another-scope/scoped-example/-/scoped-example-1.2.3.tgz",
+    "integrity": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "Example developer" }]
+}

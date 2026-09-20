@@ -121,10 +121,13 @@ declare const form: SchemaFormOptionsV1
 form.onChange({ value: {}, valid: true, issues: [] })
 import type { ModelProvidersV1 } from '@cordisx/protocol/model-providers/v1'
 import type { MarketplaceFeedV7 } from '@cordisx/protocol/marketplace/v7'
+import type { MarketplaceFeedV8 } from '@cordisx/protocol/marketplace/v8'
 declare const modelProviders: ModelProvidersV1
 modelProviders.present({ providerId: 'service', title: 'Service', icon: 'host:key' }).dispose()
 declare const marketplaceFeed: MarketplaceFeedV7
 marketplaceFeed.trust.authority satisfies 'cordisx.marketplace.codeowners/v1' | 'byted.cordisx-marketplace.codeowners/v1'
+declare const marketplaceFeedV8: MarketplaceFeedV8
+marketplaceFeedV8.plugins[0]?.artifact?.packageName satisfies string | undefined
 import type { DialogsV1 } from '@cordisx/protocol/dialogs/v1'
 declare const dialogs: DialogsV1
 dialogs.confirm({ kind: 'leave', title: 'Leave room?', confirmLabel: 'Leave', run: async () => {} }).then(result => result.status)

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/marketplace-plugin.v7.schema.json",
+  "schemaVersion": 7,
+  "id": "animal",
+  "fallbackLocale": "en",
+  "name": "Animal",
+  "description": "Version 7 remains scoped-only.",
+  "version": "0.1.2",
+  "source": "https://github.com/example/plugin-composer-animal",
+  "artifact": {
+    "publisherIdentity": "npm:example-developer",
+    "packageName": "plugin-composer-animal",
+    "downloadUrl": "https://registry.npmjs.org/plugin-composer-animal/-/plugin-composer-animal-0.1.2.tgz",
+    "integrity": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "license": "MIT",
+  "compatibility": { "cordisx": "^0.1.0" },
+  "authors": [{ "name": "Example developer" }]
+}

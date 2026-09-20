@@ -5,10 +5,10 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const pluginSchemas = [1, 2, 3, 4, 5, 6, 7].map(async version =>
+const pluginSchemas = [1, 2, 3, 4, 5, 6, 7, 8].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-plugin.v${version}.schema.json`), 'utf8'))
 )
-const feedSchemas = [1, 2, 3, 4, 5, 6, 7].map(async version =>
+const feedSchemas = [1, 2, 3, 4, 5, 6, 7, 8].map(async version =>
   JSON.parse(await readFile(path.join(root, `schemas/marketplace-feed.v${version}.schema.json`), 'utf8'))
 )
 const resolvedPluginSchemas = await Promise.all(pluginSchemas)
@@ -186,7 +186,7 @@ export function validatePlugin(plugin) {
   }
   if (plugin.schemaVersion >= 6) errors.push(...validateInlinePngIcon(plugin.icon))
   if (
-    plugin.schemaVersion >= 3 && plugin.artifact !== undefined
+    plugin.schemaVersion >= 3 && plugin.schemaVersion <= 7 && plugin.artifact !== undefined
     && !plugin.artifact.packageName.startsWith(`${plugin.artifact.packageNamespace}/`)
   ) {
     errors.push({ message: 'artifact.packageName must belong to artifact.packageNamespace' })

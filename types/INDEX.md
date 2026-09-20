@@ -79,6 +79,7 @@ not require a Host shell service; see the topic's ownership statement.
 | `raster-image/v1`                  | [raster-image.v1.d.ts](raster-image.v1.d.ts)                                   | [Bounded PNG snapshot after product-specific composition](../.agents/docs/raster-image/README.md)                                                     |
 | `brand-icon/v1`                    | [brand-icon.v1.d.ts](brand-icon.v1.d.ts)                                       | [Host semantic or bounded raster brand icon](../.agents/docs/brand-icon/README.md)                                                                    |
 | `marketplace/v7`                   | [marketplace.v7.d.ts](marketplace.v7.d.ts)                                     | [Authority-bound v7 discovery and exact v2 trust](../.agents/docs/marketplace/README.md)                                                              |
+| `marketplace/v8`                   | [marketplace.v8.d.ts](marketplace.v8.d.ts)                                     | [Scoped and unscoped npm artifact discovery](../.agents/docs/marketplace/README.md)                                                                   |
 
 ## Package documents
 
