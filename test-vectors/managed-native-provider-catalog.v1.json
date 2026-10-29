@@ -1,0 +1,31 @@
+[
+  {
+    "generation": "generation-1",
+    "digest": "sha256:eefdfec508ec8413acbfd670ce97188a733c302b1e1248da4a1172dd4e333e66",
+    "defaultAlias": "model",
+    "routes": [
+      {
+        "alias": "model",
+        "gatewayModelId": "model-id"
+      }
+    ]
+  },
+  {
+    "generation": "generation-1",
+    "digest": "sha256:3a340f74d6d61e6d724d52fe63562e491aa5a48d5cab881907211ee95e2b2844",
+    "defaultAlias": "model",
+    "routes": [
+      {
+        "alias": "model",
+        "gatewayModelId": "model-id",
+        "reasoningCapabilities": {
+          "efforts": [
+            "low",
+            "high"
+          ],
+          "defaultEffort": "high"
+        }
+      }
+    ]
+  }
+]

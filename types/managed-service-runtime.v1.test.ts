@@ -27,3 +27,13 @@ void registration.authenticate('logout')
 void registration.authenticate('sign-out')
 
 void logoutAction
+
+const reasoningRoute: import('./managed-service-runtime.v1.js').ManagedNativeProviderRouteV1 = {
+  alias: 'model',
+  gatewayModelId: 'model-id',
+  reasoningCapabilities: { efforts: ['low', 'high'], defaultEffort: 'high' },
+}
+void reasoningRoute
+// @ts-expect-error undeclared reasoning levels are not a capability
+const unknownEffort: import('./managed-service-runtime.v1.js').ModelReasoningEffortV1 = 'extreme'
+void unknownEffort

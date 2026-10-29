@@ -256,9 +256,19 @@ export type ManagedServiceMaterializationResultV1 =
   | ({ readonly status: 'accepted' } & ManagedServiceMaterializationV1)
   | Exclude<ManagedServiceControlResultV1, { readonly status: 'ready' | 'accepted' }>
 
+export type ModelReasoningEffortV1 =
+  | 'none' | 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'ultra'
+
+export interface ModelReasoningCapabilitiesV1 {
+  readonly efforts: readonly ModelReasoningEffortV1[]
+  readonly defaultEffort?: ModelReasoningEffortV1
+}
+
 export interface ManagedNativeProviderRouteV1 {
   readonly alias: string
   readonly gatewayModelId: string
+  /** Exact route capabilities declared by discovery; omission means unknown. */
+  readonly reasoningCapabilities?: ModelReasoningCapabilitiesV1
 }
 
 export interface ManagedNativeProviderCatalogV1 {
