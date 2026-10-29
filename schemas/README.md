@@ -675,3 +675,5 @@ Host-private.
 `local-wallet.v1.schema.json` closes enrollment, local assertions, classified work observations, challenges and results. See [HTTP v4](../.agents/docs/plugin-http/v4.md) for signing and ownership requirements.
 
 - [Durable work settlement v1](local-work-settlement.v1.schema.json): closed Host-signed admitted snapshot; independent of leased local wallet work.
+
+- `managed-native-provider-catalog.v1.schema.json`: closed native route catalogs with optional discovered reasoning efforts; membership, canonical ordering and digest semantics belong to the managed-service contract.

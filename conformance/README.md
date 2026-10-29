@@ -309,3 +309,5 @@ behavior require Host evidence.
 `managed-source.mjs` checks canonical payload bytes, strict binding, expiry and Ed25519 pin separation. Host-owned actual Native identity, provisioning and usage ledger reading require Host evidence.
 
 - `node conformance/local-work-settlement.mjs` checks durable payload version isolation, signatures and exact receipt pins.
+
+`managed-native-provider.mjs` (also run by managed-service conformance) checks closed route capabilities, default membership, canonical ordering, legacy digest compatibility and capability-sensitive digests.

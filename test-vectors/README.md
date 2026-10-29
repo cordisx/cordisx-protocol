@@ -289,3 +289,5 @@ Managed source signing vectors are in [conformance/managed-source.mjs](../confor
 Local wallet signed payload vectors: [local-wallet.v1.json](local-wallet.v1.json), exercised by `conformance/local-wallet.mjs`.
 
 - `local-work-settlement.v1.json` covers the closed durable signed snapshot and forbidden caller fields.
+
+`managed-native-provider-catalog.v1.json` contains legacy and reasoning-aware route digest vectors.

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-native-provider-catalog.v1.schema.json",
+  "title": "CordisX Managed Native Provider Catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "generation",
+    "digest",
+    "defaultAlias",
+    "routes"
+  ],
+  "properties": {
+    "generation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "defaultAlias": {
+      "type": "string",
+      "minLength": 1
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "alias",
+          "gatewayModelId"
+        ],
+        "properties": {
+          "alias": {
+            "type": "string",
+            "minLength": 1
+          },
+          "gatewayModelId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reasoningCapabilities": {
+            "$ref": "#/$defs/reasoningCapabilities"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "reasoningCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "efforts"
+      ],
+      "properties": {
+        "efforts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "none",
+              "minimal",
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max",
+              "ultra"
+            ]
+          }
+        },
+        "defaultEffort": {
+          "enum": [
+            "none",
+            "minimal",
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max",
+            "ultra"
+          ]
+        }
+      }
+    }
+  }
+}
