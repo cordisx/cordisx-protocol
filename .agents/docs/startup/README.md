@@ -65,6 +65,14 @@ Core/window availability, page registration, observation, and login navigation
 MUST NOT wait for provider success. A command's successful completion separately
 requires its target and requested action to become available. Authentication
 requirements and timeout retain an otherwise healthy Host and usable navigation.
+Once the authoritative target or any necessary dependency is known missing,
+failed, stopped, revoked, authentication-required, catalog-empty or missing the
+exact requested model, the command MUST finish with the corresponding unavailable
+or authentication outcome promptly; it MUST NOT wait for the general timeout or
+for unrelated services. Temporary preparation/catalog discovery may continue to
+wait within the command deadline. A known-empty catalog is not temporary discovery.
+Neither command failure nor a retry request clears drafts, changes selection,
+stops a healthy Host, or initiates authentication without the existing authority.
 
 Base component adoption preserves existing same-plugin and Cordis-context
 cleanup atomicity and update transactions. Provider success is evaluated after
@@ -94,7 +102,12 @@ For deterministic summary precedence use revoked, stopped, failed,
 auth-required, catalog-pending, preparing, ready after distinguishing unknown
 and declared. Catalog `known` with `modelIds: []` is never pending. An empty
 catalog cannot enable execute and cannot produce a valid native publication
-when publication v1 requires a default route; report `catalog-empty` for execute.
+when publication v1 requires a default route. The capability summary is `failed`
+when its current known catalog is empty, while the independent service, process,
+health and authentication evidence stays unchanged; execute reports `catalog-empty`.
+Here `failed` means the declared execution success cannot currently be met, not
+that the backend process failed. Later valid discovery may recover this capability
+without restarting a healthy service.
 
 Actions are independently available or carry one bounded reason. Authentication
 can be available while execute is unavailable. `execute` requires current
@@ -176,7 +189,19 @@ still checks every declared success condition. Reports arriving before prepare
 fulfills may update observation but cannot complete readiness. Rejection
 fails that capability; it does not falsely undo successful base adoption or
 satisfy another capability. Update/disposal aborts all owned preparation before
-atomic component cleanup; retries require a fresh fenced preparation generation.
+atomic component cleanup. A retry creates a fresh Host-bound preparation attempt,
+revokes the old attempt's reporter and aborts its signal before admitting new
+reports or accepting completion. This attempt fence is opaque capability authority,
+not a new serialized field and not permission to rotate the service generation,
+restart the process, replace the registration, or rerun base apply. For a retry
+within the same host/plugin/service generation, accepted milestone/catalog sequence
+floors remain monotonic; the owner chooses newer values. The Host rejects a report
+through a revoked old reporter even if its serialized generation and sequence look
+current. A late old callback cannot complete the new attempt. Replacement of a
+service/plugin/Host uses the existing generation and cleanup rules. Independent
+capabilities and waiters retain their demand and leases across another's retry.
+The `retry` action is available only when an existing authorized operation can
+perform this bounded retry; a status projection alone grants no retry authority.
 Old v14 modules keep their awaited blocking apply semantics. Milestones are scoped to declared capability and the
 exact host/plugin/service generation. Sequence is positive and strictly
 increasing per capability/milestone/generation. Reports are absolute states;

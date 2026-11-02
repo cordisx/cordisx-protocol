@@ -116,6 +116,7 @@ export function summarize(capability, evidence, dependenciesReady = true) {
   if (
     evidence.service === 'failed' || evidence.process === 'failed' || evidence.prepareState === 'failed'
     || evidence.catalog.state === 'failed'
+    || (capability.kind === 'provider' && evidence.catalog.state === 'known' && evidence.catalog.modelIds.length === 0)
     || Object.values(evidence.milestones).includes('failed')
   ) return 'failed'
   if (!evidence.started) return 'declared'

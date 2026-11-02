@@ -392,3 +392,7 @@ assert.equal(
   'permission-denied',
 )
 assert.equal(pageActionAvailability(page, 'undeclared', requirements, operation).reason, 'unsupported')
+
+const { checkWaitAndRetry } = await import('./startup-wait-retry.mjs')
+checkWaitAndRetry(primary, evidence, report)
+console.log('startup v1: empty catalog immediate unavailability and retry authority fencing passed')
