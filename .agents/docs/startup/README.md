@@ -171,8 +171,9 @@ it does not run a capability's prepare before its dependencies succeed.
 A rejected dependency fails dependents without running their prepare. Independent
 capabilities may progress separately, including capabilities of one service.
 Shared service registration/process work is deduplicated; provider-specific
-work and success remain independent. Return from prepare only completes the
-callback; the Host still checks every declared success condition. Rejection
+work and success remain independent. Fulfillment of prepare is necessary but not sufficient for ready; the Host
+still checks every declared success condition. Reports arriving before prepare
+fulfills may update observation but cannot complete readiness. Rejection
 fails that capability; it does not falsely undo successful base adoption or
 satisfy another capability. Update/disposal aborts all owned preparation before
 atomic component cleanup; retries require a fresh fenced preparation generation.

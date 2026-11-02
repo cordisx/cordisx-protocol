@@ -114,17 +114,22 @@ export function summarize(capability, evidence, dependenciesReady = true) {
   if (evidence.revoked) return 'revoked'
   if (evidence.service === 'stopped' || evidence.process === 'stopped') return 'stopped'
   if (
-    evidence.service === 'failed' || evidence.catalog.state === 'failed'
+    evidence.service === 'failed' || evidence.process === 'failed' || evidence.prepareState === 'failed'
+    || evidence.catalog.state === 'failed'
     || Object.values(evidence.milestones).includes('failed')
   ) return 'failed'
   if (!evidence.started) return 'declared'
-  if (evidence.requiresAuthentication && !['authenticated', 'not-required'].includes(evidence.authentication)) {
+  if (
+    (evidence.requiresAuthentication || capability.success.allOf.some(c => c.kind === 'authenticated'))
+    && !['authenticated', 'not-required'].includes(evidence.authentication)
+  ) {
     return 'auth-required'
   }
   if (capability.kind === 'provider' && ['unknown', 'pending'].includes(evidence.catalog.state)) {
     return 'catalog-pending'
   }
-  return dependenciesReady && capability.success.allOf.every(c => conditionSatisfied(c, evidence))
+  return evidence.prepareState === 'fulfilled' && dependenciesReady
+      && capability.success.allOf.every(c => conditionSatisfied(c, evidence))
     ? 'ready'
     : 'preparing'
 }
@@ -147,13 +152,24 @@ export function availability(capability, evidence, options = {}) {
   const state = summarize(capability, evidence, options.dependenciesReady !== false)
   const reason =
     { unknown: 'unknown-target', declared: 'not-prepared', 'auth-required': 'authentication-required' }[state] ?? state
-  if (state !== 'ready') return deny(options.dependenciesReady === false ? 'dependency-not-ready' : reason)
+  if (state !== 'ready') {
+    if (state !== 'preparing') return deny(reason)
+    if (options.dependenciesReady === false) return deny('dependency-not-ready')
+    if (capability.success.allOf.some(c => c.kind === 'milestone' && !conditionSatisfied(c, evidence))) {
+      return deny('milestone-pending')
+    }
+    if (capability.kind === 'provider' && evidence.provider !== 'published') return deny('provider-unpublished')
+    return deny('preparing')
+  }
   if (!evidence.binding) return deny('binding-unavailable')
   return { available: true }
 }
 
-export function publicationAllowed(capability, owner, publication, origins) {
-  return capability.kind === 'provider' && capability.pluginId === owner.pluginId
+export function publicationAllowed(capability, owner, publication, origins, catalog) {
+  return catalog?.state === 'known' && catalog.modelIds.length > 0
+    && publication.catalog.generation === catalog.generation
+    && same([...publication.catalog.routes.map(r => r.alias)].sort(), [...catalog.modelIds].sort())
+    && capability.kind === 'provider' && capability.pluginId === owner.pluginId
     && publication.providerId === capability.providerId
     && publication.owner.pluginId === owner.pluginId
     && publication.owner.hostGeneration === owner.hostGeneration

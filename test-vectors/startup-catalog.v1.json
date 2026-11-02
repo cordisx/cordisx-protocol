@@ -1,0 +1,30 @@
+{
+  "vectors": [
+    {
+      "generation": "empty-1",
+      "modelIds": [],
+      "canonical": "[\"empty-1\",[]]",
+      "digest": "sha256:d7f0ccdf8f556d3fbf6a889e9932d6de2562d00e45e72f17957f2915f4ad3457"
+    },
+    {
+      "generation": "models-1",
+      "modelIds": [
+        "zeta",
+        "alpha",
+        "模型"
+      ],
+      "canonical": "[\"models-1\",[\"alpha\",\"zeta\",\"模型\"]]",
+      "digest": "sha256:1ae2569c6669c91818739441d440f86238c29153e5482beecde7c089cdfe2c84"
+    },
+    {
+      "generation": "models-1",
+      "modelIds": [
+        "模型",
+        "alpha",
+        "zeta"
+      ],
+      "canonical": "[\"models-1\",[\"alpha\",\"zeta\",\"模型\"]]",
+      "digest": "sha256:1ae2569c6669c91818739441d440f86238c29153e5482beecde7c089cdfe2c84"
+    }
+  ]
+}

@@ -296,3 +296,6 @@ Local wallet signed payload vectors: [local-wallet.v1.json](local-wallet.v1.json
 pre-binding authentication-required snapshot and fenced Node milestone report.
 The startup conformance suite mutates these for graph/ownership rejection,
 known-empty catalog, generation, scope and subscription recovery cases.
+
+[Startup catalog digest v1](startup-catalog.v1.json) fixes empty, nonempty and
+reordered UTF-8 model alias inputs with canonical JSON and SHA-256 results.
