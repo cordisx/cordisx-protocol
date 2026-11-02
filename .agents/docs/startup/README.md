@@ -233,6 +233,8 @@ and a digest; an empty array is valid completed discovery. The Host validates
 schema, identity, generation, sequence and digest before replacing observation.
 The digest is `sha256:` plus lowercase SHA-256 of UTF-8 compact JSON
 `[generation, sortedModelIds]`, sorting exact aliases by UTF-8 byte order.
+When distinct aliases encode to identical UTF-8 bytes, compare their original
+UTF-16 code-unit sequences lexicographically as a deterministic tie-break.
 No normalization, implicit aliases or model-name heuristics are permitted.
 Invalid reports have no side effects and cannot advance the accepted sequence.
 

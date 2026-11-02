@@ -6,7 +6,9 @@ export const catalogDigest = catalog =>
   `sha256:${
     createHash('sha256').update(JSON.stringify([
       catalog.generation,
-      [...catalog.modelIds].sort((a, b) => Buffer.compare(Buffer.from(a), Buffer.from(b))),
+      [...catalog.modelIds].sort((a, b) =>
+        Buffer.compare(Buffer.from(a), Buffer.from(b)) || (a < b ? -1 : a > b ? 1 : 0)
+      ),
     ])).digest('hex')
   }`
 
@@ -76,6 +78,10 @@ export async function checkCatalogAndPreparation(fixture, graph, validate) {
   const nonempty = { state: 'known', generation: 'catalog-2', modelIds: ['b', 'a'] }
   nonempty.digest = catalogDigest(nonempty)
   assert.equal(nonempty.digest, catalogDigest({ ...nonempty, modelIds: ['a', 'b'] }))
+  const sameUtf8 = { generation: 'utf8-tie', modelIds: [String.fromCharCode(0xd800), String.fromCharCode(0xfffd)] }
+  const sameUtf8Digest = 'sha256:f423f1285a060369c5d7ad6cd7bbe3dc316c23aac6e244e1fbe7af3a01d78fff'
+  assert.equal(catalogDigest(sameUtf8), sameUtf8Digest)
+  assert.equal(catalogDigest({ ...sameUtf8, modelIds: [...sameUtf8.modelIds].reverse() }), sameUtf8Digest)
   assert.equal(reporter.reportCatalog({ ...input, sequence: 2, catalog: nonempty }, owner, validate).status, 'accepted')
   assert.equal(reporter.publicationActive, false, 'catalog report alone never publishes routes')
   reporter.publicationActive = true
