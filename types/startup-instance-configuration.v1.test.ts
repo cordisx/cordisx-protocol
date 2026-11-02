@@ -1,3 +1,4 @@
+import './startup-node-config.v1.test.js'
 import type { ManagedServiceApplyInputV1, ManagedServiceApplyV1 } from './managed-service-runtime.v1.js'
 import type {
   StartupManagedServiceApplyInputV1,

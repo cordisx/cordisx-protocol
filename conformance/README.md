@@ -324,3 +324,8 @@ remain consumer evidence.
 instance-configuration boundary: selected owner/profile, absent defaults, known
 secret-policy projection, detached immutable values and one generation snapshot
 for apply/prepare. It does not establish Host adoption or account access.
+
+`node conformance/startup-node-config.mjs` checks the package-bound optional Node
+Config proof: complete supported projection, unknown nested input/output keys,
+existing reserved roles and defaults, async rejection and normalization fencing.
+It is a reference fixture, not evidence that the Host consumes the module schema.

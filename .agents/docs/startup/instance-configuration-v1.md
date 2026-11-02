@@ -26,6 +26,57 @@ access API is granted. Existing
 [plugin configuration](../plugin-configuration/README.md) authority boundaries
 remain in force; this callback does not merge their stores or revision domains.
 
+## Package-bound Node Config
+
+`StartupManagedServiceNodeModuleV1` may export optional `Config` of type
+`StartupManagedServiceConfigV1`. It reuses the public
+[`SchemaFormSourceV1` and `SchemaFormValidationV1`](../../../types/schema-form.v1.d.ts)
+validation vocabulary, narrows `~standard.validate` to synchronous results,
+and requires `toJSON()` returning a complete serializable Schemastery envelope.
+The envelope is the existing Schemastery `schemaProjection.envelope` in
+[`plugin-config-common.v1`](../../../schemas/plugin-config-common.v1.schema.json),
+not a new form-schema format. Its field tree uses the existing type, dict,
+inner, list and meta role/default semantics. This Node `Config` must come from
+the exact admitted service entry module whose package source/digest and owner
+have already been validated; an object from a renderer fiber, another package,
+a runtime config value or an arbitrary resolver cannot replace it.
+
+After authorized Node module import and before base apply, the Host reads this
+schema and validates its complete data projection with its existing configuration
+policy. All supplied input fields, nested fields, array elements and normalized
+output fields must be accounted for by supported projected nodes. Unknown keys
+are rejected even if the validator would silently strip or preserve them. Missing
+object dictionaries/item shapes, unknown node types, unresolved lazy/reference
+nodes and uninspectable union branches fail closed when the Host cannot prove
+complete sensitive positions and value coverage. The root must describe an object.
+A plain Standard Schema validator, `type`/vendor string, empty `toJSON` result,
+`safe` boolean, or package parser alone is not proof of a complete schema. A
+conforming Host may reject unsupported projection constructs; it must never treat
+them as evidence that there are no secrets.
+
+The Host reuses the reserved roles `secret`, `credential`, `credential-ref`,
+`permission` and `capability` and existing sensitive-default rejection. It first
+checks safe input shape and projected field coverage, then removes reserved-role
+values before passing a detached nonsecret candidate to `~standard.validate`.
+Secret values/handles are never given to this callback by this seam. Validation
+must return a synchronous successful value: issues, a thrown exception, a Promise
+or any thenable reject activation with a bounded nonsecret error. The Host then
+checks the normalized output for safe JSON, complete projected field coverage and
+reserved-role fields again before cloning/freezing the final configuration.
+A validator cannot add an unknown field, restore a secret field, or smuggle a
+callback/handle through normalization. Reserved-role defaults are invalid rather
+than silently materialized. Schema and value must remain paired to the admitted
+module and activation generation; caching by plugin id alone is insufficient.
+
+No selected override (undefined or an empty object) may retain legacy/default
+behavior with `Config` omitted. A nonempty override without this complete proof
+MUST fail closed before apply/prepare, not be silently ignored or forwarded raw.
+If `Config` is present, its schema/default checks also apply to the empty candidate.
+A schema needed only for Node input does not register a renderer form or merge
+renderer/service config planes. Packages should declare their nonsecret account
+options as explicit object fields in this schema; no account-system contract,
+secret writer, filesystem grant or special built-in account field is introduced.
+
 ## Validation and authority
 
 Before invocation, the Host MUST select the exact owner instance, validate the

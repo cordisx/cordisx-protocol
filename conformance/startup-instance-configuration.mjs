@@ -91,3 +91,5 @@ assert.equal(snapshot.value.root, './account-data')
 console.log(
   'startup instance configuration: selected owner, optional defaults, redaction, immutable generation and product validation passed',
 )
+
+await import('./startup-node-config.mjs')

@@ -1,6 +1,16 @@
+import type { SchemaFormSourceV1, SchemaFormValidationV1 } from './schema-form.v1.js'
 import type { ManagedServiceNodeModuleV1 } from './managed-service-context.v1.js'
 import type { ManagedServiceApplyInputV1, ManagedServiceRegistrationHandleV1, ManagedServiceSafeValueV1, ManagedServiceServiceContextV1 } from './managed-service-runtime.v1.js'
 import type { StartupCapabilityDeclarationV1, StartupReporterV1 } from './startup.v1.js'
+
+/** Exact admitted Node module's synchronous validator plus complete Schemastery projection. */
+export interface StartupManagedServiceConfigV1 extends SchemaFormSourceV1 {
+  readonly '~standard': Omit<SchemaFormSourceV1['~standard'], 'validate'> & {
+    readonly validate: (value: unknown) => SchemaFormValidationV1
+  }
+  /** Same complete envelope as plugin-config-common/v1 schemaProjection's Schemastery branch. */
+  toJSON(): Readonly<Record<string, ManagedServiceSafeValueV1>>
+}
 
 /** Host-selected, nonsecret instance configuration; no filesystem or account authority. */
 export interface StartupManagedServiceConfigurationV1 {
@@ -34,6 +44,8 @@ export type StartupManagedServicePrepareV1 = (
 
 /** V15 opt-in: await base apply/adoption, then schedule each capability's prepare. */
 export interface StartupManagedServiceNodeModuleV1 extends ManagedServiceNodeModuleV1 {
+  /** Optional for defaults; required to prove the schema of a nonempty instance override. */
+  readonly Config?: StartupManagedServiceConfigV1
   readonly apply: StartupManagedServiceApplyV1 & Pick<ManagedServiceNodeModuleV1['apply'], 'inject'>
   readonly prepare: StartupManagedServicePrepareV1
 }

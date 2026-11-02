@@ -194,5 +194,6 @@ the specification and [schema index](../schemas/README.md).
 | `plugin-package/v15`  | [plugin-package.v15.d.ts](plugin-package.v15.d.ts)   | [Manifest v15](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v15) |
 
 The `startup-runtime/v1` entry also exports `StartupManagedServiceConfigurationV1`,
-`StartupManagedServiceApplyInputV1` and `StartupManagedServiceApplyV1`; see the
+`StartupManagedServiceApplyInputV1`, `StartupManagedServiceApplyV1` and the optional
+Node module `StartupManagedServiceConfigV1`; see the
 [optional Node instance configuration](../.agents/docs/startup/instance-configuration-v1.md).
