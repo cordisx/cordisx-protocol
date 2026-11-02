@@ -5,11 +5,15 @@ import type { StartupCapabilityDeclarationV1, StartupReporterV1 } from './startu
 
 /** Exact admitted Node module's synchronous validator plus complete Schemastery projection. */
 export interface StartupManagedServiceConfigV1 extends SchemaFormSourceV1 {
+  readonly type: 'object'
   readonly '~standard': Omit<SchemaFormSourceV1['~standard'], 'validate'> & {
     readonly validate: (value: unknown) => SchemaFormValidationV1
   }
-  /** Same complete envelope as plugin-config-common/v1 schemaProjection's Schemastery branch. */
-  toJSON(): Readonly<Record<string, ManagedServiceSafeValueV1>>
+  /** Raw object-root field tree: the envelope VALUE, never a kind/envelope wrapper or JSON string. */
+  toJSON(): Readonly<Record<string, ManagedServiceSafeValueV1>> & {
+    readonly type: 'object'
+    readonly dict: Readonly<Record<string, ManagedServiceSafeValueV1>>
+  }
 }
 
 /** Host-selected, nonsecret instance configuration; no filesystem or account authority. */

@@ -105,6 +105,10 @@ assert.equal(resolve(undefined, {}), undefined)
 assert.throws(() => resolve(undefined, { account: {} }), /schema-required/)
 assert.throws(() => resolve({ ...Config, toJSON: undefined }, { account: {} }), /schema-required/)
 assert.throws(() => resolve({ ...Config, toJSON: () => ({}) }, {}), /unsupported-projection/)
+assert.throws(
+  () => resolve({ ...Config, toJSON: () => ({ kind: 'schemastery', envelope: projection }) }, {}),
+  /unsupported-projection/,
+)
 assert.throws(() => resolve({ ...Config, toJSON: () => ({ type: 'object' }) }, {}), /incomplete-projection/)
 assert.throws(() => resolve(Config, { account: { hidden: 'unknown' } }), /unknown-key/)
 assert.throws(() => resolve(Config, { accounts: [{ root: './ok', hidden: 'unknown' }] }), /unknown-key/)

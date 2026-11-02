@@ -32,10 +32,20 @@ remain in force; this callback does not merge their stores or revision domains.
 `StartupManagedServiceConfigV1`. It reuses the public
 [`SchemaFormSourceV1` and `SchemaFormValidationV1`](../../../types/schema-form.v1.d.ts)
 validation vocabulary, narrows `~standard.validate` to synchronous results,
-and requires `toJSON()` returning a complete serializable Schemastery envelope.
-The envelope is the existing Schemastery `schemaProjection.envelope` in
+and requires `toJSON()` returning the complete serializable raw Schemastery
+object-root field tree. This is exactly the VALUE of the existing Schemastery
+`schemaProjection.envelope` in
 [`plugin-config-common.v1`](../../../schemas/plugin-config-common.v1.schema.json),
-not a new form-schema format. Its field tree uses the existing type, dict,
+not a new form-schema format. For example, `toJSON()` returns:
+
+```json
+{"type":"object","dict":{"account":{"type":"object","dict":{"root":{"type":"string"}}}}}
+```
+
+The `{ "kind": "schemastery", "envelope": ... }` descriptor wrapper, a JSON
+string and a root without `type: "object"` plus `dict` are invalid return values.
+The TypeScript root constraint excludes those forms; nested completeness still
+requires Host validation, not a structural type assertion. The field tree uses the existing type, dict,
 inner, list and meta role/default semantics. This Node `Config` must come from
 the exact admitted service entry module whose package source/digest and owner
 have already been validated; an object from a renderer fiber, another package,
