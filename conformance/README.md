@@ -319,3 +319,8 @@ awaited base adoption, per-capability prepare, cursor gap/epoch recovery,
 terminal subscriptions and independent waiter/lease cancellation. Adjacent
 reference models are conformance-only; actual Host scheduling and UI continuity
 remain consumer evidence.
+
+`node conformance/startup-instance-configuration.mjs` checks the optional Node
+instance-configuration boundary: selected owner/profile, absent defaults, known
+secret-policy projection, detached immutable values and one generation snapshot
+for apply/prepare. It does not establish Host adoption or account access.

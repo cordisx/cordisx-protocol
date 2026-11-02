@@ -90,3 +90,11 @@ application modes, identity fields, or secret schemes are rejected. Launcher
 service configuration remains separate from renderer `Config`; a Host may show
 both in one plugin detail only as independently identified sections with
 independent revisions and application results.
+
+## Optional managed-backend Node input
+
+[Instance configuration v1](../startup/instance-configuration-v1.md) supplies a
+Host-selected nonsecret profile/plugin-instance snapshot to opted-in v15 Node
+apply and prepare callbacks. It adds no configuration writer, renderer tunnel,
+secret authority or account-store API. Existing service application modes and
+atomic generation changes still govern replacement.

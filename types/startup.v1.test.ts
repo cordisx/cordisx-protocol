@@ -1,3 +1,4 @@
+import './startup-instance-configuration.v1.test.js'
 import type {
   StartupCatalogReportV1,
   StartupDeclarationV1,
@@ -82,7 +83,7 @@ const module: StartupManagedServiceNodeModuleV1 = {
   apply: async (context, input) => {
     void context.managedServices
     void input.owner
-    // @ts-expect-error base apply is the unchanged v1 input
+    // @ts-expect-error base apply still has no prepare reporter
     input.startup
   },
   prepare: async (_context, input) => {

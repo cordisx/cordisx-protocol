@@ -396,3 +396,5 @@ assert.equal(pageActionAvailability(page, 'undeclared', requirements, operation)
 const { checkWaitAndRetry } = await import('./startup-wait-retry.mjs')
 checkWaitAndRetry(primary, evidence, report)
 console.log('startup v1: empty catalog immediate unavailability and retry authority fencing passed')
+
+await import('./startup-instance-configuration.mjs')

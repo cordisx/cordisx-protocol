@@ -174,7 +174,9 @@ observation and execution binding handles.
 ## Node milestones and compatibility
 
 For opted-in managed-backend modules, the Host invokes
-`StartupManagedServiceNodeModuleV1.apply` with the unchanged v1 base input.
+`StartupManagedServiceNodeModuleV1.apply` with the v1 base fields plus the optional
+[instance configuration snapshot](instance-configuration-v1.md). Frozen
+`ManagedServiceApplyInputV1` remains unchanged.
 The Host MUST await base apply and the existing component adoption transaction;
 apply registers definitions, context providers and bounded cleanup ownership.
 It MUST NOT detach or skip awaiting apply. Opted-in modules move lengthy provider
