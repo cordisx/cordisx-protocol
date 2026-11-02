@@ -940,7 +940,7 @@ void forgedChatroomMessageV3
   )
   writeFileSync(
     join(consumer, 'cordis-peer.d.ts'),
-    "declare module '@deepseek-ai/cordis' { export interface Context {} }\n",
+    "declare module '@deepseek-ai/cordis' { export interface Context {} export type Inject<M = Record<string, unknown>> = (keyof M)[] | { [K in keyof M]?: M[K] } }\n",
   )
   run(process.execPath, [
     join(root, 'node_modules/typescript/bin/tsc'),
