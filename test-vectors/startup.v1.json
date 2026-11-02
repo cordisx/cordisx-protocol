@@ -1,0 +1,238 @@
+{
+  "plugins": [
+    {
+      "manifest": {
+        "$schema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v15.schema.json",
+        "schemaVersion": 15,
+        "id": "example",
+        "capabilities": [],
+        "services": [
+          {
+            "id": "backend",
+            "kind": "managed-backend",
+            "owner": "host",
+            "entry": "./service.mjs",
+            "definitionSchema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-definition.v1.schema.json",
+            "runtimeResources": [],
+            "consumerGrants": []
+          },
+          {
+            "id": "indexer",
+            "kind": "managed-backend",
+            "owner": "host",
+            "entry": "./service.mjs",
+            "definitionSchema": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-definition.v1.schema.json",
+            "runtimeResources": [],
+            "consumerGrants": []
+          }
+        ],
+        "startup": {
+          "contract": "cordisx.startup-declaration/v1",
+          "capabilities": [
+            {
+              "id": "primary",
+              "serviceId": "backend",
+              "kind": "provider",
+              "providerId": "example.primary",
+              "compositionOrigin": "api",
+              "dependsOn": [],
+              "wait": {
+                "interactive": "background",
+                "command": "when-selected"
+              },
+              "milestones": [
+                "catalog-validated"
+              ],
+              "success": {
+                "allOf": [
+                  {
+                    "kind": "service-ready"
+                  },
+                  {
+                    "kind": "authenticated"
+                  },
+                  {
+                    "kind": "catalog-known"
+                  },
+                  {
+                    "kind": "provider-published"
+                  },
+                  {
+                    "kind": "milestone",
+                    "milestoneId": "catalog-validated"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "secondary",
+              "serviceId": "backend",
+              "kind": "provider",
+              "providerId": "example.secondary",
+              "compositionOrigin": "second",
+              "dependsOn": [],
+              "wait": {
+                "interactive": "background",
+                "command": "when-selected"
+              },
+              "milestones": [],
+              "success": {
+                "allOf": [
+                  {
+                    "kind": "service-ready"
+                  },
+                  {
+                    "kind": "authenticated"
+                  },
+                  {
+                    "kind": "catalog-known"
+                  },
+                  {
+                    "kind": "provider-published"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "index",
+              "serviceId": "indexer",
+              "kind": "capability",
+              "dependsOn": [],
+              "wait": {
+                "interactive": "always",
+                "command": "background"
+              },
+              "milestones": [],
+              "success": {
+                "allOf": [
+                  {
+                    "kind": "service-ready"
+                  }
+                ]
+              }
+            }
+          ],
+          "pages": [
+            {
+              "pageId": "status",
+              "observes": [
+                {
+                  "pluginId": "example",
+                  "capabilityId": "primary"
+                }
+              ],
+              "actions": [
+                {
+                  "actionId": "send",
+                  "requires": [
+                    {
+                      "pluginId": "example",
+                      "capabilityId": "primary"
+                    }
+                  ]
+                },
+                {
+                  "actionId": "login",
+                  "requires": []
+                },
+                {
+                  "actionId": "refresh",
+                  "requires": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "dependencies": []
+    }
+  ],
+  "snapshot": {
+    "contract": "cordisx.startup-snapshot/v1",
+    "cursor": {
+      "scopeId": "scope-1",
+      "hostGeneration": "host-1",
+      "epoch": "epoch-1",
+      "sequence": 0
+    },
+    "entries": [
+      {
+        "identity": {
+          "pluginId": "example",
+          "capabilityId": "primary",
+          "serviceId": "backend",
+          "providerId": "example.primary"
+        },
+        "generation": {
+          "host": "host-1",
+          "plugin": "plugin-1",
+          "service": "service-1"
+        },
+        "state": "auth-required",
+        "service": "authentication-required",
+        "process": "running",
+        "health": "ready",
+        "authentication": "missing",
+        "catalog": {
+          "state": "pending"
+        },
+        "provider": "unpublished",
+        "milestones": [
+          {
+            "milestoneId": "catalog-validated",
+            "state": "pending"
+          }
+        ],
+        "actions": {
+          "execute": {
+            "available": false,
+            "reason": "authentication-required"
+          },
+          "authenticate": {
+            "available": true
+          },
+          "retry": {
+            "available": false,
+            "reason": "unsupported"
+          }
+        }
+      }
+    ],
+    "pages": [
+      {
+        "pluginId": "example",
+        "pageId": "status",
+        "actions": [
+          {
+            "actionId": "send",
+            "availability": {
+              "available": false,
+              "reason": "authentication-required"
+            }
+          },
+          {
+            "actionId": "login",
+            "availability": {
+              "available": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "report": {
+    "contract": "cordisx.startup-milestone/v1",
+    "target": {
+      "pluginId": "example",
+      "capabilityId": "primary"
+    },
+    "generation": {
+      "host": "host-1",
+      "plugin": "plugin-1",
+      "service": "service-1"
+    },
+    "milestoneId": "catalog-validated",
+    "sequence": 1,
+    "state": "satisfied"
+  }
+}

@@ -183,6 +183,11 @@
     "local-work-settlement.v1.d.ts",
     "local-work-settlement.v1.test.ts",
     "wallet-spend.v1.d.ts",
-    "wallet-spend.v1.test.ts"
+    "wallet-spend.v1.test.ts",
+    "startup.v1.d.ts",
+    "plugin-manifest.v15.d.ts",
+    "plugin-package.v15.d.ts",
+    "startup-runtime.v1.d.ts",
+    "startup.v1.test.ts"
   ]
 }

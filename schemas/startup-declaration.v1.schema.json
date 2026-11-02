@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/startup-declaration.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "capabilities",
+    "pages"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.startup-declaration/v1"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      },
+      "minItems": 0,
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/page"
+      },
+      "minItems": 0,
+      "maxItems": 256,
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "capabilityRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pluginId",
+        "capabilityId"
+      ],
+      "properties": {
+        "pluginId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+        },
+        "capabilityId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+        }
+      }
+    },
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "service-ready",
+                "authenticated",
+                "catalog-known",
+                "provider-published"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "milestoneId"
+          ],
+          "properties": {
+            "kind": {
+              "const": "milestone"
+            },
+            "milestoneId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            }
+          }
+        }
+      ]
+    },
+    "capability": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "serviceId",
+            "dependsOn",
+            "wait",
+            "milestones",
+            "success",
+            "kind",
+            "providerId",
+            "compositionOrigin"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            },
+            "serviceId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            },
+            "dependsOn": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/capabilityRef"
+              },
+              "minItems": 0,
+              "maxItems": 256,
+              "uniqueItems": true
+            },
+            "wait": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "interactive",
+                "command"
+              ],
+              "properties": {
+                "interactive": {
+                  "enum": [
+                    "background",
+                    "when-selected",
+                    "always"
+                  ]
+                },
+                "command": {
+                  "enum": [
+                    "background",
+                    "when-selected",
+                    "always"
+                  ]
+                }
+              }
+            },
+            "milestones": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+              },
+              "minItems": 0,
+              "maxItems": 256,
+              "uniqueItems": true
+            },
+            "success": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "allOf"
+              ],
+              "properties": {
+                "allOf": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/condition"
+                  },
+                  "minItems": 1,
+                  "maxItems": 256,
+                  "uniqueItems": true
+                }
+              }
+            },
+            "kind": {
+              "const": "provider"
+            },
+            "providerId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            },
+            "compositionOrigin": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "serviceId",
+            "dependsOn",
+            "wait",
+            "milestones",
+            "success",
+            "kind"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            },
+            "serviceId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            },
+            "dependsOn": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/capabilityRef"
+              },
+              "minItems": 0,
+              "maxItems": 256,
+              "uniqueItems": true
+            },
+            "wait": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "interactive",
+                "command"
+              ],
+              "properties": {
+                "interactive": {
+                  "enum": [
+                    "background",
+                    "when-selected",
+                    "always"
+                  ]
+                },
+                "command": {
+                  "enum": [
+                    "background",
+                    "when-selected",
+                    "always"
+                  ]
+                }
+              }
+            },
+            "milestones": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+              },
+              "minItems": 0,
+              "maxItems": 256,
+              "uniqueItems": true
+            },
+            "success": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "allOf"
+              ],
+              "properties": {
+                "allOf": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/condition"
+                  },
+                  "minItems": 1,
+                  "maxItems": 256,
+                  "uniqueItems": true
+                }
+              }
+            },
+            "kind": {
+              "const": "capability"
+            }
+          }
+        }
+      ]
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pageId",
+        "observes",
+        "actions"
+      ],
+      "properties": {
+        "pageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+        },
+        "observes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/capabilityRef"
+          },
+          "minItems": 0,
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "actionId",
+              "requires"
+            ],
+            "properties": {
+              "actionId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+              },
+              "requires": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/capabilityRef"
+                },
+                "minItems": 0,
+                "maxItems": 256,
+                "uniqueItems": true
+              }
+            }
+          },
+          "minItems": 0,
+          "maxItems": 256,
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

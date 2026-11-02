@@ -149,3 +149,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Local wallet spend v1](wallet-spend/v1.md): native exact-terms authorization, bounded consumption and local commerce.
 
 - [Wallet pool v1](wallet-pool/v1.md): optional Economy-owned collateral and settlement capability.
+
+- [Progressive startup v1](startup/README.md): manifest v15 declarations, target waiting, Node preparation and safe pre-binding observation.

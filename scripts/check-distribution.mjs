@@ -1,3 +1,4 @@
+import { startupConsumerFixture } from './startup-consumer-fixture.mjs'
 import { expectedExports, expectedFiles } from './distribution-public-exports.mjs'
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -54,7 +55,7 @@ try {
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
   writeFileSync(
     join(consumer, 'consumer.ts'),
-    `import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
+    startupConsumerFixture + `import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
 import type { WalletPoolV1 } from '@cordisx/protocol/wallet-pool/v1'
 declare const walletPool: WalletPoolV1
 walletPool.reserve({source:{serviceOrigin:'https://game.example',serverId:'game',servicePublicKey:'public'},terms:'{}',requestId:'pool:1',deadline:1})
@@ -939,7 +940,7 @@ void forgedChatroomMessageV3
   )
   writeFileSync(
     join(consumer, 'cordis-peer.d.ts'),
-    "declare module '@deepseek-ai/cordis' { export interface Context {} }\n",
+    "declare module '@deepseek-ai/cordis' { export interface Context {} export type Inject<M = Record<string, unknown>> = (keyof M)[] | { [K in keyof M]?: M[K] } }\n",
   )
   run(process.execPath, [
     join(root, 'node_modules/typescript/bin/tsc'),

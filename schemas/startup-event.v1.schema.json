@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/startup-event.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reason",
+        "snapshot"
+      ],
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "reason": {
+          "enum": [
+            "initial",
+            "update",
+            "gap",
+            "epoch-changed"
+          ]
+        },
+        "snapshot": {
+          "$ref": "startup-snapshot.v1.schema.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reason",
+        "cursor"
+      ],
+      "properties": {
+        "kind": {
+          "const": "closed"
+        },
+        "reason": {
+          "enum": [
+            "unsubscribed",
+            "scope-revoked",
+            "host-replaced"
+          ]
+        },
+        "cursor": {
+          "$ref": "startup-snapshot.v1.schema.json#/$defs/cursor"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "connection"
+      ],
+      "properties": {
+        "kind": {
+          "const": "connection"
+        },
+        "connection": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "connected"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "state",
+                "reason"
+              ],
+              "properties": {
+                "state": {
+                  "enum": [
+                    "disconnected",
+                    "reconnecting"
+                  ]
+                },
+                "reason": {
+                  "enum": [
+                    "transport-unavailable",
+                    "timeout"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
