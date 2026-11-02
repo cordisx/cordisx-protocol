@@ -32,21 +32,29 @@ remain in force; this callback does not merge their stores or revision domains.
 `StartupManagedServiceConfigV1`. It reuses the public
 [`SchemaFormSourceV1` and `SchemaFormValidationV1`](../../../types/schema-form.v1.d.ts)
 validation vocabulary, narrows `~standard.validate` to synchronous results,
-and requires `toJSON()` returning the complete serializable raw Schemastery
-object-root field tree. This is exactly the VALUE of the existing Schemastery
-`schemaProjection.envelope` in
-[`plugin-config-common.v1`](../../../schemas/plugin-config-common.v1.schema.json),
-not a new form-schema format. For example, `toJSON()` returns:
+and requires `toJSON()` returning an explicit, closed raw object-root field tree.
+This Node-only subset reuses field and reserved-role semantics; it is not a claim
+that a Schemastery instance's `toJSON()` or the existing loosely typed descriptor
+envelope has this representation. For example, Node `Config.toJSON()` returns:
 
 ```json
 {"type":"object","dict":{"account":{"type":"object","dict":{"root":{"type":"string"}}}}}
 ```
 
-The `{ "kind": "schemastery", "envelope": ... }` descriptor wrapper, a JSON
-string and a root without `type: "object"` plus `dict` are invalid return values.
+A `{ "uid": ..., "refs": ... }` serialization, the
+`{ "kind": "schemastery", "envelope": ... }` descriptor wrapper, a JSON string
+and a root without `type: "object"` plus `dict` are invalid return values. A package
+using a full Schemastery instance must explicitly declare this Node field tree
+or convert its schema into the supported closed subset before returning it;
+blindly forwarding the instance's `toJSON()` is not conformant. Reference
+hydration, uid/refs decoding and a new form schema system are outside this seam.
 The TypeScript root constraint excludes those forms; nested completeness still
-requires Host validation, not a structural type assertion. The field tree uses the existing type, dict,
-inner, list and meta role/default semantics. This Node `Config` must come from
+requires Host validation, not a structural type assertion. The portable closed
+subset contains object nodes with explicit `dict`, array nodes with explicit
+`inner`, and string/number/boolean leaf nodes, plus the existing `meta.role` and
+`meta.default` meaning. Every descendant must be inspectable; arbitrary/open
+records, lazy references and unresolved `list` branches are not proof of closure.
+Hosts reject unsupported constructs rather than guess missing sensitive positions. This Node `Config` must come from
 the exact admitted service entry module whose package source/digest and owner
 have already been validated; an object from a renderer fiber, another package,
 a runtime config value or an arbitrary resolver cannot replace it.

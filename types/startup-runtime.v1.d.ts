@@ -3,13 +3,13 @@ import type { ManagedServiceNodeModuleV1 } from './managed-service-context.v1.js
 import type { ManagedServiceApplyInputV1, ManagedServiceRegistrationHandleV1, ManagedServiceSafeValueV1, ManagedServiceServiceContextV1 } from './managed-service-runtime.v1.js'
 import type { StartupCapabilityDeclarationV1, StartupReporterV1 } from './startup.v1.js'
 
-/** Exact admitted Node module's synchronous validator plus complete Schemastery projection. */
+/** Exact admitted Node module's synchronous validator plus an explicit closed raw field-tree projection. */
 export interface StartupManagedServiceConfigV1 extends SchemaFormSourceV1 {
   readonly type: 'object'
   readonly '~standard': Omit<SchemaFormSourceV1['~standard'], 'validate'> & {
     readonly validate: (value: unknown) => SchemaFormValidationV1
   }
-  /** Raw object-root field tree: the envelope VALUE, never a kind/envelope wrapper or JSON string. */
+  /** Closed raw object-root tree; never uid/refs serialization, a descriptor wrapper or JSON string. */
   toJSON(): Readonly<Record<string, ManagedServiceSafeValueV1>> & {
     readonly type: 'object'
     readonly dict: Readonly<Record<string, ManagedServiceSafeValueV1>>

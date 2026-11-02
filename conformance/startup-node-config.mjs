@@ -106,6 +106,11 @@ assert.throws(() => resolve(undefined, { account: {} }), /schema-required/)
 assert.throws(() => resolve({ ...Config, toJSON: undefined }, { account: {} }), /schema-required/)
 assert.throws(() => resolve({ ...Config, toJSON: () => ({}) }, {}), /unsupported-projection/)
 assert.throws(
+  () => resolve({ ...Config, toJSON: () => ({ uid: 1, refs: { '1': projection } }) }, {}),
+  /unsupported-projection/,
+)
+assert.throws(() => resolve({ ...Config, toJSON: () => JSON.stringify(projection) }, {}), /incomplete-projection/)
+assert.throws(
   () => resolve({ ...Config, toJSON: () => ({ kind: 'schemastery', envelope: projection }) }, {}),
   /unsupported-projection/,
 )

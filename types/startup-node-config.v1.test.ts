@@ -46,3 +46,10 @@ const wrappedProjection: StartupManagedServiceConfigV1 = {
   toJSON: () => ({ kind: 'schemastery', envelope: Config.toJSON() }),
 }
 void wrappedProjection
+
+const referenceSerialization: StartupManagedServiceConfigV1 = {
+  ...Config,
+  // @ts-expect-error uid/refs serialization is not the explicit raw object-root tree
+  toJSON: () => ({ uid: 1, refs: { '1': Config.toJSON() } }),
+}
+void referenceSerialization
