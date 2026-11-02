@@ -107,7 +107,10 @@ when its current known catalog is empty, while the independent service, process,
 health and authentication evidence stays unchanged; execute reports `catalog-empty`.
 Here `failed` means the declared execution success cannot currently be met, not
 that the backend process failed. Later valid discovery may recover this capability
-without restarting a healthy service.
+without restarting a healthy service. Consumers MUST render the most specific
+action reason: `catalog-empty` means no available models, not a service startup
+failure. A generic capability `failed` summary must not override the independent
+healthy service/process evidence or erase that specific action reason.
 
 Actions are independently available or carry one bounded reason. Authentication
 can be available while execute is unavailable. `execute` requires current
