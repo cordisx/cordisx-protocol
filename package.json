@@ -147,7 +147,11 @@
     "types/local-work-settlement.v1.d.ts",
     "runtime/local-work-settlement.v1.js",
     "types/wallet-spend.v1.d.ts",
-    "types/wallet-pool.v1.d.ts"
+    "types/wallet-pool.v1.d.ts",
+    "types/startup.v1.d.ts",
+    "types/plugin-manifest.v15.d.ts",
+    "types/plugin-package.v15.d.ts",
+    "types/startup-runtime.v1.d.ts"
   ],
   "exports": {
     "./model-providers/v1": "./types/model-providers.v1.d.ts",
@@ -290,7 +294,11 @@
     },
     "./wallet-pool/v1": {
       "types": "./types/wallet-pool.v1.d.ts"
-    }
+    },
+    "./startup/v1": "./types/startup.v1.d.ts",
+    "./plugin-manifest/v15": "./types/plugin-manifest.v15.d.ts",
+    "./plugin-package/v15": "./types/plugin-package.v15.d.ts",
+    "./startup-runtime/v1": "./types/startup-runtime.v1.d.ts"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",

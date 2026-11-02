@@ -1,0 +1,441 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/startup-snapshot.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "cursor",
+    "entries",
+    "pages"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.startup-snapshot/v1"
+    },
+    "cursor": {
+      "$ref": "#/$defs/cursor"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/projection"
+      },
+      "minItems": 0,
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pluginId",
+          "pageId",
+          "actions"
+        ],
+        "properties": {
+          "pluginId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "actionId",
+                "availability"
+              ],
+              "properties": {
+                "actionId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+                },
+                "availability": {
+                  "$ref": "#/$defs/availability"
+                }
+              }
+            },
+            "minItems": 0,
+            "maxItems": 256,
+            "uniqueItems": true
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 256,
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "availability": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "available"
+          ],
+          "properties": {
+            "available": {
+              "const": true
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "available",
+            "reason"
+          ],
+          "properties": {
+            "available": {
+              "const": false
+            },
+            "reason": {
+              "enum": [
+                "unknown-target",
+                "not-prepared",
+                "preparing",
+                "authentication-required",
+                "catalog-pending",
+                "catalog-empty",
+                "model-unavailable",
+                "dependency-not-ready",
+                "milestone-pending",
+                "provider-unpublished",
+                "failed",
+                "stopped",
+                "revoked",
+                "permission-denied",
+                "unsupported",
+                "stale-generation",
+                "binding-unavailable"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "cursor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scopeId",
+        "hostGeneration",
+        "epoch",
+        "sequence"
+      ],
+      "properties": {
+        "scopeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "hostGeneration": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "epoch": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity",
+        "generation",
+        "state",
+        "service",
+        "process",
+        "health",
+        "authentication",
+        "catalog",
+        "provider",
+        "milestones",
+        "actions"
+      ],
+      "properties": {
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pluginId",
+            "capabilityId",
+            "serviceId",
+            "providerId"
+          ],
+          "properties": {
+            "pluginId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            },
+            "capabilityId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+            },
+            "serviceId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "providerId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "generation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "host",
+            "plugin",
+            "service"
+          ],
+          "properties": {
+            "host": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "plugin": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "service": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "state": {
+          "enum": [
+            "unknown",
+            "declared",
+            "preparing",
+            "auth-required",
+            "catalog-pending",
+            "ready",
+            "failed",
+            "stopped",
+            "revoked"
+          ]
+        },
+        "service": {
+          "enum": [
+            "unknown",
+            "registered",
+            "preparing",
+            "ready",
+            "authentication-required",
+            "failed",
+            "stopped",
+            "disposed"
+          ]
+        },
+        "process": {
+          "enum": [
+            "unknown",
+            "not-started",
+            "starting",
+            "running",
+            "stopped",
+            "failed"
+          ]
+        },
+        "health": {
+          "enum": [
+            "unknown",
+            "starting",
+            "ready",
+            "degraded",
+            "unhealthy",
+            "stopped"
+          ]
+        },
+        "authentication": {
+          "enum": [
+            "unknown",
+            "not-required",
+            "missing",
+            "authenticating",
+            "authenticated",
+            "expired",
+            "failed",
+            "logged-out"
+          ]
+        },
+        "catalog": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "enum": [
+                    "unknown",
+                    "pending",
+                    "not-applicable",
+                    "failed"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "state",
+                "generation",
+                "modelIds"
+              ],
+              "properties": {
+                "state": {
+                  "const": "known"
+                },
+                "generation": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "modelIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "minItems": 0,
+                  "maxItems": 256,
+                  "uniqueItems": true
+                }
+              }
+            }
+          ]
+        },
+        "provider": {
+          "enum": [
+            "not-applicable",
+            "unpublished",
+            "published",
+            "revoked"
+          ]
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "milestoneId",
+              "state"
+            ],
+            "properties": {
+              "milestoneId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"
+              },
+              "state": {
+                "enum": [
+                  "pending",
+                  "satisfied",
+                  "failed"
+                ]
+              }
+            }
+          },
+          "minItems": 0,
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "actions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "execute",
+            "authenticate",
+            "retry"
+          ],
+          "properties": {
+            "execute": {
+              "$ref": "#/$defs/availability"
+            },
+            "authenticate": {
+              "$ref": "#/$defs/availability"
+            },
+            "retry": {
+              "$ref": "#/$defs/availability"
+            }
+          }
+        }
+      }
+    }
+  }
+}

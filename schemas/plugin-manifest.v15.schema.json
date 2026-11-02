@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v15.schema.json",
+  "title": "CordisX Runtime Plugin Manifest v15",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "id",
+    "capabilities",
+    "services",
+    "startup"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v15.schema.json"
+    },
+    "schemaVersion": {
+      "const": 15
+    },
+    "id": {
+      "$ref": "plugin-manifest.v14.schema.json#/properties/id"
+    },
+    "name": {
+      "$ref": "plugin-manifest.v14.schema.json#/properties/name"
+    },
+    "capabilities": {
+      "$ref": "plugin-manifest.v14.schema.json#/properties/capabilities"
+    },
+    "services": {
+      "$ref": "plugin-manifest.v14.schema.json#/properties/services"
+    },
+    "startup": {
+      "$ref": "startup-declaration.v1.schema.json"
+    }
+  }
+}
