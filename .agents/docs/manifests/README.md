@@ -171,3 +171,10 @@ provider/workspace or Session scope from each validated call and authorizes it
 before dispatch. Package v13 only adds the digest-pinned manifest v13 reference;
 manifest and package v1-v12 remain frozen. See
 [Runtime exact-request Platform scope](../platform-capabilities/runtime-exact-request-v13.md).
+
+## Runtime and package manifest v15
+
+Runtime v15 adds the explicit [startup v1](../startup/README.md) declaration.
+Package v15 adds only the separately digested manifest v15 reference. All prior
+manifests remain frozen; legacy services preserve blocking behavior. Backend
+definition, health/authentication and native publication v1 wire are reused.

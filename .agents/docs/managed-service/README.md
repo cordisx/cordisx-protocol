@@ -79,3 +79,10 @@ implementing Host. A compatibility fallback may publish an unchanged legacy
 route with metadata omitted, but MUST keep the choices unknown instead of
 claiming the new capability survived. Publication and native interoperability
 remain separate from Protocol conformance.
+
+## Opted-in progressive startup
+
+[Startup v1](../startup/README.md) adds manifest v15 provider ownership, an awaited
+base-apply/per-capability-prepare boundary, Node catalog/milestone reports and a
+pre-binding observer. It reuses these backend definitions and publication wire;
+legacy modules keep their original blocking apply behavior.

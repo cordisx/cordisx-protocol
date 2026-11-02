@@ -110,7 +110,12 @@ export interface StartupSnapshotV1 {
 }
 
 /** Full snapshots make removals, generation replacement and gap recovery unambiguous. */
+export type StartupConnectionV1 =
+  | { readonly state: 'connected' }
+  | { readonly state: 'disconnected' | 'reconnecting'; readonly reason: 'transport-unavailable' | 'timeout' }
+
 export type StartupEventV1 =
+  | { readonly kind: 'connection'; readonly connection: StartupConnectionV1 }
   | { readonly kind: 'snapshot'; readonly reason: 'initial' | 'update' | 'gap' | 'epoch-changed'; readonly snapshot: StartupSnapshotV1 }
   | { readonly kind: 'closed'; readonly reason: 'unsubscribed' | 'scope-revoked' | 'host-replaced'; readonly cursor: StartupCursorV1 }
 
@@ -137,8 +142,29 @@ export interface StartupMilestoneReportV1 {
   readonly state: 'satisfied' | 'failed'
 }
 
+export type StartupDiscoveredCatalogV1 =
+  | { readonly state: 'pending' | 'failed' }
+  | {
+      readonly state: 'known'
+      readonly generation: string
+      readonly modelIds: readonly string[]
+      readonly digest: `sha256:${string}`
+    }
+
+export interface StartupCatalogReportV1 {
+  readonly contract: 'cordisx.startup-catalog-report/v1'
+  readonly target: StartupCapabilityRefV1
+  readonly generation: { readonly host: string; readonly plugin: string; readonly service: string }
+  readonly sequence: number
+  readonly catalog: StartupDiscoveredCatalogV1
+}
+
 /** Issued only to the declaring Node service owner, never to a renderer. */
 export interface StartupReporterV1 {
+  reportCatalog(input: StartupCatalogReportV1): Promise<
+    | { readonly status: 'accepted' }
+    | { readonly status: 'rejected'; readonly reason: 'not-owner' | 'undeclared' | 'stale-generation' | 'stale-sequence' | 'revoked' | 'invalid-catalog' | 'not-provider' }
+  >
   report(input: StartupMilestoneReportV1): Promise<
     | { readonly status: 'accepted' }
     | { readonly status: 'rejected'; readonly reason: 'not-owner' | 'undeclared' | 'stale-generation' | 'stale-sequence' | 'revoked' }

@@ -677,3 +677,11 @@ Host-private.
 - [Durable work settlement v1](local-work-settlement.v1.schema.json): closed Host-signed admitted snapshot; independent of leased local wallet work.
 
 - `managed-native-provider-catalog.v1.schema.json`: closed native route catalogs with optional discovered reasoning efforts; membership, canonical ordering and digest semantics belong to the managed-service contract.
+
+## Progressive startup
+
+[Startup v1](../.agents/docs/startup/README.md) uses `startup-declaration.v1`,
+`startup-snapshot.v1`, `startup-event.v1`, `startup-milestone.v1` and
+`startup-catalog-report.v1` schemas. Manifest/package v15 opt in without changing
+frozen v14 documents. Graph, ownership, generation and digest checks are semantic
+validation beyond JSON Schema.

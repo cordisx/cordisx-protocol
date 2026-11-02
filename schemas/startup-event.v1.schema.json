@@ -50,6 +50,57 @@
           "$ref": "startup-snapshot.v1.schema.json#/$defs/cursor"
         }
       }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "connection"
+      ],
+      "properties": {
+        "kind": {
+          "const": "connection"
+        },
+        "connection": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "connected"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "state",
+                "reason"
+              ],
+              "properties": {
+                "state": {
+                  "enum": [
+                    "disconnected",
+                    "reconnecting"
+                  ]
+                },
+                "reason": {
+                  "enum": [
+                    "transport-unavailable",
+                    "timeout"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
     }
   ]
 }

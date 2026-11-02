@@ -371,7 +371,7 @@
                     "maxLength": 256
                   },
                   "minItems": 0,
-                  "maxItems": 256,
+                  "maxItems": 4096,
                   "uniqueItems": true
                 }
               }

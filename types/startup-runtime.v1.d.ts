@@ -1,19 +1,22 @@
-import type { Inject } from '@deepseek-ai/cordis'
 import type { ManagedServiceNodeModuleV1 } from './managed-service-context.v1.js'
-import type { ManagedServiceApplyInputV1, ManagedServiceServiceContextV1 } from './managed-service-runtime.v1.js'
-import type { StartupReporterV1 } from './startup.v1.js'
+import type { ManagedServiceApplyInputV1, ManagedServiceRegistrationHandleV1, ManagedServiceServiceContextV1 } from './managed-service-runtime.v1.js'
+import type { StartupCapabilityDeclarationV1, StartupReporterV1 } from './startup.v1.js'
 
-export interface StartupManagedServiceApplyInputV1 extends ManagedServiceApplyInputV1 {
-  /** Owner and service generation bound by the Host, never accepted from renderer input. */
+export interface StartupManagedServicePrepareInputV1 extends ManagedServiceApplyInputV1 {
+  /** Exact admitted declaration selected by the Host, not by the renderer or module. */
+  readonly capability: StartupCapabilityDeclarationV1
+  readonly generation: { readonly host: string; readonly plugin: string; readonly service: string }
+  readonly registration: ManagedServiceRegistrationHandleV1
+  /** Owner/service/capability and generation bound for this preparation. */
   readonly startup: StartupReporterV1
 }
 
-export type StartupManagedServiceApplyV1 = (
+export type StartupManagedServicePrepareV1 = (
   context: ManagedServiceServiceContextV1,
-  input: StartupManagedServiceApplyInputV1,
+  input: StartupManagedServicePrepareInputV1,
 ) => void | Promise<void>
 
-/** Opted-in v15 managed-backend entry; definition and registration wire stay v1. */
-export interface StartupManagedServiceNodeModuleV1 extends Omit<ManagedServiceNodeModuleV1, 'apply'> {
-  readonly apply: StartupManagedServiceApplyV1 & { readonly inject?: Inject }
+/** V15 opt-in: await base apply/adoption, then schedule each capability's prepare. */
+export interface StartupManagedServiceNodeModuleV1 extends ManagedServiceNodeModuleV1 {
+  readonly prepare: StartupManagedServicePrepareV1
 }

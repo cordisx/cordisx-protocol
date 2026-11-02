@@ -311,3 +311,11 @@ behavior require Host evidence.
 - `node conformance/local-work-settlement.mjs` checks durable payload version isolation, signatures and exact receipt pins.
 
 `managed-native-provider.mjs` (also run by managed-service conformance) checks closed route capabilities, default membership, canonical ordering, legacy digest compatibility and capability-sensitive digests.
+
+Startup v1: `node conformance/startup.mjs` checks declaration graph rejection,
+frozen-version downgrade, target-only waits, independent readiness/actions,
+publication ownership, Node milestones and catalog digest/empty discovery,
+awaited base adoption, per-capability prepare, cursor gap/epoch recovery,
+terminal subscriptions and independent waiter/lease cancellation. Adjacent
+reference models are conformance-only; actual Host scheduling and UI continuity
+remain consumer evidence.

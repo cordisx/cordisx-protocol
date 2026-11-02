@@ -26,7 +26,8 @@ milestone condition names a locally declared milestone. Every page observation
 and action requirement resolves to an admitted capability. Provider-only
 conditions (`catalog-known`, `provider-published`) are invalid for non-provider
 capabilities. A provider MUST require `service-ready`, `catalog-known` and
-`provider-published`; all capabilities MUST require `service-ready`.
+`provider-published`; all capabilities MUST require `service-ready`. Providers and capabilities with
+Node milestones MUST be owned by a declared managed-backend service.
 
 `success.allOf` is a nonempty conjunction. Host-owned `service-ready` checks the
 existing backend readiness and health; `authenticated` checks the existing
@@ -49,8 +50,10 @@ presentation contribution does not create or revive an execution identity.
 
 `wait.interactive` and `wait.command` select the corresponding launch mode.
 `background` starts preparation without adding a launch barrier;
-`when-selected` starts when explicitly selected or required by a dependency;
-`always` starts and joins the launch barrier. With no explicit target the Host
+`when-selected` joins a wait only when selected or required by a target;
+`always` joins the launch barrier. All enabled admitted services prepare in the
+background normally, including `when-selected`; waiting policy MUST NOT be used
+to infer lazy/on-demand startup. No on-demand startup contract is introduced. With no explicit target the Host
 waits only for its core, legacy blocking services, and applicable `always`
 closures. An explicit provider/model target MUST wait for that exact capability
 and its dependency closure regardless of its policy; missing, failed, unauthenticated,
@@ -99,7 +102,12 @@ binding, authorization, successful readiness, valid publication for a provider,
 and a nonempty provider catalog; exact-model admission additionally checks
 membership and reports `model-unavailable`. Non-provider execution does not
 require a provider catalog. Host authorization and actual operation support
-always apply, including to page actions with empty `requires`. Page `observes`
+always apply, including to page actions with empty `requires`. Generic page action ids may
+represent refresh, logout, read-status or other existing operations; declaration
+alone never implements an operation or grants its authority. Hosts intersect
+requirements with the existing operation support, bound capability and required
+user gesture. The fixed execute/authenticate/retry summary is not an exhaustive
+operation inventory and cannot authorize an undeclared page action. Page `observes`
 never gates navigation; action `requires` gates only that action. An unavailable
 action never hides the page, clears a draft, or substitutes a selection.
 
@@ -122,6 +130,21 @@ old/duplicate sequences within an epoch, and discard replaced row generations.
 A full snapshot removes entries absent from the new admitted set. Execution
 binding replacement is observable through generations even if identity is stable.
 
+Transport connection is a separate `connection` event, with state `connected`,
+`disconnected` or `reconnecting`. Temporary loss carries only the bounded reason
+`transport-unavailable` or `timeout`; no raw error or endpoint is exposed.
+Connection events have no authority cursor and MUST NOT increment authority
+sequence, replace the last snapshot, set a service to failed/unknown, or create
+readiness. The bridge reports observed connectivity and retains the last
+successful snapshot while reconnecting. It resumes using the last accepted
+cursor and applies replay/gap/epoch rules before claiming current state. A
+`connected` event indicates transport only, not readiness or fresh authority.
+A subscription may remain open across transient loss; explicit scope revocation
+or Host replacement is terminal even if transport can reconnect. Consumers
+present connection state alongside the last authoritative snapshot and preserve
+drafts/selections. Hosts unable to distinguish a transient failure from
+revocation must not invent revocation or silently grant a replacement scope.
+
 Exactly one `closed` event terminates a subscription on explicit close/abort,
 scope revocation or Host replacement. No later callback is allowed. Closing or
 aborting observation never stops preparation. A target becoming stopped/revoked
@@ -135,13 +158,30 @@ observation and execution binding handles.
 ## Node milestones and compatibility
 
 For opted-in managed-backend modules, the Host invokes
-`StartupManagedServiceNodeModuleV1.apply` with an owner/service-bound
-`input.startup` reporter. Milestones are scoped to declared capability and the
+`StartupManagedServiceNodeModuleV1.apply` with the unchanged v1 base input.
+The Host MUST await base apply and the existing component adoption transaction;
+apply registers definitions, context providers and bounded cleanup ownership.
+It MUST NOT detach or skip awaiting apply. Opted-in modules move lengthy provider
+preparation to the required `prepare(context, input)` callback. After adoption,
+the Host schedules one prepare per admitted capability and current generation,
+providing the exact declaration, current registration, owner/client, signal and
+owner/service/capability-bound `input.startup` reporter. The Host prepares enabled
+capabilities in the background, ordering their required dependency closures;
+it does not run a capability's prepare before its dependencies succeed.
+A rejected dependency fails dependents without running their prepare. Independent
+capabilities may progress separately, including capabilities of one service.
+Shared service registration/process work is deduplicated; provider-specific
+work and success remain independent. Return from prepare only completes the
+callback; the Host still checks every declared success condition. Rejection
+fails that capability; it does not falsely undo successful base adoption or
+satisfy another capability. Update/disposal aborts all owned preparation before
+atomic component cleanup; retries require a fresh fenced preparation generation.
+Old v14 modules keep their awaited blocking apply semantics. Milestones are scoped to declared capability and the
 exact host/plugin/service generation. Sequence is positive and strictly
 increasing per capability/milestone/generation. Reports are absolute states;
 newer `failed` revokes satisfaction. Rejected reports have no side effects.
-Reports cannot set Host health, authentication, catalog, publication or global
-ready. Renderer code and other service owners cannot obtain the reporter.
+Milestone reports cannot set Host health, authentication, catalog, publication
+or global ready. Renderer code and other service owners cannot obtain the reporter.
 Disposal/revocation invalidates it before cleanup; cancellation fences late work.
 
 Hosts not supporting v15 reject the required schema. Producers needing older
@@ -149,6 +189,31 @@ Hosts must supply a separately validated legacy package with its original
 blocking behavior; silently stripping `startup` is forbidden. V15 cannot grant
 background semantics to old plugins by reinterpretation. Package version stays
 independent of schema versions; no package publication is implied by this spec.
+
+## Catalog discovery reports
+
+`StartupReporterV1.reportCatalog` accepts `startup-catalog-report/v1` only from
+the provider capability's bound Node prepare owner. It uses the same exact
+generation/target fencing as milestones and a distinct strictly increasing
+positive catalog sequence per capability/generation. `pending` and `failed`
+report discovery, not process or authentication status. `known` includes an
+opaque catalog generation, distinct nonempty model alias strings (up to 4096),
+and a digest; an empty array is valid completed discovery. The Host validates
+schema, identity, generation, sequence and digest before replacing observation.
+The digest is `sha256:` plus lowercase SHA-256 of UTF-8 compact JSON
+`[generation, sortedModelIds]`, sorting exact aliases by UTF-8 byte order.
+No normalization, implicit aliases or model-name heuristics are permitted.
+Invalid reports have no side effects and cannot advance the accepted sequence.
+
+Discovery is independent of native publication. A nonempty catalog alone cannot
+enable execution; real publication, binding and all success conditions still
+apply. Publication must match the current discovery catalog generation and exact
+alias set, in addition to existing publication v1 catalog digest validation.
+A changed, pending or failed discovery invalidates the old publication for
+readiness and admission; an identical known report does not create authority.
+Empty discovery revokes executable routes and reports `catalog-empty`, without
+inventing a default route or publishing an invalid v1 catalog. Existing v1
+publication wire and its nonempty/default-route requirement are unchanged.
 
 ## Security and evidence
 

@@ -183,3 +183,12 @@ the specification and [schema index](../schemas/README.md).
 - `wallet-pool/v1`: [types](wallet-pool.v1.d.ts), [specification](../.agents/docs/wallet-pool/v1.md).
 
 `managed-service-runtime/v1` also declares optional `ModelReasoningCapabilitiesV1` on managed native routes; see [Managed Service](../.agents/docs/managed-service/README.md).
+
+## Progressive startup
+
+| Public subpath        | Declaration                                          | Specification                                                                        |
+| --------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `startup/v1`          | [startup.v1.d.ts](startup.v1.d.ts)                   | [Startup v1](../.agents/docs/startup/README.md)                                      |
+| `startup-runtime/v1`  | [startup-runtime.v1.d.ts](startup-runtime.v1.d.ts)   | [Startup v1](../.agents/docs/startup/README.md)                                      |
+| `plugin-manifest/v15` | [plugin-manifest.v15.d.ts](plugin-manifest.v15.d.ts) | [Manifest v15](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v15) |
+| `plugin-package/v15`  | [plugin-package.v15.d.ts](plugin-package.v15.d.ts)   | [Manifest v15](../.agents/docs/manifests/README.md#runtime-and-package-manifest-v15) |
