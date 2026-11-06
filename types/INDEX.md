@@ -200,7 +200,7 @@ Node module `StartupManagedServiceConfigV1`; see the
 
 ## Managed-service web entry
 
-| Public subpath | Declaration | Contract |
-| --- | --- | --- |
-| `managed-service-web-entry/v1` | [managed-service-web-entry.v1.d.ts](managed-service-web-entry.v1.d.ts) | [Read-only web entry](../.agents/docs/managed-service/web-entry-v1.md) |
+| Public subpath                         | Declaration                                                                            | Contract                                                                                |
+| -------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `managed-service-web-entry/v1`         | [managed-service-web-entry.v1.d.ts](managed-service-web-entry.v1.d.ts)                 | [Read-only web entry](../.agents/docs/managed-service/web-entry-v1.md)                  |
 | `managed-service-web-entry-runtime/v1` | [managed-service-web-entry-runtime.v1.d.ts](managed-service-web-entry-runtime.v1.d.ts) | [Node declaration and ownership proof](../.agents/docs/managed-service/web-entry-v1.md) |

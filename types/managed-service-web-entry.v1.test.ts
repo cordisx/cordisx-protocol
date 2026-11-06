@@ -1,4 +1,7 @@
-import type { ManagedServiceWebEntryUIContextV1, ManagedServiceWebEntryReadRequestV1 } from './managed-service-web-entry.v1.js'
+import type {
+  ManagedServiceWebEntryReadRequestV1,
+  ManagedServiceWebEntryUIContextV1,
+} from './managed-service-web-entry.v1.js'
 import type { ManagedServiceWebEntryNodeModuleV1 } from './managed-service-web-entry-runtime.v1.js'
 import type { ManagedServiceNodeModuleV1 } from './managed-service-context.v1.js'
 import type { StartupManagedServiceNodeModuleV1 } from './startup-runtime.v1.js'
@@ -15,7 +18,11 @@ if (got.status === 'available' && got.service.webEntry?.contract === 'cordisx.ma
     // @ts-expect-error unavailable never contains a previous origin
     result.origin
   }
-  const request: ManagedServiceWebEntryReadRequestV1 = { contract: 'cordisx.managed-service-web-entry-read/v1', binding: entry.binding, serviceGeneration: entry.serviceGeneration }
+  const request: ManagedServiceWebEntryReadRequestV1 = {
+    contract: 'cordisx.managed-service-web-entry-read/v1',
+    binding: entry.binding,
+    serviceGeneration: entry.serviceGeneration,
+  }
   void request
   // @ts-expect-error renderer cannot supply arbitrary URL
   entry.read({ origin: 'http://127.0.0.1:9999' })
@@ -27,10 +34,15 @@ if (got.status === 'available' && got.service.webEntry?.contract === 'cordisx.ma
 const module: ManagedServiceWebEntryNodeModuleV1 = {
   apply: () => {},
   managedServiceWebEntry: {
-    contract: 'cordisx.managed-service-web-entry-source/v1', serviceId: 'gateway', operationId: 'console.info',
+    contract: 'cordisx.managed-service-web-entry-source/v1',
+    serviceId: 'gateway',
+    operationId: 'console.info',
     verification: { kind: 'shared-instance-hmac-sha256', path: '/api/proof' },
   },
 }
-const progressive: StartupManagedServiceNodeModuleV1 & ManagedServiceWebEntryNodeModuleV1 = { ...module, prepare: () => {} }
+const progressive: StartupManagedServiceNodeModuleV1 & ManagedServiceWebEntryNodeModuleV1 = {
+  ...module,
+  prepare: () => {},
+}
 const legacy: ManagedServiceNodeModuleV1 = module
 void [progressive, legacy]
