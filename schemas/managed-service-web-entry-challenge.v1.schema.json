@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-web-entry-challenge.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "challenge"
+  ],
+  "properties": {
+    "challenge": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

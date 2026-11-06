@@ -17,9 +17,18 @@ export type ManagedServiceWebEntryResultV1 = {
   | { readonly status: 'unavailable'; readonly code: ManagedServiceWebEntryUnavailableCodeV1 }
 )
 
+/** Host-generated transport envelope from the captured handle; not caller-selected authority. */
+export interface ManagedServiceWebEntryReadRequestV1 {
+  readonly contract: 'cordisx.managed-service-web-entry-read/v1'
+  readonly binding: ManagedServiceBindingV1
+  readonly serviceGeneration: string
+}
+
 /** Dedicated read only; no caller URL, operation, owner, proof or lifecycle control. */
 export interface ManagedServiceWebEntryV1 {
   readonly contract: 'cordisx.managed-service-web-entry/v1'
+  readonly binding: ManagedServiceBindingV1
+  readonly serviceGeneration: string
   read(options?: { readonly signal?: AbortSignal }): Promise<ManagedServiceWebEntryResultV1>
 }
 

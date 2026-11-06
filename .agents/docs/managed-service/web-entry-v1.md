@@ -19,8 +19,11 @@ It works with both existing base modules and progressive startup modules by
 intersecting the optional extension with their existing module type.
 
 The operation MUST already exist in the current registered definition, use GET,
-accept no renderer payload, have no request schema and declare response schema
-`managed-service-web-entry-source-result.v1.schema.json`. Its effective HTTP
+accept no renderer payload, use `requestEncoding: "query"`, and declare response schema
+`managed-service-web-entry-source-result.v1.schema.json`. An optional requestSchema
+must name `managed-service-web-entry-challenge.v1.schema.json`; validate the
+Host-generated `{challenge}` against it when present. The query is always exactly
+that challenge object, with no request body. Its effective HTTP
 authentication MUST be the existing configured authorization-header mechanism;
 it MUST NOT opt out to `none`. Only the dedicated web-entry broker uses this
 response schema to interpret origin/proof values. Generic invoke's safe-value
@@ -39,7 +42,13 @@ managed-service wire document is expanded.
 
 ## Current binding and read lifecycle
 
-A handle captures the current UI binding and service generation. Each read
+A handle exposes readonly `binding` and `serviceGeneration` captured at get time.
+The browser bridge builds `ManagedServiceWebEntryReadRequestV1` with literal
+contract `cordisx.managed-service-web-entry-read/v1` and exactly these captured
+values. The Host validates the closed request plus the caller's existing owner
+scope; supplying another generation or editing binding data cannot retarget it.
+Neither the facade nor the transport may replace captured generation with a newer
+one when issuing read. Every result repeats that captured binding/generation. Each read
 revalidates owner, active profile, source identity, binding id, Host/plugin/service
 generation, current source registration, process/endpoint ownership and service
 availability before dispatch and after every awaited operation. The source and
@@ -54,7 +63,9 @@ authenticate, refresh credentials, restart, mutate configuration, navigate or
 create a window. It may use only the existing running authenticated broker.
 Abort/dispose cancels the read and any owned request; late completions cannot
 return an origin. One caller's cancellation does not cancel another caller or
-stop a process. Apply existing bounded operation timeout across the whole read.
+stop a process. Apply the declared bounded operation timeout as one deadline across the whole
+read, including both HTTP exchanges and body parsing. Limit each response body
+to 64 KiB, rejecting an oversized stream before unbounded buffering.
 Return unavailable for unsupported, owner-unavailable, service-unavailable,
 stale-generation, binding-replaced, disposed, cancelled, timeout, invalid-source
 or ownership-unverified as applicable; do not forward raw errors or responses.
@@ -88,7 +99,9 @@ endpoint selected by the package declaration; the renderer cannot select it.
 If the sanitized origin is exactly the Host's current owned registered backend
 origin, existing endpoint ownership plus before/after fences suffices. Loopback
 syntax by itself never suffices, even for another service of the same plugin.
-The Host MUST reject redirects and MUST NOT dispatch ordinary authenticated
+Both HTTP fetches MUST use redirect rejection and credentials omission (equivalent
+to `redirect: "error"`, `credentials: "omit"`); only the source request explicitly
+carries its existing broker Authorization header. The Host MUST NOT dispatch ordinary authenticated
 requests to an origin supplied by the renderer or by an unverified source.
 
 ## Secondary listener proof
@@ -144,8 +157,9 @@ unavailable code. It carries no instance id, PID, proof/challenge, credential,
 filesystem path, runtime/registration handle or arbitrary diagnostic. It grants
 no filesystem, account, execution, login or navigation authority.
 
-The source declaration, source-result, secondary proof and renderer result have
-independent v1 schemas. Frozen definitions, managed service v1 methods, startup
+The source declaration, Host challenge, source-result, secondary proof, read
+request and renderer result have independent v1 schemas. The read request is
+captured by the handle rather than accepted as public read method arguments. Frozen definitions, managed service v1 methods, startup
 v1 and manifest/package v15 remain unchanged. A package may advertise this
 optional versioned extension to a supporting Host; an older Host ignores the
 unknown optional module export and has no renderer webEntry capability. A

@@ -36,3 +36,8 @@ export interface ManagedServiceWebEntryProofV1 {
   readonly instance: string
   readonly proof: string
 }
+
+/** Host-generated query only, never a request body or renderer argument. */
+export interface ManagedServiceWebEntryChallengeV1 {
+  readonly challenge: string
+}
