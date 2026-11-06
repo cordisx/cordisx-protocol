@@ -9,6 +9,7 @@ export type ManagedServiceWebEntryUnavailableCodeV1 =
 
 export type ManagedServiceWebEntryResultV1 = {
   readonly contract: 'cordisx.managed-service-web-entry-result/v1'
+  /** Host-issued web-entry binding; not the parent service's stable binding. */
   readonly binding: ManagedServiceBindingV1
   /** Exact generation captured by this handle; never silently retargeted. */
   readonly serviceGeneration: string
@@ -20,13 +21,20 @@ export type ManagedServiceWebEntryResultV1 = {
 /** Host-generated transport envelope from the captured handle; not caller-selected authority. */
 export interface ManagedServiceWebEntryReadRequestV1 {
   readonly contract: 'cordisx.managed-service-web-entry-read/v1'
+  /** Host-issued web-entry binding; not the parent service's stable binding. */
   readonly binding: ManagedServiceBindingV1
   readonly serviceGeneration: string
 }
 
-/** Dedicated read only; no caller URL, operation, owner, proof or lifecycle control. */
+/**
+ * Dedicated read only; no caller URL, operation, owner, proof or lifecycle control.
+ * The binding has the parent's identity/scope but an independently issued opaque
+ * bindingId for this service generation. Copying a newer generation onto an old
+ * binding never confers authority; replacement requires a fresh registry get.
+ */
 export interface ManagedServiceWebEntryV1 {
   readonly contract: 'cordisx.managed-service-web-entry/v1'
+  /** Host-issued web-entry binding; not the parent service's stable binding. */
   readonly binding: ManagedServiceBindingV1
   readonly serviceGeneration: string
   read(options?: { readonly signal?: AbortSignal }): Promise<ManagedServiceWebEntryResultV1>

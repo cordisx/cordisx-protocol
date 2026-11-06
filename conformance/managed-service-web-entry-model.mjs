@@ -1,6 +1,6 @@
 // Conformance-only reference broker. Mock transport owns parsing and reports body size.
 // Host streaming, process admission and production composition need separate evidence.
-import { createHmac, timingSafeEqual } from 'node:crypto'
+import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
 
 export const proofContract = 'cordisx.managed-service-web-entry-proof/v1'
 export function proof(secret, challenge, origin, instance) {
@@ -70,10 +70,22 @@ async function boundedAwait(operation, state, signal) {
     state.signal?.removeEventListener('abort', dispose)
   }
 }
+// Host-private issuance, separate from a parent binding that can survive restart.
+const issuedBindings = new WeakMap()
 export function createHandle(record) {
+  let issued = issuedBindings.get(record)
+  if (!issued || issued.generation !== record.serviceGeneration || !same(issued.parent, record.binding)) {
+    issued = {
+      generation: record.serviceGeneration,
+      parent: structuredClone(record.binding),
+      binding: { ...structuredClone(record.binding), bindingId: `web-entry-${randomBytes(32).toString('hex')}` },
+    }
+    issuedBindings.set(record, issued)
+  }
   return {
     contract: 'cordisx.managed-service-web-entry/v1',
-    binding: structuredClone(record.binding),
+    binding: structuredClone(issued.binding),
+    parentBinding: structuredClone(record.binding),
     serviceGeneration: record.serviceGeneration,
     pluginGeneration: record.pluginGeneration,
     hostGeneration: record.hostGeneration,
@@ -101,12 +113,16 @@ export async function readEntry(handle, options) {
     if (state.now() >= state.deadline) fail('timeout')
     if (caller !== state.owner) fail('owner-unavailable')
     if (state.disposed || state.signal?.aborted) fail('disposed')
-    if (state.current !== handle.record || !same(state.current.binding, handle.binding)) fail('binding-replaced')
+    if (state.current !== handle.record || !same(state.current.binding, handle.parentBinding)) fail('binding-replaced')
     if (
       state.current.serviceGeneration !== handle.serviceGeneration
       || state.current.pluginGeneration !== handle.pluginGeneration
       || state.current.hostGeneration !== handle.hostGeneration
     ) fail('stale-generation')
+    const issued = issuedBindings.get(state.current)
+    if (!issued || issued.generation !== handle.serviceGeneration || !same(issued.binding, handle.binding)) {
+      fail('binding-replaced')
+    }
     if (state.current.registration !== handle.registration || state.current.source !== handle.source) {
       fail('binding-replaced')
     }

@@ -179,6 +179,9 @@ const [resultA, resultB] = await Promise.all([read(a), read(b)])
 assert.equal(resultA.origin, 'http://127.0.0.1:4001')
 assert.equal(resultB.origin, 'http://127.0.0.1:4002')
 assert.notDeepEqual(resultA.binding, resultB.binding)
+assert.notEqual(resultA.binding.bindingId, a.record.binding.bindingId)
+assert.deepEqual(resultA.binding.identity, a.record.binding.identity)
+assert.deepEqual(resultA.binding.scope, a.record.binding.scope)
 assert.equal(validator('result')(resultA), true)
 for (const field of ['instance', 'proof', 'pid', 'path', 'token', 'registration', 'challenge']) {
   assert.equal(Object.hasOwn(resultA, field), false)
@@ -305,6 +308,27 @@ assert.equal(staleResult.serviceGeneration, 'service-1')
 assert.equal(staleResult.origin, undefined)
 assert.equal(validator('result')(staleResult), true)
 assert.equal(validator('result')({ ...staleResult, origin: 'http://127.0.0.1:4001' }), false)
+const restart = fixture()
+const parentBinding = structuredClone(restart.record.binding)
+const oldHandle = restart.handle
+restart.record.serviceGeneration = 'replacement'
+// A correct current generation value cannot repair an old issued binding.
+const forgedHandle = { ...oldHandle, serviceGeneration: 'replacement' }
+const forgedOptions = { ...restart.options, request: { ...restart.options.request, serviceGeneration: 'replacement' } }
+assert.equal((await readEntry(forgedHandle, forgedOptions)).status, 'unavailable')
+assert.equal(restart.calls.length, 0)
+const freshHandle = createHandle(restart.record)
+assert.notEqual(freshHandle.binding.bindingId, oldHandle.binding.bindingId)
+assert.deepEqual(restart.record.binding, parentBinding, 'parent binding stays unchanged on restart')
+assert.deepEqual(freshHandle.binding.identity, parentBinding.identity)
+assert.deepEqual(freshHandle.binding.scope, parentBinding.scope)
+assert.equal((await readEntry(forgedHandle, forgedOptions)).status, 'unavailable')
+const freshOptions = { ...restart.options, request: { ...restart.options.request, binding: freshHandle.binding, serviceGeneration: 'replacement' } }
+const parentForgedHandle = { ...freshHandle, binding: parentBinding }
+assert.equal((await readEntry(parentForgedHandle, { ...freshOptions, request: { ...freshOptions.request, binding: parentBinding } })).status, 'unavailable')
+assert.equal(restart.calls.length, 0)
+assert.equal((await readEntry(freshHandle, freshOptions)).status, 'available')
+assert.equal(validator('read')(freshOptions.request), true, 'same wire shape supports the independently issued binding')
 const login = fixture()
 login.record.status = 'authentication-required'
 assert.equal((await read(login)).status, 'available')

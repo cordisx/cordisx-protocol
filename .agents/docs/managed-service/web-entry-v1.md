@@ -43,6 +43,20 @@ managed-service wire document is expanded.
 ## Current binding and read lifecycle
 
 A handle exposes readonly `binding` and `serviceGeneration` captured at get time.
+The web-entry binding is independently issued by the Host for this capability's
+current service generation. It has the same owner, `identity` and `scope` as the
+parent service, but its opaque `bindingId` differs from the parent's stable
+`service.binding.bindingId`. The Host issues a fresh unpredictable binding id
+when the service generation changes and invalidates the old issued pair. It
+MUST validate the exact issued `(binding, serviceGeneration)` pair and its caller
+ownership, rather than accepting any currently correct generation string with
+an otherwise stable service binding. An old web-entry binding combined with a
+new generation, or the parent binding supplied to the dedicated read RPC, is
+rejected. A fresh registry get obtains the replacement pair; changing captured
+values never retargets an old handle. The web-entry binding is an opaque UI
+reference, not a raw broker credential, process/registration handle or general
+service authority. Parent service methods, binding and subscriptions preserve
+their existing contracts.
 The browser bridge builds `ManagedServiceWebEntryReadRequestV1` with literal
 contract `cordisx.managed-service-web-entry-read/v1` and exactly these captured
 values. The Host validates the closed request plus the caller's existing owner
@@ -151,7 +165,7 @@ claim to sandbox an authorized Node plugin's own code.
 
 ## Safe result and compatibility
 
-`ManagedServiceWebEntryResultV1` exposes only its versioned contract, existing
+`ManagedServiceWebEntryResultV1` exposes only its versioned contract, generation-specific
 UI binding, explicit serviceGeneration, status and canonical origin OR a bounded
 unavailable code. It carries no instance id, PID, proof/challenge, credential,
 filesystem path, runtime/registration handle or arbitrary diagnostic. It grants
