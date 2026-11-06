@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-web-entry-source-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "status",
+        "origin"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.managed-service-web-entry-source-result/v1"
+        },
+        "status": {
+          "const": "available"
+        },
+        "origin": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^https?://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[1-9][0-9]{0,4})?$"
+        },
+        "verification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "instance",
+            "proof"
+          ],
+          "properties": {
+            "instance": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "proof": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "status"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.managed-service-web-entry-source-result/v1"
+        },
+        "status": {
+          "const": "unavailable"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "origin": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^https?://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[1-9][0-9]{0,4})?$"
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instance",
+        "proof"
+      ],
+      "properties": {
+        "instance": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "proof": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

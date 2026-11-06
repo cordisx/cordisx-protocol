@@ -86,3 +86,9 @@ remain separate from Protocol conformance.
 base-apply/per-capability-prepare boundary, Node catalog/milestone reports and a
 pre-binding observer. It reuses these backend definitions and publication wire;
 legacy modules keep their original blocking apply behavior.
+
+## Optional management webpage entry
+
+[Web entry v1](web-entry-v1.md) adds a separate Node declaration and renderer
+capability for current owned loopback management origins, including proof for
+a separate listener. Reading it does not start, authenticate or navigate a service.

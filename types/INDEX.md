@@ -197,3 +197,10 @@ The `startup-runtime/v1` entry also exports `StartupManagedServiceConfigurationV
 `StartupManagedServiceApplyInputV1`, `StartupManagedServiceApplyV1` and the optional
 Node module `StartupManagedServiceConfigV1`; see the
 [optional Node instance configuration](../.agents/docs/startup/instance-configuration-v1.md).
+
+## Managed-service web entry
+
+| Public subpath | Declaration | Contract |
+| --- | --- | --- |
+| `managed-service-web-entry/v1` | [managed-service-web-entry.v1.d.ts](managed-service-web-entry.v1.d.ts) | [Read-only web entry](../.agents/docs/managed-service/web-entry-v1.md) |
+| `managed-service-web-entry-runtime/v1` | [managed-service-web-entry-runtime.v1.d.ts](managed-service-web-entry-runtime.v1.d.ts) | [Node declaration and ownership proof](../.agents/docs/managed-service/web-entry-v1.md) |

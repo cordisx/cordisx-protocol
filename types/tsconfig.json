@@ -188,6 +188,8 @@
     "plugin-manifest.v15.d.ts",
     "plugin-package.v15.d.ts",
     "startup-runtime.v1.d.ts",
-    "startup.v1.test.ts"
+    "startup.v1.test.ts",
+    "managed-service-web-entry.v1.d.ts",
+    "managed-service-web-entry-runtime.v1.d.ts"
   ]
 }
