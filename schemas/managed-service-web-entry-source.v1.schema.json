@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-web-entry-source.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "serviceId",
+    "operationId"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.managed-service-web-entry-source/v1"
+    },
+    "serviceId": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localId"
+    },
+    "operationId": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localId"
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "path"
+      ],
+      "properties": {
+        "kind": {
+          "const": "shared-instance-hmac-sha256"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 256,
+          "pattern": "^/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+$"
+        }
+      }
+    }
+  }
+}

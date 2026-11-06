@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-web-entry-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "binding",
+        "serviceGeneration",
+        "status",
+        "origin"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.managed-service-web-entry-result/v1"
+        },
+        "binding": {
+          "$ref": "managed-service-common.v1.schema.json#/$defs/binding"
+        },
+        "serviceGeneration": {
+          "$ref": "managed-service-common.v1.schema.json#/$defs/generation"
+        },
+        "status": {
+          "const": "available"
+        },
+        "origin": {
+          "$ref": "managed-service-web-entry-source-result.v1.schema.json#/$defs/origin"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "binding",
+        "serviceGeneration",
+        "status",
+        "code"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.managed-service-web-entry-result/v1"
+        },
+        "binding": {
+          "$ref": "managed-service-common.v1.schema.json#/$defs/binding"
+        },
+        "serviceGeneration": {
+          "$ref": "managed-service-common.v1.schema.json#/$defs/generation"
+        },
+        "status": {
+          "const": "unavailable"
+        },
+        "code": {
+          "enum": [
+            "unsupported",
+            "owner-unavailable",
+            "service-unavailable",
+            "stale-generation",
+            "binding-replaced",
+            "disposed",
+            "cancelled",
+            "timeout",
+            "invalid-source",
+            "ownership-unverified"
+          ]
+        }
+      }
+    }
+  ]
+}

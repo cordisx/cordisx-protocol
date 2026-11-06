@@ -1,6 +1,8 @@
 import { readdirSync } from 'node:fs'
 // Public import coverage for the packed consumer smoke test.
 export const expectedExports = [
+  './managed-service-web-entry/v1',
+  './managed-service-web-entry-runtime/v1',
   './startup/v1',
   './startup-runtime/v1',
   './plugin-manifest/v15',
@@ -117,6 +119,8 @@ export const expectedExports = [
 ].sort()
 
 export const expectedFiles = [
+  'types/managed-service-web-entry.v1.d.ts',
+  'types/managed-service-web-entry-runtime.v1.d.ts',
   'types/startup.v1.d.ts',
   'types/startup-runtime.v1.d.ts',
   'types/plugin-manifest.v15.d.ts',

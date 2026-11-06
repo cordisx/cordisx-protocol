@@ -1,0 +1,12 @@
+{
+  "proofs": [
+    {
+      "secretHex": "7171717171717171717171717171717171717171717171717171717171717171",
+      "challenge": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "origin": "http://127.0.0.1:4001",
+      "instance": "instance-1",
+      "canonical": "[\"cordisx.managed-service-web-entry-proof/v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"http://127.0.0.1:4001\",\"instance-1\"]",
+      "proof": "6012919475d00d1b9824f23da232f6130eb1e9aef1d646d39621fb4cd15058e3"
+    }
+  ]
+}

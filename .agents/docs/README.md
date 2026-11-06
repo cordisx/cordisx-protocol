@@ -151,3 +151,5 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Wallet pool v1](wallet-pool/v1.md): optional Economy-owned collateral and settlement capability.
 
 - [Progressive startup v1](startup/README.md): manifest v15 declarations, target waiting, Node preparation and safe pre-binding observation.
+
+- [Managed-service web entry v1](managed-service/web-entry-v1.md): owner-bound read-only management origins with current-generation ownership proof.

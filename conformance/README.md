@@ -329,3 +329,9 @@ for apply/prepare. It does not establish Host adoption or account access.
 Config proof: complete supported projection, unknown nested input/output keys,
 existing reserved roles and defaults, async rejection and normalization fencing.
 It is a reference fixture, not evidence that the Host consumes the module schema.
+
+Managed-service web entry: `node conformance/managed-service-web-entry.mjs`
+checks closed schemas, origin ownership, separate-listener HMAC proofs, cross-owner
+and stale-generation denial, pre/post-await lifecycle fences, cancellation,
+response limits and dedicated read-only transport. This is a reference contract
+model; production Node/broker/renderer composition remains Host evidence.

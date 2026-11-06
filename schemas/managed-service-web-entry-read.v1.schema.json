@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-web-entry-read.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "binding",
+    "serviceGeneration"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.managed-service-web-entry-read/v1"
+    },
+    "binding": {
+      "$ref": "managed-service-common.v1.schema.json#/$defs/binding"
+    },
+    "serviceGeneration": {
+      "$ref": "managed-service-common.v1.schema.json#/$defs/generation"
+    }
+  }
+}

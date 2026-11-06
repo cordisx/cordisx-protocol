@@ -685,3 +685,9 @@ Host-private.
 `startup-catalog-report.v1` schemas. Manifest/package v15 opt in without changing
 frozen v14 documents. Graph, ownership, generation and digest checks are semantic
 validation beyond JSON Schema.
+
+Managed-service web entry v1 uses `managed-service-web-entry-source.v1`,
+`managed-service-web-entry-source-result.v1`, `managed-service-web-entry-proof.v1`
+`managed-service-web-entry-challenge.v1`, `managed-service-web-entry-read.v1`
+and `managed-service-web-entry-result.v1`; see the [normative contract](../.agents/docs/managed-service/web-entry-v1.md).
+Ownership and canonical-origin checks supplement shape validation.
