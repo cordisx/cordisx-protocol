@@ -323,9 +323,18 @@ assert.deepEqual(restart.record.binding, parentBinding, 'parent binding stays un
 assert.deepEqual(freshHandle.binding.identity, parentBinding.identity)
 assert.deepEqual(freshHandle.binding.scope, parentBinding.scope)
 assert.equal((await readEntry(forgedHandle, forgedOptions)).status, 'unavailable')
-const freshOptions = { ...restart.options, request: { ...restart.options.request, binding: freshHandle.binding, serviceGeneration: 'replacement' } }
+const freshOptions = {
+  ...restart.options,
+  request: { ...restart.options.request, binding: freshHandle.binding, serviceGeneration: 'replacement' },
+}
 const parentForgedHandle = { ...freshHandle, binding: parentBinding }
-assert.equal((await readEntry(parentForgedHandle, { ...freshOptions, request: { ...freshOptions.request, binding: parentBinding } })).status, 'unavailable')
+assert.equal(
+  (await readEntry(parentForgedHandle, {
+    ...freshOptions,
+    request: { ...freshOptions.request, binding: parentBinding },
+  })).status,
+  'unavailable',
+)
 assert.equal(restart.calls.length, 0)
 assert.equal((await readEntry(freshHandle, freshOptions)).status, 'available')
 assert.equal(validator('read')(freshOptions.request), true, 'same wire shape supports the independently issued binding')
