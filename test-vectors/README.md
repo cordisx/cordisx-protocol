@@ -299,3 +299,7 @@ known-empty catalog, generation, scope and subscription recovery cases.
 
 [Startup catalog digest v1](startup-catalog.v1.json) fixes empty, nonempty and
 reordered UTF-8 model alias inputs with canonical JSON and SHA-256 results.
+
+[Managed-service web entry v1](managed-service-web-entry.v1.json) fixes the
+challenge/origin/instance HMAC transcript and expected proof using a public test
+key. No production key or account material is present.
