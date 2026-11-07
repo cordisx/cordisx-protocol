@@ -691,3 +691,8 @@ Managed-service web entry v1 uses `managed-service-web-entry-source.v1`,
 `managed-service-web-entry-challenge.v1`, `managed-service-web-entry-read.v1`
 and `managed-service-web-entry-result.v1`; see the [normative contract](../.agents/docs/managed-service/web-entry-v1.md).
 Ownership and canonical-origin checks supplement shape validation.
+
+Managed-service authenticated console v1 uses the closed
+`managed-service-console-source.v1`, `managed-service-console-request.v1` and
+`managed-service-console-result.v1` schemas. See the
+[normative authenticated console contract](../.agents/docs/managed-service/authenticated-console-v1.md).

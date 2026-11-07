@@ -92,3 +92,6 @@ legacy modules keep their original blocking apply behavior.
 [Web entry v1](web-entry-v1.md) adds a separate Node declaration and renderer
 capability for current owned loopback management origins, including proof for
 a separate listener. Reading it does not start, authenticate or navigate a service.
+
+[Authenticated console v1](authenticated-console-v1.md) separately adds an
+owner-bound isolated browser mount for a verified existing management session.
