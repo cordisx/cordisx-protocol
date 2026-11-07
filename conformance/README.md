@@ -335,3 +335,6 @@ checks closed schemas, origin ownership, separate-listener HMAC proofs, cross-ow
 and stale-generation denial, pre/post-await lifecycle fences, cancellation,
 response limits and dedicated read-only transport. This is a reference contract
 model; production Node/broker/renderer composition remains Host evidence.
+
+Authenticated managed console: `node conformance/managed-service-console.mjs`
+checks the closed declaration, private request and credential response shapes.

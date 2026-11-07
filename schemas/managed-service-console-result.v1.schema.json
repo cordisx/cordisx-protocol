@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-console-result.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "cordisx.managed-service-console-result/v1"
+    },
+    "status": {
+      "enum": [
+        "prepared",
+        "revoked",
+        "sign-in-required",
+        "unavailable"
+      ]
+    },
+    "cookie": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^__Host-[A-Za-z0-9_-]{1,80}$"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{32,128}$"
+        },
+        "maxAgeSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 28800
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "maxAgeSeconds"
+      ]
+    }
+  },
+  "required": [
+    "contract",
+    "status"
+  ],
+  "oneOf": [
+    {
+      "properties": {
+        "status": {
+          "const": "prepared"
+        },
+        "cookie": {}
+      },
+      "required": [
+        "cookie"
+      ]
+    },
+    {
+      "properties": {
+        "status": {
+          "enum": [
+            "revoked",
+            "sign-in-required",
+            "unavailable"
+          ]
+        },
+        "cookie": false
+      }
+    }
+  ]
+}
