@@ -25,3 +25,22 @@ export type ManagedServiceConsoleResultV1 =
     readonly contract: 'cordisx.managed-service-console-result/v1'
     readonly status: 'revoked' | 'sign-in-required' | 'unavailable'
   }
+
+/** Optional managedServiceBrowserConsole export from the admitted Node module. */
+export interface ManagedServiceBrowserConsoleSourceV1 {
+  readonly contract: 'cordisx.managed-service-browser-console-source/v1'
+  readonly serviceId: string
+  readonly operationId: string
+  readonly redeemPath: `/${string}`
+}
+
+/** Private issue request; origin is the proved backend origin used for management authentication. */
+export interface ManagedServiceBrowserConsoleRequestV1 {
+  readonly binding: string
+  readonly origin: `http://${string}` | `https://${string}`
+}
+
+/** Private result consumed by the Host when constructing the single-use entry URL. */
+export type ManagedServiceBrowserConsoleResultV1 =
+  | { readonly status: 'issued'; readonly ticket: string }
+  | { readonly status: 'sign-in-required' | 'unavailable' }

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-browser-console-request.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "binding": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "origin": {
+      "type": "string",
+      "pattern": "^https?://(?:127\\.0\\.0\\.1|\\[::1\\])(?::[1-9][0-9]{0,4})?$"
+    }
+  },
+  "required": [
+    "binding",
+    "origin"
+  ]
+}

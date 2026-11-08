@@ -696,3 +696,7 @@ Managed-service authenticated console v1 uses the closed
 `managed-service-console-source.v1`, `managed-service-console-request.v1` and
 `managed-service-console-result.v1` schemas. See the
 [normative authenticated console contract](../.agents/docs/managed-service/authenticated-console-v1.md).
+
+The browser ticket variant uses separate closed `managed-service-browser-console-source.v1`,
+`managed-service-browser-console-request.v1` and `managed-service-browser-console-result.v1`
+schemas. See the [browser ticket contract](../.agents/docs/managed-service/browser-console-v1.md).
