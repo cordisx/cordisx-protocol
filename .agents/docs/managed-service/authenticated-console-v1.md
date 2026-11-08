@@ -61,3 +61,6 @@ An older Host or an adapter without proven isolation omits the capability.
 The consumer can still offer the normal manually authenticated web entry,
 without treating an unavailable mount as authenticated or moving an existing
 credential into that fallback.
+
+[Browser ticket v1](browser-console-v1.md) is a separate optional exchange. It
+does not install a native mount credential in an embedded browser view.

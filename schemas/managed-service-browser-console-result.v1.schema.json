@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-browser-console-result.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "enum": [
+        "issued",
+        "sign-in-required",
+        "unavailable"
+      ]
+    },
+    "ticket": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{32}$"
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "oneOf": [
+    {
+      "properties": {
+        "status": {
+          "const": "issued"
+        },
+        "ticket": {}
+      },
+      "required": [
+        "ticket"
+      ]
+    },
+    {
+      "properties": {
+        "status": {
+          "enum": [
+            "sign-in-required",
+            "unavailable"
+          ]
+        },
+        "ticket": false
+      }
+    }
+  ]
+}

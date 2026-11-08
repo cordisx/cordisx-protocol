@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-browser-console-source.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "cordisx.managed-service-browser-console-source/v1"
+    },
+    "serviceId": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localId"
+    },
+    "operationId": {
+      "$ref": "ui-common.v1.schema.json#/$defs/localId"
+    },
+    "redeemPath": {
+      "type": "string",
+      "maxLength": 256,
+      "pattern": "^/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+$"
+    }
+  },
+  "required": [
+    "contract",
+    "serviceId",
+    "operationId",
+    "redeemPath"
+  ]
+}

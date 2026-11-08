@@ -95,3 +95,5 @@ a separate listener. Reading it does not start, authenticate or navigate a servi
 
 [Authenticated console v1](authenticated-console-v1.md) separately adds an
 owner-bound isolated browser mount for a verified existing management session.
+[Browser ticket v1](browser-console-v1.md) adds a separate, optional single-use
+navigation entry for Hosts with a proved browser request boundary.

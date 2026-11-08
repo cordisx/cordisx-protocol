@@ -337,4 +337,5 @@ response limits and dedicated read-only transport. This is a reference contract
 model; production Node/broker/renderer composition remains Host evidence.
 
 Authenticated managed console: `node conformance/managed-service-console.mjs`
-checks the closed declaration, private request and credential response shapes.
+checks both console declarations, their closed private requests and responses,
+and rejection of fields from the other exchange.
