@@ -303,3 +303,6 @@ reordered UTF-8 model alias inputs with canonical JSON and SHA-256 results.
 [Managed-service web entry v1](managed-service-web-entry.v1.json) fixes the
 challenge/origin/instance HMAC transcript and expected proof using a public test
 key. No production key or account material is present.
+
+`identity-visuals/avatar.json` is a credential-free RGBA PNG used by the
+collection-v2 and Channel Manager identity successor conformance.

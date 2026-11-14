@@ -164,3 +164,6 @@ Manager navigation, and the legacy sidebar `registerCollection` API are
 unchanged. An older Host keeps an unknown Manager collection registration
 inactive with a compatibility diagnostic and must not reinterpret it as the
 private HostCollection or sidebar collection API.
+
+The explicit [v2 successor](v2.md) adds account artwork and a platform badge
+without changing this frozen registration, query or snapshot version.

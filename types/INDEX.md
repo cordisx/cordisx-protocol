@@ -206,3 +206,7 @@ Node module `StartupManagedServiceConfigV1`; see the
 | `managed-service-web-entry-runtime/v1` | [managed-service-web-entry-runtime.v1.d.ts](managed-service-web-entry-runtime.v1.d.ts) | [Node declaration and ownership proof](../.agents/docs/managed-service/web-entry-v1.md)                                                                 |
 | `managed-service-console/v1`           | [managed-service-console.v1.d.ts](managed-service-console.v1.d.ts)                     | [Native mount](../.agents/docs/managed-service/authenticated-console-v1.md), [browser entry](../.agents/docs/managed-service/browser-console-v1.md)     |
 | `managed-service-console-runtime/v1`   | [managed-service-console-runtime.v1.d.ts](managed-service-console-runtime.v1.d.ts)     | [Native exchange](../.agents/docs/managed-service/authenticated-console-v1.md), [browser ticket](../.agents/docs/managed-service/browser-console-v1.md) |
+
+Identity successors: [Manager collection v2](manager-collection.v2.d.ts) and
+[Channel Manager v3](channel-manager.v3.d.ts) retain frozen predecessor methods
+and explicitly select identity-bearing snapshots.

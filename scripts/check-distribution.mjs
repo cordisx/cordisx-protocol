@@ -1,5 +1,6 @@
 import { managedServiceWebEntryConsumerFixture } from './managed-service-web-entry-consumer-fixture.mjs'
 import { startupConsumerFixture } from './startup-consumer-fixture.mjs'
+import { identityVisualsConsumerFixture } from './identity-visuals-consumer-fixture.mjs'
 import { expectedExports, expectedFiles } from './distribution-public-exports.mjs'
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -56,7 +57,7 @@ try {
   writeFileSync(join(consumer, 'package.json'), '{"type":"module"}\n')
   writeFileSync(
     join(consumer, 'consumer.ts'),
-    managedServiceWebEntryConsumerFixture + startupConsumerFixture
+    managedServiceWebEntryConsumerFixture + startupConsumerFixture + identityVisualsConsumerFixture
       + `import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
 import type { WalletPoolV1 } from '@cordisx/protocol/wallet-pool/v1'
 declare const walletPool: WalletPoolV1

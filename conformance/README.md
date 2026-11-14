@@ -339,3 +339,6 @@ model; production Node/broker/renderer composition remains Host evidence.
 Authenticated managed console: `node conformance/managed-service-console.mjs`
 checks both console declarations, their closed private requests and responses,
 and rejection of fields from the other exchange.
+
+`identity-visuals.mjs` verifies the explicit collection-v2 and Channel snapshot-v4
+identity branches, their predecessor rejection and bounded image validation.

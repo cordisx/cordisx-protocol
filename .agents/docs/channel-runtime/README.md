@@ -463,3 +463,6 @@ fingerprint; it is consumed once by the following page. Export creation yields
 an expiring private `log-export` record. The additive v1 readback request and
 acknowledgement consume that record once and expose no payload, path, URL, or
 download handle to renderer code.
+
+See [Channel Manager v3 identity projection](manager-v3-identity.md) for the
+explicit display-only snapshot successor; v2 operations remain unchanged.

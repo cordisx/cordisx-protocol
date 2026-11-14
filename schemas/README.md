@@ -700,3 +700,8 @@ Managed-service authenticated console v1 uses the closed
 The browser ticket variant uses separate closed `managed-service-browser-console-source.v1`,
 `managed-service-browser-console-request.v1` and `managed-service-browser-console-result.v1`
 schemas. See the [browser ticket contract](../.agents/docs/managed-service/browser-console-v1.md).
+
+Identity display successors: `manager-collection-common.v2.schema.json`,
+`manager-collection-snapshot.v2.schema.json` and
+`channel-runtime-snapshot.v4.schema.json` reuse their frozen predecessors
+except for bounded, decorative account artwork and brand visuals.
