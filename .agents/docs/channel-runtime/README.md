@@ -15,6 +15,9 @@ versions.
 
 ## Contracts
 
+For scoped main-stream, quoted and topic replies with Agent choice, see the
+explicit [conversation reply-policy v2 successor](reply-routing-v2.md).
+
 The machine-readable contracts are:
 
 - `channel-common.v1.schema.json`: structured account, tenant, conversation,
@@ -466,3 +469,18 @@ download handle to renderer code.
 
 See [Channel Manager v3 identity projection](manager-v3-identity.md) for the
 explicit display-only snapshot successor; v2 operations remain unchanged.
+
+See [Channel configuration v2](config-v2.md) for persistent connection labels and receive selectors. Existing Manager v2 operations and service-manifest v1 declarations are unchanged.
+
+## Host conversation policy
+
+The [v5 owned-service facade](manager-v5-service-owner.md) provides a separate
+internal management entrypoint. Inherited delegated methods remain frozen.
+
+[Conversation policy v1 and Channel Manager v4](conversation-policy.md) keep task delivery separate from transport and add a Host-owned configuration surface.
+
+See [Channel Manager v7 inline forms](manager-v7-inline-forms.md) for Host-owned credential and policy bodies.
+
+See [Channel Manager v8 unified configuration](manager-v8-connection-form.md) for the single connection form and atomic optional-secret save.
+
+See [workflow policy v3 and Manager v9](workflow-v3.md) for progressive commands, native approvals, execution forms and readable grouping.

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v16.schema.json",
+  "title": "CordisX Runtime Plugin Manifest v16",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "id", "capabilities", "services"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-manifest.v16.schema.json"
+    },
+    "schemaVersion": { "const": 16 },
+    "id": { "$ref": "plugin-manifest.v15.schema.json#/properties/id" },
+    "name": { "$ref": "plugin-manifest.v15.schema.json#/properties/name" },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 37,
+      "items": {
+        "oneOf": [
+          { "$ref": "plugin-manifest.v13.schema.json#/properties/capabilities/items" },
+          { "$ref": "#/$defs/channelExactRequest" }
+        ]
+      }
+    },
+    "services": { "$ref": "plugin-manifest.v15.schema.json#/properties/services" },
+    "startup": { "$ref": "plugin-manifest.v15.schema.json#/properties/startup" }
+  },
+  "$defs": {
+    "channelExactRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "required", "scope"],
+      "properties": {
+        "name": { "enum": ["channel.accounts.connect", "channel.bindings.write"] },
+        "required": { "const": false },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["runtime"],
+          "properties": { "runtime": { "const": "exact-request" } }
+        }
+      }
+    }
+  }
+}

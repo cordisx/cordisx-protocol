@@ -156,3 +156,6 @@ contract availability here does not establish deployment or consumer acceptance.
 
 - [Manager collection identity visuals v2](manager-collection/v2.md).
 - [Channel Manager v3 identity projection](channel-runtime/manager-v3-identity.md).
+
+- [Channel workflow v3 / Manager v9](channel-runtime/workflow-v3.md).
+- [Package documentation v1](plugin-documents/README.md).

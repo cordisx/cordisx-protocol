@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/chat-execution-readback.v1.schema.json",
+  "title": "CordisX chat execution readback v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "profileId",
+    "hostGeneration",
+    "revision",
+    "scope",
+    "settings",
+    "application"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.chat-execution-readback/v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "profileId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "hostGeneration": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "scope": {
+      "enum": [
+        "creation-defaults",
+        "chat"
+      ]
+    },
+    "settings": {
+      "$ref": "chat-execution-settings.v1.schema.json"
+    },
+    "effective": {
+      "$ref": "chat-execution-settings.v1.schema.json"
+    },
+    "application": {
+      "enum": [
+        "saved",
+        "submitted",
+        "applied",
+        "restricted",
+        "unknown"
+      ]
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{0,79}$"
+    }
+  }
+}

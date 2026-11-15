@@ -178,3 +178,8 @@ Runtime v15 adds the explicit [startup v1](../startup/README.md) declaration.
 Package v15 adds only the separately digested manifest v15 reference. All prior
 manifests remain frozen; legacy services preserve blocking behavior. Backend
 definition, health/authentication and native publication v1 wire are reused.
+
+## Runtime and package manifest v16
+
+[Channel exact-request declarations](../platform-capabilities/channel-exact-request-v16.md)
+add optional, Host-materialized account/binding writes. V1-v15 remain frozen.

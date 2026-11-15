@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/chat-execution-settings.v1.schema.json",
+  "title": "CordisX chat execution settings v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "execution": {
+      "enum": [
+        "inherit",
+        "read-only",
+        "workspace-write",
+        "full-access"
+      ]
+    },
+    "approval": {
+      "enum": [
+        "inherit",
+        "untrusted",
+        "on-request",
+        "never"
+      ]
+    },
+    "workMode": {
+      "enum": [
+        "inherit",
+        "default",
+        "plan"
+      ]
+    },
+    "effort": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,31}$"
+    },
+    "networkAccess": {
+      "type": "boolean"
+    }
+  }
+}
