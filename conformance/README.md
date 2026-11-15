@@ -1,5 +1,9 @@
 # Conformance
 
+`channel-reply-routing.mjs` checks the explicit reply-policy v2 modes,
+readback version, closed fields and frozen v1 predecessors. Host routing,
+Agent choice, platform delivery and retry stability require Host evidence.
+
 `current-user.mjs` checks the bounded display-only current-user result schema;
 native source, account-switch fencing, subject scope and lifecycle require Host tests.
 
@@ -339,3 +343,13 @@ model; production Node/broker/renderer composition remains Host evidence.
 Authenticated managed console: `node conformance/managed-service-console.mjs`
 checks both console declarations, their closed private requests and responses,
 and rejection of fields from the other exchange.
+
+`identity-visuals.mjs` verifies the explicit collection-v2 and Channel snapshot-v4
+identity branches, their predecessor rejection and bounded image validation.
+
+`channel-exact-request-v16.mjs` checks Channel write markers, predecessor
+rejection, concrete permission scopes and the separately digested v16 package.
+
+- `node conformance/manager-content-navigation-v6.mjs` checks identity/status/count summaries and frozen predecessor documents.
+
+`channel-workflow.mjs` validates execution/readback shapes, frozen policy boundaries, new commands, documentation and Manager v9 exports.

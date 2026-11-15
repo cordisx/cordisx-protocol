@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/manager-collection-common.v2.schema.json",
+  "title": "CordisX Manager Collection Common v2",
+  "$defs": {
+    "identityVisual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "icon"
+      ],
+      "properties": {
+        "kind": {
+          "const": "identity"
+        },
+        "icon": {
+          "$ref": "brand-icon.v1.schema.json"
+        },
+        "avatar": {
+          "$ref": "raster-image-snapshot.v1.schema.json"
+        }
+      }
+    },
+    "leadingVisual": {
+      "oneOf": [
+        {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/leadingVisual"
+        },
+        {
+          "$ref": "#/$defs/identityVisual"
+        }
+      ]
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "summary",
+        "leadingVisual",
+        "route",
+        "order",
+        "disabled",
+        "actions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/item/properties/id"
+        },
+        "title": {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/item/properties/title"
+        },
+        "summary": {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/item/properties/summary"
+        },
+        "route": {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/item/properties/route"
+        },
+        "order": {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/item/properties/order"
+        },
+        "disabled": {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/item/properties/disabled"
+        },
+        "actions": {
+          "$ref": "manager-collection-common.v1.schema.json#/$defs/item/properties/actions"
+        },
+        "leadingVisual": {
+          "$ref": "#/$defs/leadingVisual"
+        }
+      }
+    }
+  }
+}

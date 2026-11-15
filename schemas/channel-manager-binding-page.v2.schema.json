@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-manager-binding-page.v2.schema.json",
+  "title": "CordisX Channel binding display page v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "profileId",
+    "hostGeneration",
+    "connectionToken",
+    "snapshotRevision",
+    "total",
+    "bindings"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.channel-manager-binding-page/v2"
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "profileId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "hostGeneration": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "connectionToken": {
+      "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+    },
+    "snapshotRevision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "total": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "bindings": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/binding"
+      }
+    },
+    "nextCursor": {
+      "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+    }
+  },
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingToken",
+        "connectionToken",
+        "sessionToken",
+        "routeToken",
+        "bindingRevision",
+        "state",
+        "availableOperations",
+        "sessionName",
+        "conversationName"
+      ],
+      "properties": {
+        "bindingToken": {
+          "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+        },
+        "connectionToken": {
+          "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+        },
+        "sessionToken": {
+          "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+        },
+        "routeToken": {
+          "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+        },
+        "bindingRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "state": {
+          "enum": [
+            "active",
+            "archived",
+            "unavailable"
+          ]
+        },
+        "availableOperations": {
+          "type": "array",
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "binding.archive",
+              "binding.restore",
+              "binding.unbind"
+            ]
+          }
+        },
+        "sessionName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "conversationName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      }
+    }
+  }
+}

@@ -700,3 +700,27 @@ Managed-service authenticated console v1 uses the closed
 The browser ticket variant uses separate closed `managed-service-browser-console-source.v1`,
 `managed-service-browser-console-request.v1` and `managed-service-browser-console-result.v1`
 schemas. See the [browser ticket contract](../.agents/docs/managed-service/browser-console-v1.md).
+
+Identity display successors: `manager-collection-common.v2.schema.json`,
+`manager-collection-snapshot.v2.schema.json` and
+`channel-runtime-snapshot.v4.schema.json` reuse their frozen predecessors
+except for bounded, decorative account artwork and brand visuals.
+
+The [Channel configuration v2](channel-service-config.v2.schema.json) successor preserves v1 and adds bounded display names and receive selectors; see its [compatibility guide](../.agents/docs/channel-runtime/config-v2.md).
+
+- [Channel conversation policy v1](channel-conversation-policy.v1.schema.json) defines Host consumer groups, scoped command/message rules and wake prefixes.
+
+- [Channel conversation policy readback v1](channel-conversation-policy-readback.v1.schema.json): Host policy revision and profile/generation readback.
+- [Channel conversation policy v2](channel-conversation-policy.v2.schema.json) and [readback v2](channel-conversation-policy-readback.v2.schema.json): scoped reply defaults and Agent choice, with frozen v1 compatibility; see [reply routing](../.agents/docs/channel-runtime/reply-routing-v2.md).
+- [Channel Manager connection configuration v1](channel-manager-connection-configuration.v1.schema.json): redacted display name and receive selectors.
+- [Channel Manager binding page v1](channel-manager-binding-page.v1.schema.json): revision-fenced binding pagination without a persistent binding limit.
+
+## Channel exact-request v16
+
+`plugin-manifest.v16` adds optional exact connect/binding write declarations and
+optional existing startup. `plugin-package.v16` adds its separately digested
+manifest reference. See [Channel exact-request](../.agents/docs/platform-capabilities/channel-exact-request-v16.md).
+
+- [Manager content navigation v6](manager-content-navigation.v6.schema.json) and [projection v5](manager-content-projection.v5.schema.json) add generic record status/count summaries.
+
+Channel workflow schemas: `channel-conversation-policy.v3`, its readback, `channel-manager-binding-page.v2`, `chat-execution-settings.v1`, `chat-execution-readback.v1`, `plugin-documents.v1` and `plugin-document-readback.v1`.

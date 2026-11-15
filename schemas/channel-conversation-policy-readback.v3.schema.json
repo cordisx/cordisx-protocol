@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-conversation-policy-readback.v3.schema.json",
+  "title": "CordisX Channel conversation policy readback v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "profileId",
+    "hostGeneration",
+    "revision",
+    "policy"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.channel-conversation-policy-readback/v3"
+    },
+    "schemaVersion": {
+      "const": 3
+    },
+    "profileId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "hostGeneration": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "policy": {
+      "$ref": "channel-conversation-policy.v3.schema.json"
+    }
+  }
+}

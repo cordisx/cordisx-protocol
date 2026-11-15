@@ -206,3 +206,26 @@ Node module `StartupManagedServiceConfigV1`; see the
 | `managed-service-web-entry-runtime/v1` | [managed-service-web-entry-runtime.v1.d.ts](managed-service-web-entry-runtime.v1.d.ts) | [Node declaration and ownership proof](../.agents/docs/managed-service/web-entry-v1.md)                                                                 |
 | `managed-service-console/v1`           | [managed-service-console.v1.d.ts](managed-service-console.v1.d.ts)                     | [Native mount](../.agents/docs/managed-service/authenticated-console-v1.md), [browser entry](../.agents/docs/managed-service/browser-console-v1.md)     |
 | `managed-service-console-runtime/v1`   | [managed-service-console-runtime.v1.d.ts](managed-service-console-runtime.v1.d.ts)     | [Native exchange](../.agents/docs/managed-service/authenticated-console-v1.md), [browser ticket](../.agents/docs/managed-service/browser-console-v1.md) |
+
+Identity successors: [Manager collection v2](manager-collection.v2.d.ts) and
+[Channel Manager v3](channel-manager.v3.d.ts) retain frozen predecessor methods
+and explicitly select identity-bearing snapshots.
+
+- `@cordisx/protocol/channel-service-config/v2`: launcher-only connection configuration with persistent display names and receive selectors; see [compatibility](../.agents/docs/channel-runtime/config-v2.md).
+
+- [Channel Manager v4](channel-manager.v4.d.ts) adds Host-owned [conversation policy v1](channel-conversation-policy.v1.d.ts) read/configuration surfaces.
+
+- [Channel Manager v6](channel-manager.v6.d.ts) adds [reply policy v2](channel-conversation-policy.v2.d.ts), its Host form and owned-service facade; see [reply routing](../.agents/docs/channel-runtime/reply-routing-v2.md).
+
+- [Channel Manager v5](channel-manager.v5.d.ts) adds the explicit
+  [owned-service facade](../.agents/docs/channel-runtime/manager-v5-service-owner.md);
+  inherited delegated methods retain their permission behavior.
+
+| `plugin-manifest/v16` | [plugin-manifest.v16.d.ts](plugin-manifest.v16.d.ts) | [Channel exact-request writes](../.agents/docs/platform-capabilities/channel-exact-request-v16.md) |
+| `plugin-package/v16` | [plugin-package.v16.d.ts](plugin-package.v16.d.ts) | [Channel manifest v16 packaging](../.agents/docs/platform-capabilities/channel-exact-request-v16.md) |
+
+- [Manager content navigation v6](manager-content-navigation.v6.d.ts): account identity, statuses and counts before tabs.
+- [Channel Manager v8](channel-manager.v8.d.ts): one Host-owned connection configuration and optional-secret form.
+- [Channel Manager v7](channel-manager.v7.d.ts): Host-owned inline credential and policy forms.
+
+- [Channel workflow v9](channel-manager.v9.d.ts), [conversation policy v3](channel-conversation-policy.v3.d.ts), [chat execution settings v1](chat-execution-settings.v1.d.ts), and [plugin documentation v1](plugin-documents.v1.d.ts).

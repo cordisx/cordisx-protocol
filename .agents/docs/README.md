@@ -153,3 +153,9 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Progressive startup v1](startup/README.md): manifest v15 declarations, target waiting, Node preparation and safe pre-binding observation.
 
 - [Managed-service web entry v1](managed-service/web-entry-v1.md): owner-bound read-only management origins with current-generation ownership proof.
+
+- [Manager collection identity visuals v2](manager-collection/v2.md).
+- [Channel Manager v3 identity projection](channel-runtime/manager-v3-identity.md).
+
+- [Channel workflow v3 / Manager v9](channel-runtime/workflow-v3.md).
+- [Package documentation v1](plugin-documents/README.md).

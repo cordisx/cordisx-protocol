@@ -11,6 +11,7 @@ remain available unchanged.
 | [v3](./v3.md) | Fixed record summary and exact Agent-definition detail subject | [v2](../../../schemas/manager-content-projection.v2.schema.json) | [v3](../../../types/manager-content-navigation.v3.d.ts) | [v3](../../../conformance/manager-content-navigation-v3.mjs) |
 | [v4](./v4.md) | Host-owned plugin configuration form body | [v3](../../../schemas/manager-content-projection.v3.schema.json) | [v4](../../../types/manager-content-navigation.v4.d.ts) | [v4](../../../conformance/manager-content-navigation-v4.mjs) |
 | [v5](./v5.md) | Localized labels for finite scalar choices | [v4](../../../schemas/manager-content-projection.v4.schema.json) | [v5](../../../types/manager-content-navigation.v5.d.ts) | [v5](../../../conformance/manager-content-navigation-v5.mjs) |
+| [v6](./v6.md) | Generic identity, statuses and count metrics | [v5](../../../schemas/manager-content-projection.v5.schema.json) | [v6](../../../types/manager-content-navigation.v6.d.ts) | [v6](../../../conformance/manager-content-navigation-v6.mjs) |
 
 This specification defines a generic subroute declaration and a separate renderer-safe Host projection for standard pages in the CordisX Manager. It is not a Channel-specific API and it does not expose a renderer navigation controller. A Channel (or any other plugin) registers data; the Host owns the Manager header, breadcrumb trail, back action, history, tablist, accessibility, selection, route stack, and all lifecycle cleanup.
 

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/plugin-documents.v1.schema.json",
+  "title": "CordisX package documentation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "documents"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.plugin-documents/v1"
+    },
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "path"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^\\./(?:[a-zA-Z0-9_-][a-zA-Z0-9_.-]*/)*[a-zA-Z0-9_-][a-zA-Z0-9_.-]*\\.md$",
+            "maxLength": 240
+          },
+          "locale": {
+            "type": "string",
+            "pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+          }
+        }
+      }
+    }
+  }
+}

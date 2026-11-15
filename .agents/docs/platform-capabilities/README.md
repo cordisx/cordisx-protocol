@@ -385,3 +385,6 @@ part of either protocol.
 6. `cordisxmono` updates exact merged commits last in a separate commit.
 
 No roadmap checkout is required for this public compatibility unit.
+
+[Channel exact-request v16](channel-exact-request-v16.md) adds optional connect and
+binding-write markers without changing transport permission scopes.
