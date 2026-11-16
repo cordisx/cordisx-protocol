@@ -233,3 +233,5 @@ and explicitly select identity-bearing snapshots.
 - [Channel Manager v10](channel-manager.v10.d.ts): remote conversation identity, local transport activity and many-to-many local bindings; see [authority and compatibility](../.agents/docs/channel-runtime/manager-v10-conversations.md).
 
 - [Channel Manager v11](channel-manager.v11.d.ts): Host-owned sectioned settings forms and a live own-service settings destination; see [settings and compatibility](../.agents/docs/channel-runtime/manager-v11-settings.md).
+
+- [Channel Manager v12](channel-manager.v12.d.ts) and [task settings v1](channel-task-settings.v1.d.ts): [scoped models and exact permissions](../.agents/docs/channel-runtime/task-settings-v1.md).

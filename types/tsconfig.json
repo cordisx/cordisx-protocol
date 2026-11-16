@@ -222,6 +222,9 @@
     "channel-manager.v10.d.ts",
     "channel-manager.v10.test.ts",
     "channel-manager.v11.d.ts",
-    "channel-manager.v11.test.ts"
+    "channel-manager.v11.test.ts",
+    "channel-manager.v12.d.ts",
+    "channel-task-settings.v1.d.ts",
+    "channel-task-settings.v1.test.ts"
   ]
 }

@@ -1,6 +1,8 @@
 import { readdirSync } from 'node:fs'
 // Public import coverage for the packed consumer smoke test.
 export const expectedExports = [
+  './channel-manager/v12',
+  './channel-task-settings/v1',
   './channel-manager/v11',
   './channel-manager/v10',
   './channel-manager/v9',
@@ -141,6 +143,8 @@ export const expectedExports = [
 
 export const expectedFiles = [
   'types/channel-manager.v11.d.ts',
+  'types/channel-manager.v12.d.ts',
+  'types/channel-task-settings.v1.d.ts',
   'types/channel-manager.v10.d.ts',
   'types/channel-manager.v9.d.ts',
   'types/chat-execution-settings.v1.d.ts',

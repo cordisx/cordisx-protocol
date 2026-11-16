@@ -488,3 +488,5 @@ See [workflow policy v3 and Manager v9](workflow-v3.md) for progressive commands
 See [Channel Manager v10 remote conversations](manager-v10-conversations.md) for conversation cards, actual local transport activity and local task relationships.
 
 See [Channel Manager v11 unified settings](manager-v11-settings.md) for sectioned Host forms and the lifecycle-scoped settings entry.
+
+See [task settings v1 / Manager v12](task-settings-v1.md) for scoped model defaults and authenticated exact-change approvals.

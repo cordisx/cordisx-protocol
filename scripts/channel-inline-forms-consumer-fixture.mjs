@@ -1,4 +1,9 @@
 export const channelInlineFormsConsumerFixture = `
+import type { ChannelManagerV12 } from '@cordisx/protocol/channel-manager/v12'
+import type { ChannelTaskConfigV1 } from '@cordisx/protocol/channel-task-settings/v1'
+declare const modelManager: ChannelManagerV12
+const modelConfig: ChannelTaskConfigV1 = { defaults: {}, scopes: [], permissions: [{ id: 'owner', effect: 'allow', userIds: ['user'], fields: ['model'], models: [{ providerId: 'example', model: 'example' }] }] }
+void modelConfig
 import type { ChannelManagerV9 } from '@cordisx/protocol/channel-manager/v9'
 import type { ChatExecutionReadbackV1 } from '@cordisx/protocol/chat-execution-settings/v1'
 import type { PluginDocumentsV1, PluginDocumentReadbackV1 } from '@cordisx/protocol/plugin-documents/v1'
@@ -9,6 +14,8 @@ declare const inlineManager: ChannelManagerV7
 declare const configurationManager: ChannelManagerV8
 declare const inlineSeat: HTMLElement
 const inlineOptions = { signal: new AbortController().signal, onResult: (result: ChannelManagerFormOutcomeV1) => result.code }
+modelManager.mountSettingsForm('task-models', inlineSeat, inlineOptions)
+modelManager.mountBindingModelForm('binding-token', inlineSeat, inlineOptions)
 declare const workflowManager: ChannelManagerV9
 workflowManager.forOwnWorkflowService()?.mountChatCreationDefaultsForm(inlineSeat, inlineOptions)
 workflowManager.mountBindingExecutionForm('binding-token', inlineSeat, inlineOptions)

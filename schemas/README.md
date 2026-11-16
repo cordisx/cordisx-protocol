@@ -726,3 +726,5 @@ manifest reference. See [Channel exact-request](../.agents/docs/platform-capabil
 Channel workflow schemas: `channel-conversation-policy.v3`, its readback, `channel-manager-binding-page.v2`, `chat-execution-settings.v1`, `chat-execution-readback.v1`, `plugin-documents.v1` and `plugin-document-readback.v1`.
 
 Channel Manager v10 adds `channel-manager-conversations.v1`, conversation page/detail, activity-page and bindings-page schemas. See the [conversation contract](../.agents/docs/channel-runtime/manager-v10-conversations.md).
+
+Channel task model configuration: `channel-task-config.v1.schema.json`; see [task settings v1](../.agents/docs/channel-runtime/task-settings-v1.md).

@@ -353,3 +353,5 @@ rejection, concrete permission scopes and the separately digested v16 package.
 - `node conformance/manager-content-navigation-v6.mjs` checks identity/status/count summaries and frozen predecessor documents.
 
 `channel-workflow.mjs` validates execution/readback shapes, frozen policy boundaries, new commands, documentation and Manager v9 exports.
+
+`channel-task-settings.mjs` checks the Manager v12 form successor and serialized model configuration boundary.
