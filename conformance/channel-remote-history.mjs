@@ -13,12 +13,18 @@ const request = {
   endTime: '2',
 }
 assert.equal(validate(request), true)
+// Conversation identity is platform-defined, not a Feishu-specific oc_ wire format.
+assert.equal(
+  validate({ ...request, account: { ...request.account, adapterId: 'wecom' }, conversationId: 'chat_123' }),
+  true,
+)
 for (
   const invalid of [
     { ...request, pageSize: 51 },
     { ...request, pageSize: 0 },
     { ...request, startTime: 'today' },
-    { ...request, conversationId: 'ou_user' },
+    { ...request, conversationId: '' },
+    { ...request, conversationId: 'x'.repeat(513) },
     { ...request, secret: 'no' },
     { ...request, account: { ...request.account, tenantId: '' } },
   ]

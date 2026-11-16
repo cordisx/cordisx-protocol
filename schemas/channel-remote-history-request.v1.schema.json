@@ -43,7 +43,7 @@
     },
     "conversationId": {
       "type": "string",
-      "pattern": "^oc_[A-Za-z0-9_]+$",
+      "minLength": 1,
       "maxLength": 512
     },
     "kind": {

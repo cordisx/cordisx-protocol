@@ -9,7 +9,9 @@ remote access. This contract does not give a plugin raw transport or credentials
 
 The caller supplies adapter/account/tenant, conversation ID and kind, a start
 and end in decimal Unix seconds, and optional page size (1–50), order and opaque
-continuation token. Start must precede end. The Host applies its own source and
+continuation token. Conversation IDs are opaque and platform-scoped; an implementation
+may reject IDs or adapters outside the formats it supports. Start must precede
+end. The Host applies its own source and
 account authorization and the platform's permissions; identifiers or display
 names are never authority. A remotely triggered agent may query only its
 verified source account and conversation. The result is one page and repeats
@@ -25,3 +27,14 @@ sequence cursor. A Host may enrich names through an account-scoped cache, but
 must preserve the real sender ID and not use names for authorization. Missing
 scope, timeout or an absent name does not authorize a switch to another account
 or identity. Older persisted records without optional names remain readable.
+
+## Security and compatibility
+
+This operation conveys message content only through a Host-authorized read; it
+does not extend a plugin facade, give a remote sender authority, or expose a
+transport or credentials. The Host verifies the caller and exact source scope,
+uses the selected account's platform permissions and rejects a page whose
+returned conversation identity conflicts with the request. Names are display
+data and content is untrusted. A continuation token is opaque and cannot grant
+a wider account, conversation or caller scope. Older Hosts remain unavailable
+for this optional operation, and their existing local-history behavior is frozen.
