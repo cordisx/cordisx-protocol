@@ -33,4 +33,10 @@ conversationManager.conversationDetail('opaque', new AbortController().signal)
 conversationManager.conversationActivity({ conversationToken: 'opaque' }, new AbortController().signal)
 conversationManager.conversationBindings({ conversationToken: 'opaque' }, new AbortController().signal)
 conversationManager.openBindingConversation('opaque', new AbortController().signal)
+import type { ChannelManagerV11 } from '@cordisx/protocol/channel-manager/v11'
+declare const settingsManager: ChannelManagerV11
+settingsManager.forOwnSettingsService()?.mountSettingsForm('new-chats', document.createElement('div'), { signal: new AbortController().signal })
+settingsManager.registerChatCreationSettingsDestination({ id: 'defaults' })?.dispose()
+// @ts-expect-error The destination cannot reference another owner.
+settingsManager.registerChatCreationSettingsDestination({ id: 'defaults', owner: 'foreign' })
 `

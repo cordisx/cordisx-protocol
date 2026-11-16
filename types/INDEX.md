@@ -231,3 +231,5 @@ and explicitly select identity-bearing snapshots.
 - [Channel workflow v9](channel-manager.v9.d.ts), [conversation policy v3](channel-conversation-policy.v3.d.ts), [chat execution settings v1](chat-execution-settings.v1.d.ts), and [plugin documentation v1](plugin-documents.v1.d.ts).
 
 - [Channel Manager v10](channel-manager.v10.d.ts): remote conversation identity, local transport activity and many-to-many local bindings; see [authority and compatibility](../.agents/docs/channel-runtime/manager-v10-conversations.md).
+
+- [Channel Manager v11](channel-manager.v11.d.ts): Host-owned sectioned settings forms and a live own-service settings destination; see [settings and compatibility](../.agents/docs/channel-runtime/manager-v11-settings.md).
