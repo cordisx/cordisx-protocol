@@ -229,3 +229,5 @@ and explicitly select identity-bearing snapshots.
 - [Channel Manager v7](channel-manager.v7.d.ts): Host-owned inline credential and policy forms.
 
 - [Channel workflow v9](channel-manager.v9.d.ts), [conversation policy v3](channel-conversation-policy.v3.d.ts), [chat execution settings v1](chat-execution-settings.v1.d.ts), and [plugin documentation v1](plugin-documents.v1.d.ts).
+
+- [Channel Manager v10](channel-manager.v10.d.ts): remote conversation identity, local transport activity and many-to-many local bindings; see [authority and compatibility](../.agents/docs/channel-runtime/manager-v10-conversations.md).

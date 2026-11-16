@@ -218,6 +218,8 @@
     "channel-conversation-policy.v3.d.ts",
     "channel-manager.v9.d.ts",
     "plugin-documents.v1.d.ts",
-    "channel-workflow.v1.test.ts"
+    "channel-workflow.v1.test.ts",
+    "channel-manager.v10.d.ts",
+    "channel-manager.v10.test.ts"
   ]
 }

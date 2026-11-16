@@ -26,4 +26,11 @@ channelManager.configureConversationPolicy({appSecret:'not-allowed'})
 // @ts-expect-error A frozen v1 result is not a reply-v2 result.
 const wrongReplyPolicy: Promise<ChannelConversationPolicyReadbackV2> = replyManager.conversationPolicy(new AbortController().signal)
 void wrongReplyPolicy
+import type { ChannelManagerV10 } from '@cordisx/protocol/channel-manager/v10'
+declare const conversationManager: ChannelManagerV10
+conversationManager.conversationPage({ connectionToken: 'opaque', limit: 100 }, new AbortController().signal)
+conversationManager.conversationDetail('opaque', new AbortController().signal)
+conversationManager.conversationActivity({ conversationToken: 'opaque' }, new AbortController().signal)
+conversationManager.conversationBindings({ conversationToken: 'opaque' }, new AbortController().signal)
+conversationManager.openBindingConversation('opaque', new AbortController().signal)
 `
