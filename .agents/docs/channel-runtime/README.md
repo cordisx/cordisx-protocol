@@ -484,3 +484,9 @@ See [Channel Manager v7 inline forms](manager-v7-inline-forms.md) for Host-owned
 See [Channel Manager v8 unified configuration](manager-v8-connection-form.md) for the single connection form and atomic optional-secret save.
 
 See [workflow policy v3 and Manager v9](workflow-v3.md) for progressive commands, native approvals, execution forms and readable grouping.
+
+See [Channel Manager v10 remote conversations](manager-v10-conversations.md) for conversation cards, actual local transport activity and local task relationships.
+
+See [Channel Manager v11 unified settings](manager-v11-settings.md) for sectioned Host forms and the lifecycle-scoped settings entry.
+
+See [task settings v1 / Manager v12](task-settings-v1.md) for scoped model defaults and authenticated exact-change approvals.

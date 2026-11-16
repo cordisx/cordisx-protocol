@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-manager-conversations.v1.schema.json",
+  "title": "CordisX Channel Manager conversations v1",
+  "$defs": {
+    "conversation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conversationToken",
+        "connectionToken",
+        "name",
+        "kind",
+        "bindingCount",
+        "activeBindingCount",
+        "receivedCount",
+        "sentCount"
+      ],
+      "properties": {
+        "conversationToken": {
+          "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+        },
+        "connectionToken": {
+          "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group",
+            "broadcast"
+          ]
+        },
+        "avatar": {
+          "$ref": "raster-image-snapshot.v1.schema.json"
+        },
+        "bindingCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "activeBindingCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "receivedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "sentCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "lastActivityAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "activity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entryId",
+        "direction",
+        "state",
+        "occurredAt",
+        "text"
+      ],
+      "properties": {
+        "entryId": {
+          "$ref": "channel-manager-common.v2.schema.json#/$defs/opaqueToken"
+        },
+        "direction": {
+          "enum": [
+            "incoming",
+            "outgoing"
+          ]
+        },
+        "state": {
+          "enum": [
+            "received",
+            "queued",
+            "processing",
+            "retrying",
+            "permission-pending",
+            "denied",
+            "sent",
+            "failed",
+            "cancelled",
+            "unknown"
+          ]
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 8192
+        },
+        "senderName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "sessionName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Z0-9._-]+$"
+        }
+      }
+    }
+  }
+}
