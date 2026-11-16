@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-remote-history-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "source",
+        "account",
+        "conversation",
+        "startTime",
+        "endTime",
+        "order",
+        "hasMore",
+        "messages"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "source": {
+          "const": "remote"
+        },
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string"
+            },
+            "accountId": {
+              "type": "string"
+            },
+            "tenantId": {
+              "type": "string"
+            }
+          }
+        },
+        "conversation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "direct",
+                "group"
+              ]
+            }
+          }
+        },
+        "startTime": {
+          "type": "string"
+        },
+        "endTime": {
+          "type": "string"
+        },
+        "order": {
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        },
+        "hasMore": {
+          "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mentions"
+            ],
+            "properties": {
+              "messageId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "createTime": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "threadId": {
+                "type": "string"
+              },
+              "rootId": {
+                "type": "string"
+              },
+              "parentId": {
+                "type": "string"
+              },
+              "deleted": {
+                "type": "boolean"
+              },
+              "updated": {
+                "type": "boolean"
+              },
+              "sender": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "idType",
+                  "type"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "idType": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tenantId": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              },
+              "mentions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "idType",
+                    "key"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "idType": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "tenantId": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "hasMore": {
+                "const": true
+              }
+            },
+            "required": [
+              "hasMore"
+            ]
+          },
+          "then": {
+            "required": [
+              "pageToken"
+            ],
+            "properties": {
+              "pageToken": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "rejected",
+            "unavailable"
+          ]
+        },
+        "code": {
+          "type": "string"
+        },
+        "diagnostic": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stage"
+          ],
+          "properties": {
+            "stage": {
+              "type": "string"
+            },
+            "httpStatus": {
+              "type": "integer"
+            },
+            "platformCode": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
