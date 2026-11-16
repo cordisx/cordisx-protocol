@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-remote-history-request.v1.schema.json",
+  "title": "Channel remote history request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "account",
+    "conversationId",
+    "kind",
+    "startTime",
+    "endTime"
+  ],
+  "properties": {
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapterId",
+        "accountId",
+        "tenantId"
+      ],
+      "properties": {
+        "adapterId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "accountId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    },
+    "conversationId": {
+      "type": "string",
+      "pattern": "^oc_[A-Za-z0-9_]+$",
+      "maxLength": 512
+    },
+    "kind": {
+      "enum": [
+        "direct",
+        "group"
+      ]
+    },
+    "startTime": {
+      "type": "string",
+      "pattern": "^[0-9]{1,12}$"
+    },
+    "endTime": {
+      "type": "string",
+      "pattern": "^[0-9]{1,12}$"
+    },
+    "pageSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50
+    },
+    "pageToken": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^[^\\u0000\\r\\n]+$"
+    },
+    "order": {
+      "enum": [
+        "asc",
+        "desc"
+      ]
+    }
+  }
+}

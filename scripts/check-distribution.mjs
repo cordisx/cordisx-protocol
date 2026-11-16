@@ -64,7 +64,10 @@ try {
       + channelConversationConsumerFixture
       + channelInlineFormsConsumerFixture
       + distributionServicesConsumerFixture
-      + `import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'
+      + `import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
+declare const remoteHistory: ChannelRemoteHistoryRequestV1
+remoteHistory.account.tenantId satisfies string
+import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'
 declare const form: SchemaFormOptionsV1
 form.onChange({ value: {}, valid: true, issues: [] })
 import type { ModelProvidersV1 } from '@cordisx/protocol/model-providers/v1'
