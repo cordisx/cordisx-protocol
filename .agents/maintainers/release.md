@@ -42,6 +42,12 @@ pin a channel.
    `gitHead`, repository identity, clean registry installation, and provenance
    with [verify-registry-release.mjs](../../scripts/verify-registry-release.mjs).
 
+Registry availability may lag a successful publish while npm scans a package.
+The workflow permits 120 verification attempts at ten-second intervals. If they fail,
+check the exact registry version before rerunning the same tag workflow; do not
+replace the tag or treat a publish response as proof of installability. An
+existing version must pass the complete identity and provenance checks.
+
 A local check, formal merge, Git tag, registry publication, Host
 interoperability, and consumer acceptance are separate results. Record their
 exact versions and source revisions when reporting a release.

@@ -25,7 +25,9 @@ export async function publishRegistryRelease({
   version,
   npmTag,
   expectedGitHead,
-  attempts = 12,
+  // npm scans newly submitted packages before they become installable. The
+  // documented delay can exceed 15 minutes, so allow 120 bounded attempts.
+  attempts = 120,
   delayMs = 10_000,
   run = defaultRun,
   sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)),

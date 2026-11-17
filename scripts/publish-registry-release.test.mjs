@@ -70,6 +70,25 @@ test('retries strict verification while a newly published release propagates', a
   assert.equal(verificationAttempts, 2)
 })
 
+test('allows the documented publish-time scanning window before giving up', async () => {
+  let verificationAttempts = 0
+  const outcome = await publishRegistryRelease({
+    version,
+    npmTag,
+    expectedGitHead,
+    run(_command, arguments_) {
+      if (arguments_[0] === 'view') return result(1, '', 'npm error code E404')
+      if (arguments_[0] === 'publish') return result(0)
+      verificationAttempts += 1
+      return verificationAttempts <= 90 ? result(1, '', 'npm error code E404') : result(0)
+    },
+    sleep: async () => {},
+    log() {},
+  })
+  assert.deepEqual(outcome, { published: true })
+  assert.equal(verificationAttempts, 91)
+})
+
 test('accepts a matching release that appears after an immutable publish conflict', async () => {
   let verificationAttempts = 0
   const outcome = await publishRegistryRelease({
