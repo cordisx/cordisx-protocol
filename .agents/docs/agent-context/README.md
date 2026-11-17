@@ -64,9 +64,12 @@ must not be reused for the same Session generation after a change.
 The Host orders samples and rejects duplicates or out-of-order observations before
 updating state; a late sample from an old epoch cannot restore it. Samples past
 `expiresAt` cannot be returned as available or cause an event; `read` returns
-`stale` until a fresh observation. Invalidation or a stale interval discards
-crossing state; the next fresh eligible sample is a new baseline, emitting
-`epoch-initial` if at or above threshold. Notifications are best-effort
+`stale` until a fresh observation. Invalidation or a stale interval discards the crossing baseline but retains
+the last evaluated epoch identity. The next fresh eligible sample in that same
+epoch establishes a baseline without an event; a fresh below-threshold sample
+arms the next actual crossing. Only a first eligible sample for a different
+epoch may emit `epoch-initial`. This avoids a duplicate notification merely
+because a source became stale or a budget temporarily became unavailable. Notifications are best-effort
 observations, not a promise to precede native compaction or report every
 intermediate occupancy, and do not themselves interrupt anything.
 Observer errors close that subscription. Unsubscribe, permission revocation,

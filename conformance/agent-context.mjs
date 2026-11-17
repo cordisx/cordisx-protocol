@@ -15,7 +15,6 @@ function watch(threshold) {
   let epoch, below
   return sample => {
     if (!sample.fresh || !sample.budget) {
-      epoch = undefined
       below = undefined
       return undefined
     }
@@ -28,6 +27,10 @@ function watch(threshold) {
     }
     if (!above) {
       below = true
+      return undefined
+    }
+    if (below === undefined) {
+      below = false
       return undefined
     }
     if (below) {
@@ -52,7 +55,10 @@ assert.equal(next(sample(50000, { reset: 'r2' })), 'epoch-initial')
 assert.equal(next(sample(50000, { reset: 'r2', config: 'c2', budget: 120000 })), undefined)
 assert.equal(next(sample(60000, { reset: 'r2', config: 'c2', budget: 120000 })), 'crossed')
 assert.equal(next(sample(70000, { fresh: false })), undefined)
-assert.equal(next(sample(70000, { reset: 'r2', config: 'c2', budget: 120000 })), 'epoch-initial')
+assert.equal(next(sample(70000, { reset: 'r2', config: 'c2', budget: 120000 })), undefined)
+assert.equal(next(sample(50000, { reset: 'r2', config: 'c2', budget: 120000 })), undefined)
+assert.equal(next(sample(70000, { reset: 'r2', config: 'c2', budget: 120000 })), 'crossed')
+assert.equal(next(sample(70000, { reset: 'r3', config: 'c2', budget: 120000 })), 'epoch-initial')
 const spec = await readFile(new URL('.agents/docs/agent-context/README.md', root), 'utf8')
 for (
   const phrase of [
