@@ -1,4 +1,6 @@
 export const channelInlineFormsConsumerFixture = `
+import type { ChannelManagerV13 } from '@cordisx/protocol/channel-manager/v13'
+declare const channelDefaultsManager: ChannelManagerV13
 import type { ChannelManagerV12 } from '@cordisx/protocol/channel-manager/v12'
 import type { ChannelTaskConfigV1 } from '@cordisx/protocol/channel-task-settings/v1'
 declare const modelManager: ChannelManagerV12
@@ -14,6 +16,9 @@ declare const inlineManager: ChannelManagerV7
 declare const configurationManager: ChannelManagerV8
 declare const inlineSeat: HTMLElement
 const inlineOptions = { signal: new AbortController().signal, onResult: (result: ChannelManagerFormOutcomeV1) => result.code }
+channelDefaultsManager.forOwnSettingsService()?.mountChannelCreationDefaultsForm(inlineSeat, inlineOptions)
+// @ts-expect-error A Channel form accepts no plugin-supplied general defaults or settings owner.
+channelDefaultsManager.mountChannelCreationDefaultsForm(inlineSeat, { ...inlineOptions, settings: {}, profileId: 'foreign' })
 modelManager.mountSettingsForm('task-models', inlineSeat, inlineOptions)
 modelManager.mountBindingModelForm('binding-token', inlineSeat, inlineOptions)
 declare const workflowManager: ChannelManagerV9
