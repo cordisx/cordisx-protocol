@@ -492,3 +492,5 @@ See [Channel Manager v11 unified settings](manager-v11-settings.md) for sectione
 See [task settings v1 / Manager v12](task-settings-v1.md) for scoped model defaults and authenticated exact-change approvals.
 
 See [remote history v1](remote-history-v1.md) for optional bounded remote reads, identity preservation and source authorization.
+
+See [Channel Manager v13 creation defaults](manager-v13-creation-defaults.md) for the separate sparse Channel overlay and frozen-form compatibility.

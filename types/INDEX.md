@@ -237,3 +237,5 @@ and explicitly select identity-bearing snapshots.
 - [Channel Manager v12](channel-manager.v12.d.ts) and [task settings v1](channel-task-settings.v1.d.ts): [scoped models and exact permissions](../.agents/docs/channel-runtime/task-settings-v1.md).
 
 - [Channel remote history v1](channel-remote-history.v1.d.ts): [bounded remote history and source identity](../.agents/docs/channel-runtime/remote-history-v1.md).
+
+- [Channel Manager v13](channel-manager.v13.d.ts): [independent Channel creation defaults inherited from general profile defaults](../.agents/docs/channel-runtime/manager-v13-creation-defaults.md).
