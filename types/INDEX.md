@@ -239,3 +239,7 @@ and explicitly select identity-bearing snapshots.
 - [Channel remote history v1](channel-remote-history.v1.d.ts): [bounded remote history and source identity](../.agents/docs/channel-runtime/remote-history-v1.md).
 
 - [Channel Manager v13](channel-manager.v13.d.ts): [independent Channel creation defaults inherited from general profile defaults](../.agents/docs/channel-runtime/manager-v13-creation-defaults.md).
+
+- [Agent context v1](agent-context.v1.d.ts): [current occupancy and threshold observation](../.agents/docs/agent-context/README.md).
+- [Agent turn control v1](agent-turn-control.v1.d.ts): [owner-fenced exact-turn interruption](../.agents/docs/agent-context/README.md#exact-turn-control).
+- [Channel Manager v14](channel-manager.v14.d.ts): [Host-owned continuation defaults](../.agents/docs/channel-runtime/manager-v14-continuation.md).
