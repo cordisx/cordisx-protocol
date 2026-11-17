@@ -494,3 +494,5 @@ See [task settings v1 / Manager v12](task-settings-v1.md) for scoped model defau
 See [remote history v1](remote-history-v1.md) for optional bounded remote reads, identity preservation and source authorization.
 
 See [Channel Manager v13 creation defaults](manager-v13-creation-defaults.md) for the separate sparse Channel overlay and frozen-form compatibility.
+
+The additive [Channel Manager v14](manager-v14-continuation.md) exposes the Host-owned continuation defaults form.

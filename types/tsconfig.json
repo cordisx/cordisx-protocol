@@ -227,6 +227,10 @@
     "channel-task-settings.v1.d.ts",
     "channel-task-settings.v1.test.ts",
     "channel-remote-history.v1.d.ts",
-    "channel-remote-history.v1.test.ts"
+    "channel-remote-history.v1.test.ts",
+    "agent-context.v1.d.ts",
+    "agent-turn-control.v1.d.ts",
+    "channel-manager.v14.d.ts",
+    "agent-context.v1.test.ts"
   ]
 }

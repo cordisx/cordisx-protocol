@@ -64,7 +64,16 @@ try {
       + channelConversationConsumerFixture
       + channelInlineFormsConsumerFixture
       + distributionServicesConsumerFixture
-      + `import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
+      + `import type { AgentContextV1 } from '@cordisx/protocol/agent-context/v1'
+import type { AgentTurnControlV1 } from '@cordisx/protocol/agent-turn-control/v1'
+import type { ChannelManagerV14 } from '@cordisx/protocol/channel-manager/v14'
+declare const contextV1: AgentContextV1
+declare const turnControlV1: AgentTurnControlV1
+declare const channelV14: ChannelManagerV14
+contextV1.read('session')
+turnControlV1.acquire({ sessionId: 'session', turnId: 'turn' })
+channelV14.mountContinuationDefaultsForm(document.body, { signal: new AbortController().signal })
+import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
 declare const remoteHistory: ChannelRemoteHistoryRequestV1
 remoteHistory.account.tenantId satisfies string
 import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'
