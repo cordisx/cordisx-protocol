@@ -15,7 +15,7 @@ const sample: AgentContextSampleV1 = {
   sessionId: 's',
   sessionGeneration: 1,
   usedTokens: 40000,
-  measurement: { source: 'provider-current-context', scope: 'native context total' },
+  measurement: { kind: 'reported-snapshot', source: 'provider', scope: 'last request context total' },
   budget: { status: 'resolved', tokens: 80000, source: 'effective-configuration' },
   ratio: 0.5,
   observedAt: 1,

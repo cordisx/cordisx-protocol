@@ -13,13 +13,21 @@ claim that a threshold is active.
 `read(sessionId)` and `watch({ sessionId, thresholdRatio }, observer)` require
 `agent.events.read` and the exact Session grant, including all existing broker,
 owner, scope and plugin-generation fences. No global watch is provided. A sample
-contains the exact Session and generation, current context occupancy (not
-cumulative billing or `usage.read`), observation and expiration times in Unix
-milliseconds, a measurement source and bounded sanitized description of the
-actual native counting scope, and opaque reset and configuration epochs. The
-adapter must not claim a broader range than observed or use a partial counter as
-a complete current occupancy; without a reliable current count, read is
-unavailable and no event is emitted. Tokens are finite,
+contains the exact Session and generation, a context occupancy measurement (not
+cumulative billing or `usage.read`), observation and expiration times in Unix milliseconds, a measurement kind,
+source and bounded sanitized description of the actual accounting scope, and
+opaque reset and configuration epochs. `reported-snapshot` is a native-reported
+context measurement from a particular request, such as last-request total tokens;
+it may lag and omit items not yet reported. `estimated-current` is an adapter
+estimate of current occupancy and must identify its actual scope and derivation.
+Neither claims a complete instantaneous internal counter. `asOf`, when known, is
+the source observation time; `observedAt` is Host receipt time and must not be
+misrepresented as source time. Do not fabricate `asOf` when unknown. A report
+must belong to the same Session and, when supplied, exact turn, and use token
+units and an accounting scope compatible with the effective budget. If a
+budget uses a different counting basis and no verified conversion is available,
+that budget is unsupported; never compare unlike counts. Without a suitable
+measurement, read is unavailable and no event is emitted. Tokens are finite,
 nonnegative integers. The optional turn is an exact observed native turn, never
 a guessed association. Raw and usable model windows are optional independently
 identified facts, and neither is substituted for the automatic compaction budget.
@@ -58,8 +66,9 @@ updating state; a late sample from an old epoch cannot restore it. Samples past
 `expiresAt` cannot be returned as available or cause an event; `read` returns
 `stale` until a fresh observation. Invalidation or a stale interval discards
 crossing state; the next fresh eligible sample is a new baseline, emitting
-`epoch-initial` if at or above threshold. Notifications are observations, not a
-promise to precede native compaction, and do not themselves interrupt anything.
+`epoch-initial` if at or above threshold. Notifications are best-effort
+observations, not a promise to precede native compaction or report every
+intermediate occupancy, and do not themselves interrupt anything.
 Observer errors close that subscription. Unsubscribe, permission revocation,
 plugin block, fiber disposal, Session or connection replacement and generation
 replacement close it, fence future observer starts, and discard state. In-flight

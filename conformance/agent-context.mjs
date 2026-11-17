@@ -54,7 +54,17 @@ assert.equal(next(sample(60000, { reset: 'r2', config: 'c2', budget: 120000 })),
 assert.equal(next(sample(70000, { fresh: false })), undefined)
 assert.equal(next(sample(70000, { reset: 'r2', config: 'c2', budget: 120000 })), 'epoch-initial')
 const spec = await readFile(new URL('.agents/docs/agent-context/README.md', root), 'utf8')
-for (const phrase of ['current connection', 'agent.events.read', 'out-of-order', 'never redirects', '0.95']) {
+for (
+  const phrase of [
+    'current connection',
+    'agent.events.read',
+    'out-of-order',
+    'never redirects',
+    'reported-snapshot',
+    'estimated-current',
+    '0.95',
+  ]
+) {
   assert.ok(spec.includes(phrase))
 }
 console.log('Agent context: threshold, epoch, invalid budget, freshness and export vectors passed.')

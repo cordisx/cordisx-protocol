@@ -1,6 +1,6 @@
 import type { SessionId } from './sessions.v1.js'
 
-/** Observed current occupancy, never accumulated billing or lifetime usage. */
+/** Context measurement, possibly a lagging reported snapshot; never cumulative billing. */
 export interface AgentContextSampleV1 {
   readonly contract: 'cordisx.agent-context-sample/v1'
   readonly sessionId: SessionId
@@ -8,8 +8,15 @@ export interface AgentContextSampleV1 {
   /** Exact native turn identity only when observed, never inferred from a message. */
   readonly turnId?: string
   readonly usedTokens: number
-  /** Sanitized description of the actually observed accounting scope. */
-  readonly measurement: { readonly source: 'provider-current-context' | 'adapter-derived-current-context'; readonly scope: string }
+  /** A reported snapshot may omit changes since its source observation. */
+  readonly measurement: {
+    readonly kind: 'reported-snapshot' | 'estimated-current'
+    readonly source: 'provider' | 'adapter-derived'
+    /** Bounded, sanitized description of the actual token accounting scope. */
+    readonly scope: string
+    /** Source observation time in Unix milliseconds, only if known. */
+    readonly asOf?: number
+  }
   readonly rawModelWindowTokens?: number
   readonly usableModelWindowTokens?: number
   readonly budget: { readonly status: 'resolved'; readonly tokens: number; readonly source: 'effective-configuration' | 'provider-metadata' | 'adapter-derived' }
