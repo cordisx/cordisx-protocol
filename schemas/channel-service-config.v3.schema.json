@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-service-config.v3.schema.json",
+  "title": "CordisX Channel Connection Configuration v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "connections", "pendingConnections"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-service-config/v3" },
+    "schemaVersion": { "const": 3 },
+    "connections": {
+      "type": "array", "maxItems": 64,
+      "items": { "$ref": "channel-service-config.v2.schema.json#/$defs/connection" }
+    },
+    "pendingConnections": {
+      "type": "array", "maxItems": 64,
+      "items": { "$ref": "#/$defs/pendingConnection" }
+    }
+  },
+  "$defs": {
+    "pendingConnection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["account", "adapterKind", "secretRef", "displayName"],
+      "properties": {
+        "account": { "$ref": "channel-common.v1.schema.json#/$defs/accountRef" },
+        "adapterKind": { "enum": ["feishu", "lark"] },
+        "secretRef": { "$ref": "channel-service-config.v2.schema.json#/$defs/secretRef" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 240, "pattern": "\\S" },
+        "selectors": { "$ref": "channel-service-config.v2.schema.json#/$defs/connection/properties/selectors" }
+      },
+      "oneOf": [
+        { "properties": { "adapterKind": { "const": "feishu" }, "account": { "type": "object", "properties": { "adapterId": { "const": "feishu" } } } } },
+        { "properties": { "adapterKind": { "const": "lark" }, "account": { "type": "object", "properties": { "adapterId": { "const": "lark" } } } } }
+      ]
+    }
+  }
+}
