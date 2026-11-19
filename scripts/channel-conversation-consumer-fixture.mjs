@@ -2,6 +2,7 @@ import { channelExactConsumerFixture } from './channel-exact-consumer-fixture.mj
 export const channelConversationConsumerFixture = channelExactConsumerFixture
   + `import type { ChannelManagerV4 } from '@cordisx/protocol/channel-manager/v4'
 import type { ChannelServiceConfigV2 } from '@cordisx/protocol/channel-service-config/v2'
+import type { ChannelServiceConfigV3 } from '@cordisx/protocol/channel-service-config/v3'
 import type { ChannelManagerV5 } from '@cordisx/protocol/channel-manager/v5'
 import type { ChannelConversationPolicyReadbackV1 } from '@cordisx/protocol/channel-conversation-policy/v1'
 import type { ChannelManagerV6 } from '@cordisx/protocol/channel-manager/v6'
@@ -17,6 +18,10 @@ ownManager?.snapshotWithIdentity()
 // @ts-expect-error The management interface provides no message transport.
 ownManager?.send()
 declare const channelConfig: ChannelServiceConfigV2
+declare const pendingConfig: ChannelServiceConfigV3
+pendingConfig.pendingConnections[0]?.account.accountId satisfies string | undefined
+// @ts-expect-error Pending accounts do not carry a tenant identity.
+pendingConfig.pendingConnections[0]?.account.tenantId
 const channelPolicy: Promise<ChannelConversationPolicyReadbackV1> = channelManager.conversationPolicy(new AbortController().signal)
 channelManager.connectionConfiguration('opaque', new AbortController().signal)
 channelManager.bindingPage({connectionToken:'opaque',limit:50}, new AbortController().signal)

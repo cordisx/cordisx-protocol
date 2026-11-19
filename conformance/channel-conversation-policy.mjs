@@ -57,6 +57,28 @@ assert.equal(
 ajv.addSchema(await load('channel-common.v1.schema.json'))
 ajv.addSchema(await load('channel-service-config.v1.schema.json'))
 const config = ajv.compile(await load('channel-service-config.v2.schema.json'))
+const configV3 = ajv.compile(await load('channel-service-config.v3.schema.json'))
+const pending = {
+  account: { adapterId: 'feishu', accountId: 'cli_test' },
+  adapterKind: 'feishu',
+  secretRef: 'host-secret:channel/test/draft-a',
+  displayName: 'Pending',
+}
+const pendingConfig = {
+  contract: 'cordisx.channel-service-config/v3',
+  schemaVersion: 3,
+  connections: [],
+  pendingConnections: [pending],
+}
+assert.equal(configV3(pendingConfig), true)
+assert.equal(
+  configV3({
+    ...pendingConfig,
+    pendingConnections: [{ ...pending, account: { ...pending.account, tenantId: 'not-identified' } }],
+  }),
+  false,
+)
+assert.equal(configV3({ ...pendingConfig, pendingConnections: [{ ...pending, adapterKind: 'lark' }] }), false)
 const connection = {
   ref: { adapterId: 'feishu', accountId: 'cli_test', tenantId: 'test' },
   adapterKind: 'feishu',

@@ -212,6 +212,7 @@ Identity successors: [Manager collection v2](manager-collection.v2.d.ts) and
 and explicitly select identity-bearing snapshots.
 
 - `@cordisx/protocol/channel-service-config/v2`: launcher-only connection configuration with persistent display names and receive selectors; see [compatibility](../.agents/docs/channel-runtime/config-v2.md).
+- `@cordisx/protocol/channel-service-config/v3`: pending tenant identity; see [compatibility](../.agents/docs/channel-runtime/config-v3.md).
 
 - [Channel Manager v4](channel-manager.v4.d.ts) adds Host-owned [conversation policy v1](channel-conversation-policy.v1.d.ts) read/configuration surfaces.
 

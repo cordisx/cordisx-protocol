@@ -730,3 +730,5 @@ Channel Manager v10 adds `channel-manager-conversations.v1`, conversation page/d
 Channel task model configuration: `channel-task-config.v1.schema.json`; see [task settings v1](../.agents/docs/channel-runtime/task-settings-v1.md).
 
 - [Channel remote history request v1](channel-remote-history-request.v1.schema.json) and [result v1](channel-remote-history-result.v1.schema.json): bounded one-page requests; see [remote history](../.agents/docs/channel-runtime/remote-history-v1.md).
+
+The [Channel configuration v3](channel-service-config.v3.schema.json) adds pending tenant identity; see its [compatibility guide](../.agents/docs/channel-runtime/config-v3.md).

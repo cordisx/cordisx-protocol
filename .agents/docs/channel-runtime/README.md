@@ -15,6 +15,8 @@ versions.
 
 ## Contracts
 
+[Connection configuration v3](config-v3.md) represents authenticated accounts awaiting tenant identity.
+
 For scoped main-stream, quoted and topic replies with Agent choice, see the
 explicit [conversation reply-policy v2 successor](reply-routing-v2.md).
 

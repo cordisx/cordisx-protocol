@@ -162,6 +162,7 @@
     "types/channel-manager.v5.d.ts",
     "types/channel-conversation-policy.v1.d.ts",
     "types/channel-service-config.v2.d.ts",
+    "types/channel-service-config.v3.d.ts",
     "types/plugin-manifest.v16.d.ts",
     "types/plugin-package.v16.d.ts",
     "types/channel-conversation-policy.v2.d.ts",
@@ -337,6 +338,9 @@
     "./channel-manager/v3": "./types/channel-manager.v3.d.ts",
     "./channel-service-config/v2": {
       "types": "./types/channel-service-config.v2.d.ts"
+    },
+    "./channel-service-config/v3": {
+      "types": "./types/channel-service-config.v3.d.ts"
     },
     "./channel-manager/v4": "./types/channel-manager.v4.d.ts",
     "./channel-manager/v5": "./types/channel-manager.v5.d.ts",
