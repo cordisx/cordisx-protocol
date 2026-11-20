@@ -111,6 +111,11 @@ not caller-selectable authority.
 
 ### Install and enable authorization
 
+The behavior below describes the frozen v1 contract. The additive
+[permission-plan v7 successor](optional-permission-deferral-v7.md) defines
+activation without an install-time decision for undecided optional authority;
+older plan versions retain their existing behavior.
+
 Before installation activation or enabling a disabled package, the Host builds
 one authorization plan from the normalized manifest. The plan contains every
 required and optional declaration exactly once, its localized reason, scope,

@@ -236,6 +236,10 @@ its scope are described in [conformance](../conformance/README.md).
   `permission-authorization-plan.v4.schema.json`, and
   `permission-authorization-decision.v4.schema.json`: Host DOM root/operation
   dimensions in the existing profile ledger, plan, and explicit decision path;
+- `permission-authorization-plan.v7.schema.json` and
+  `permission-authorization-decision.v7.schema.json`: the v4 capability
+  vocabulary with explicitly deferred optional activation authority and a
+  Host-origin empty decision; see [deferral v7](../.agents/docs/platform-capabilities/optional-permission-deferral-v7.md);
 - `permission-capability-catalog.v3.schema.json`: complete 25-entry catalog
   with the original 22 non-DOM entries, structured rendering, and separately
   classified Host DOM read/modify eligibility;
