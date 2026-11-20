@@ -1,5 +1,9 @@
 # Conformance
 
+`permission-deferral-v7.mjs` checks the deferred optional plan and decision
+shapes and a narrow exact-plan binding reference. It does not establish Host
+adoption, complete manifest validation, or runtime enforcement.
+
 `channel-reply-routing.mjs` checks the explicit reply-policy v2 modes,
 readback version, closed fields and frozen v1 predecessors. Host routing,
 Agent choice, platform delivery and retry stability require Host evidence.
