@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-read-result.v1.schema.json",
+  "title": "Channel message read result v1",
+  "oneOf": [
+    {
+      "type": "object", "additionalProperties": false, "required": ["status", "message"],
+      "properties": {
+        "status": {"const": "ok"},
+        "message": {
+          "type": "object", "additionalProperties": false, "required": ["messageId"],
+          "properties": {
+            "messageId": {"type": "string", "minLength": 1, "maxLength": 512},
+            "parentId": {"type": "string", "minLength": 1, "maxLength": 512},
+            "type": {"type": "string"},
+            "content": {"type": "string"},
+            "truncated": {"type": "boolean"},
+            "sender": {
+              "type": "object", "additionalProperties": false,
+              "properties": {"id": {"type": "string"}, "idType": {"type": "string"}, "type": {"type": "string"}, "name": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false, "required": ["status", "code"],
+      "properties": {"status": {"enum": ["rejected", "unavailable"]}, "code": {"type": "string", "minLength": 1}}
+    }
+  ]
+}

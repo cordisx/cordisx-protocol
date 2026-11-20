@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-read-request.v1.schema.json",
+  "title": "Channel message read request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["account", "conversationId", "kind", "messageId"],
+  "properties": {
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapterId", "accountId", "tenantId"],
+      "properties": {
+        "adapterId": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\u0000\\r\\n]+$"},
+        "accountId": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\u0000\\r\\n]+$"},
+        "tenantId": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\u0000\\r\\n]+$"}
+      }
+    },
+    "conversationId": {"type": "string", "minLength": 1, "maxLength": 512},
+    "kind": {"enum": ["direct", "group"]},
+    "messageId": {"type": "string", "minLength": 1, "maxLength": 512}
+  }
+}
