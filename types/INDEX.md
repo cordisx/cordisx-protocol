@@ -246,3 +246,5 @@ and explicitly select identity-bearing snapshots.
 - [Agent context v1](agent-context.v1.d.ts): [current occupancy and threshold observation](../.agents/docs/agent-context/README.md).
 - [Agent turn control v1](agent-turn-control.v1.d.ts): [owner-fenced exact-turn interruption](../.agents/docs/agent-context/README.md#exact-turn-control).
 - [Channel Manager v14](channel-manager.v14.d.ts): [Host-owned continuation defaults](../.agents/docs/channel-runtime/manager-v14-continuation.md).
+
+- [Logical conversation continuation v1](conversation-continuation.v1.d.ts): [cross-provider modes and scoped history](../.agents/docs/conversation-continuation/v1.md).

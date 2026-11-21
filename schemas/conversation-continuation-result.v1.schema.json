@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/conversation-continuation-result.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "state",
+    "operationId"
+  ],
+  "properties": {
+    "state": {
+      "enum": [
+        "pending",
+        "applied",
+        "rejected",
+        "unknown"
+      ]
+    },
+    "operationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hostId",
+        "appId",
+        "profileId",
+        "sessionId"
+      ],
+      "properties": {
+        "hostId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "appId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "sessionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "code": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "state": {
+          "const": "pending"
+        }
+      },
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "destination"
+            ]
+          },
+          {
+            "required": [
+              "code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "properties": {
+        "state": {
+          "const": "applied"
+        }
+      },
+      "required": [
+        "destination"
+      ],
+      "not": {
+        "required": [
+          "code"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "state": {
+          "const": "rejected"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "not": {
+        "required": [
+          "destination"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "state": {
+          "const": "unknown"
+        }
+      },
+      "not": {
+        "required": [
+          "code"
+        ]
+      }
+    }
+  ]
+}

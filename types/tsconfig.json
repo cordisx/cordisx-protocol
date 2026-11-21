@@ -231,6 +231,8 @@
     "agent-context.v1.d.ts",
     "agent-turn-control.v1.d.ts",
     "channel-manager.v14.d.ts",
-    "agent-context.v1.test.ts"
+    "agent-context.v1.test.ts",
+    "conversation-continuation.v1.d.ts",
+    "conversation-continuation.v1.test.ts"
   ]
 }

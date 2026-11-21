@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/continuation-history-page.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "source",
+    "entries",
+    "omitted",
+    "pagination",
+    "truncated"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.continuation-history-page/v1"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hostId",
+        "appId",
+        "profileId",
+        "sessionId"
+      ],
+      "properties": {
+        "hostId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "appId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "sessionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "enum": [
+              "user-text",
+              "assistant-text",
+              "plan",
+              "command",
+              "tool"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 60000
+          }
+        }
+      }
+    },
+    "omitted": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "attachment",
+          "raw-reasoning",
+          "encrypted-reasoning",
+          "unsupported",
+          "not-authorized"
+        ]
+      }
+    },
+    "pagination": {
+      "enum": [
+        "native-items",
+        "native-turn"
+      ]
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "nextCursor": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 16384
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "truncated": {
+            "const": true
+          }
+        },
+        "required": [
+          "truncated"
+        ]
+      },
+      "then": {
+        "required": [
+          "nextCursor"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "nextCursor"
+          ]
+        }
+      }
+    }
+  ]
+}

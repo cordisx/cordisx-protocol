@@ -308,3 +308,5 @@ key. No production key or account material is present.
 
 `identity-visuals/avatar.json` is a credential-free RGBA PNG used by the
 collection-v2 and Channel Manager identity successor conformance.
+
+Logical conversation continuation v1 request vectors are in `conversation-continuation/valid` and `invalid`; requests carry no credentials or caller-supplied actor authority.
