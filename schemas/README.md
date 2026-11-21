@@ -733,6 +733,8 @@ Channel Manager v10 adds `channel-manager-conversations.v1`, conversation page/d
 
 Channel task model configuration: `channel-task-config.v1.schema.json`; see [task settings v1](../.agents/docs/channel-runtime/task-settings-v1.md).
 
+Channel Provider continuation requests and results use `channel-provider-continuation-request.v1.schema.json` and `channel-provider-continuation-result.v1.schema.json`; see [Provider continuation v1](../.agents/docs/channel-runtime/provider-continuation-v1.md).
+
 - [Channel remote history request v1](channel-remote-history-request.v1.schema.json) and [result v1](channel-remote-history-result.v1.schema.json): bounded one-page requests; see [remote history](../.agents/docs/channel-runtime/remote-history-v1.md).
 - [Channel message read request v1](channel-message-read-request.v1.schema.json) and [result v1](channel-message-read-result.v1.schema.json): source-scoped reply-chain lookup; see [message read](../.agents/docs/channel-runtime/message-read-v1.md).
 

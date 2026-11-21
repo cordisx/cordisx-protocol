@@ -1,0 +1,8 @@
+{
+  "contract": "cordisx.channel-provider-continuation/v1",
+  "operationId": "example-operation",
+  "sourceSessionId": "source-session",
+  "expectedRevision": 2,
+  "target": { "providerId": "example-provider", "model": "example-model" },
+  "history": "inherit"
+}

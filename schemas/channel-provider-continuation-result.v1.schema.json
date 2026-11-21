@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/channel-provider-continuation-result.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["state", "operationId"],
+  "properties": {
+    "state": { "enum": ["pending", "applied", "rejected", "unknown"] },
+    "operationId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "destinationSessionId": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "code": { "type": "string", "minLength": 1, "maxLength": 128 }
+  },
+  "oneOf": [
+    { "properties": { "state": { "const": "pending" } }, "not": { "anyOf": [{ "required": ["destinationSessionId"] }, { "required": ["code"] }] } },
+    { "properties": { "state": { "const": "applied" } }, "required": ["destinationSessionId"], "not": { "required": ["code"] } },
+    { "properties": { "state": { "const": "rejected" } }, "required": ["code"], "not": { "required": ["destinationSessionId"] } },
+    { "properties": { "state": { "const": "unknown" } }, "not": { "required": ["code"] } }
+  ]
+}

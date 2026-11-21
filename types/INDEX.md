@@ -236,6 +236,7 @@ and explicitly select identity-bearing snapshots.
 - [Channel Manager v11](channel-manager.v11.d.ts): Host-owned sectioned settings forms and a live own-service settings destination; see [settings and compatibility](../.agents/docs/channel-runtime/manager-v11-settings.md).
 
 - [Channel Manager v12](channel-manager.v12.d.ts) and [task settings v1](channel-task-settings.v1.d.ts): [scoped models and exact permissions](../.agents/docs/channel-runtime/task-settings-v1.md).
+- [Channel Provider continuation v1](channel-provider-continuation.v1.d.ts): [explicit history-preserving Provider continuation](../.agents/docs/channel-runtime/provider-continuation-v1.md).
 
 - [Channel remote history v1](channel-remote-history.v1.d.ts): [bounded remote history and source identity](../.agents/docs/channel-runtime/remote-history-v1.md).
 - [Channel message read v1](channel-message-read.v1.d.ts): [source-scoped reply-chain lookup](../.agents/docs/channel-runtime/message-read-v1.md).
