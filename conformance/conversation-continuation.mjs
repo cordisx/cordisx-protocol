@@ -15,11 +15,12 @@ assert.ok(request(example))
 for (const file of ['consent-mismatch.json', 'injected-actor.json']) {
   assert.equal(request(await read(`test-vectors/conversation-continuation/invalid/${file}`)), false)
 }
-const { historyCategories: _categories, ...withoutCategories } = example
+const { historyCategories: _categories, handoffConsent: _handoff, ...withoutCategories } = example
 assert.ok(request({ ...withoutCategories, mode: 'fork', historyConsent: 'inherit' }))
 assert.ok(request({ ...withoutCategories, mode: 'fresh', historyConsent: 'none' }))
 assert.equal(request({ ...withoutCategories, mode: 'fresh', historyConsent: 'on-demand' }), false)
 assert.equal(request({ ...example, historyCategories: [] }), false)
+assert.equal(request({ ...example, handoffConsent: undefined }), false)
 assert.equal(request({ ...example, mode: 'fork', historyConsent: 'inherit' }), false)
 assert.ok(history({ contract: 'cordisx.continuation-history-request/v1', limit: 32 }))
 assert.equal(history({ contract: 'cordisx.continuation-history-request/v1', sourceSessionId: 'other' }), false)
@@ -46,7 +47,8 @@ const link = {
   historyCategories: example.historyCategories,
 }
 assert.ok(relation(link))
-assert.equal(relation({ ...link, handoff: 'none' }), false)
+assert.ok(relation({ ...link, handoff: 'none' }))
+assert.equal(relation({ ...link, handoff: 'invented' }), false)
 assert.equal(relation({ ...link, historyAccess: 'inherited' }), false)
 assert.ok(result({ state: 'applied', operationId: 'op', destination: example.source }))
 assert.equal(result({ state: 'applied', operationId: 'op' }), false)

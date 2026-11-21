@@ -8,6 +8,7 @@ const request: ConversationContinuationRequestV1 = {
   target: { providerId: 'target', model: 'example' },
   mode: 'linked',
   historyConsent: 'on-demand',
+  handoffConsent: 'none',
   historyCategories: ['user-text', 'assistant-text'],
 }
 const history: ContinuationHistoryRequestV1 = { contract: 'cordisx.continuation-history-request/v1', limit: 4 }

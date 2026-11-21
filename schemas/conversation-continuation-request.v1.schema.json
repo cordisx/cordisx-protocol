@@ -110,6 +110,12 @@
           "tool"
         ]
       }
+    },
+    "handoffConsent": {
+      "enum": [
+        "checkpoint",
+        "none"
+      ]
     }
   },
   "oneOf": [
@@ -123,7 +129,8 @@
         }
       },
       "required": [
-        "historyCategories"
+        "historyCategories",
+        "handoffConsent"
       ]
     },
     {
@@ -136,8 +143,17 @@
         }
       },
       "not": {
-        "required": [
-          "historyCategories"
+        "anyOf": [
+          {
+            "required": [
+              "historyCategories"
+            ]
+          },
+          {
+            "required": [
+              "handoffConsent"
+            ]
+          }
         ]
       }
     },
@@ -151,8 +167,17 @@
         }
       },
       "not": {
-        "required": [
-          "historyCategories"
+        "anyOf": [
+          {
+            "required": [
+              "historyCategories"
+            ]
+          },
+          {
+            "required": [
+              "handoffConsent"
+            ]
+          }
         ]
       }
     }

@@ -19,5 +19,6 @@
   "historyCategories": [
     "user-text",
     "assistant-text"
-  ]
+  ],
+  "handoffConsent": "none"
 }

@@ -165,7 +165,8 @@
         "handoff": {
           "enum": [
             "checkpoint",
-            "unavailable"
+            "unavailable",
+            "none"
           ]
         }
       },

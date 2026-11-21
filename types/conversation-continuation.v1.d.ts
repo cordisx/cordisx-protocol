@@ -18,6 +18,7 @@ export type ConversationContinuationRequestV1 = {
   | {
     readonly mode: 'linked'
     readonly historyConsent: 'on-demand'
+    readonly handoffConsent: 'checkpoint' | 'none'
     readonly historyCategories: readonly [ContinuationHistoryCategoryV1, ...ContinuationHistoryCategoryV1[]]
   }
   | { readonly mode: 'fork'; readonly historyConsent: 'inherit' }
@@ -41,7 +42,7 @@ export type ConversationContinuationRelationV1 = {
   | {
     readonly mode: 'linked'
     readonly historyAccess: 'on-demand'
-    readonly handoff: 'checkpoint' | 'unavailable'
+    readonly handoff: 'checkpoint' | 'unavailable' | 'none'
     readonly historyCategories: readonly [ContinuationHistoryCategoryV1, ...ContinuationHistoryCategoryV1[]]
   }
   | { readonly mode: 'fork'; readonly historyAccess: 'inherited'; readonly handoff: 'none' }
