@@ -76,6 +76,9 @@ channelV14.mountContinuationDefaultsForm(document.body, { signal: new AbortContr
 import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
 declare const remoteHistory: ChannelRemoteHistoryRequestV1
 remoteHistory.account.tenantId satisfies string
+import type { ChannelProviderContinuationRequestV1 } from '@cordisx/protocol/channel-provider-continuation/v1'
+declare const providerContinuation: ChannelProviderContinuationRequestV1
+providerContinuation.history satisfies 'inherit'
 import type { ChannelMessageReadRequestV1 } from '@cordisx/protocol/channel-message-read/v1'
 declare const messageRead: ChannelMessageReadRequestV1
 messageRead.messageId satisfies string
