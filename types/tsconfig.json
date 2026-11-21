@@ -231,6 +231,8 @@
     "agent-context.v1.d.ts",
     "agent-turn-control.v1.d.ts",
     "channel-manager.v14.d.ts",
+    "channel-manager.v15.d.ts",
+    "channel-manager.v15.test.ts",
     "agent-context.v1.test.ts"
   ]
 }
