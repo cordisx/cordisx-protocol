@@ -183,7 +183,8 @@
     "types/channel-manager.v13.d.ts",
     "types/agent-context.v1.d.ts",
     "types/agent-turn-control.v1.d.ts",
-    "types/channel-manager.v14.d.ts"
+    "types/channel-manager.v14.d.ts",
+    "types/channel-manager.v15.d.ts"
   ],
   "exports": {
     "./model-providers/v1": "./types/model-providers.v1.d.ts",
@@ -400,6 +401,9 @@
     },
     "./channel-manager/v14": {
       "types": "./types/channel-manager.v14.d.ts"
+    },
+    "./channel-manager/v15": {
+      "types": "./types/channel-manager.v15.d.ts"
     }
   },
   "publishConfig": {
