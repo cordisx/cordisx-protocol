@@ -49,5 +49,10 @@ reported for inspection, but is not silently deleted. An explicit native
 preflight refusal with no fork effect is `rejected`. A timeout, disconnect,
 unrecognized error or unconfirmed acknowledgement remains `unknown`.
 
+An in-flight or unknown intent must remain fenced across downgrade: an older
+Host must not ignore it and dispatch another source turn. A successor store that
+an older Host cannot open is one way to enforce this. A capable Host must
+reconcile or safely migrate the intent before the fence is removed.
+
 This contract specifies behavior and authorization, not native runtime support,
 Host adoption, a particular model service, or a release.
