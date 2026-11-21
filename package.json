@@ -178,6 +178,7 @@
     "types/channel-manager.v11.d.ts",
     "types/channel-manager.v12.d.ts",
     "types/channel-task-settings.v1.d.ts",
+    "types/channel-provider-continuation.v1.d.ts",
     "types/channel-remote-history.v1.d.ts",
     "types/channel-message-read.v1.d.ts",
     "types/channel-manager.v13.d.ts",
@@ -382,6 +383,9 @@
     },
     "./channel-task-settings/v1": {
       "types": "./types/channel-task-settings.v1.d.ts"
+    },
+    "./channel-provider-continuation/v1": {
+      "types": "./types/channel-provider-continuation.v1.d.ts"
     },
     "./channel-remote-history/v1": {
       "types": "./types/channel-remote-history.v1.d.ts"

@@ -359,5 +359,6 @@ rejection, concrete permission scopes and the separately digested v16 package.
 `channel-workflow.mjs` validates execution/readback shapes, frozen policy boundaries, new commands, documentation and Manager v9 exports.
 
 `channel-task-settings.mjs` checks the Manager v12 form successor and serialized model configuration boundary.
+It also checks the versioned Provider continuation request/result shapes and explicit history-transfer contract.
 
 - `agent-context.mjs`: current occupancy threshold and epoch vectors, exports and specification coverage.

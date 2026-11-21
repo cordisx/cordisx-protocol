@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/channel-provider-continuation-request.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "operationId", "sourceSessionId", "expectedRevision", "target", "history"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-provider-continuation/v1" },
+    "operationId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "sourceSessionId": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "expectedRevision": { "type": "integer", "minimum": 0 },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "model"],
+      "properties": {
+        "providerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "model": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    },
+    "history": { "const": "inherit" }
+  }
+}
