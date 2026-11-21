@@ -1,0 +1,24 @@
+{
+  "contract": "cordisx.conversation-continuation-request/v1",
+  "operationId": "op",
+  "logicalConversationId": "logical",
+  "source": {
+    "hostId": "local",
+    "appId": "codex",
+    "profileId": "personal",
+    "sessionId": "source"
+  },
+  "expectedRevision": 1,
+  "target": {
+    "providerId": "target",
+    "model": "example"
+  },
+  "mode": "linked",
+  "historyConsent": "on-demand",
+  "actor": "untrusted",
+  "historyCategories": [
+    "user-text",
+    "assistant-text"
+  ],
+  "handoffConsent": "none"
+}

@@ -1,5 +1,7 @@
 # Test Vectors
 
+Channel Provider continuation v1 request vectors live in `channel-provider-continuation/valid` and `invalid`; they require explicit history inheritance and contain no credentials.
+
 Deterministic manifest, package identity, signature, grant, activation, and compatibility vectors belong here.
 
 Visuals v1 vectors live in `visuals/valid` and `visuals/invalid`. Neutral status
@@ -306,3 +308,5 @@ key. No production key or account material is present.
 
 `identity-visuals/avatar.json` is a credential-free RGBA PNG used by the
 collection-v2 and Channel Manager identity successor conformance.
+
+Logical conversation continuation v1 request vectors are in `conversation-continuation/valid` and `invalid`; requests carry no credentials or caller-supplied actor authority.

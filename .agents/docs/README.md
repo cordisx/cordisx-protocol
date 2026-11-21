@@ -164,8 +164,11 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Channel Manager v10 conversations](channel-runtime/manager-v10-conversations.md).
 
 - [Channel task model settings v1 / Manager v12](channel-runtime/task-settings-v1.md): scoped creation defaults, exact field/value authorization, and Host model forms.
+- [Channel Provider continuation v1](channel-runtime/provider-continuation-v1.md): explicit history-preserving Provider changes with safe binding migration.
 
 - [Channel Manager v13 creation defaults](channel-runtime/manager-v13-creation-defaults.md): a separate sparse Channel overlay of general profile defaults.
 
 - [Agent context v1](agent-context/README.md): current context, threshold observation, and exact-turn control.
 - [Channel Manager v14](channel-runtime/manager-v14-continuation.md): continuation defaults form.
+
+- [Logical conversation continuation v1](conversation-continuation/v1.md): cross-provider modes, logical identity, disclosure, scoped source history, and failure fencing.

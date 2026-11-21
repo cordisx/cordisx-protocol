@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/conversation-continuation-preference.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "revision",
+    "scope",
+    "mode"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.conversation-continuation-preference/v1"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "profile",
+            "project",
+            "conversation"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "mode": {
+      "enum": [
+        "linked",
+        "fork",
+        "fresh"
+      ]
+    }
+  }
+}

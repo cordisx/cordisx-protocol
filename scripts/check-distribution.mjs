@@ -79,6 +79,12 @@ channelV15.forOwnPresentationService()?.presentationCapabilities().mode satisfie
 import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
 declare const remoteHistory: ChannelRemoteHistoryRequestV1
 remoteHistory.account.tenantId satisfies string
+import type { ChannelProviderContinuationRequestV1 } from '@cordisx/protocol/channel-provider-continuation/v1'
+declare const providerContinuation: ChannelProviderContinuationRequestV1
+providerContinuation.history satisfies 'inherit'
+import type { ConversationContinuationRequestV1 } from '@cordisx/protocol/conversation-continuation/v1'
+declare const logicalContinuation: ConversationContinuationRequestV1
+logicalContinuation.mode satisfies 'linked' | 'fork' | 'fresh'
 import type { ChannelMessageReadRequestV1 } from '@cordisx/protocol/channel-message-read/v1'
 declare const messageRead: ChannelMessageReadRequestV1
 messageRead.messageId satisfies string
