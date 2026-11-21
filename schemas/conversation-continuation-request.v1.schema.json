@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/conversation-continuation-request.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "operationId",
+    "logicalConversationId",
+    "source",
+    "expectedRevision",
+    "target",
+    "mode",
+    "historyConsent"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.conversation-continuation-request/v1"
+    },
+    "operationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "logicalConversationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hostId",
+        "appId",
+        "profileId",
+        "sessionId"
+      ],
+      "properties": {
+        "hostId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "appId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "sessionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "expectedRevision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "providerId",
+        "model"
+      ],
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "mode": {
+      "enum": [
+        "linked",
+        "fork",
+        "fresh"
+      ]
+    },
+    "historyConsent": {
+      "enum": [
+        "on-demand",
+        "inherit",
+        "none"
+      ]
+    },
+    "historyCategories": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "user-text",
+          "assistant-text",
+          "plan",
+          "command",
+          "tool"
+        ]
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "mode": {
+          "const": "linked"
+        },
+        "historyConsent": {
+          "const": "on-demand"
+        }
+      },
+      "required": [
+        "historyCategories"
+      ]
+    },
+    {
+      "properties": {
+        "mode": {
+          "const": "fork"
+        },
+        "historyConsent": {
+          "const": "inherit"
+        }
+      },
+      "not": {
+        "required": [
+          "historyCategories"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "mode": {
+          "const": "fresh"
+        },
+        "historyConsent": {
+          "const": "none"
+        }
+      },
+      "not": {
+        "required": [
+          "historyCategories"
+        ]
+      }
+    }
+  ]
+}

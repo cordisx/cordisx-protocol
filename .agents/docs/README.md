@@ -170,3 +170,5 @@ contract availability here does not establish deployment or consumer acceptance.
 
 - [Agent context v1](agent-context/README.md): current context, threshold observation, and exact-turn control.
 - [Channel Manager v14](channel-runtime/manager-v14-continuation.md): continuation defaults form.
+
+- [Logical conversation continuation v1](conversation-continuation/v1.md): cross-provider modes, logical identity, disclosure, scoped source history, and failure fencing.
