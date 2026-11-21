@@ -8,7 +8,11 @@ export interface ChannelManagerConfigurationPresentationCapabilitiesV1 {
   readonly mode: 'configuration-only'
 }
 
-/** Explicitly requested facade for status and the Host-owned connection form. */
+/**
+ * Explicitly requested facade for status and the Host-owned connection form.
+ * Credential rotation, if available, stays inside that form; this facade
+ * does not expose credential values, references, drafts, or credential operations.
+ */
 export interface ChannelManagerConfigurationPresentationV1 extends ChannelManagerV8 {
   configurationPresentationCapabilities(): ChannelManagerConfigurationPresentationCapabilitiesV1
 }

@@ -10,13 +10,21 @@ and revision fences. An unavailable or invalid facade must fail closed.
 
 This facade supports the existing account snapshots, identity refresh and
 subscription, and the v8 Host-owned connection configuration form. It may
-advertise `connection.update` only for accounts that can use that form. The
-form may omit credential fields when credential capture is unavailable; it
-must not expose secrets or references to the plugin. The Host rejects other
-operations, including creation, connection control, credentials, policies,
-conversations, bindings, events, and logs. Consumers expose only the account
-list, configuration, and runtime-status surfaces for this mode. A pending
-identity that cannot yet be configured remains unavailable.
+advertise `connection.update` only for accounts that can use that form.
+For an existing resolved account, the Host-owned form may offer credential
+rotation when the Host can authorize and coordinate that transaction. Otherwise
+it omits the credential input. Credential values, references and private draft
+identifiers are not exposed through the plugin-facing facade. The Host rejects
+plugin-issued credential operations, as well as creation, connection control,
+policies, conversations, bindings, events, and logs. Consumers expose only the
+account list, configuration, and runtime-status surfaces for this mode. A
+pending identity that cannot yet be configured remains unavailable.
+
+An inline credential write retains the account authorization, owner generation
+and configuration revision checks. Private drafts are retired with their form
+or renderer; an unconfirmed cleanup or write does not produce an applied
+receipt. The Host must not persist the entered credential in browser storage
+or automatically retry an uncertain write.
 
 The new facade is requested separately. The existing v15
 `forOwnPresentationService()` and its `snapshot-only` descriptor retain their
