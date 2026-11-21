@@ -186,6 +186,7 @@
     "types/agent-turn-control.v1.d.ts",
     "types/channel-manager.v14.d.ts",
     "types/channel-manager.v15.d.ts",
+    "types/channel-manager.v16.d.ts",
     "types/conversation-continuation.v1.d.ts"
   ],
   "exports": {
@@ -409,6 +410,9 @@
     },
     "./channel-manager/v15": {
       "types": "./types/channel-manager.v15.d.ts"
+    },
+    "./channel-manager/v16": {
+      "types": "./types/channel-manager.v16.d.ts"
     },
     "./conversation-continuation/v1": {
       "types": "./types/conversation-continuation.v1.d.ts"
