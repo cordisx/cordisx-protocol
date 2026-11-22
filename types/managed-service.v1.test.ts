@@ -26,7 +26,7 @@ if (snapshot.status === 'available') {
   // @ts-expect-error full endpoints are not exposed
   projection.endpoint
   // Service's own auth projection does not carry account-subscription fields.
-  // @ts-expect-error account subscriptions live on accountControl, not projection.auth
+  // @ts-expect-error account subscriptions are a separate capability, not projection.auth
   projection.auth.accounts
 } else {
   // @ts-expect-error unavailable snapshot has no projection
@@ -126,6 +126,14 @@ accounts.accounts[0]?.path
 accounts.accounts[0]?.apiKey
 // @ts-expect-error raw id_token stays Host-private
 accounts.accounts[0]?.id_token
+
+// A Host can provide read-only account information without granting account control.
+if (service.readAccounts) {
+  const result = await service.readAccounts()
+  if (result.status === 'available') result.accounts.accounts[0]?.accountId
+  // @ts-expect-error account mutation is not a method on the read-only service surface
+  service.toggleAccount
+}
 
 // CLIProxyAPI account control (optional) is keyed separately from service.auth.
 if (service.accountControl) {

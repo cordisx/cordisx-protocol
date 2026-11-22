@@ -514,6 +514,8 @@ export interface ManagedServiceV1 {
   logout(request: ManagedServiceLogoutRequestV1): Promise<ManagedServiceLogoutResultV1>
   /** Optional, service-kind-specific renderer-safe read (for CLIProxyAPI). */
   readCatalog?(): Promise<ManagedServiceCliProxyCatalogResultV1>
+  /** Optional CLIProxyAPI account projection, independent of account mutation authority. */
+  readAccounts?(): Promise<ManagedServiceCliProxyAccountsResultV1>
   /** Optional CLIProxyAPI account-subscription control surface (Host-brokered Management API). */
   accountControl?: ManagedServiceCliProxyAccountControlV1
 }

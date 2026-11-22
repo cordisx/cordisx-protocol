@@ -11,6 +11,14 @@ entryChallenge.challenge satisfies string
 entryProof.proof satisfies string
 entrySourceResult.status satisfies 'available' | 'unavailable'
 const entryLookup = await entryContext.managedServices.get({ serviceId: 'gateway' })
+if (entryLookup.status === 'available' && entryLookup.service.readAccounts) {
+  const result = await entryLookup.service.readAccounts()
+  if (result.status === 'available') {
+    result.accounts.accounts[0]?.accountId satisfies string | undefined
+    // @ts-expect-error account reads never expose credentials
+    result.accounts.accounts[0]?.apiKey
+  }
+}
 if (entryLookup.status === 'available' && entryLookup.service.webEntry?.contract === 'cordisx.managed-service-web-entry/v1') {
   const entryCapability = entryLookup.service.webEntry
   const entryResult = await entryCapability.read()

@@ -48,6 +48,23 @@ registration control continues to accept `login`, `logout`, and `refresh`; this
 Protocol contract does not establish Host adoption or authorize a renderer to
 call the Node-side registration handle.
 
+## Independent account reads
+
+For CLIProxyAPI services, a Host MAY expose `ManagedServiceV1.readAccounts()`
+without exposing `accountControl`. The result uses the existing
+`cordisx.managed-service-cli-proxy-accounts/v1` projection and the exact service
+binding, profile and generation. A Host MUST validate that projection and MUST
+NOT expose credentials, authentication files, tokens or raw endpoints. The read
+MUST NOT start authentication, change an account, or grant authority to toggle
+an account or manage OAuth sessions. If the owner or binding is no longer
+current, the read is unavailable.
+
+Consumers SHOULD prefer `readAccounts()` when it exists, otherwise use
+`accountControl.readAccounts()` when the full control surface exists. Older Hosts
+may omit the independent read. A returned revision is an opaque equality fence;
+it need not increase between observations. This capability does not prove that
+a Host has synchronized account mutations across clients.
+
 ## Managed native provider reasoning capabilities
 
 `ManagedNativeProviderRouteV1.reasoningCapabilities` optionally carries the
