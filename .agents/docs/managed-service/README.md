@@ -59,6 +59,12 @@ MUST NOT start authentication, change an account, or grant authority to toggle
 an account or manage OAuth sessions. If the owner or binding is no longer
 current, the read is unavailable.
 
+The existing identity type permits an optional HTTPS source. The common v1
+schema now accepts that field, matching the type and owner binding, while
+rejecting sources with authority credentials. Older validators that omit this
+field may reject source-bound projections; consumers must not discard source
+identity merely to make those validators accept a different binding.
+
 Consumers SHOULD prefer `readAccounts()` when it exists, otherwise use
 `accountControl.readAccounts()` when the full control surface exists. Older Hosts
 may omit the independent read. A returned revision is an opaque equality fence;

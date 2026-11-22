@@ -289,6 +289,19 @@ const accounts = {
 }
 assert.deepEqual(errors(validator('managed-service-cli-proxy-accounts.v1.schema.json'), accounts), [])
 
+const accountsWithSource = {
+  ...accounts,
+  binding: { ...binding, identity: { ...binding.identity, source: 'https://plugins.example.test/provider' } },
+}
+assert.deepEqual(errors(validator('managed-service-cli-proxy-accounts.v1.schema.json'), accountsWithSource), [])
+for (const source of ['http://plugins.example.test/provider', 'https://user:example@plugins.example.test/provider']) {
+  const unsafe = {
+    ...accountsWithSource,
+    binding: { ...accountsWithSource.binding, identity: { ...binding.identity, source } },
+  }
+  assert.ok(errors(validator('managed-service-cli-proxy-accounts.v1.schema.json'), unsafe).length > 0)
+}
+
 const accountsPathLeak = {
   ...accounts,
   accounts: [{ ...accounts.accounts[0], path: '/workspace/private-auth.json' }],

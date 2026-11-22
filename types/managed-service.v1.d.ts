@@ -45,6 +45,7 @@ export type ManagedServiceErrorCodeV1 =
   | 'disposed'
 
 export interface ManagedServiceIdentityV1 {
+  /** Optional HTTPS source identity; it MUST NOT contain authority credentials. */
   readonly source?: `https://${string}`
   readonly pluginId: string
   readonly serviceId: string

@@ -39,6 +39,12 @@
         "serviceId"
       ],
       "properties": {
+        "source": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 4096,
+          "pattern": "^https://[^/?#@]+(?:[/?#]|$)"
+        },
         "pluginId": {
           "$ref": "#/$defs/pluginId"
         },
