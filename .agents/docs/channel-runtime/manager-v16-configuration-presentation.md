@@ -15,10 +15,19 @@ For an existing resolved account, the Host-owned form may offer credential
 rotation when the Host can authorize and coordinate that transaction. Otherwise
 it omits the credential input. Credential values, references and private draft
 identifiers are not exposed through the plugin-facing facade. The Host rejects
-plugin-issued credential operations, as well as creation, connection control,
-policies, conversations, bindings, events, and logs. Consumers expose only the
+plugin-issued credential operations, as well as creation, policies,
+conversations, bindings, events, logs, and reconnect. Consumers expose only the
 account list, configuration, and runtime-status surfaces for this mode. A
 pending identity that cannot yet be configured remains unavailable.
+
+The optional descriptor field `connectionControl: 'enable-disable'` indicates
+that this facade may advertise and execute `connection.enable` and
+`connection.disable` for an existing resolved connection. Without that exact
+field both operations remain unavailable. It is not a permission grant: the
+Host checks the service owner, caller authorization, configuration revision
+and active generation. It coordinates all admitted consumers, prevents
+unaccounted participants from joining, and reports an applied result only
+after their adoption receipts. An uncertain action is not automatically retried.
 
 An inline credential write retains the account authorization, owner generation
 and configuration revision checks. Private drafts are retired with their form

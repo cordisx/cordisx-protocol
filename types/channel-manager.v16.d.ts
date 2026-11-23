@@ -6,12 +6,15 @@ export interface ChannelManagerConfigurationPresentationCapabilitiesV1 {
   readonly contract: 'cordisx.channel-manager-configuration-presentation-capabilities/v1'
   readonly schemaVersion: 1
   readonly mode: 'configuration-only'
+  /** Optional owner-coordinated enable/disable for an existing resolved connection. */
+  readonly connectionControl?: 'enable-disable'
 }
 
 /**
  * Explicitly requested facade for status and the Host-owned connection form.
  * Credential rotation, if available, stays inside that form; this facade
  * does not expose credential values, references, drafts, or credential operations.
+ * Connection control is unavailable unless the descriptor explicitly advertises it.
  */
 export interface ChannelManagerConfigurationPresentationV1 extends ChannelManagerV8 {
   configurationPresentationCapabilities(): ChannelManagerConfigurationPresentationCapabilitiesV1
