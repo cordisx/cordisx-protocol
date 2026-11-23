@@ -1,5 +1,7 @@
 # Channel runtime protocol
 
+For inline paragraphs and verified native user mentions, see [outbound v2 and runtime v3](outbound-v2.md).
+
 For standard text/image/audio/file/video/richtext/card outbound descriptors,
 bounded caller-sandbox bytes preparation and scoped media resolution, see the
 explicit [outbound v1 and runtime v2 successor](outbound-v1.md).

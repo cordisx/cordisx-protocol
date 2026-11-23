@@ -1,5 +1,7 @@
 # Conformance
 
+- `node conformance/channel-outbound-v2.mjs`: frozen v1 rejection, v2 paragraph/mention shapes, capability negotiation and scoped sender-evidence model.
+
 `node conformance/channel-outbound.mjs` checks the six outbound v1 schemas,
 seven content types, bounded bytes preparation, scoped capability reference
 model, fallback, idempotency, receipt truthfulness and frozen runtime v1.
