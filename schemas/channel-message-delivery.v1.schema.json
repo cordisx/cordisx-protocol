@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-delivery.v1.schema.json",
+  "title": "CordisX channel-message-delivery v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "deliveryId",
+    "request",
+    "createdAt"
+  ],
+  "properties": {
+    "deliveryId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "request": {
+      "$ref": "channel-message-send.v1.schema.json"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

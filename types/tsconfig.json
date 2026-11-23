@@ -237,6 +237,9 @@
     "channel-manager.v16.test.ts",
     "agent-context.v1.test.ts",
     "conversation-continuation.v1.d.ts",
-    "conversation-continuation.v1.test.ts"
+    "conversation-continuation.v1.test.ts",
+    "channel-outbound.v1.d.ts",
+    "channel-runtime.v2.d.ts",
+    "channel-outbound.v1.test.ts"
   ]
 }

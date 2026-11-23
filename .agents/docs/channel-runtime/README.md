@@ -1,5 +1,9 @@
 # Channel runtime protocol
 
+For standard text/image/audio/file/video/richtext/card outbound descriptors,
+bounded caller-sandbox bytes preparation and scoped media resolution, see the
+explicit [outbound v1 and runtime v2 successor](outbound-v1.md).
+
 Status: normative version 1 Channel connection contracts. Channel is a base
 messaging service: it connects accounts, durably receives and sends attributed
 messages, exposes Channel thread/session identity, emits normalized events,
