@@ -1,5 +1,9 @@
 # TypeScript declarations
 
+- `channel-forward/v1`: [independent forwarding and receipts](channel-forward.v1.d.ts), governed by [forward v1](../.agents/docs/channel-runtime/forward-v1.md).
+
+- `channel-outbound/v2`: [inline richtext and verified native mentions](channel-outbound.v2.d.ts); `channel-runtime/v3`: [additive outboundV2 service](channel-runtime.v3.d.ts).
+
 - `channel-outbound/v1`: [outbound descriptors and scoped capabilities](channel-outbound.v1.d.ts).
 - `channel-runtime/v2`: [explicit runtime and adapter successor](channel-runtime.v2.d.ts).
   Both follow [outbound v1](../.agents/docs/channel-runtime/outbound-v1.md), preserving runtime v1.
@@ -244,6 +248,7 @@ and explicitly select identity-bearing snapshots.
 
 - [Channel remote history v1](channel-remote-history.v1.d.ts): [bounded remote history and source identity](../.agents/docs/channel-runtime/remote-history-v1.md).
 - [Channel message read v1](channel-message-read.v1.d.ts): [source-scoped reply-chain lookup](../.agents/docs/channel-runtime/message-read-v1.md).
+- [Channel message operations v1](channel-message-operations.v1.d.ts): [scoped mutation, pagination and discovery](../.agents/docs/channel-runtime/message-operations-v1.md).
 
 - [Channel Manager v13](channel-manager.v13.d.ts): [independent Channel creation defaults inherited from general profile defaults](../.agents/docs/channel-runtime/manager-v13-creation-defaults.md).
 

@@ -1,5 +1,9 @@
 # Schemas
 
+- [Forward request v1](channel-forward.v1.schema.json) and [receipt v1](channel-forward-receipt.v1.schema.json): independent bounded forwarding; [normative contract](../.agents/docs/channel-runtime/forward-v1.md).
+
+- [Channel message send v2](channel-message-send.v2.schema.json) and [outbound capabilities v2](channel-outbound-capabilities.v2.schema.json): inline paragraphs and explicit native mention support.
+
 Channel outbound v1 uses `channel-media-prepare`, `channel-prepared-media`,
 `channel-message-send`, `channel-message-delivery`, `channel-outbound-capabilities`
 and `channel-send-receipt` v1 schemas. See
@@ -743,6 +747,7 @@ Channel Provider continuation requests and results use `channel-provider-continu
 
 - [Channel remote history request v1](channel-remote-history-request.v1.schema.json) and [result v1](channel-remote-history-result.v1.schema.json): bounded one-page requests; see [remote history](../.agents/docs/channel-runtime/remote-history-v1.md).
 - [Channel message read request v1](channel-message-read-request.v1.schema.json) and [result v1](channel-message-read-result.v1.schema.json): source-scoped reply-chain lookup; see [message read](../.agents/docs/channel-runtime/message-read-v1.md).
+- Channel message operations v1: [request](channel-message-operation-request.v1.schema.json), [result](channel-message-operation-result.v1.schema.json), [capabilities](channel-message-operation-capabilities.v1.schema.json); see [scoped operations](../.agents/docs/channel-runtime/message-operations-v1.md).
 
 The [Channel configuration v3](channel-service-config.v3.schema.json) adds pending tenant identity; see its [compatibility guide](../.agents/docs/channel-runtime/config-v3.md).
 

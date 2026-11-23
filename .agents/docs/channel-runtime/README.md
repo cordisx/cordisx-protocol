@@ -1,8 +1,14 @@
 # Channel runtime protocol
 
+- [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
+
+For inline paragraphs and verified native user mentions, see [outbound v2 and runtime v3](outbound-v2.md).
+
 For standard text/image/audio/file/video/richtext/card outbound descriptors,
 bounded caller-sandbox bytes preparation and scoped media resolution, see the
 explicit [outbound v1 and runtime v2 successor](outbound-v1.md).
+Optional [message operations v1](message-operations-v1.md) adds scoped lifecycle
+operations and operation-level discovery independently of outbound availability.
 
 Status: normative version 1 Channel connection contracts. Channel is a base
 messaging service: it connects accounts, durably receives and sends attributed

@@ -1,0 +1,19 @@
+{
+  "request": {
+    "contract": "cordisx.channel-forward/v1", "schemaVersion": 1,
+    "operation": "forward", "operationId": "forward-1",
+    "source": { "adapterId": "feishu", "accountId": "bot", "tenantId": "tenant", "conversationId": "oc_source", "kind": "group" },
+    "target": { "adapterId": "feishu", "accountId": "bot", "tenantId": "tenant", "conversationId": "oc_target", "kind": "group" },
+    "messageIds": ["om_one"]
+  },
+  "invalid": [
+    { "messageIds": [] },
+    { "messageIds": ["om_one", "om_two"] },
+    { "operation": "merge-forward", "messageIds": ["om_one"] },
+    { "operation": "merge-forward", "messageIds": ["om_one", "om_one"] },
+    { "operation": "thread-forward" },
+    { "actor": "claimed-user" },
+    { "text": "fallback" },
+    { "operationId": "" }
+  ]
+}
