@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-prepared-media.v1.schema.json",
+  "title": "CordisX channel-prepared-media v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "handle",
+    "type",
+    "mediaType",
+    "size",
+    "expiresAt",
+    "format",
+    "sha256"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.channel-prepared-media/v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "handle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^media:[A-Za-z0-9_-]+$"
+    },
+    "type": {
+      "enum": [
+        "image",
+        "audio",
+        "file",
+        "video"
+      ]
+    },
+    "mediaType": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+$"
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30000000
+    },
+    "filename": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "^(?!\\s)(?!.*\\s$)(?!\\.{1,2}$)(?!.*\\.$)[^/\\\\\\u0000-\\u001f\\u007f]+$"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "format": {
+      "enum": [
+        "png",
+        "jpeg",
+        "opus",
+        "mp4",
+        "pdf",
+        "binary"
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "durationMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "image"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "format": {
+            "enum": [
+              "png",
+              "jpeg"
+            ]
+          },
+          "durationMs": false,
+          "size": {
+            "type": "integer",
+            "maximum": 10000000
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "audio"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "format": {
+            "enum": [
+              "opus"
+            ]
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "file"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "format": {
+            "enum": [
+              "pdf",
+              "binary"
+            ]
+          },
+          "durationMs": false,
+          "filename": {}
+        },
+        "required": [
+          "filename"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "video"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "format": {
+            "enum": [
+              "mp4"
+            ]
+          },
+          "filename": {}
+        },
+        "required": [
+          "filename"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "const": "pdf"
+          }
+        },
+        "required": [
+          "format"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "filename"
+        ],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "pattern": "\\.[pP][dD][fF]$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "const": "mp4"
+          }
+        },
+        "required": [
+          "format"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "filename"
+        ],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "pattern": "\\.[mM][pP]4$"
+          }
+        }
+      }
+    }
+  ]
+}

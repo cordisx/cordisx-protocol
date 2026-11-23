@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-send.v1.schema.json",
+  "title": "CordisX channel-message-send v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "target",
+    "kind",
+    "idempotencyKey",
+    "content",
+    "fallback"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.channel-message-send/v1"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "target": {
+      "$ref": "channel-common.v1.schema.json#/$defs/threadRef"
+    },
+    "kind": {
+      "enum": [
+        "completion",
+        "approval",
+        "failure",
+        "reply"
+      ]
+    },
+    "idempotencyKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "content": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "text"
+          ],
+          "properties": {
+            "type": {
+              "const": "text"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 65536
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "handle"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "image",
+                "audio",
+                "file",
+                "video"
+              ]
+            },
+            "handle": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^media:[A-Za-z0-9_-]+$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "blocks"
+          ],
+          "properties": {
+            "type": {
+              "const": "richtext"
+            },
+            "blocks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "style"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "style": {
+                    "enum": [
+                      "plain",
+                      "strong",
+                      "emphasis",
+                      "code"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "title",
+            "body"
+          ],
+          "properties": {
+            "type": {
+              "const": "card"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            }
+          }
+        }
+      ]
+    },
+    "fallback": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "const": "reject"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "text"
+          ],
+          "properties": {
+            "mode": {
+              "const": "text"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 65536
+            }
+          }
+        }
+      ]
+    }
+  }
+}

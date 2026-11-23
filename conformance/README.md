@@ -1,5 +1,10 @@
 # Conformance
 
+`node conformance/channel-outbound.mjs` checks the six outbound v1 schemas,
+seven content types, bounded bytes preparation, scoped capability reference
+model, fallback, idempotency, receipt truthfulness and frozen runtime v1.
+It does not establish Host adoption or interoperability.
+
 `permission-deferral-v7.mjs` checks the deferred optional plan and decision
 shapes and a narrow exact-plan binding reference. It does not establish Host
 adoption, complete manifest validation, or runtime enforcement.
