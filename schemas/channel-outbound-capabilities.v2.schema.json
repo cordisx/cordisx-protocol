@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-outbound-capabilities.v2.schema.json",
+  "title": "CordisX channel-outbound-capabilities v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schemaVersion",
+    "target",
+    "types",
+    "maxMediaBytes",
+    "richtext"
+  ],
+  "properties": {
+    "contract": {
+      "const": "cordisx.channel-outbound-capabilities/v2"
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "target": {
+      "$ref": "channel-common.v1.schema.json#/$defs/threadRef"
+    },
+    "types": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 7,
+      "items": {
+        "enum": [
+          "text",
+          "image",
+          "audio",
+          "file",
+          "video",
+          "richtext",
+          "card"
+        ]
+      }
+    },
+    "maxMediaBytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 30000000
+    },
+    "richtext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "paragraphs",
+        "mentions"
+      ],
+      "properties": {
+        "paragraphs": {
+          "type": "boolean"
+        },
+        "mentions": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "richtext": {
+            "properties": {
+              "paragraphs": {
+                "const": true
+              }
+            },
+            "required": [
+              "paragraphs"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "richtext"
+        ]
+      },
+      "then": {
+        "properties": {
+          "types": {
+            "contains": {
+              "const": "richtext"
+            },
+            "type": "array"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "richtext": {
+            "properties": {
+              "mentions": {
+                "const": true
+              }
+            },
+            "required": [
+              "mentions"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "richtext"
+        ]
+      },
+      "then": {
+        "properties": {
+          "richtext": {
+            "properties": {
+              "paragraphs": {
+                "const": true
+              }
+            },
+            "type": "object"
+          },
+          "types": {
+            "contains": {
+              "const": "richtext"
+            },
+            "type": "array"
+          }
+        }
+      }
+    }
+  ]
+}

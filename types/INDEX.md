@@ -1,5 +1,7 @@
 # TypeScript declarations
 
+- `channel-outbound/v2`: [inline richtext and verified native mentions](channel-outbound.v2.d.ts); `channel-runtime/v3`: [additive outboundV2 service](channel-runtime.v3.d.ts).
+
 - `channel-outbound/v1`: [outbound descriptors and scoped capabilities](channel-outbound.v1.d.ts).
 - `channel-runtime/v2`: [explicit runtime and adapter successor](channel-runtime.v2.d.ts).
   Both follow [outbound v1](../.agents/docs/channel-runtime/outbound-v1.md), preserving runtime v1.

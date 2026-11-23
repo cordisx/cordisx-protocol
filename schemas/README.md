@@ -1,5 +1,7 @@
 # Schemas
 
+- [Channel message send v2](channel-message-send.v2.schema.json) and [outbound capabilities v2](channel-outbound-capabilities.v2.schema.json): inline paragraphs and explicit native mention support.
+
 Channel outbound v1 uses `channel-media-prepare`, `channel-prepared-media`,
 `channel-message-send`, `channel-message-delivery`, `channel-outbound-capabilities`
 and `channel-send-receipt` v1 schemas. See
