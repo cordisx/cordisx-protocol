@@ -517,6 +517,10 @@ export interface ManagedServiceV1 {
   readCatalog?(): Promise<ManagedServiceCliProxyCatalogResultV1>
   /** Optional CLIProxyAPI account projection, independent of account mutation authority. */
   readAccounts?(): Promise<ManagedServiceCliProxyAccountsResultV1>
+  /** Optional account toggle, independent of OAuth and the full control surface. */
+  toggleAccount?(request: ManagedServiceCliProxyAccountToggleRequestV1): Promise<ManagedServiceCliProxyAccountToggleResultV1>
+  /** Observe owner-confirmed account projections for this binding; dispose with the consumer. */
+  observeAccounts?(observer: (accounts: ManagedServiceCliProxyAccountsV1) => void | Promise<void>): () => void
   /** Optional CLIProxyAPI account-subscription control surface (Host-brokered Management API). */
   accountControl?: ManagedServiceCliProxyAccountControlV1
 }

@@ -71,6 +71,36 @@ may omit the independent read. A returned revision is an opaque equality fence;
 it need not increase between observations. This capability does not prove that
 a Host has synchronized account mutations across clients.
 
+## Independent account toggles and observation
+
+A Host MAY expose `ManagedServiceV1.toggleAccount()` without granting the full
+`accountControl` surface or OAuth authority. The method uses the existing v1
+toggle request and result. The Host MUST bind it to the current service owner,
+require the declared user gesture, check the exact account and expected opaque
+revision, and verify the requested state against a fresh owner readback before
+reporting acceptance. It MUST coordinate all affected service consumers and
+admitted renderers; an unconfirmed change MUST NOT be reported as successful or
+automatically replayed. A Host that cannot establish those conditions omits the
+method. Older Hosts may expose only `accountControl.toggleAccount()`.
+
+A Host MAY expose `observeAccounts(observer)` for the same binding. It returns
+a disposer and delivers validated, owner-confirmed account projections without
+credentials. Consumers retaining an account view SHOULD register an observer
+when available and dispose it with that view. The Host MUST await currently
+registered observers during a coordinated toggle and treat a failed or lost
+acknowledgement as an unconfirmed result. Observations do not grant write
+authority, and a revision is an equality fence rather than a counter.
+
+An owner-side Node UI source MAY supply `prepareAccountToggle(request)` with
+the exact declared service operations, safe request values and invocation
+limits needed for the toggle and its account readback. Preparing a plan MUST
+be side-effect free and MUST NOT invoke the service or include credentials.
+The Host MUST validate and bind the plan to the active plugin and service
+generation, keep it private from renderers, and enforce its exact values and
+limits while other service consumers are reserved. A missing or invalid plan
+does not grant a toggle. This plan does not replace user authorization or the
+owner readback and renderer acknowledgements above.
+
 ## Managed native provider reasoning capabilities
 
 `ManagedNativeProviderRouteV1.reasoningCapabilities` optionally carries the

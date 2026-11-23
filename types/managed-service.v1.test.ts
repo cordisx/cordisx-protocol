@@ -131,9 +131,28 @@ accounts.accounts[0]?.id_token
 if (service.readAccounts) {
   const result = await service.readAccounts()
   if (result.status === 'available') result.accounts.accounts[0]?.accountId
-  // @ts-expect-error account mutation is not a method on the read-only service surface
-  service.toggleAccount
+  // @ts-expect-error a read does not imply that account mutation is available
+  const requiredToggle: NonNullable<typeof service.toggleAccount> = service.toggleAccount
+  void requiredToggle
 }
+
+if (service.observeAccounts) {
+  const dispose = service.observeAccounts(async projection => {
+    projection.binding
+    projection.accounts[0]?.disabled
+  })
+  dispose()
+}
+
+const togglePlan: import('./managed-service-context.v1.js').ManagedServiceNodeUIAccountTogglePlanV1 = {
+  operations: [{ operationId: 'accounts.toggle', value: { account: 'one', disabled: true }, maxInvocations: 1 }],
+}
+void togglePlan
+const unsafeTogglePlan = { operations: [{ operationId: 'toggle', value: () => {}, maxInvocations: 1 }] }
+// @ts-expect-error operation values are safe JSON data, never functions
+const invalidTogglePlan: typeof togglePlan = unsafeTogglePlan
+void unsafeTogglePlan
+void invalidTogglePlan
 
 // CLIProxyAPI account control (optional) is keyed separately from service.auth.
 if (service.accountControl) {
@@ -151,6 +170,7 @@ if (service.accountControl) {
     userGesture: { kind: 'explicit-click', at: gestureAt },
   }
   void ctrl.toggleAccount(toggle)
+  if (service.toggleAccount) void service.toggleAccount(toggle)
   const oauthStart: ManagedServiceCliProxyOAuthStartRequestV1 = {
     $schema:
       'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-cli-proxy-oauth-start.v1.schema.json',
