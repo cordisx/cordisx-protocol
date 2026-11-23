@@ -1,5 +1,7 @@
 # Schemas
 
+- [Forward request v1](channel-forward.v1.schema.json) and [receipt v1](channel-forward-receipt.v1.schema.json): independent bounded forwarding; [normative contract](../.agents/docs/channel-runtime/forward-v1.md).
+
 - [Channel message send v2](channel-message-send.v2.schema.json) and [outbound capabilities v2](channel-outbound-capabilities.v2.schema.json): inline paragraphs and explicit native mention support.
 
 Channel outbound v1 uses `channel-media-prepare`, `channel-prepared-media`,

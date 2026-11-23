@@ -1,5 +1,7 @@
 # Channel runtime protocol
 
+- [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
+
 For inline paragraphs and verified native user mentions, see [outbound v2 and runtime v3](outbound-v2.md).
 
 For standard text/image/audio/file/video/richtext/card outbound descriptors,

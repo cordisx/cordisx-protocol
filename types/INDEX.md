@@ -1,5 +1,7 @@
 # TypeScript declarations
 
+- `channel-forward/v1`: [independent forwarding and receipts](channel-forward.v1.d.ts), governed by [forward v1](../.agents/docs/channel-runtime/forward-v1.md).
+
 - `channel-outbound/v2`: [inline richtext and verified native mentions](channel-outbound.v2.d.ts); `channel-runtime/v3`: [additive outboundV2 service](channel-runtime.v3.d.ts).
 
 - `channel-outbound/v1`: [outbound descriptors and scoped capabilities](channel-outbound.v1.d.ts).
