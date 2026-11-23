@@ -1,0 +1,422 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-send-receipt.v1.schema.json",
+  "title": "CordisX channel-send-receipt v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "schemaVersion",
+        "deliveryId",
+        "idempotencyKey",
+        "requestedType",
+        "effectiveType",
+        "downgraded",
+        "status"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.channel-send-receipt/v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "deliveryId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "requestedType": {
+          "enum": [
+            "text",
+            "image",
+            "audio",
+            "file",
+            "video",
+            "richtext",
+            "card"
+          ]
+        },
+        "effectiveType": {
+          "enum": [
+            "text",
+            "image",
+            "audio",
+            "file",
+            "video",
+            "richtext",
+            "card"
+          ]
+        },
+        "downgraded": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "sending",
+            "retrying",
+            "cancelled"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "schemaVersion",
+        "deliveryId",
+        "idempotencyKey",
+        "requestedType",
+        "effectiveType",
+        "downgraded",
+        "status",
+        "externalMessageId"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.channel-send-receipt/v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "deliveryId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "requestedType": {
+          "enum": [
+            "text",
+            "image",
+            "audio",
+            "file",
+            "video",
+            "richtext",
+            "card"
+          ]
+        },
+        "effectiveType": {
+          "enum": [
+            "text",
+            "image",
+            "audio",
+            "file",
+            "video",
+            "richtext",
+            "card"
+          ]
+        },
+        "downgraded": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "sent"
+          ]
+        },
+        "externalMessageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "recallHandle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "schemaVersion",
+        "deliveryId",
+        "idempotencyKey",
+        "requestedType",
+        "effectiveType",
+        "downgraded",
+        "status",
+        "code"
+      ],
+      "properties": {
+        "contract": {
+          "const": "cordisx.channel-send-receipt/v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "deliveryId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "requestedType": {
+          "enum": [
+            "text",
+            "image",
+            "audio",
+            "file",
+            "video",
+            "richtext",
+            "card"
+          ]
+        },
+        "effectiveType": {
+          "enum": [
+            "text",
+            "image",
+            "audio",
+            "file",
+            "video",
+            "richtext",
+            "card"
+          ]
+        },
+        "downgraded": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "failed",
+            "unknown"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "downgraded": {
+            "const": true
+          }
+        },
+        "required": [
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "text"
+          },
+          "requestedType": {
+            "enum": [
+              "image",
+              "audio",
+              "file",
+              "video",
+              "richtext",
+              "card"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "requestedType": {
+            "const": "text"
+          },
+          "downgraded": {
+            "const": false
+          }
+        },
+        "required": [
+          "requestedType",
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "text"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "requestedType": {
+            "const": "image"
+          },
+          "downgraded": {
+            "const": false
+          }
+        },
+        "required": [
+          "requestedType",
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "image"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "requestedType": {
+            "const": "audio"
+          },
+          "downgraded": {
+            "const": false
+          }
+        },
+        "required": [
+          "requestedType",
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "audio"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "requestedType": {
+            "const": "file"
+          },
+          "downgraded": {
+            "const": false
+          }
+        },
+        "required": [
+          "requestedType",
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "file"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "requestedType": {
+            "const": "video"
+          },
+          "downgraded": {
+            "const": false
+          }
+        },
+        "required": [
+          "requestedType",
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "video"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "requestedType": {
+            "const": "richtext"
+          },
+          "downgraded": {
+            "const": false
+          }
+        },
+        "required": [
+          "requestedType",
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "richtext"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "requestedType": {
+            "const": "card"
+          },
+          "downgraded": {
+            "const": false
+          }
+        },
+        "required": [
+          "requestedType",
+          "downgraded"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "effectiveType": {
+            "const": "card"
+          }
+        }
+      }
+    }
+  ]
+}

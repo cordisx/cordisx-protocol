@@ -1,5 +1,11 @@
 # Schemas
 
+Channel outbound v1 uses `channel-media-prepare`, `channel-prepared-media`,
+`channel-message-send`, `channel-message-delivery`, `channel-outbound-capabilities`
+and `channel-send-receipt` v1 schemas. See
+[outbound v1](../.agents/docs/channel-runtime/outbound-v1.md) for authorization,
+bytes integrity, fallback and live-handle semantics beyond shape validation.
+
 Machine-readable CordisX manifest and protocol schemas belong here.
 
 Use the [specification topics](../.agents/docs/README.md) for normative behavior

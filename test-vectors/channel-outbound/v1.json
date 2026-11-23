@@ -1,0 +1,128 @@
+{
+  "contents": [
+    {
+      "type": "text",
+      "text": "hello"
+    },
+    {
+      "type": "image",
+      "handle": "media:example"
+    },
+    {
+      "type": "audio",
+      "handle": "media:example"
+    },
+    {
+      "type": "file",
+      "handle": "media:example"
+    },
+    {
+      "type": "video",
+      "handle": "media:example"
+    },
+    {
+      "type": "richtext",
+      "blocks": [
+        {
+          "text": "hello",
+          "style": "strong"
+        }
+      ]
+    },
+    {
+      "type": "card",
+      "title": "title",
+      "body": "body"
+    }
+  ],
+  "send": {
+    "contract": "cordisx.channel-message-send/v1",
+    "schemaVersion": 1,
+    "target": {
+      "adapterId": "feishu",
+      "accountId": "app",
+      "tenantId": "tenant",
+      "conversationId": "chat",
+      "kind": "group",
+      "threadId": "thread",
+      "semantics": "topic"
+    },
+    "kind": "reply",
+    "idempotencyKey": "one",
+    "content": {
+      "type": "text",
+      "text": "hello"
+    },
+    "fallback": {
+      "mode": "reject"
+    }
+  },
+  "prepare": {
+    "contract": "cordisx.channel-media-prepare/v1",
+    "schemaVersion": 1,
+    "target": {
+      "adapterId": "feishu",
+      "accountId": "app",
+      "tenantId": "tenant",
+      "conversationId": "chat",
+      "kind": "group",
+      "threadId": "thread",
+      "semantics": "topic"
+    },
+    "type": "file",
+    "input": {
+      "kind": "bytes",
+      "bytesBase64": "YQ==",
+      "sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+      "size": 1,
+      "mediaType": "application/octet-stream",
+      "format": "binary",
+      "filename": "artifact.bin"
+    }
+  },
+  "prepared": {
+    "contract": "cordisx.channel-prepared-media/v1",
+    "schemaVersion": 1,
+    "handle": "media:example",
+    "type": "file",
+    "mediaType": "application/octet-stream",
+    "size": 1,
+    "expiresAt": "2026-11-23T20:00:00Z",
+    "format": "binary",
+    "filename": "artifact.bin",
+    "sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
+  },
+  "capabilities": {
+    "contract": "cordisx.channel-outbound-capabilities/v1",
+    "schemaVersion": 1,
+    "target": {
+      "adapterId": "feishu",
+      "accountId": "app",
+      "tenantId": "tenant",
+      "conversationId": "chat",
+      "kind": "group",
+      "threadId": "thread",
+      "semantics": "topic"
+    },
+    "types": [
+      "text",
+      "image",
+      "audio",
+      "file",
+      "video",
+      "richtext",
+      "card"
+    ],
+    "maxMediaBytes": 30000000
+  },
+  "receipt": {
+    "contract": "cordisx.channel-send-receipt/v1",
+    "schemaVersion": 1,
+    "deliveryId": "delivery",
+    "idempotencyKey": "one",
+    "requestedType": "image",
+    "effectiveType": "image",
+    "downgraded": false,
+    "status": "queued"
+  }
+}
