@@ -8,6 +8,8 @@ export interface ChannelManagerConfigurationPresentationCapabilitiesV1 {
   readonly mode: 'configuration-only'
   /** Optional owner-coordinated enable/disable for an existing resolved connection. */
   readonly connectionControl?: 'enable-disable'
+  /** Optional owner-coordinated reconnect for an enabled resolved connection. */
+  readonly connectionReconnect?: true
 }
 
 /**

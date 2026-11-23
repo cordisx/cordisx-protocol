@@ -11,6 +11,7 @@ const configuration: ChannelManagerConfigurationPresentationV1 | undefined = man
   .forOwnConfigurationPresentationService()
 configuration?.configurationPresentationCapabilities().mode satisfies 'configuration-only' | undefined
 configuration?.configurationPresentationCapabilities().connectionControl satisfies 'enable-disable' | undefined
+configuration?.configurationPresentationCapabilities().connectionReconnect satisfies true | undefined
 const unsupportedControl: ChannelManagerConfigurationPresentationCapabilitiesV1 = {
   contract: 'cordisx.channel-manager-configuration-presentation-capabilities/v1',
   schemaVersion: 1,
@@ -19,6 +20,14 @@ const unsupportedControl: ChannelManagerConfigurationPresentationCapabilitiesV1 
   connectionControl: 'reconnect',
 }
 void unsupportedControl
+const unsupportedReconnect: ChannelManagerConfigurationPresentationCapabilitiesV1 = {
+  contract: 'cordisx.channel-manager-configuration-presentation-capabilities/v1',
+  schemaVersion: 1,
+  mode: 'configuration-only',
+  // @ts-expect-error Reconnect is advertised only as an explicit true capability.
+  connectionReconnect: false,
+}
+void unsupportedReconnect
 configuration?.mountConnectionConfigurationForm('opaque', document.body, { signal: new AbortController().signal })
 // @ts-expect-error An older presentation service cannot request the new facade.
 void older.forOwnConfigurationPresentationService()
