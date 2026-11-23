@@ -1,5 +1,9 @@
 # Test Vectors
 
+Channel outbound v1 fixtures in `channel-outbound/v1.json` cover all standard
+content types and canonical bytes payloads; `conformance/channel-outbound.mjs`
+also derives invalid closed-shape and security reference-model cases.
+
 Channel Provider continuation v1 request vectors live in `channel-provider-continuation/valid` and `invalid`; they require explicit history inheritance and contain no credentials.
 
 Deterministic manifest, package identity, signature, grant, activation, and compatibility vectors belong here.

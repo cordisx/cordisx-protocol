@@ -1,5 +1,9 @@
 # TypeScript declarations
 
+- `channel-outbound/v1`: [outbound descriptors and scoped capabilities](channel-outbound.v1.d.ts).
+- `channel-runtime/v2`: [explicit runtime and adapter successor](channel-runtime.v2.d.ts).
+  Both follow [outbound v1](../.agents/docs/channel-runtime/outbound-v1.md), preserving runtime v1.
+
 This index maps the exact public subpaths in [package.json](../package.json)
 to their declarations and specification topics. Prefix each subpath below with
 `@cordisx/protocol/`. The topic pages own version semantics and successor
