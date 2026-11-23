@@ -156,6 +156,7 @@ export const expectedExports = [
 ].sort()
 
 export const expectedFiles = [
+  'types/channel-forward.v1.d.ts',
   'types/channel-outbound.v1.d.ts',
   'types/channel-outbound.v2.d.ts',
   'types/channel-runtime.v3.d.ts',
