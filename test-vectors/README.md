@@ -1,5 +1,7 @@
 # Test Vectors
 
+- [Channel forward v1](channel-forward/v1.json): bounded single/merge requests and rejected escalation shapes.
+
 - `channel-outbound/v2.json`: ordered native mention plus inline explanation and legacy block examples.
 
 Channel outbound v1 fixtures in `channel-outbound/v1.json` cover all standard
