@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-operation-result.v1.schema.json",
+  "title": "channel-message-operation-result v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "operation"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "operation": {
+          "enum": [
+            "message-edit",
+            "message-recall",
+            "pin-add",
+            "pin-remove",
+            "pin-list",
+            "read-users",
+            "reaction-list",
+            "card-update"
+          ]
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "messageId"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "pin"
+                  },
+                  "messageId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "userId"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "reader"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  },
+                  "readAt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "reactionId",
+                  "emojiType"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "reaction"
+                  },
+                  "reactionId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  },
+                  "emojiType": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  },
+                  "operatorId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  },
+                  "operatorType": {
+                    "enum": [
+                      "app",
+                      "user"
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "^[^\\u0000\\r\\n]+$"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "hasMore": {
+          "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "rejected",
+            "unavailable",
+            "failed",
+            "unknown"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    }
+  ]
+}

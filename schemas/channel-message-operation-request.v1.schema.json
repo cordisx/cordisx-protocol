@@ -1,0 +1,713 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-operation-request.v1.schema.json",
+  "title": "channel-message-operation-request v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "operationId",
+        "messageId",
+        "content"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "message-edit"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "content": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "text"
+              ],
+              "properties": {
+                "type": {
+                  "const": "text"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "pattern": "^[^\\u0000]+$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "blocks"
+              ],
+              "properties": {
+                "type": {
+                  "const": "richtext"
+                },
+                "blocks": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "text",
+                      "style"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "pattern": "^[^\\u0000]+$"
+                      },
+                      "style": {
+                        "enum": [
+                          "plain",
+                          "strong",
+                          "emphasis",
+                          "code"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "operationId",
+        "messageId"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "message-recall"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "operationId",
+        "messageId"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "pin-add"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "operationId",
+        "messageId"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "pin-remove"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "operationId",
+        "messageId",
+        "card"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "card-update"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "card": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "template",
+                "title",
+                "body"
+              ],
+              "properties": {
+                "template": {
+                  "const": "notice"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                "body": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "pattern": "^[^\\u0000]+$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "template",
+                "title",
+                "body",
+                "status"
+              ],
+              "properties": {
+                "template": {
+                  "const": "status"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                "body": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "running",
+                    "completed",
+                    "failed"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "const": "group"
+        },
+        "operation": {
+          "const": "pin-list"
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "pageToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "startTime": {
+          "type": "string",
+          "pattern": "^[0-9]{1,16}$"
+        },
+        "endTime": {
+          "type": "string",
+          "pattern": "^[0-9]{1,16}$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "messageId"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "read-users"
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "pageToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "messageId"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000\\r\\n]+$"
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "reaction-list"
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "pageToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "emojiType": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_]{1,64}$"
+        }
+      }
+    }
+  ]
+}
