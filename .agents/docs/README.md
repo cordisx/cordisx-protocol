@@ -172,3 +172,6 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Channel Manager v14](channel-runtime/manager-v14-continuation.md): continuation defaults form.
 
 - [Logical conversation continuation v1](conversation-continuation/v1.md): cross-provider modes, logical identity, disclosure, scoped source history, and failure fencing.
+
+- [Channel model priority v1](channel-runtime/model-priority-v1.md): ordered, authorized preflight selection for new tasks.
+- [Idle Channel model priority v1](channel-runtime/idle-model-priority-v1.md): explicitly authorized linked migration before an existing conversation dispatches a new input.

@@ -1,6 +1,7 @@
 # Channel runtime protocol
 
 - [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
+- [Idle model priority v1](idle-model-priority-v1.md): explicitly authorized linked migration before a new input is dispatched.
 
 For inline paragraphs and verified native user mentions, see [outbound v2 and runtime v3](outbound-v2.md).
 
