@@ -381,3 +381,5 @@ It also checks the versioned Provider continuation request/result shapes and exp
 Group idle priority: authority, exact scope and evidence checks passed. checks group admission and probe evidence; it does not prove Host adoption.
 
 Group idle priority v2: admin rule, sender dispatch and explicit denials passed. checks group-scoped use and explicit denials; it does not prove Host adoption.
+
+Group linked priority: provenance and confirmed-delivery scope passed. checks group provenance and confirmed-delivery filtering; it does not prove Host adoption.
