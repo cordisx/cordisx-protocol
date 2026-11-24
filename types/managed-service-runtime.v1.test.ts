@@ -32,8 +32,12 @@ const reasoningRoute: import('./managed-service-runtime.v1.js').ManagedNativePro
   alias: 'model',
   gatewayModelId: 'model-id',
   reasoningCapabilities: { efforts: ['low', 'high'], defaultEffort: 'high' },
+  contextWindow: 65_536,
 }
 void reasoningRoute
+if (registration.nativeProviderCapabilities?.contextWindow === true) {
+  registration.nativeProviderCapabilities.contextWindow satisfies true
+}
 // @ts-expect-error undeclared reasoning levels are not a capability
 const unknownEffort: import('./managed-service-runtime.v1.js').ModelReasoningEffortV1 = 'extreme'
 void unknownEffort

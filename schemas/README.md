@@ -1,5 +1,9 @@
 # Schemas
 
+- [Forward request v1](channel-forward.v1.schema.json) and [receipt v1](channel-forward-receipt.v1.schema.json): independent bounded forwarding; [normative contract](../.agents/docs/channel-runtime/forward-v1.md).
+
+- [Channel message send v2](channel-message-send.v2.schema.json) and [outbound capabilities v2](channel-outbound-capabilities.v2.schema.json): inline paragraphs and explicit native mention support.
+
 Channel outbound v1 uses `channel-media-prepare`, `channel-prepared-media`,
 `channel-message-send`, `channel-message-delivery`, `channel-outbound-capabilities`
 and `channel-send-receipt` v1 schemas. See
@@ -686,7 +690,7 @@ Host-private.
 
 - [Durable work settlement v1](local-work-settlement.v1.schema.json): closed Host-signed admitted snapshot; independent of leased local wallet work.
 
-- `managed-native-provider-catalog.v1.schema.json`: closed native route catalogs with optional discovered reasoning efforts; membership, canonical ordering and digest semantics belong to the managed-service contract.
+- `managed-native-provider-catalog.v1.schema.json`: closed native route catalogs with optional discovered reasoning efforts and context windows; membership, canonical ordering, capability negotiation and digest semantics belong to the managed-service contract.
 
 ## Progressive startup
 
@@ -743,7 +747,12 @@ Channel Provider continuation requests and results use `channel-provider-continu
 
 - [Channel remote history request v1](channel-remote-history-request.v1.schema.json) and [result v1](channel-remote-history-result.v1.schema.json): bounded one-page requests; see [remote history](../.agents/docs/channel-runtime/remote-history-v1.md).
 - [Channel message read request v1](channel-message-read-request.v1.schema.json) and [result v1](channel-message-read-result.v1.schema.json): source-scoped reply-chain lookup; see [message read](../.agents/docs/channel-runtime/message-read-v1.md).
+- Channel message operations v1: [request](channel-message-operation-request.v1.schema.json), [result](channel-message-operation-result.v1.schema.json), [capabilities](channel-message-operation-capabilities.v1.schema.json); see [scoped operations](../.agents/docs/channel-runtime/message-operations-v1.md).
 
 The [Channel configuration v3](channel-service-config.v3.schema.json) adds pending tenant identity; see its [compatibility guide](../.agents/docs/channel-runtime/config-v3.md).
 
 Logical conversation continuation v1 uses the `conversation-continuation-request.v1`, `conversation-continuation-result.v1`, `conversation-continuation-relation.v1`, `continuation-history-request.v1`, `continuation-history-page.v1`, and `conversation-continuation-preference.v1` schemas. See [the contract](../.agents/docs/conversation-continuation/v1.md).
+
+Channel model priority v1: `channel-model-priority.v1.schema.json`; see [model priority](../.agents/docs/channel-runtime/model-priority-v1.md).
+
+Channel failure notices v1: `channel-failure-notices.v1.schema.json`; see [model priority](../.agents/docs/channel-runtime/model-priority-v1.md).

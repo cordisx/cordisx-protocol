@@ -1,5 +1,9 @@
 # Conformance
 
+- `node conformance/channel-forward.mjs` checks independent forward request/receipt schemas and vectors; it does not establish live Host/platform adoption.
+
+- `node conformance/channel-outbound-v2.mjs`: frozen v1 rejection, v2 paragraph/mention shapes, capability negotiation and scoped sender-evidence model.
+
 `node conformance/channel-outbound.mjs` checks the six outbound v1 schemas,
 seven content types, bounded bytes preparation, scoped capability reference
 model, fallback, idempotency, receipt truthfulness and frozen runtime v1.
@@ -323,7 +327,7 @@ behavior require Host evidence.
 
 - `node conformance/local-work-settlement.mjs` checks durable payload version isolation, signatures and exact receipt pins.
 
-`managed-native-provider.mjs` (also run by managed-service conformance) checks closed route capabilities, default membership, canonical ordering, legacy digest compatibility and capability-sensitive digests.
+`managed-native-provider.mjs` (also run by managed-service conformance) checks closed route capabilities, default membership, canonical ordering, safe window values, legacy digest compatibility and capability-sensitive digests.
 
 Startup v1: `node conformance/startup.mjs` checks declaration graph rejection,
 frozen-version downgrade, target-only waits, independent readiness/actions,
@@ -367,3 +371,15 @@ rejection, concrete permission scopes and the separately digested v16 package.
 It also checks the versioned Provider continuation request/result shapes and explicit history-transfer contract.
 
 - `agent-context.mjs`: current occupancy threshold and epoch vectors, exports and specification coverage.
+
+`node conformance/channel-model-priority.mjs` checks the bounded configuration shape; it does not prove Host adoption.
+
+`node conformance/channel-idle-priority.mjs` checks the idle migration admission and uncertain-effect reference cases; it does not prove Host adoption.
+
+`node conformance/channel-idle-priority-v2.mjs` checks ordered selection among disclosed candidates with current consent; it does not prove Host adoption.
+
+Group idle priority: authority, exact scope and evidence checks passed. checks group admission and probe evidence; it does not prove Host adoption.
+
+Group idle priority v2: admin rule, sender dispatch and explicit denials passed. checks group-scoped use and explicit denials; it does not prove Host adoption.
+
+Group linked priority: provenance and confirmed-delivery scope passed. checks group provenance and confirmed-delivery filtering; it does not prove Host adoption.

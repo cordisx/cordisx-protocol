@@ -1,0 +1,13 @@
+{
+  "content": {
+    "type": "richtext",
+    "blocks": [
+      { "type": "paragraph", "nodes": [
+        { "type": "mention", "userId": "ou_verified" },
+        { "type": "text", "text": " please review", "style": "plain" }
+      ] },
+      { "text": "Separate legacy line", "style": "strong" }
+    ]
+  },
+  "richtext": { "paragraphs": true, "mentions": true }
+}

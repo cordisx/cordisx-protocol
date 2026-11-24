@@ -1,5 +1,9 @@
 # TypeScript declarations
 
+- `channel-forward/v1`: [independent forwarding and receipts](channel-forward.v1.d.ts), governed by [forward v1](../.agents/docs/channel-runtime/forward-v1.md).
+
+- `channel-outbound/v2`: [inline richtext and verified native mentions](channel-outbound.v2.d.ts); `channel-runtime/v3`: [additive outboundV2 service](channel-runtime.v3.d.ts).
+
 - `channel-outbound/v1`: [outbound descriptors and scoped capabilities](channel-outbound.v1.d.ts).
 - `channel-runtime/v2`: [explicit runtime and adapter successor](channel-runtime.v2.d.ts).
   Both follow [outbound v1](../.agents/docs/channel-runtime/outbound-v1.md), preserving runtime v1.
@@ -186,7 +190,7 @@ the specification and [schema index](../schemas/README.md).
 
 - `wallet-pool/v1`: [types](wallet-pool.v1.d.ts), [specification](../.agents/docs/wallet-pool/v1.md).
 
-`managed-service-runtime/v1` also declares optional `ModelReasoningCapabilitiesV1` on managed native routes; see [Managed Service](../.agents/docs/managed-service/README.md).
+`managed-service-runtime/v1` also declares optional reasoning capabilities and context windows on managed native routes, with Host capability negotiation; see [Managed Service](../.agents/docs/managed-service/README.md).
 
 ## Progressive startup
 
@@ -244,6 +248,7 @@ and explicitly select identity-bearing snapshots.
 
 - [Channel remote history v1](channel-remote-history.v1.d.ts): [bounded remote history and source identity](../.agents/docs/channel-runtime/remote-history-v1.md).
 - [Channel message read v1](channel-message-read.v1.d.ts): [source-scoped reply-chain lookup](../.agents/docs/channel-runtime/message-read-v1.md).
+- [Channel message operations v1](channel-message-operations.v1.d.ts): [scoped mutation, pagination and discovery](../.agents/docs/channel-runtime/message-operations-v1.md).
 
 - [Channel Manager v13](channel-manager.v13.d.ts): [independent Channel creation defaults inherited from general profile defaults](../.agents/docs/channel-runtime/manager-v13-creation-defaults.md).
 
@@ -254,3 +259,5 @@ and explicitly select identity-bearing snapshots.
 - [Channel Manager v16](channel-manager.v16.d.ts): [explicit configuration-only presentation](../.agents/docs/channel-runtime/manager-v16-configuration-presentation.md).
 
 - [Logical conversation continuation v1](conversation-continuation.v1.d.ts): [cross-provider modes and scoped history](../.agents/docs/conversation-continuation/v1.md).
+
+- [Channel model priority v1](channel-model-priority.v1.d.ts): [ordered task creation policy](../.agents/docs/channel-runtime/model-priority-v1.md).

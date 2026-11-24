@@ -89,6 +89,9 @@ import type { ConversationContinuationRequestV1 } from '@cordisx/protocol/conver
 declare const logicalContinuation: ConversationContinuationRequestV1
 logicalContinuation.mode satisfies 'linked' | 'fork' | 'fresh'
 import type { ChannelMessageReadRequestV1 } from '@cordisx/protocol/channel-message-read/v1'
+import type { ChannelMessageOperationsV1 } from '@cordisx/protocol/channel-message-operations/v1'
+declare const messageOperations: ChannelMessageOperationsV1
+void messageOperations
 declare const messageRead: ChannelMessageReadRequestV1
 messageRead.messageId satisfies string
 import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'

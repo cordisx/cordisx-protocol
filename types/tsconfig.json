@@ -8,6 +8,10 @@
     "skipLibCheck": true
   },
   "files": [
+    "channel-forward.v1.d.ts",
+    "channel-forward.v1.test.ts",
+    "channel-message-operations.v1.d.ts",
+    "channel-message-operations.v1.test.ts",
     "model-providers.v1.d.ts",
     "model-providers.v1.test.ts",
     "visuals.v1.d.ts",
@@ -224,6 +228,8 @@
     "channel-manager.v11.d.ts",
     "channel-manager.v11.test.ts",
     "channel-manager.v12.d.ts",
+    "channel-model-priority.v1.d.ts",
+    "channel-model-priority.v1.test.ts",
     "channel-task-settings.v1.d.ts",
     "channel-task-settings.v1.test.ts",
     "channel-remote-history.v1.d.ts",
@@ -240,6 +246,9 @@
     "conversation-continuation.v1.test.ts",
     "channel-outbound.v1.d.ts",
     "channel-runtime.v2.d.ts",
-    "channel-outbound.v1.test.ts"
+    "channel-outbound.v1.test.ts",
+    "channel-outbound.v2.d.ts",
+    "channel-runtime.v3.d.ts",
+    "channel-outbound.v2.test.ts"
   ]
 }
