@@ -73,7 +73,7 @@ independently tested.
 ## Managed native provider context windows
 
 `ManagedNativeProviderRouteV1.contextWindow` optionally declares the number of
-tokens in the route's discovered context window. It MUST be a positive safe
+tokens in the route's discovered context window or a user-configured limit. It MUST be a positive safe
 integer, at most `9007199254740991`. Omission means unknown, never 128000 or
 any other implicit limit. An invalid or ambiguous discovery value MUST NOT be
 published as known. When a route can select from multiple eligible upstreams under
@@ -146,7 +146,7 @@ before appending the fixed suffix; encoded or alternate paths MUST NOT bypass
 the gateway's scope check. A scope revision is not a bearer token and MUST NOT
 replace the existing gateway authentication.
 
-The gateway MUST apply the same scope check to every HTTP request and each
+The gateway MUST apply the same scope check to every scoped model API HTTP request and each
 WebSocket `response.create`, including compaction, streaming, response and
 item listing, read, deletion, cancellation, and references such as
 `previous_response_id` and `item_reference`. Stored responses and asynchronous
@@ -189,6 +189,8 @@ The provider MUST NOT supply a URL or arbitrary request headers. The Host MUST
 bound response size and duration, reject redirects, and compare the service
 generation and scope before and after reading. It MUST NOT treat unverified
 metadata, model instructions or inferred capabilities as native evidence. An
+explicit user-configured window may be used as a conservative configuration
+limit, but MUST NOT be represented as a verified upstream capability. An
 absent signal or declaration leaves the previous catalog behavior unchanged.
 
 ## Opted-in progressive startup

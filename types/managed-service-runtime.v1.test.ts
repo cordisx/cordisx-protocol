@@ -44,7 +44,7 @@ if (registration.nativeProviderCapabilities?.credentialScopeLease === true) {
     providerId: 'example',
     compositionOrigin: 'api',
     catalog: { generation: 'one', digest: `sha256:${'0'.repeat(64)}`, defaultAlias: 'model', routes: [reasoningRoute] },
-    credentialScope: { revision: `scope_${'a'.repeat(43)}`, requestBinding: 'path-v1' },
+    credentialScope: { revision: `scope_${'a'.repeat(42)}A`, requestBinding: 'path-v1' },
   })
 }
 if (registration.nativeProviderCapabilities?.scopedNativeCatalog === true) {
