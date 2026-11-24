@@ -176,3 +176,6 @@ contract availability here does not establish deployment or consumer acceptance.
 - [Channel model priority v1](channel-runtime/model-priority-v1.md): ordered, authorized preflight selection for new tasks.
 - [Idle Channel model priority v1](channel-runtime/idle-model-priority-v1.md): explicitly authorized linked migration before an existing conversation dispatches a new input.
 - [Idle Channel model priority v2](channel-runtime/idle-model-priority-v2.md): explicitly disclosed ordered candidates for one idle linked migration.
+- [Group Channel idle model priority v1](channel-runtime/group-idle-priority-v1.md): group-admin rules for same-provider idle selection.
+- [Group Channel idle model priority v2](channel-runtime/group-idle-priority-v2.md): administrator-granted group model use with explicit deny protection.
+- [Group-scoped linked priority v1](channel-runtime/group-linked-priority-v1.md): bounded group provenance for cross-provider continuation.
