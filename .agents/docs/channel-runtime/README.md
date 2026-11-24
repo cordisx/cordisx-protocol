@@ -1,5 +1,7 @@
 # Channel runtime protocol
 
+- [Turn wait notice v1](turn-wait-v1.md): bounded, non-replaying observation and notification.
+
 - [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
 - [Idle model priority v1](idle-model-priority-v1.md): explicitly authorized linked migration before a new input is dispatched.
 

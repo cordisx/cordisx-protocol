@@ -1,0 +1,9 @@
+# Channel turn wait notice v1
+
+A local profile may opt into a bounded, revisioned notice policy for a running Channel turn whose first response has not been observed within a configured interval. The default is disabled. Only the local user may change the whole policy using its current revision. The timeout is between 30 seconds and 24 hours.
+
+The Host may notify only after a bounded read of the exact current turn confirms it is still running and exposes a complete current item view containing the incoming user item with no observed assistant, reasoning, tool, hook or other activity. Missing timestamps, unavailable or incomplete reads, mismatched turns and unknown item types do not authorize a notice. A known tool execution, approval or wait is activity, not evidence of model failure. A current item view may omit in-flight or unrecorded activity, so the notice states only that no response was observed at the last check; it never claims the provider failed or that no effects occurred.
+
+The notice uses fixed, non-sensitive text, the original authorized account and conversation, current dispatch and send permissions, and a stable per-job, per-turn delivery identity. It is independent of automatic final replies. A denied, failed or uncertain delivery is not blindly repeated. Source state, binding, authorization and policy revision are checked again before reservation and delivery. Groups receive no new history or model-access grant through this policy.
+
+This is an observation and notification capability, not interruption, model selection, history authorization or replay authority. A silent interval, an absent item, or a terminal result does not establish that side effects did not happen. The Host must not automatically restart the input or change a running task's model on this evidence. Older Hosts that do not support the policy retain their existing behavior and must not claim that this notice or automatic failover is active.

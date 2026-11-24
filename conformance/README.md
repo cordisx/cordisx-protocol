@@ -375,3 +375,5 @@ It also checks the versioned Provider continuation request/result shapes and exp
 `node conformance/channel-model-priority.mjs` checks the bounded configuration shape; it does not prove Host adoption.
 
 `node conformance/channel-idle-priority.mjs` checks the idle migration admission and uncertain-effect reference cases; it does not prove Host adoption.
+
+`node conformance/channel-turn-wait.mjs` validates the bounded policy shape; it does not prove Host adoption.

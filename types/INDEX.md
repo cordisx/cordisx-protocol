@@ -259,3 +259,5 @@ and explicitly select identity-bearing snapshots.
 - [Logical conversation continuation v1](conversation-continuation.v1.d.ts): [cross-provider modes and scoped history](../.agents/docs/conversation-continuation/v1.md).
 
 - [Channel model priority v1](channel-model-priority.v1.d.ts): [ordered task creation policy](../.agents/docs/channel-runtime/model-priority-v1.md).
+
+- [Channel turn wait notice v1](channel-turn-wait.v1.d.ts): [opt-in wait notice policy](../.agents/docs/channel-runtime/turn-wait-v1.md).

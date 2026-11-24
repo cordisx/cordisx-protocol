@@ -756,3 +756,5 @@ Logical conversation continuation v1 uses the `conversation-continuation-request
 Channel model priority v1: `channel-model-priority.v1.schema.json`; see [model priority](../.agents/docs/channel-runtime/model-priority-v1.md).
 
 Channel failure notices v1: `channel-failure-notices.v1.schema.json`; see [model priority](../.agents/docs/channel-runtime/model-priority-v1.md).
+
+Channel turn wait notice v1: `channel-turn-wait.v1.schema.json`; see [turn wait policy](../.agents/docs/channel-runtime/turn-wait-v1.md).

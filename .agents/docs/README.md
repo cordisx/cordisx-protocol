@@ -175,3 +175,5 @@ contract availability here does not establish deployment or consumer acceptance.
 
 - [Channel model priority v1](channel-runtime/model-priority-v1.md): ordered, authorized preflight selection for new tasks.
 - [Idle Channel model priority v1](channel-runtime/idle-model-priority-v1.md): explicitly authorized linked migration before an existing conversation dispatches a new input.
+
+- [Channel turn wait notice v1](channel-runtime/turn-wait-v1.md): opt-in, bounded and non-replaying wait notices.
