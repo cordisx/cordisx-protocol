@@ -327,7 +327,7 @@ behavior require Host evidence.
 
 - `node conformance/local-work-settlement.mjs` checks durable payload version isolation, signatures and exact receipt pins.
 
-`managed-native-provider.mjs` (also run by managed-service conformance) checks closed route capabilities, default membership, canonical ordering, legacy digest compatibility and capability-sensitive digests.
+`managed-native-provider.mjs` (also run by managed-service conformance) checks closed route capabilities, default membership, canonical ordering, safe window values, legacy digest compatibility and capability-sensitive digests.
 
 Startup v1: `node conformance/startup.mjs` checks declaration graph rejection,
 frozen-version downgrade, target-only waits, independent readiness/actions,

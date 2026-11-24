@@ -27,6 +27,10 @@ function digest(catalog) {
         ...(reasoning.defaultEffort === undefined ? {} : { defaultEffort: reasoning.defaultEffort }),
       })
     }
+    if (route.contextWindow !== undefined) {
+      if (reasoning === undefined) tuple.push(null)
+      tuple.push(route.contextWindow)
+    }
     return tuple
   })
   return `sha256:${
@@ -57,6 +61,8 @@ function valid(catalog) {
 
 for (const vector of vectors) assert.equal(valid(vector), true)
 assert.notEqual(vectors[0].digest, vectors[1].digest)
+assert.notEqual(vectors[0].digest, vectors[2].digest)
+assert.notEqual(vectors[1].digest, vectors[3].digest)
 for (
   const capability of [
     { efforts: [] },
@@ -75,4 +81,23 @@ for (
 const changed = structuredClone(vectors[1])
 changed.routes[0].reasoningCapabilities.defaultEffort = 'low'
 assert.equal(valid(changed), false)
-console.log('Managed native provider catalog: legacy and reasoning-aware digest/capability conformance passed')
+for (const window of [0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1, null, '128000']) {
+  const candidate = structuredClone(vectors[2])
+  candidate.routes[0].contextWindow = window
+  candidate.digest = digest(candidate)
+  assert.equal(valid(candidate), false)
+}
+const staleWindow = structuredClone(vectors[2])
+staleWindow.routes[0].contextWindow = 65_536
+assert.equal(valid(staleWindow), false)
+const unknownWindow = structuredClone(vectors[2])
+delete unknownWindow.routes[0].contextWindow
+unknownWindow.digest = digest(unknownWindow)
+assert.equal(valid(unknownWindow), true)
+assert.equal(unknownWindow.digest, vectors[0].digest)
+const legacySchema = structuredClone(schema)
+delete legacySchema.properties.routes.items.properties.contextWindow
+const legacyValidate = new Ajv2020({ strict: true, allErrors: true }).compile(legacySchema)
+assert.equal(legacyValidate(vectors[0]), true)
+assert.equal(legacyValidate(vectors[2]), false)
+console.log('Managed native provider catalog: legacy, reasoning and context-window conformance passed')

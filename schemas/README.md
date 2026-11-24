@@ -690,7 +690,7 @@ Host-private.
 
 - [Durable work settlement v1](local-work-settlement.v1.schema.json): closed Host-signed admitted snapshot; independent of leased local wallet work.
 
-- `managed-native-provider-catalog.v1.schema.json`: closed native route catalogs with optional discovered reasoning efforts; membership, canonical ordering and digest semantics belong to the managed-service contract.
+- `managed-native-provider-catalog.v1.schema.json`: closed native route catalogs with optional discovered reasoning efforts and context windows; membership, canonical ordering, capability negotiation and digest semantics belong to the managed-service contract.
 
 ## Progressive startup
 
