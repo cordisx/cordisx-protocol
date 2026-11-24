@@ -27,5 +27,36 @@
         }
       }
     ]
+  },
+  {
+    "generation": "generation-1",
+    "digest": "sha256:8d96978f9f7d1c5b6cfe608abc66017f6fac8ac535882bd5bebd47c7c6610390",
+    "defaultAlias": "model",
+    "routes": [
+      {
+        "alias": "model",
+        "gatewayModelId": "model-id",
+        "contextWindow": 32768
+      }
+    ]
+  },
+  {
+    "generation": "generation-1",
+    "digest": "sha256:38dcb31fe169842174f5ad491c8ab0a717c8beb4638df8f4604ac69a5966ab84",
+    "defaultAlias": "model",
+    "routes": [
+      {
+        "alias": "model",
+        "gatewayModelId": "model-id",
+        "reasoningCapabilities": {
+          "efforts": [
+            "low",
+            "high"
+          ],
+          "defaultEffort": "high"
+        },
+        "contextWindow": 32768
+      }
+    ]
   }
 ]

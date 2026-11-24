@@ -115,16 +115,51 @@ output alone. An explicit single effort describes a fixed choice.
 Hosts MUST validate the capability before publication and retain it with the
 route through safe model-catalog projection. This display metadata grants no
 endpoint, credential, authentication, process, or request authority.
+When a route can select from multiple upstreams, a provider MUST declare efforts only
+when it can determine the exact supported efforts for every eligible upstream,
+and then only their intersection. It MUST NOT infer a default from an ordered
+list or from a generic provider default. An unavailable, ambiguous, malformed,
+or empty intersection is treated as unknown and MUST be omitted. These declarations
+come from discovery and do not constitute evidence that each upstream has been
+independently tested.
+
+## Managed native provider context windows
+
+`ManagedNativeProviderRouteV1.contextWindow` optionally declares the number of
+tokens in the route's discovered context window. It MUST be a positive safe
+integer, at most `9007199254740991`. Omission means unknown, never 128000 or
+any other implicit limit. An invalid or ambiguous discovery value MUST NOT be
+published as known. When a route can select from multiple eligible upstreams under
+the same credential scope, the provider MAY publish their minimum only when
+every candidate has a valid known window; otherwise it MUST omit the value.
+This limit is a source declaration, not a guarantee that the upstream has been
+tested. Hosts MUST preserve the unknown state and MUST NOT present a fallback
+as a discovered or verified route limit. A Host unable to express unknown to
+its native catalog MUST expose that limitation instead of assigning a guessed
+limit as if it were known.
+
+The optional registration handle property
+`nativeProviderCapabilities.contextWindow` serves as the Host's positive capability
+signal. It is available on both the result of `managedServices.register()` and
+the registration passed to progressive startup preparation. A provider MUST
+send `contextWindow` only if that property is exactly `true`; absence means the
+Host might reject the closed catalog route shape. When unavailable, the provider
+may publish a legacy route without the field, but the route's window remains
+unknown to the Host. Neither the signal nor the metadata grants any new
+endpoint, authentication or execution authority.
 
 Catalog digests are SHA-256 over UTF-8 JSON without whitespace of
 `[generation, defaultAlias, canonicalRoutes]`. Routes sort by UTF-8 byte order
 of JSON `[alias, gatewayModelId]`. Each canonical route is
-`[alias, gatewayModelId]` when capability metadata is omitted, preserving the
-existing digest, or `[alias, gatewayModelId, reasoningCapabilities]` otherwise.
-The capability object writes `efforts` first and optional `defaultEffort` second.
-Changing capability metadata therefore changes the catalog digest.
+`[alias, gatewayModelId]` when both metadata fields are omitted, preserving the
+existing digest. With reasoning metadata but no window it is
+`[alias, gatewayModelId, reasoningCapabilities]`; with a window it is
+`[alias, gatewayModelId, reasoningCapabilitiesOrNull, contextWindow]`, where
+`null` is used only as a tuple placeholder when reasoning metadata is absent.
+The reasoning object writes `efforts` first and optional `defaultEffort` second.
+Changing either metadata field therefore changes the catalog digest.
 [Digest vectors](../../../test-vectors/managed-native-provider-catalog.v1.json)
-cover both forms.
+cover the legacy and metadata forms.
 
 This additive field retains existing catalogs. Older Hosts may reject routes
 containing the new field; consumers requiring reasoning choices MUST use an
