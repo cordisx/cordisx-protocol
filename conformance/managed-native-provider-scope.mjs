@@ -21,4 +21,25 @@ for (
     { ...valid, endpoint: 'https://example.invalid' },
   ]
 ) assert.equal(validate(invalid), false)
+
+// Reference behavior only; real gateways must enforce this at their atomic boundary.
+const old = valid.revision
+const next = `scope_${'B'.repeat(42)}A`
+let active = old
+const owners = new Map()
+const retired = new Set()
+const admit = (scope, authenticated, reference) =>
+  authenticated && scope === active
+  && (reference === undefined || owners.get(reference) === scope)
+assert.equal(admit(old, false), false)
+assert.equal(admit(old, true), true)
+owners.set('response-old', old)
+retired.add(old)
+active = next
+assert.equal(admit(old, true), false)
+assert.equal(admit(next, true, 'response-old'), false)
+assert.equal(admit(next, true, 'unknown-response'), false)
+owners.set('late-old-result', old)
+assert.equal(admit(next, true, 'late-old-result'), false)
+assert.equal(retired.has(old), true)
 console.log('Managed native provider credential scope conformance passed')

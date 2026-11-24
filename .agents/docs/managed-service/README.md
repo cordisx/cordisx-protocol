@@ -141,6 +141,27 @@ gateway authentication still applies. Before forwarding each model request,
 the gateway MUST verify that its revision is still active and that the model
 resolves within that exact immutable scope. It MUST reject a stale or unknown
 revision without forwarding. In-flight requests retain their admitted scope.
+The Host removes at most one trailing slash from the declared origin path
+before appending the fixed suffix; encoded or alternate paths MUST NOT bypass
+the gateway's scope check. A scope revision is not a bearer token and MUST NOT
+replace the existing gateway authentication.
+
+The gateway MUST apply the same scope check to every HTTP request and each
+WebSocket `response.create`, including compaction, streaming, response and
+item listing, read, deletion, cancellation, and references such as
+`previous_response_id` and `item_reference`. Stored responses and asynchronous
+completion receipts MUST retain their admitted scope; unknown or legacy
+ownership MUST NOT be treated as belonging to the current scope. A late
+completion from a retired scope MUST NOT enter its replacement scope.
+
+Authorization, route and candidate resolution, and admission MUST have a
+defined atomic ordering against scope revocation. A request admitted before
+revocation may finish only against its fixed admitted scope; a request not yet
+admitted MUST fail after revocation. Changes to any credential, permission,
+short-name mapping, or pool membership MUST retire the old revision before the
+new configuration can be used. The gateway MUST NOT fall back to an unscoped
+path. A provider MUST omit the declaration when it cannot prove this ordering
+across all writers and processes or cannot observe a relevant external change.
 The Host MUST bind the scope to its verified profile, plugin source, service,
 provider and catalog; it MUST preserve generation fences for live connections.
 It may resume a conversation after restart only when the new active scope and
