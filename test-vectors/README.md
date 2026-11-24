@@ -300,7 +300,7 @@ Local wallet signed payload vectors: [local-wallet.v1.json](local-wallet.v1.json
 
 - `local-work-settlement.v1.json` covers the closed durable signed snapshot and forbidden caller fields.
 
-`managed-native-provider-catalog.v1.json` contains legacy and reasoning-aware route digest vectors.
+`managed-native-provider-catalog.v1.json` contains legacy, reasoning-aware and context-window route digest vectors.
 
 [Startup v1](startup.v1.json) contains a multiple-provider/non-provider manifest,
 pre-binding authentication-required snapshot and fenced Node milestone report.

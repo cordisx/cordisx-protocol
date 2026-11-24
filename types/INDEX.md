@@ -190,7 +190,7 @@ the specification and [schema index](../schemas/README.md).
 
 - `wallet-pool/v1`: [types](wallet-pool.v1.d.ts), [specification](../.agents/docs/wallet-pool/v1.md).
 
-`managed-service-runtime/v1` also declares optional `ModelReasoningCapabilitiesV1` on managed native routes; see [Managed Service](../.agents/docs/managed-service/README.md).
+`managed-service-runtime/v1` also declares optional reasoning capabilities and context windows on managed native routes, with Host capability negotiation; see [Managed Service](../.agents/docs/managed-service/README.md).
 
 ## Progressive startup
 

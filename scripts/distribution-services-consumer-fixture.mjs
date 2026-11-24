@@ -1,6 +1,10 @@
 /* Service/account boundary fixture consumed by the installed-package gate. */
 export const distributionServicesConsumerFixture =
   `import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
+import type { ManagedNativeProviderRouteV1, ManagedServiceRegistrationHandleV1 } from '@cordisx/protocol/managed-service-runtime/v1'
+declare const managedRegistration: ManagedServiceRegistrationHandleV1
+const managedRoute: ManagedNativeProviderRouteV1 = { alias: 'example', gatewayModelId: 'example', ...(managedRegistration.nativeProviderCapabilities?.contextWindow === true ? { contextWindow: 65536 } : {}) }
+void managedRoute
 import type { WalletPoolV1 } from '@cordisx/protocol/wallet-pool/v1'
 declare const walletPool: WalletPoolV1
 walletPool.reserve({source:{serviceOrigin:'https://game.example',serverId:'game',servicePublicKey:'public'},terms:'{}',requestId:'pool:1',deadline:1})

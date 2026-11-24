@@ -269,6 +269,8 @@ export interface ManagedNativeProviderRouteV1 {
   readonly gatewayModelId: string
   /** Exact route capabilities declared by discovery; omission means unknown. */
   readonly reasoningCapabilities?: ModelReasoningCapabilitiesV1
+  /** Discovered context-window token limit; omission means unknown, not a default. */
+  readonly contextWindow?: number
 }
 
 export interface ManagedNativeProviderCatalogV1 {
@@ -336,6 +338,8 @@ export type ManagedNativeProviderPublicationResultV1 =
 export interface ManagedServiceRegistrationHandleV1 {
   readonly binding: ManagedServiceBindingV1
   readonly revision: `sha256:${string}`
+  /** Host accepts and preserves the optional managed-route context window. */
+  readonly nativeProviderCapabilities?: { readonly contextWindow: true }
   inspect(): Promise<ManagedServiceProjectionV1>
   authenticate(
     action: 'login' | 'logout' | 'refresh',
