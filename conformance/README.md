@@ -373,3 +373,5 @@ It also checks the versioned Provider continuation request/result shapes and exp
 - `agent-context.mjs`: current occupancy threshold and epoch vectors, exports and specification coverage.
 
 `node conformance/channel-model-priority.mjs` checks the bounded configuration shape; it does not prove Host adoption.
+
+`node conformance/channel-idle-priority.mjs` checks the idle migration admission and uncertain-effect reference cases; it does not prove Host adoption.
