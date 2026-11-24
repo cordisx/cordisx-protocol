@@ -752,3 +752,7 @@ Channel Provider continuation requests and results use `channel-provider-continu
 The [Channel configuration v3](channel-service-config.v3.schema.json) adds pending tenant identity; see its [compatibility guide](../.agents/docs/channel-runtime/config-v3.md).
 
 Logical conversation continuation v1 uses the `conversation-continuation-request.v1`, `conversation-continuation-result.v1`, `conversation-continuation-relation.v1`, `continuation-history-request.v1`, `continuation-history-page.v1`, and `conversation-continuation-preference.v1` schemas. See [the contract](../.agents/docs/conversation-continuation/v1.md).
+
+Channel model priority v1: `channel-model-priority.v1.schema.json`; see [model priority](../.agents/docs/channel-runtime/model-priority-v1.md).
+
+Channel failure notices v1: `channel-failure-notices.v1.schema.json`; see [model priority](../.agents/docs/channel-runtime/model-priority-v1.md).

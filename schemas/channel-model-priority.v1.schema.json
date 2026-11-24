@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-model-priority.v1.schema.json",
+  "title": "Channel model priority v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["revision", "candidates"],
+  "properties": {
+    "revision": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+    "candidates": {
+      "type": "array", "maxItems": 8, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["providerId", "model"],
+        "properties": {
+          "providerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+          "model": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      }
+    }
+  }
+}
