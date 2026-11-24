@@ -151,6 +151,25 @@ This is a cooperative contract with the admitted plugin and gateway, not a
 proof against malicious trusted code. Declaration does not grant additional
 credential access or authorize model, account or history sharing.
 
+## Scoped native model catalog
+
+When both `nativeProviderCapabilities.credentialScopeLease` and
+`nativeProviderCapabilities.scopedNativeCatalog` are exactly `true`, a provider
+with a credential scope MAY publish `scopedNativeCatalog: true`. The fixed
+scoped gateway path serves `GET /models?client_version=<native-version>` under
+the same gateway authentication and scope as inference. It returns a JSON
+object containing `models`, with exactly one row for each published gateway
+model ID and no rows from other publications or scopes. Every row's `slug`
+MUST be the exact published gateway model ID. The gateway MUST reject stale
+scope revisions before returning model information. The version parameter
+contains only a Host-selected native version, not user content or a credential.
+
+The provider MUST NOT supply a URL or arbitrary request headers. The Host MUST
+bound response size and duration, reject redirects, and compare the service
+generation and scope before and after reading. It MUST NOT treat unverified
+metadata, model instructions or inferred capabilities as native evidence. An
+absent signal or declaration leaves the previous catalog behavior unchanged.
+
 ## Opted-in progressive startup
 
 [Startup v1](../startup/README.md) adds manifest v15 provider ownership, an awaited

@@ -47,6 +47,9 @@ if (registration.nativeProviderCapabilities?.credentialScopeLease === true) {
     credentialScope: { revision: `scope_${'a'.repeat(43)}`, requestBinding: 'path-v1' },
   })
 }
+if (registration.nativeProviderCapabilities?.scopedNativeCatalog === true) {
+  registration.nativeProviderCapabilities.scopedNativeCatalog satisfies true
+}
 // @ts-expect-error undeclared reasoning levels are not a capability
 const unknownEffort: import('./managed-service-runtime.v1.js').ModelReasoningEffortV1 = 'extreme'
 void unknownEffort
