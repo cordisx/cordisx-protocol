@@ -16,6 +16,7 @@ for (
     {},
     { ...valid, revision: 'scope_short' },
     { ...valid, revision: `scope_${'A'.repeat(42)}/` },
+    { ...valid, revision: `scope_${'A'.repeat(42)}B` },
     { ...valid, requestBinding: 'unverified' },
     { ...valid, endpoint: 'https://example.invalid' },
   ]

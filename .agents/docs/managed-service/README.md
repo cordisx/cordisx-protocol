@@ -124,7 +124,7 @@ has no evidence to resume the publication's conversations across a service
 restart. Older publication shapes and behavior remain unchanged.
 
 The [scope](../../../schemas/managed-native-provider-credential-scope.v1.schema.json)
-is a non-secret, random 256-bit base64url revision prefixed `scope_`, and the
+is a non-secret, random 256-bit canonical unpadded base64url revision prefixed `scope_`, and the
 `path-v1` request-binding scheme. It covers every route, credential, account,
 gateway instance and routing permission in the publication. The provider may
 use one snapshot for multiple accounts, but MUST rotate the entire revision
