@@ -3,6 +3,7 @@
 - [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
 - [Idle model priority v1](idle-model-priority-v1.md): explicitly authorized linked migration before a new input is dispatched.
 - [Idle model priority v2](idle-model-priority-v2.md): one explicit grant for an ordered list of eligible candidates.
+- [Group idle model priority v1](group-idle-priority-v1.md): group-admin rules for same-provider idle selection.
 
 For inline paragraphs and verified native user mentions, see [outbound v2 and runtime v3](outbound-v2.md).
 
