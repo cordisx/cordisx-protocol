@@ -115,6 +115,42 @@ route with metadata omitted, but MUST keep the choices unknown instead of
 claiming the new capability survived. Publication and native interoperability
 remain separate from Protocol conformance.
 
+## Managed native provider credential scope
+
+A provider MAY add `credentialScope` to a publication only when
+`nativeProviderCapabilities.credentialScopeLease` is exactly `true`. An absent
+signal means that the provider MUST omit it. An absent scope means that the Host
+has no evidence to resume the publication's conversations across a service
+restart. Older publication shapes and behavior remain unchanged.
+
+The [scope](../../../schemas/managed-native-provider-credential-scope.v1.schema.json)
+is a non-secret, random 256-bit base64url revision prefixed `scope_`, and the
+`path-v1` request-binding scheme. It covers every route, credential, account,
+gateway instance and routing permission in the publication. The provider may
+use one snapshot for multiple accounts, but MUST rotate the entire revision
+when any covered binding changes. The provider MUST verify the active bindings
+before publishing and MUST revoke the previous scope before switching credentials,
+permissions or route mappings. A revision MUST NOT be reused, including after
+an A-to-B-to-A change. If continuity cannot be verified, it MUST be omitted.
+The value is not an authorization credential or an independently verified
+account identity and MUST NOT contain account names, keys or other private data.
+
+For `path-v1` the Host appends `/.cordisx-scope/<revision>` to the declared
+composition origin path; the plugin cannot supply another URL or path. Existing
+gateway authentication still applies. Before forwarding each model request,
+the gateway MUST verify that its revision is still active and that the model
+resolves within that exact immutable scope. It MUST reject a stale or unknown
+revision without forwarding. In-flight requests retain their admitted scope.
+The Host MUST bind the scope to its verified profile, plugin source, service,
+provider and catalog; it MUST preserve generation fences for live connections.
+It may resume a conversation after restart only when the new active scope and
+the stored route and catalog evidence agree. A missing or uncertain binding
+MUST fail closed; old records without such evidence cannot be silently upgraded.
+
+This is a cooperative contract with the admitted plugin and gateway, not a
+proof against malicious trusted code. Declaration does not grant additional
+credential access or authorize model, account or history sharing.
+
 ## Opted-in progressive startup
 
 [Startup v1](../startup/README.md) adds manifest v15 provider ownership, an awaited
