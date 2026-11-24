@@ -14,10 +14,11 @@ advertise `connection.update` only for accounts that can use that form.
 For an existing resolved account, the Host-owned form may offer credential
 rotation when the Host can authorize and coordinate that transaction. Otherwise
 it omits the credential input. Credential values, references and private draft
-identifiers are not exposed through the plugin-facing facade. The Host rejects
-plugin-issued credential operations, as well as creation, policies,
-conversations, bindings, events, and logs. Consumers expose only the
-account list, configuration, and runtime-status surfaces for this mode. A
+identifiers are not exposed through the plugin-facing facade. Unless creation
+is explicitly advertised, the Host rejects plugin-issued credential operations
+and creation. It also rejects policies, conversations, bindings, events, and
+logs. Consumers expose only the available account list, configuration, and
+runtime-status surfaces for this mode. A
 pending identity that cannot yet be configured remains unavailable.
 
 The optional descriptor field `connectionControl: 'enable-disable'` indicates
@@ -36,6 +37,16 @@ revision, reconnects through the owner, confirms the new service generation,
 and waits for admitted consumers to adopt it. Reconnect does not itself change
 the configuration revision. A missing or invalid field keeps reconnect
 unavailable; an uncertain operation is never automatically retried.
+
+The optional `connectionCreate: 'credentialed'` field enables the existing
+opaque credential-capture and connection-creation operations for supported
+adapters. The Host owns the credential form and private draft, so the plugin
+receives neither secret values nor storage references. Before reporting a
+committed result, the Host verifies caller and account authorization, captures
+the configuration revision, and coordinates admitted consumers. An unresolved
+account is never silently treated as a working connection, failed or uncertain
+writes are never automatically retried, and missing or invalid capability
+data keeps creation unavailable.
 
 An inline credential write retains the account authorization, owner generation
 and configuration revision checks. Private drafts are retired with their form

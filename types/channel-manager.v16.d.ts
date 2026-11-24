@@ -10,12 +10,15 @@ export interface ChannelManagerConfigurationPresentationCapabilitiesV1 {
   readonly connectionControl?: 'enable-disable'
   /** Optional owner-coordinated reconnect for an enabled resolved connection. */
   readonly connectionReconnect?: true
+  /** Optional owner-coordinated creation using the Host credential workflow. */
+  readonly connectionCreate?: 'credentialed'
 }
 
 /**
  * Explicitly requested facade for status and the Host-owned connection form.
  * Credential rotation, if available, stays inside that form; this facade
- * does not expose credential values, references, drafts, or credential operations.
+ * does not expose credential values, references, or private drafts. Creation
+ * operations are unavailable unless the descriptor explicitly advertises them.
  * Connection control is unavailable unless the descriptor explicitly advertises it.
  */
 export interface ChannelManagerConfigurationPresentationV1 extends ChannelManagerV8 {

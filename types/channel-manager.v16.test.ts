@@ -12,6 +12,7 @@ const configuration: ChannelManagerConfigurationPresentationV1 | undefined = man
 configuration?.configurationPresentationCapabilities().mode satisfies 'configuration-only' | undefined
 configuration?.configurationPresentationCapabilities().connectionControl satisfies 'enable-disable' | undefined
 configuration?.configurationPresentationCapabilities().connectionReconnect satisfies true | undefined
+configuration?.configurationPresentationCapabilities().connectionCreate satisfies 'credentialed' | undefined
 const unsupportedControl: ChannelManagerConfigurationPresentationCapabilitiesV1 = {
   contract: 'cordisx.channel-manager-configuration-presentation-capabilities/v1',
   schemaVersion: 1,
@@ -28,6 +29,14 @@ const unsupportedReconnect: ChannelManagerConfigurationPresentationCapabilitiesV
   connectionReconnect: false,
 }
 void unsupportedReconnect
+const unsupportedCreate: ChannelManagerConfigurationPresentationCapabilitiesV1 = {
+  contract: 'cordisx.channel-manager-configuration-presentation-capabilities/v1',
+  schemaVersion: 1,
+  mode: 'configuration-only',
+  // @ts-expect-error This restricted capability does not authorize simulator creation.
+  connectionCreate: 'simulator',
+}
+void unsupportedCreate
 configuration?.mountConnectionConfigurationForm('opaque', document.body, { signal: new AbortController().signal })
 // @ts-expect-error An older presentation service cannot request the new facade.
 void older.forOwnConfigurationPresentationService()
