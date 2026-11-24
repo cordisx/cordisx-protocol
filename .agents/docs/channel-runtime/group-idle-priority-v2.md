@@ -1,0 +1,5 @@
+# Group Channel idle model priority v2
+
+This optional successor to [group idle priority v1](group-idle-priority-v1.md) lets a group administrator's explicit rule authorize use of the listed same-provider models for eligible queued group inputs. The administrator must retain the existing authority to manage the group and change to each selected model. Each sender must retain dispatch authority in that exact group; explicit sender, group and model-value denials remain authoritative. The group rule does not grant a sender the independent right to change a model or authorize another conversation.
+
+All other v1 conditions remain: exact uniquely bound idle source, disclosure and confirmation, unchanged priority and source settings, real source failure and successful target evidence, preservation of project and execution settings, and durable unknown-effect reconciliation. Older Hosts reject persisted successor rules instead of applying a weaker interpretation. No cross-provider history transfer is authorized.
