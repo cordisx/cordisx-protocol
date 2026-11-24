@@ -257,3 +257,5 @@ and explicitly select identity-bearing snapshots.
 - [Channel Manager v14](channel-manager.v14.d.ts): [Host-owned continuation defaults](../.agents/docs/channel-runtime/manager-v14-continuation.md).
 
 - [Logical conversation continuation v1](conversation-continuation.v1.d.ts): [cross-provider modes and scoped history](../.agents/docs/conversation-continuation/v1.md).
+
+- [Channel model priority v1](channel-model-priority.v1.d.ts): [ordered task creation policy](../.agents/docs/channel-runtime/model-priority-v1.md).

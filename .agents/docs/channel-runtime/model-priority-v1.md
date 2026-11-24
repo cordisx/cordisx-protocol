@@ -1,0 +1,9 @@
+# Channel model priority v1
+
+A local profile may save an ordered list of up to eight distinct provider and model pairs. An empty list disables the policy. A complete replacement uses an expected revision, and a conflicting revision rejects the write. Only the local user may modify this profile policy; Channel actors and Agents cannot grant themselves access to it.
+
+The policy applies only to a newly created Channel task without a more specific explicit provider or model. The Host evaluates candidates in order and retains the existing exact provider/model permissions and deny rules. A candidate must pass local preparation before the first turn starts. A supported direct model connection may also be probed with bounded synthetic input, no tools and no private message; such a probe may incur model usage. A successful probe establishes availability only at that moment. An unavailable or incompatible probe is not evidence of login or service health. The policy does not change the approval reviewer, execution permissions, or an existing task's model.
+
+After a native creation or turn may have started, an unknown result remains subject to reconciliation and must not be replayed on a different candidate. A timeout, terminal failure, or lack of first response alone does not prove that no tool or other side effect occurred. Automatic interruption and cross-provider history transfer are outside this version. Existing continuation history consent and binding restrictions remain in force.
+
+Hosts that do not support this policy retain their existing selection behavior and must not claim failover support. Failure notices have a separate revisioned local-user setting, enabled by default, and do not depend on automatic final replies. A fixed, non-sensitive notice uses an existing authorized reply route and a stable delivery identity; a denied or uncertain delivery must not be blindly resent. An explicit disabled setting suppresses failure notices.
