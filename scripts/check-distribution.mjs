@@ -80,6 +80,11 @@ import type { ChannelThreadHistoryRequestV1, ChannelThreadHistoryResultV1 } from
 declare const threadHistoryRequest: ChannelThreadHistoryRequestV1
 declare const threadHistoryResult: ChannelThreadHistoryResultV1
 threadHistoryRequest.anchorMessageId satisfies string
+import type { ChannelThreadForwardRequestV1, ChannelThreadForwardReceiptV1 } from '@cordisx/protocol/channel-thread-forward/v1'
+declare const threadForwardRequest: ChannelThreadForwardRequestV1
+declare const threadForwardReceipt: ChannelThreadForwardReceiptV1
+threadForwardRequest.threadId satisfies string
+if (threadForwardReceipt.state === 'sent') threadForwardReceipt.externalMessageId satisfies string
 if (threadHistoryResult.status === 'ok') threadHistoryResult.messages[0]?.threadId satisfies string | undefined
 import type { ChannelProviderContinuationRequestV1 } from '@cordisx/protocol/channel-provider-continuation/v1'
 declare const providerContinuation: ChannelProviderContinuationRequestV1

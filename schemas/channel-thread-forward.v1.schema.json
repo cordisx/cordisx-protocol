@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-thread-forward.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "operation", "operationId", "source", "target", "threadId", "anchorMessageId"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-thread-forward/v1" },
+    "schemaVersion": { "const": 1 },
+    "operation": { "const": "thread-forward" },
+    "operationId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,128}$" },
+    "source": { "$ref": "#/$defs/conversation" },
+    "target": { "$ref": "#/$defs/conversation" },
+    "threadId": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\u0000\\r\\n]+$" },
+    "anchorMessageId": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\u0000\\r\\n]+$" }
+  },
+  "$defs": { "conversation": { "allOf": [
+    { "$ref": "channel-common.v1.schema.json#/$defs/conversationRef" },
+    { "type": "object", "properties": { "kind": { "enum": ["direct", "group"] } } }
+  ] } }
+}

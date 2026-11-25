@@ -37,3 +37,4 @@ assert.equal(
   true,
 )
 console.log('Channel forwarding v1 conformance passed')
+await import('./channel-thread-forward.mjs')
