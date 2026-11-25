@@ -1,5 +1,7 @@
 # Channel runtime protocol
 
+- [Whole-thread forwarding v1](thread-forward-v1.md): native topic envelopes, independent authorization and durable receipts.
+
 - [Terminal delivery intent v1](terminal-intent-v1.md): explicit terminal sends with durable, exact-turn receipt reconciliation.
 - [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
 - [Idle model priority v1](idle-model-priority-v1.md): explicitly authorized linked migration before a new input is dispatched.
@@ -253,14 +255,14 @@ bodies, transports, secrets, or task-gateway handles.
 
 Channel adds these declarations to the existing Permission Broker model:
 
-| Capability | Minimum use | Default requirement |
-| --- | --- | --- |
-| `channel.accounts.read` | list or watch redacted connection metadata | required for consumer connection discovery |
-| `channel.accounts.connect` | start a real account transport | required for live adapters |
-| `channel.events.receive` | authenticate, persist, and normalize inbound events | required for inbound adapters |
-| `channel.events.subscribe` | consume sourced normalized messages across Node plugins | required for consumer subscriptions |
-| `channel.messages.send` | reply, notify, update, or recall where supported | required for bidirectional adapters |
-| `channel.attachments.read` | fetch and open quarantined inbound media | optional |
+| Capability                 | Minimum use                                             | Default requirement                        |
+| -------------------------- | ------------------------------------------------------- | ------------------------------------------ |
+| `channel.accounts.read`    | list or watch redacted connection metadata              | required for consumer connection discovery |
+| `channel.accounts.connect` | start a real account transport                          | required for live adapters                 |
+| `channel.events.receive`   | authenticate, persist, and normalize inbound events     | required for inbound adapters              |
+| `channel.events.subscribe` | consume sourced normalized messages across Node plugins | required for consumer subscriptions        |
+| `channel.messages.send`    | reply, notify, update, or recall where supported        | required for bidirectional adapters        |
+| `channel.attachments.read` | fetch and open quarantined inbound media                | optional                                   |
 
 Channel declarations may use only `channelAccounts`, `channelTenants`,
 `channelConversations`, and `channelUsers`. Platform declarations may combine
@@ -511,6 +513,8 @@ See [task settings v1 / Manager v12](task-settings-v1.md) for scoped model defau
 See [Provider continuation v1](provider-continuation-v1.md) for explicitly authorized history-preserving continuation into a new session.
 
 See [remote history v1](remote-history-v1.md) for optional bounded remote reads, identity preservation and source authorization.
+See [thread history v1](thread-history-v1.md) for independent topic pagination and verified anchor scope.
+See [message search v1](message-search-v1.md) for conversation/time-bounded search and authoritative hit verification.
 
 See [message read v1](message-read-v1.md) for source-scoped lookup of reply ancestors.
 

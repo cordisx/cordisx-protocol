@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-search-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "source",
+        "account",
+        "conversation",
+        "query",
+        "startTime",
+        "endTime",
+        "hasMore",
+        "messages"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "source": {
+          "const": "remote"
+        },
+        "account": {
+          "$ref": "channel-remote-history-request.v1.schema.json#/properties/account"
+        },
+        "conversation": {
+          "$ref": "channel-remote-history-result.v1.schema.json#/oneOf/0/properties/conversation"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^(?=[\\s\\S]*\\S)[^\\u0000]+$"
+        },
+        "startTime": {
+          "type": "string",
+          "pattern": "^[0-9]{1,13}$"
+        },
+        "endTime": {
+          "type": "string",
+          "pattern": "^[0-9]{1,13}$"
+        },
+        "hasMore": {
+          "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        },
+        "messages": {
+          "allOf": [
+            {
+              "$ref": "channel-remote-history-result.v1.schema.json#/oneOf/0/properties/messages"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "messageId",
+                  "createTime"
+                ],
+                "properties": {
+                  "messageId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  },
+                  "createTime": {
+                    "type": "string",
+                    "pattern": "^[0-9]{1,16}$"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "hasMore": {
+            "const": true
+          }
+        },
+        "required": [
+          "hasMore"
+        ]
+      },
+      "then": {
+        "properties": {
+          "pageToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pageToken"
+        ]
+      }
+    },
+    {
+      "$ref": "channel-remote-history-result.v1.schema.json#/oneOf/1"
+    }
+  ]
+}
