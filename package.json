@@ -182,6 +182,7 @@
     "types/channel-provider-continuation.v1.d.ts",
     "types/channel-remote-history.v1.d.ts",
     "types/channel-thread-history.v1.d.ts",
+    "types/channel-message-search.v1.d.ts",
     "types/channel-message-read.v1.d.ts",
     "types/channel-message-operations.v1.d.ts",
     "types/channel-manager.v13.d.ts",
@@ -406,6 +407,9 @@
     },
     "./channel-thread-history/v1": {
       "types": "./types/channel-thread-history.v1.d.ts"
+    },
+    "./channel-message-search/v1": {
+      "types": "./types/channel-message-search.v1.d.ts"
     },
     "./channel-message-read/v1": {
       "types": "./types/channel-message-read.v1.d.ts"
