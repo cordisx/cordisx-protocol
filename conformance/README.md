@@ -1,5 +1,7 @@
 # Conformance
 
+- `node conformance/channel-thread-forward.mjs` checks native topic request/receipt shapes; authorization, idempotency and platform effects require Host evidence. It also runs from the existing forwarding gate.
+
 - `node conformance/channel-terminal-intent.mjs` checks the closed terminal intent shape and vectors; Host delivery and recovery require separate integration evidence.
 
 - `node conformance/channel-forward.mjs` checks independent forward request/receipt schemas and vectors; it does not establish live Host/platform adoption.

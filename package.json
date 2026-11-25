@@ -193,6 +193,7 @@
     "types/channel-runtime.v2.d.ts",
     "types/channel-outbound.v2.d.ts",
     "types/channel-forward.v1.d.ts",
+    "types/channel-thread-forward.v1.d.ts",
     "types/channel-terminal-intent.v1.d.ts",
     "types/channel-runtime.v3.d.ts"
   ],
@@ -430,6 +431,7 @@
     "./channel-outbound/v1": "./types/channel-outbound.v1.d.ts",
     "./channel-outbound/v2": "./types/channel-outbound.v2.d.ts",
     "./channel-forward/v1": "./types/channel-forward.v1.d.ts",
+    "./channel-thread-forward/v1": { "types": "./types/channel-thread-forward.v1.d.ts" },
     "./channel-terminal-intent/v1": "./types/channel-terminal-intent.v1.d.ts",
     "./channel-runtime/v3": "./types/channel-runtime.v3.d.ts",
     "./channel-runtime/v2": "./types/channel-runtime.v2.d.ts"

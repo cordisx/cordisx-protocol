@@ -1,5 +1,7 @@
 # Channel runtime protocol
 
+- [Whole-thread forwarding v1](thread-forward-v1.md): native topic envelopes, independent authorization and durable receipts.
+
 - [Terminal delivery intent v1](terminal-intent-v1.md): explicit terminal sends with durable, exact-turn receipt reconciliation.
 - [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
 - [Idle model priority v1](idle-model-priority-v1.md): explicitly authorized linked migration before a new input is dispatched.

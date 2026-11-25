@@ -3,6 +3,7 @@
 - `channel-terminal-intent/v1`: [explicit terminal send correlation](channel-terminal-intent.v1.d.ts); see [semantics](../.agents/docs/channel-runtime/terminal-intent-v1.md).
 
 - `channel-forward/v1`: [independent forwarding and receipts](channel-forward.v1.d.ts), governed by [forward v1](../.agents/docs/channel-runtime/forward-v1.md).
+- `channel-thread-forward/v1`: [native topic forwarding and receipts](channel-thread-forward.v1.d.ts), governed by [thread forward v1](../.agents/docs/channel-runtime/thread-forward-v1.md).
 
 - `channel-outbound/v2`: [inline richtext and verified native mentions](channel-outbound.v2.d.ts); `channel-runtime/v3`: [additive outboundV2 service](channel-runtime.v3.d.ts).
 

@@ -1,5 +1,7 @@
 # Test Vectors
 
+- [Whole-thread forwarding v1](channel-thread-forward/v1.json): native topic envelope and real-ID receipt shapes.
+
 - [Channel terminal intent v1](channel-terminal-intent/v1.json): valid and invalid explicit terminal correlation.
 
 - [Channel forward v1](channel-forward/v1.json): bounded single/merge requests and rejected escalation shapes.
