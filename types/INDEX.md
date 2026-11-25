@@ -249,6 +249,7 @@ and explicitly select identity-bearing snapshots.
 - [Channel Provider continuation v1](channel-provider-continuation.v1.d.ts): [explicit history-preserving Provider continuation](../.agents/docs/channel-runtime/provider-continuation-v1.md).
 
 - [Channel remote history v1](channel-remote-history.v1.d.ts): [bounded remote history and source identity](../.agents/docs/channel-runtime/remote-history-v1.md).
+- [Channel thread history v1](channel-thread-history.v1.d.ts): [topic pagination and verified anchor scope](../.agents/docs/channel-runtime/thread-history-v1.md).
 - [Channel message read v1](channel-message-read.v1.d.ts): [source-scoped reply-chain lookup](../.agents/docs/channel-runtime/message-read-v1.md).
 - [Channel message operations v1](channel-message-operations.v1.d.ts): [scoped mutation, pagination and discovery](../.agents/docs/channel-runtime/message-operations-v1.md).
 

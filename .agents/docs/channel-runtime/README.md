@@ -511,6 +511,7 @@ See [task settings v1 / Manager v12](task-settings-v1.md) for scoped model defau
 See [Provider continuation v1](provider-continuation-v1.md) for explicitly authorized history-preserving continuation into a new session.
 
 See [remote history v1](remote-history-v1.md) for optional bounded remote reads, identity preservation and source authorization.
+See [thread history v1](thread-history-v1.md) for independent topic pagination and verified anchor scope.
 
 See [message read v1](message-read-v1.md) for source-scoped lookup of reply ancestors.
 
