@@ -79,6 +79,10 @@ remoteHistory.account.tenantId satisfies string
 import type { ChannelThreadHistoryRequestV1, ChannelThreadHistoryResultV1 } from '@cordisx/protocol/channel-thread-history/v1'
 declare const threadHistoryRequest: ChannelThreadHistoryRequestV1
 declare const threadHistoryResult: ChannelThreadHistoryResultV1
+import type { ChannelMessageSearchRequestV1, ChannelMessageSearchResultV1 } from '@cordisx/protocol/channel-message-search/v1'
+declare const messageSearchRequest: ChannelMessageSearchRequestV1
+declare const messageSearchResult: ChannelMessageSearchResultV1
+void [messageSearchRequest, messageSearchResult]
 threadHistoryRequest.anchorMessageId satisfies string
 import type { ChannelThreadForwardRequestV1, ChannelThreadForwardReceiptV1 } from '@cordisx/protocol/channel-thread-forward/v1'
 declare const threadForwardRequest: ChannelThreadForwardRequestV1
