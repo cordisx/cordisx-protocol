@@ -181,6 +181,8 @@
     "types/channel-model-priority.v1.d.ts",
     "types/channel-provider-continuation.v1.d.ts",
     "types/channel-remote-history.v1.d.ts",
+    "types/channel-thread-history.v1.d.ts",
+    "types/channel-message-search.v1.d.ts",
     "types/channel-message-read.v1.d.ts",
     "types/channel-message-operations.v1.d.ts",
     "types/channel-manager.v13.d.ts",
@@ -192,6 +194,7 @@
     "types/channel-runtime.v2.d.ts",
     "types/channel-outbound.v2.d.ts",
     "types/channel-forward.v1.d.ts",
+    "types/channel-thread-forward.v1.d.ts",
     "types/channel-terminal-intent.v1.d.ts",
     "types/channel-runtime.v3.d.ts"
   ],
@@ -402,6 +405,12 @@
     "./channel-remote-history/v1": {
       "types": "./types/channel-remote-history.v1.d.ts"
     },
+    "./channel-thread-history/v1": {
+      "types": "./types/channel-thread-history.v1.d.ts"
+    },
+    "./channel-message-search/v1": {
+      "types": "./types/channel-message-search.v1.d.ts"
+    },
     "./channel-message-read/v1": {
       "types": "./types/channel-message-read.v1.d.ts"
     },
@@ -426,6 +435,7 @@
     "./channel-outbound/v1": "./types/channel-outbound.v1.d.ts",
     "./channel-outbound/v2": "./types/channel-outbound.v2.d.ts",
     "./channel-forward/v1": "./types/channel-forward.v1.d.ts",
+    "./channel-thread-forward/v1": { "types": "./types/channel-thread-forward.v1.d.ts" },
     "./channel-terminal-intent/v1": "./types/channel-terminal-intent.v1.d.ts",
     "./channel-runtime/v3": "./types/channel-runtime.v3.d.ts",
     "./channel-runtime/v2": "./types/channel-runtime.v2.d.ts"

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-thread-forward-receipt.v1.schema.json",
+  "type": "object",
+  "required": ["contract", "schemaVersion", "operation", "operationId", "state"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-thread-forward-receipt/v1" },
+    "schemaVersion": { "const": 1 },
+    "operation": { "const": "thread-forward" },
+    "operationId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,128}$" },
+    "state": { "enum": ["sending", "sent", "failed", "unknown"] }
+  },
+  "oneOf": [
+    { "properties": { "state": { "const": "sending" } } },
+    { "required": ["externalMessageId"], "properties": {
+      "state": { "const": "sent" }, "externalMessageId": { "type": "string", "minLength": 1, "maxLength": 512 }
+    } },
+    { "required": ["code"], "properties": {
+      "state": { "enum": ["failed", "unknown"] }, "code": { "type": "string", "pattern": "^[A-Z0-9_]{1,128}$" }
+    } }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-search-request.v1.schema.json",
+  "title": "Channel message search request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "account",
+    "conversationId",
+    "kind",
+    "query",
+    "startTime",
+    "endTime"
+  ],
+  "properties": {
+    "account": {
+      "$ref": "channel-remote-history-request.v1.schema.json#/properties/account"
+    },
+    "conversationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "kind": {
+      "enum": [
+        "direct",
+        "group"
+      ]
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?=[\\s\\S]*\\S)[^\\u0000]+$"
+    },
+    "startTime": {
+      "type": "string",
+      "pattern": "^[0-9]{1,13}$"
+    },
+    "endTime": {
+      "type": "string",
+      "pattern": "^[0-9]{1,13}$"
+    },
+    "pageSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50
+    },
+    "pageToken": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^[^\\u0000\\r\\n]+$"
+    }
+  }
+}

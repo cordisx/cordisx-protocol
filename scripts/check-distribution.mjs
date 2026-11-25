@@ -76,6 +76,20 @@ channelV14.mountContinuationDefaultsForm(document.body, { signal: new AbortContr
 import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
 declare const remoteHistory: ChannelRemoteHistoryRequestV1
 remoteHistory.account.tenantId satisfies string
+import type { ChannelThreadHistoryRequestV1, ChannelThreadHistoryResultV1 } from '@cordisx/protocol/channel-thread-history/v1'
+declare const threadHistoryRequest: ChannelThreadHistoryRequestV1
+declare const threadHistoryResult: ChannelThreadHistoryResultV1
+import type { ChannelMessageSearchRequestV1, ChannelMessageSearchResultV1 } from '@cordisx/protocol/channel-message-search/v1'
+declare const messageSearchRequest: ChannelMessageSearchRequestV1
+declare const messageSearchResult: ChannelMessageSearchResultV1
+void [messageSearchRequest, messageSearchResult]
+threadHistoryRequest.anchorMessageId satisfies string
+import type { ChannelThreadForwardRequestV1, ChannelThreadForwardReceiptV1 } from '@cordisx/protocol/channel-thread-forward/v1'
+declare const threadForwardRequest: ChannelThreadForwardRequestV1
+declare const threadForwardReceipt: ChannelThreadForwardReceiptV1
+threadForwardRequest.threadId satisfies string
+if (threadForwardReceipt.state === 'sent') threadForwardReceipt.externalMessageId satisfies string
+if (threadHistoryResult.status === 'ok') threadHistoryResult.messages[0]?.threadId satisfies string | undefined
 import type { ChannelProviderContinuationRequestV1 } from '@cordisx/protocol/channel-provider-continuation/v1'
 declare const providerContinuation: ChannelProviderContinuationRequestV1
 providerContinuation.history satisfies 'inherit'

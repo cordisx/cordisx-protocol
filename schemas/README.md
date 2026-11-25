@@ -1,5 +1,7 @@
 # Schemas
 
+- [Whole-thread forwarding request v1](channel-thread-forward.v1.schema.json) and [receipt v1](channel-thread-forward-receipt.v1.schema.json): [independent native topic contract](../.agents/docs/channel-runtime/thread-forward-v1.md).
+
 - [Channel terminal intent v1](channel-terminal-intent.v1.schema.json): explicit terminal send correlation; [normative contract](../.agents/docs/channel-runtime/terminal-intent-v1.md).
 
 - [Forward request v1](channel-forward.v1.schema.json) and [receipt v1](channel-forward-receipt.v1.schema.json): independent bounded forwarding; [normative contract](../.agents/docs/channel-runtime/forward-v1.md).

@@ -1,0 +1,14 @@
+{
+  "request": {
+    "contract": "cordisx.channel-thread-forward/v1", "schemaVersion": 1,
+    "operation": "thread-forward", "operationId": "thread-forward-1",
+    "source": { "adapterId": "feishu", "accountId": "app", "tenantId": "tenant", "conversationId": "oc_source", "kind": "group" },
+    "target": { "adapterId": "feishu", "accountId": "app", "tenantId": "tenant", "conversationId": "oc_target", "kind": "direct" },
+    "threadId": "omt_topic", "anchorMessageId": "om_anchor"
+  },
+  "sent": {
+    "contract": "cordisx.channel-thread-forward-receipt/v1", "schemaVersion": 1,
+    "operation": "thread-forward", "operationId": "thread-forward-1",
+    "state": "sent", "externalMessageId": "om_forwarded_topic"
+  }
+}
