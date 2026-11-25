@@ -2,6 +2,7 @@ import { readdirSync } from 'node:fs'
 // Public import coverage for the packed consumer smoke test.
 export const expectedExports = [
   './channel-forward/v1',
+  './channel-terminal-intent/v1',
   './channel-outbound/v1',
   './channel-outbound/v2',
   './channel-runtime/v3',
@@ -161,6 +162,7 @@ export const expectedExports = [
 
 export const expectedFiles = [
   'types/channel-forward.v1.d.ts',
+  'types/channel-terminal-intent.v1.d.ts',
   'types/channel-outbound.v1.d.ts',
   'types/channel-outbound.v2.d.ts',
   'types/channel-runtime.v3.d.ts',

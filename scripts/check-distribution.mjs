@@ -89,6 +89,9 @@ import type { ConversationContinuationRequestV1 } from '@cordisx/protocol/conver
 declare const logicalContinuation: ConversationContinuationRequestV1
 logicalContinuation.mode satisfies 'linked' | 'fork' | 'fresh'
 import type { ChannelMessageReadRequestV1 } from '@cordisx/protocol/channel-message-read/v1'
+import type { ChannelTerminalIntentV1 } from '@cordisx/protocol/channel-terminal-intent/v1'
+declare const terminalIntent: ChannelTerminalIntentV1
+terminalIntent.inputOperationId satisfies string
 import type { ChannelMessageOperationsV1 } from '@cordisx/protocol/channel-message-operations/v1'
 declare const messageOperations: ChannelMessageOperationsV1
 void messageOperations
