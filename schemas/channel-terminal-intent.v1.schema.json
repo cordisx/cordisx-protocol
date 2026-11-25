@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-terminal-intent.v1.schema.json",
+  "title": "Channel terminal delivery intent v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "inputOperationId"],
+  "properties": {
+    "contract": { "const": "cordisx.channel-terminal-intent/v1" },
+    "schemaVersion": { "const": 1 },
+    "inputOperationId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,128}$" }
+  }
+}

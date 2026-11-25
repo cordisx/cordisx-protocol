@@ -2,6 +2,7 @@ import { readdirSync } from 'node:fs'
 // Public import coverage for the packed consumer smoke test.
 export const expectedExports = [
   './channel-forward/v1',
+  './channel-terminal-intent/v1',
   './channel-outbound/v1',
   './channel-outbound/v2',
   './channel-runtime/v3',
@@ -12,9 +13,12 @@ export const expectedExports = [
   './channel-manager/v14',
   './channel-manager/v13',
   './channel-remote-history/v1',
+  './channel-thread-history/v1',
   './channel-message-read/v1',
+  './channel-message-operations/v1',
   './channel-manager/v12',
   './channel-task-settings/v1',
+  './channel-model-priority/v1',
   './channel-provider-continuation/v1',
   './channel-manager/v11',
   './channel-manager/v10',
@@ -157,6 +161,7 @@ export const expectedExports = [
 
 export const expectedFiles = [
   'types/channel-forward.v1.d.ts',
+  'types/channel-terminal-intent.v1.d.ts',
   'types/channel-outbound.v1.d.ts',
   'types/channel-outbound.v2.d.ts',
   'types/channel-runtime.v3.d.ts',
@@ -166,11 +171,14 @@ export const expectedFiles = [
   'types/agent-turn-control.v1.d.ts',
   'types/channel-manager.v14.d.ts',
   'types/channel-remote-history.v1.d.ts',
+  'types/channel-thread-history.v1.d.ts',
   'types/channel-message-read.v1.d.ts',
+  'types/channel-message-operations.v1.d.ts',
   'types/channel-manager.v11.d.ts',
   'types/channel-manager.v12.d.ts',
   'types/channel-manager.v13.d.ts',
   'types/channel-task-settings.v1.d.ts',
+  'types/channel-model-priority.v1.d.ts',
   'types/channel-provider-continuation.v1.d.ts',
   'types/channel-manager.v10.d.ts',
   'types/channel-manager.v9.d.ts',

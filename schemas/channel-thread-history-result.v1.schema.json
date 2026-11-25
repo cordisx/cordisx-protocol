@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-thread-history-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "source", "account", "conversation", "threadId", "anchorMessageId", "order", "hasMore", "messages"],
+      "properties": {
+        "status": { "const": "ok" },
+        "source": { "const": "remote" },
+        "account": { "$ref": "channel-remote-history-request.v1.schema.json#/properties/account" },
+        "conversation": { "$ref": "channel-remote-history-result.v1.schema.json#/oneOf/0/properties/conversation" },
+        "threadId": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "anchorMessageId": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "order": { "enum": ["asc", "desc"] },
+        "hasMore": { "type": "boolean" },
+        "pageToken": { "type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^[^\\u0000\\r\\n]+$" },
+        "messages": { "$ref": "channel-remote-history-result.v1.schema.json#/oneOf/0/properties/messages" }
+      },
+      "if": { "properties": { "hasMore": { "const": true } }, "required": ["hasMore"] },
+      "then": { "properties": { "pageToken": { "type": "string" } }, "required": ["pageToken"] }
+    },
+    { "$ref": "channel-remote-history-result.v1.schema.json#/oneOf/1" }
+  ]
+}

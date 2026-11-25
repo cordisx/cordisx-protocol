@@ -32,8 +32,24 @@ const reasoningRoute: import('./managed-service-runtime.v1.js').ManagedNativePro
   alias: 'model',
   gatewayModelId: 'model-id',
   reasoningCapabilities: { efforts: ['low', 'high'], defaultEffort: 'high' },
+  contextWindow: 65_536,
 }
 void reasoningRoute
+if (registration.nativeProviderCapabilities?.contextWindow === true) {
+  registration.nativeProviderCapabilities.contextWindow satisfies true
+}
+if (registration.nativeProviderCapabilities?.credentialScopeLease === true) {
+  registration.nativeProviderCapabilities.credentialScopeLease satisfies true
+  void registration.publishNativeProvider({
+    providerId: 'example',
+    compositionOrigin: 'api',
+    catalog: { generation: 'one', digest: `sha256:${'0'.repeat(64)}`, defaultAlias: 'model', routes: [reasoningRoute] },
+    credentialScope: { revision: `scope_${'a'.repeat(42)}A`, requestBinding: 'path-v1' },
+  })
+}
+if (registration.nativeProviderCapabilities?.scopedNativeCatalog === true) {
+  registration.nativeProviderCapabilities.scopedNativeCatalog satisfies true
+}
 // @ts-expect-error undeclared reasoning levels are not a capability
 const unknownEffort: import('./managed-service-runtime.v1.js').ModelReasoningEffortV1 = 'extreme'
 void unknownEffort

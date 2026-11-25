@@ -1,12 +1,20 @@
 # Channel runtime protocol
 
+- [Terminal delivery intent v1](terminal-intent-v1.md): explicit terminal sends with durable, exact-turn receipt reconciliation.
 - [Independent forwarding v1](forward-v1.md): single-message and merge forwarding, separate source/target authorization and durable uncertain-effect receipts.
+- [Idle model priority v1](idle-model-priority-v1.md): explicitly authorized linked migration before a new input is dispatched.
+- [Idle model priority v2](idle-model-priority-v2.md): one explicit grant for an ordered list of eligible candidates.
+- [Group idle model priority v1](group-idle-priority-v1.md): group-admin rules for same-provider idle selection.
+- [Group idle model priority v2](group-idle-priority-v2.md): administrator-granted group model use with explicit deny protection.
+- [Group-scoped linked priority v1](group-linked-priority-v1.md): bounded group provenance for cross-provider continuation.
 
 For inline paragraphs and verified native user mentions, see [outbound v2 and runtime v3](outbound-v2.md).
 
 For standard text/image/audio/file/video/richtext/card outbound descriptors,
 bounded caller-sandbox bytes preparation and scoped media resolution, see the
 explicit [outbound v1 and runtime v2 successor](outbound-v1.md).
+Optional [message operations v1](message-operations-v1.md) adds scoped lifecycle
+operations and operation-level discovery independently of outbound availability.
 
 Status: normative version 1 Channel connection contracts. Channel is a base
 messaging service: it connects accounts, durably receives and sends attributed
@@ -503,6 +511,7 @@ See [task settings v1 / Manager v12](task-settings-v1.md) for scoped model defau
 See [Provider continuation v1](provider-continuation-v1.md) for explicitly authorized history-preserving continuation into a new session.
 
 See [remote history v1](remote-history-v1.md) for optional bounded remote reads, identity preservation and source authorization.
+See [thread history v1](thread-history-v1.md) for independent topic pagination and verified anchor scope.
 
 See [message read v1](message-read-v1.md) for source-scoped lookup of reply ancestors.
 

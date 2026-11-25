@@ -269,6 +269,8 @@ export interface ManagedNativeProviderRouteV1 {
   readonly gatewayModelId: string
   /** Exact route capabilities declared by discovery; omission means unknown. */
   readonly reasoningCapabilities?: ModelReasoningCapabilitiesV1
+  /** Discovered context-window token limit; omission means unknown, not a default. */
+  readonly contextWindow?: number
 }
 
 export interface ManagedNativeProviderCatalogV1 {
@@ -278,10 +280,19 @@ export interface ManagedNativeProviderCatalogV1 {
   readonly routes: readonly ManagedNativeProviderRouteV1[]
 }
 
+/** Non-secret, publication-wide routing snapshot enforced by the managed gateway. */
+export interface ManagedNativeProviderCredentialScopeV1 {
+  readonly revision: `scope_${string}`
+  readonly requestBinding: 'path-v1'
+}
+
 export interface ManagedNativeProviderPublicationInputV1 {
   readonly providerId: string
   readonly compositionOrigin: string
   readonly catalog: ManagedNativeProviderCatalogV1
+  readonly credentialScope?: ManagedNativeProviderCredentialScopeV1
+  /** Full native-format model rows are available on the same scoped gateway. */
+  readonly scopedNativeCatalog?: true
 }
 
 export interface ManagedNativeProviderPublicationProjectionV1 {
@@ -297,6 +308,8 @@ export interface ManagedNativeProviderPublicationProjectionV1 {
   }
   readonly compositionOrigin: string
   readonly catalog: ManagedNativeProviderCatalogV1
+  readonly credentialScope?: ManagedNativeProviderCredentialScopeV1
+  readonly scopedNativeCatalog?: true
   readonly state: 'active' | 'revoked'
 }
 
@@ -336,6 +349,8 @@ export type ManagedNativeProviderPublicationResultV1 =
 export interface ManagedServiceRegistrationHandleV1 {
   readonly binding: ManagedServiceBindingV1
   readonly revision: `sha256:${string}`
+  /** Host accepts and preserves the optional managed-route context window. */
+  readonly nativeProviderCapabilities?: { readonly contextWindow: true; readonly credentialScopeLease?: true; readonly scopedNativeCatalog?: true }
   inspect(): Promise<ManagedServiceProjectionV1>
   authenticate(
     action: 'login' | 'logout' | 'refresh',

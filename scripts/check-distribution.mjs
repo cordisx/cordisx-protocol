@@ -76,6 +76,11 @@ channelV14.mountContinuationDefaultsForm(document.body, { signal: new AbortContr
 import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
 declare const remoteHistory: ChannelRemoteHistoryRequestV1
 remoteHistory.account.tenantId satisfies string
+import type { ChannelThreadHistoryRequestV1, ChannelThreadHistoryResultV1 } from '@cordisx/protocol/channel-thread-history/v1'
+declare const threadHistoryRequest: ChannelThreadHistoryRequestV1
+declare const threadHistoryResult: ChannelThreadHistoryResultV1
+threadHistoryRequest.anchorMessageId satisfies string
+if (threadHistoryResult.status === 'ok') threadHistoryResult.messages[0]?.threadId satisfies string | undefined
 import type { ChannelProviderContinuationRequestV1 } from '@cordisx/protocol/channel-provider-continuation/v1'
 declare const providerContinuation: ChannelProviderContinuationRequestV1
 providerContinuation.history satisfies 'inherit'
@@ -83,6 +88,12 @@ import type { ConversationContinuationRequestV1 } from '@cordisx/protocol/conver
 declare const logicalContinuation: ConversationContinuationRequestV1
 logicalContinuation.mode satisfies 'linked' | 'fork' | 'fresh'
 import type { ChannelMessageReadRequestV1 } from '@cordisx/protocol/channel-message-read/v1'
+import type { ChannelTerminalIntentV1 } from '@cordisx/protocol/channel-terminal-intent/v1'
+declare const terminalIntent: ChannelTerminalIntentV1
+terminalIntent.inputOperationId satisfies string
+import type { ChannelMessageOperationsV1 } from '@cordisx/protocol/channel-message-operations/v1'
+declare const messageOperations: ChannelMessageOperationsV1
+void messageOperations
 declare const messageRead: ChannelMessageReadRequestV1
 messageRead.messageId satisfies string
 import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'

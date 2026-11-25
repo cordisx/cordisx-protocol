@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-message-operation-capabilities.v1.schema.json",
+  "title": "channel-message-operation-capabilities v1",
+  "type": "array",
+  "maxItems": 32,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "operation",
+      "implementation",
+      "authorization",
+      "scope",
+      "write",
+      "permissionAlternatives",
+      "restrictions"
+    ],
+    "properties": {
+      "operation": {
+        "enum": [
+          "message-edit",
+          "message-recall",
+          "pin-add",
+          "pin-remove",
+          "pin-list",
+          "read-users",
+          "reaction-list",
+          "card-update"
+        ]
+      },
+      "implementation": {
+        "enum": [
+          "supported",
+          "unsupported",
+          "internal-only"
+        ]
+      },
+      "authorization": {
+        "const": "not-verified"
+      },
+      "scope": {
+        "enum": [
+          "own-message",
+          "source-message",
+          "conversation"
+        ]
+      },
+      "write": {
+        "type": "boolean"
+      },
+      "permissionAlternatives": {
+        "type": "array",
+        "maxItems": 16,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      },
+      "restrictions": {
+        "type": "array",
+        "maxItems": 32,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000\\r\\n]+$"
+        }
+      }
+    }
+  }
+}
