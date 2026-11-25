@@ -1,5 +1,7 @@
 # Test Vectors
 
+- [Channel terminal intent v1](channel-terminal-intent/v1.json): valid and invalid explicit terminal correlation.
+
 - [Channel forward v1](channel-forward/v1.json): bounded single/merge requests and rejected escalation shapes.
 
 - `channel-outbound/v2.json`: ordered native mention plus inline explanation and legacy block examples.

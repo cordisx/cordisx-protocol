@@ -1,0 +1,13 @@
+{
+  "intent": {
+    "contract": "cordisx.channel-terminal-intent/v1",
+    "schemaVersion": 1,
+    "inputOperationId": "channel:example"
+  },
+  "invalid": [
+    { "schemaVersion": 2 },
+    { "inputOperationId": "" },
+    { "inputOperationId": "invalid\nvalue" },
+    { "claimedSent": true }
+  ]
+}
