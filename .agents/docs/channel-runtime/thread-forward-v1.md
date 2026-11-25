@@ -14,6 +14,11 @@ account and tenant, with direct or group conversation destinations only. Topic
 destinations and broadcast are unsupported. Read the anchor using the selected
 connection and require its actual conversation and reported topic to match the
 request. Deleted anchors, absent associations or guessed topics fail closed.
+Before mutation, also verify the destination's actual conversation kind from
+account-scoped platform metadata. A caller-supplied kind or display-directory
+hint cannot bypass kind-specific policy. Missing metadata fails closed, never
+defaults to group. This routing proof grants no destination history or contact
+read and must not disclose unrelated metadata.
 
 Source read requires explicit `forward-read` policy. Destination mutation requires
 the independent `thread-forward` policy key, denied by default. Send, ordinary
