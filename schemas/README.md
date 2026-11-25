@@ -1,5 +1,7 @@
 # Schemas
 
+- [Channel terminal intent v1](channel-terminal-intent.v1.schema.json): explicit terminal send correlation; [normative contract](../.agents/docs/channel-runtime/terminal-intent-v1.md).
+
 - [Forward request v1](channel-forward.v1.schema.json) and [receipt v1](channel-forward-receipt.v1.schema.json): independent bounded forwarding; [normative contract](../.agents/docs/channel-runtime/forward-v1.md).
 
 - [Channel message send v2](channel-message-send.v2.schema.json) and [outbound capabilities v2](channel-outbound-capabilities.v2.schema.json): inline paragraphs and explicit native mention support.
@@ -691,6 +693,7 @@ Host-private.
 - [Durable work settlement v1](local-work-settlement.v1.schema.json): closed Host-signed admitted snapshot; independent of leased local wallet work.
 
 - `managed-native-provider-catalog.v1.schema.json`: closed native route catalogs with optional discovered reasoning efforts and context windows; membership, canonical ordering, capability negotiation and digest semantics belong to the managed-service contract.
+- `managed-native-provider-credential-scope.v1.schema.json`: non-secret, publication-wide credential-scope revision and request-binding scheme.
 
 ## Progressive startup
 

@@ -1,5 +1,7 @@
 # Conformance
 
+- `node conformance/channel-terminal-intent.mjs` checks the closed terminal intent shape and vectors; Host delivery and recovery require separate integration evidence.
+
 - `node conformance/channel-forward.mjs` checks independent forward request/receipt schemas and vectors; it does not establish live Host/platform adoption.
 
 - `node conformance/channel-outbound-v2.mjs`: frozen v1 rejection, v2 paragraph/mention shapes, capability negotiation and scoped sender-evidence model.
@@ -328,6 +330,7 @@ behavior require Host evidence.
 - `node conformance/local-work-settlement.mjs` checks durable payload version isolation, signatures and exact receipt pins.
 
 `managed-native-provider.mjs` (also run by managed-service conformance) checks closed route capabilities, default membership, canonical ordering, safe window values, legacy digest compatibility and capability-sensitive digests.
+`managed-native-provider-scope.mjs` checks the closed credential-scope shape; actual lease enforcement requires Host and gateway tests.
 
 Startup v1: `node conformance/startup.mjs` checks declaration graph rejection,
 frozen-version downgrade, target-only waits, independent readiness/actions,
