@@ -48,6 +48,15 @@ account is never silently treated as a working connection, failed or uncertain
 writes are never automatically retried, and missing or invalid capability
 data keeps creation unavailable.
 
+The independent optional field `pendingTenantResolution: true` permits the
+Host-owned connection form to resolve an existing pending account. It does not
+authorize a change to an already resolved identity or expose the stored
+credential. The Host checks the caller, pending account, owner generation and
+configuration revision, then confirms readback and consumer adoption before
+reporting success. An uncertain write is not retried. Without this exact field,
+the restricted facade keeps pending accounts read-only; creation support alone
+does not imply resolution support.
+
 An inline credential write retains the account authorization, owner generation
 and configuration revision checks. Private drafts are retired with their form
 or renderer; an unconfirmed cleanup or write does not produce an applied

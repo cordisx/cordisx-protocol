@@ -13,6 +13,7 @@ configuration?.configurationPresentationCapabilities().mode satisfies 'configura
 configuration?.configurationPresentationCapabilities().connectionControl satisfies 'enable-disable' | undefined
 configuration?.configurationPresentationCapabilities().connectionReconnect satisfies true | undefined
 configuration?.configurationPresentationCapabilities().connectionCreate satisfies 'credentialed' | undefined
+configuration?.configurationPresentationCapabilities().pendingTenantResolution satisfies true | undefined
 const unsupportedControl: ChannelManagerConfigurationPresentationCapabilitiesV1 = {
   contract: 'cordisx.channel-manager-configuration-presentation-capabilities/v1',
   schemaVersion: 1,
@@ -37,6 +38,14 @@ const unsupportedCreate: ChannelManagerConfigurationPresentationCapabilitiesV1 =
   connectionCreate: 'simulator',
 }
 void unsupportedCreate
+const unsupportedResolution: ChannelManagerConfigurationPresentationCapabilitiesV1 = {
+  contract: 'cordisx.channel-manager-configuration-presentation-capabilities/v1',
+  schemaVersion: 1,
+  mode: 'configuration-only',
+  // @ts-expect-error Resolution is advertised only as an explicit true capability.
+  pendingTenantResolution: false,
+}
+void unsupportedResolution
 configuration?.mountConnectionConfigurationForm('opaque', document.body, { signal: new AbortController().signal })
 // @ts-expect-error An older presentation service cannot request the new facade.
 void older.forOwnConfigurationPresentationService()

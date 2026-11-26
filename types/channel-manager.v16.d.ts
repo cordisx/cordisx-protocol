@@ -12,6 +12,8 @@ export interface ChannelManagerConfigurationPresentationCapabilitiesV1 {
   readonly connectionReconnect?: true
   /** Optional owner-coordinated creation using the Host credential workflow. */
   readonly connectionCreate?: 'credentialed'
+  /** Optional resolution of a pending account in the Host-owned connection form. */
+  readonly pendingTenantResolution?: true
 }
 
 /**
@@ -20,6 +22,7 @@ export interface ChannelManagerConfigurationPresentationCapabilitiesV1 {
  * does not expose credential values, references, or private drafts. Creation
  * operations are unavailable unless the descriptor explicitly advertises them.
  * Connection control is unavailable unless the descriptor explicitly advertises it.
+ * Pending-account resolution is unavailable unless separately advertised.
  */
 export interface ChannelManagerConfigurationPresentationV1 extends ChannelManagerV8 {
   configurationPresentationCapabilities(): ChannelManagerConfigurationPresentationCapabilitiesV1
