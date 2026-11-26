@@ -67,59 +67,18 @@ try {
       + `import type { AgentContextV1 } from '@cordisx/protocol/agent-context/v1'
 import type { AgentTurnControlV1 } from '@cordisx/protocol/agent-turn-control/v1'
 import type { ChannelManagerV14 } from '@cordisx/protocol/channel-manager/v14'
+import type { ChannelManagerV15 } from '@cordisx/protocol/channel-manager/v15'
+import type { ChannelManagerV16 } from '@cordisx/protocol/channel-manager/v16'
 declare const contextV1: AgentContextV1
 declare const turnControlV1: AgentTurnControlV1
 declare const channelV14: ChannelManagerV14
+declare const channelV15: ChannelManagerV15
+declare const channelV16: ChannelManagerV16
 contextV1.read('session')
 turnControlV1.acquire({ sessionId: 'session', turnId: 'turn' })
 channelV14.mountContinuationDefaultsForm(document.body, { signal: new AbortController().signal })
-import type { ChannelRemoteHistoryRequestV1 } from '@cordisx/protocol/channel-remote-history/v1'
-declare const remoteHistory: ChannelRemoteHistoryRequestV1
-remoteHistory.account.tenantId satisfies string
-import type { ChannelThreadHistoryRequestV1, ChannelThreadHistoryResultV1 } from '@cordisx/protocol/channel-thread-history/v1'
-declare const threadHistoryRequest: ChannelThreadHistoryRequestV1
-declare const threadHistoryResult: ChannelThreadHistoryResultV1
-import type { ChannelMessageSearchRequestV1, ChannelMessageSearchResultV1 } from '@cordisx/protocol/channel-message-search/v1'
-declare const messageSearchRequest: ChannelMessageSearchRequestV1
-declare const messageSearchResult: ChannelMessageSearchResultV1
-void [messageSearchRequest, messageSearchResult]
-import type { ChannelHistoricalResourceReadRequestV1, ChannelHistoricalResourceResultV1 } from '@cordisx/protocol/channel-historical-resources/v1'
-declare const historicalResourceRequest: ChannelHistoricalResourceReadRequestV1
-declare const historicalResourceResult: ChannelHistoricalResourceResultV1
-historicalResourceRequest.length satisfies number
-if (historicalResourceResult.status === 'ok' && historicalResourceResult.resource.state === 'ready') {
-  historicalResourceResult.resource.attachment.handle satisfies string
-}
-threadHistoryRequest.anchorMessageId satisfies string
-import type { ChannelThreadForwardRequestV1, ChannelThreadForwardReceiptV1 } from '@cordisx/protocol/channel-thread-forward/v1'
-declare const threadForwardRequest: ChannelThreadForwardRequestV1
-declare const threadForwardReceipt: ChannelThreadForwardReceiptV1
-threadForwardRequest.threadId satisfies string
-if (threadForwardReceipt.state === 'sent') threadForwardReceipt.externalMessageId satisfies string
-if (threadHistoryResult.status === 'ok') threadHistoryResult.messages[0]?.threadId satisfies string | undefined
-import type { ChannelProviderContinuationRequestV1 } from '@cordisx/protocol/channel-provider-continuation/v1'
-declare const providerContinuation: ChannelProviderContinuationRequestV1
-providerContinuation.history satisfies 'inherit'
-import type { ConversationContinuationRequestV1 } from '@cordisx/protocol/conversation-continuation/v1'
-declare const logicalContinuation: ConversationContinuationRequestV1
-logicalContinuation.mode satisfies 'linked' | 'fork' | 'fresh'
-import type { ChannelMessageReadRequestV1 } from '@cordisx/protocol/channel-message-read/v1'
-import type { ChannelTerminalIntentV1 } from '@cordisx/protocol/channel-terminal-intent/v1'
-declare const terminalIntent: ChannelTerminalIntentV1
-terminalIntent.inputOperationId satisfies string
-import type { ChannelMessageOperationsV1 } from '@cordisx/protocol/channel-message-operations/v1'
-declare const messageOperations: ChannelMessageOperationsV1
-void messageOperations
-import type { ChannelCardActionsV1, ChannelCardActionResultV1 } from '@cordisx/protocol/channel-card-actions/v1'
-declare const cardActions: ChannelCardActionsV1
-declare const cardActionResult: ChannelCardActionResultV1
-void cardActions
-if (cardActionResult.status === 'ok' && cardActionResult.operation === 'card-action-read') {
-  cardActionResult.events satisfies readonly unknown[]
-  if (cardActionResult.hasMore) cardActionResult.pageToken satisfies string
-}
-declare const messageRead: ChannelMessageReadRequestV1
-messageRead.messageId satisfies string
+channelV15.forOwnPresentationService()?.presentationCapabilities().mode satisfies 'standard' | 'snapshot-only' | undefined
+channelV16.forOwnConfigurationPresentationService()?.configurationPresentationCapabilities().mode satisfies 'configuration-only' | undefined
 import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'
 declare const form: SchemaFormOptionsV1
 form.onChange({ value: {}, valid: true, issues: [] })

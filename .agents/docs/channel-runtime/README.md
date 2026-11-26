@@ -527,3 +527,7 @@ See [message read v1](message-read-v1.md) for source-scoped lookup of reply ance
 See [Channel Manager v13 creation defaults](manager-v13-creation-defaults.md) for the separate sparse Channel overlay and frozen-form compatibility.
 
 The additive [Channel Manager v14](manager-v14-continuation.md) exposes the Host-owned continuation defaults form.
+
+[Channel Manager v15](manager-v15-presentation.md) negotiates a generation-bound snapshot-only presentation.
+
+[Channel Manager v16](manager-v16-configuration-presentation.md) separately negotiates a restricted connection-configuration presentation.
