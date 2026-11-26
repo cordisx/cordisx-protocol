@@ -83,6 +83,13 @@ import type { ChannelMessageSearchRequestV1, ChannelMessageSearchResultV1 } from
 declare const messageSearchRequest: ChannelMessageSearchRequestV1
 declare const messageSearchResult: ChannelMessageSearchResultV1
 void [messageSearchRequest, messageSearchResult]
+import type { ChannelHistoricalResourceReadRequestV1, ChannelHistoricalResourceResultV1 } from '@cordisx/protocol/channel-historical-resources/v1'
+declare const historicalResourceRequest: ChannelHistoricalResourceReadRequestV1
+declare const historicalResourceResult: ChannelHistoricalResourceResultV1
+historicalResourceRequest.length satisfies number
+if (historicalResourceResult.status === 'ok' && historicalResourceResult.resource.state === 'ready') {
+  historicalResourceResult.resource.attachment.handle satisfies string
+}
 threadHistoryRequest.anchorMessageId satisfies string
 import type { ChannelThreadForwardRequestV1, ChannelThreadForwardReceiptV1 } from '@cordisx/protocol/channel-thread-forward/v1'
 declare const threadForwardRequest: ChannelThreadForwardRequestV1
@@ -103,6 +110,14 @@ terminalIntent.inputOperationId satisfies string
 import type { ChannelMessageOperationsV1 } from '@cordisx/protocol/channel-message-operations/v1'
 declare const messageOperations: ChannelMessageOperationsV1
 void messageOperations
+import type { ChannelCardActionsV1, ChannelCardActionResultV1 } from '@cordisx/protocol/channel-card-actions/v1'
+declare const cardActions: ChannelCardActionsV1
+declare const cardActionResult: ChannelCardActionResultV1
+void cardActions
+if (cardActionResult.status === 'ok' && cardActionResult.operation === 'card-action-read') {
+  cardActionResult.events satisfies readonly unknown[]
+  if (cardActionResult.hasMore) cardActionResult.pageToken satisfies string
+}
 declare const messageRead: ChannelMessageReadRequestV1
 messageRead.messageId satisfies string
 import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'

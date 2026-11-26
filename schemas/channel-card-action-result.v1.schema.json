@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/channel-card-action-result.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "operation",
+        "messageId",
+        "version",
+        "expiresAt",
+        "operationId"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "operation": {
+          "const": "card-action-publish"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "operation",
+        "messageId",
+        "version",
+        "expiresAt",
+        "events",
+        "hasMore"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "operation": {
+          "const": "card-action-read"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "events": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "eventId",
+              "messageId",
+              "version",
+              "actionId",
+              "operatorId",
+              "receivedAt"
+            ],
+            "properties": {
+              "eventId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "messageId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "actionId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_-]{1,64}$"
+              },
+              "operatorId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "receivedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "hasMore": {
+          "const": false
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "operation",
+        "messageId",
+        "version",
+        "expiresAt",
+        "events",
+        "hasMore",
+        "pageToken"
+      ],
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "operation": {
+          "const": "card-action-read"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "events": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "eventId",
+              "messageId",
+              "version",
+              "actionId",
+              "operatorId",
+              "receivedAt"
+            ],
+            "properties": {
+              "eventId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "messageId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "actionId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_-]{1,64}$"
+              },
+              "operatorId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "receivedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "pageToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "hasMore": {
+          "const": true
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "rejected",
+            "unavailable",
+            "failed",
+            "unknown"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    {
+      "type": "null"
+    }
+  ]
+}

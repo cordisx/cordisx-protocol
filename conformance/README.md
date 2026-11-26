@@ -1,5 +1,7 @@
 # Conformance
 
+- `node conformance/channel-historical-resources.mjs` checks closed resource requests/results and bounded-byte vectors. It also runs from the existing remote-history gate; SDK/source authorization and actual consumption require Host evidence.
+
 - `node conformance/channel-thread-forward.mjs` checks native topic request/receipt shapes; authorization, idempotency and platform effects require Host evidence. It also runs from the existing forwarding gate.
 
 - `node conformance/channel-terminal-intent.mjs` checks the closed terminal intent shape and vectors; Host delivery and recovery require separate integration evidence.
@@ -7,6 +9,7 @@
 - `node conformance/channel-forward.mjs` checks independent forward request/receipt schemas and vectors; it does not establish live Host/platform adoption.
 
 - `node conformance/channel-outbound-v2.mjs`: frozen v1 rejection, v2 paragraph/mention shapes, capability negotiation and scoped sender-evidence model.
+- `node conformance/channel-outbound-v3.mjs`: frozen v1/v2 rejection, safe links/prepared-image structure, standalone inline-code layout, code-language negotiation and runtime v4 acquisition exports.
 
 `node conformance/channel-outbound.mjs` checks the six outbound v1 schemas,
 seven content types, bounded bytes preparation, scoped capability reference
@@ -388,3 +391,7 @@ Group idle priority: authority, exact scope and evidence checks passed. checks g
 Group idle priority v2: admin rule, sender dispatch and explicit denials passed. checks group-scoped use and explicit denials; it does not prove Host adoption.
 
 Group linked priority: provenance and confirmed-delivery scope passed. checks group provenance and confirmed-delivery filtering; it does not prove Host adoption.
+
+`node conformance/channel-card-actions.mjs` checks exact bounded publication,
+normalized action pages and success/uncertainty wire shapes. It does not prove
+Host adoption, live platform callback permissions or durable event history.

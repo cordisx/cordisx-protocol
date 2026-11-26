@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cordisx.dev/schemas/channel-card-action-request.v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "operationId",
+        "messageId",
+        "expectedVersion",
+        "template",
+        "title",
+        "body",
+        "actions",
+        "expiresInSeconds"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "card-action-publish"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "template": {
+          "const": "action-notice"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_-]{1,64}$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            }
+          }
+        },
+        "expiresInSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "operatorIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "messageId",
+        "version"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "card-action-read"
+        },
+        "messageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "pageToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "conversationId",
+        "kind",
+        "operation",
+        "operationId"
+      ],
+      "properties": {
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapterId",
+            "accountId",
+            "tenantId"
+          ],
+          "properties": {
+            "adapterId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "accountId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "tenantId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        },
+        "conversationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "kind": {
+          "enum": [
+            "direct",
+            "group"
+          ]
+        },
+        "operation": {
+          "const": "card-action-receipt"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }
+  ]
+}

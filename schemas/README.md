@@ -751,8 +751,10 @@ Channel task model configuration: `channel-task-config.v1.schema.json`; see [tas
 Channel Provider continuation requests and results use `channel-provider-continuation-request.v1.schema.json` and `channel-provider-continuation-result.v1.schema.json`; see [Provider continuation v1](../.agents/docs/channel-runtime/provider-continuation-v1.md).
 
 - [Channel remote history request v1](channel-remote-history-request.v1.schema.json) and [result v1](channel-remote-history-result.v1.schema.json): bounded one-page requests; see [remote history](../.agents/docs/channel-runtime/remote-history-v1.md).
+- [Channel historical resource request v1](channel-historical-resource-request.v1.schema.json) and [result v1](channel-historical-resource-result.v1.schema.json): independent scoped preparation/status/byte consumption; see [historical resources](../.agents/docs/channel-runtime/historical-resources-v1.md).
 - [Channel message read request v1](channel-message-read-request.v1.schema.json) and [result v1](channel-message-read-result.v1.schema.json): source-scoped reply-chain lookup; see [message read](../.agents/docs/channel-runtime/message-read-v1.md).
 - Channel message operations v1: [request](channel-message-operation-request.v1.schema.json), [result](channel-message-operation-result.v1.schema.json), [capabilities](channel-message-operation-capabilities.v1.schema.json); see [scoped operations](../.agents/docs/channel-runtime/message-operations-v1.md).
+- Channel bounded card actions v1: [request](channel-card-action-request.v1.schema.json), [result](channel-card-action-result.v1.schema.json); see [owned notice publication and readback](../.agents/docs/channel-runtime/card-actions-v1.md).
 
 The [Channel configuration v3](channel-service-config.v3.schema.json) adds pending tenant identity; see its [compatibility guide](../.agents/docs/channel-runtime/config-v3.md).
 

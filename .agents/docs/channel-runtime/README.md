@@ -17,6 +17,8 @@ bounded caller-sandbox bytes preparation and scoped media resolution, see the
 explicit [outbound v1 and runtime v2 successor](outbound-v1.md).
 Optional [message operations v1](message-operations-v1.md) adds scoped lifecycle
 operations and operation-level discovery independently of outbound availability.
+Optional [bounded card actions v1](card-actions-v1.md) adds explicit owned notice
+publication and generation-local normalized action readback without task dispatch.
 
 Status: normative version 1 Channel connection contracts. Channel is a base
 messaging service: it connects accounts, durably receives and sends attributed
@@ -515,6 +517,10 @@ See [Provider continuation v1](provider-continuation-v1.md) for explicitly autho
 See [remote history v1](remote-history-v1.md) for optional bounded remote reads, identity preservation and source authorization.
 See [thread history v1](thread-history-v1.md) for independent topic pagination and verified anchor scope.
 See [message search v1](message-search-v1.md) for conversation/time-bounded search and authoritative hit verification.
+
+See [historical resources v1](historical-resources-v1.md) for source-verified status, preparation and bounded byte consumption with independent resource-read authority.
+
+See [typed outbound v3](outbound-v3.md) for links, prepared image nodes, language-tagged code and the standalone inline-code layout limitation.
 
 See [message read v1](message-read-v1.md) for source-scoped lookup of reply ancestors.
 

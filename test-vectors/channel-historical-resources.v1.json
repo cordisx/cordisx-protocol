@@ -1,0 +1,28 @@
+{
+  "request": {
+    "account": { "adapterId": "feishu", "accountId": "app", "tenantId": "tenant" },
+    "conversationId": "oc_chat",
+    "kind": "group",
+    "messageId": "om_resource",
+    "index": 0,
+    "offset": 0,
+    "length": 4
+  },
+  "result": {
+    "status": "ok",
+    "messageId": "om_resource",
+    "index": 0,
+    "type": "file",
+    "resource": {
+      "state": "ready",
+      "expiresAt": 1800000000000,
+      "attachment": {
+        "type": "attachment",
+        "handle": "attachment:opaque",
+        "mediaType": "application/octet-stream",
+        "size": 4
+      }
+    },
+    "chunk": { "offset": 0, "base64": "AQIDBA==", "nextOffset": 4, "hasMore": false }
+  }
+}
