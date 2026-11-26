@@ -15,6 +15,7 @@ import type {
   ManagedServiceApplyV1,
   ManagedServiceBoundClientV1,
   ManagedServiceRegistrationHandleV1,
+  ManagedServiceSafeValueV1,
 } from './managed-service-runtime.v1.js'
 
 export interface ManagedServiceContextAuthorityV1 {
@@ -50,10 +51,20 @@ export interface ManagedServiceContextProviderV1 {
   }): ManagedServiceContextProviderRootV1 | Promise<ManagedServiceContextProviderRootV1>
 }
 
+/** Exact owner-service invocations needed for one UI account toggle and its readback. */
+export interface ManagedServiceNodeUIAccountTogglePlanV1 {
+  readonly operations: readonly {
+    readonly operationId: string
+    readonly value?: ManagedServiceSafeValueV1
+    readonly maxInvocations: number
+  }[]
+}
+
 /** Optional Node-owned methods that the Host may bind into a renderer-safe managed-service handle. */
 export interface ManagedServiceNodeUISourceExtensionV1 {
   readCatalog?(): Promise<ManagedServiceCliProxyCatalogResultV1>
   readAccounts?(): Promise<ManagedServiceCliProxyAccountsResultV1>
+  prepareAccountToggle?(request: ManagedServiceCliProxyAccountToggleRequestV1): ManagedServiceNodeUIAccountTogglePlanV1
   toggleAccount?(request: ManagedServiceCliProxyAccountToggleRequestV1): Promise<ManagedServiceCliProxyAccountToggleResultV1>
   startOAuth?(request: ManagedServiceCliProxyOAuthStartRequestV1): Promise<ManagedServiceCliProxyOAuthStartResultV1>
   pollOAuth?(sessionId: string): Promise<ManagedServiceCliProxyOAuthStatusV1>

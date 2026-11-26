@@ -45,6 +45,7 @@ export type ManagedServiceErrorCodeV1 =
   | 'disposed'
 
 export interface ManagedServiceIdentityV1 {
+  /** Optional HTTPS source identity; it MUST NOT contain authority credentials. */
   readonly source?: `https://${string}`
   readonly pluginId: string
   readonly serviceId: string
@@ -514,6 +515,12 @@ export interface ManagedServiceV1 {
   logout(request: ManagedServiceLogoutRequestV1): Promise<ManagedServiceLogoutResultV1>
   /** Optional, service-kind-specific renderer-safe read (for CLIProxyAPI). */
   readCatalog?(): Promise<ManagedServiceCliProxyCatalogResultV1>
+  /** Optional CLIProxyAPI account projection, independent of account mutation authority. */
+  readAccounts?(): Promise<ManagedServiceCliProxyAccountsResultV1>
+  /** Optional account toggle, independent of OAuth and the full control surface. */
+  toggleAccount?(request: ManagedServiceCliProxyAccountToggleRequestV1): Promise<ManagedServiceCliProxyAccountToggleResultV1>
+  /** Observe owner-confirmed account projections for this binding; dispose with the consumer. */
+  observeAccounts?(observer: (accounts: ManagedServiceCliProxyAccountsV1) => void | Promise<void>): () => void
   /** Optional CLIProxyAPI account-subscription control surface (Host-brokered Management API). */
   accountControl?: ManagedServiceCliProxyAccountControlV1
 }

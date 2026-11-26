@@ -48,6 +48,59 @@ registration control continues to accept `login`, `logout`, and `refresh`; this
 Protocol contract does not establish Host adoption or authorize a renderer to
 call the Node-side registration handle.
 
+## Independent account reads
+
+For CLIProxyAPI services, a Host MAY expose `ManagedServiceV1.readAccounts()`
+without exposing `accountControl`. The result uses the existing
+`cordisx.managed-service-cli-proxy-accounts/v1` projection and the exact service
+binding, profile and generation. A Host MUST validate that projection and MUST
+NOT expose credentials, authentication files, tokens or raw endpoints. The read
+MUST NOT start authentication, change an account, or grant authority to toggle
+an account or manage OAuth sessions. If the owner or binding is no longer
+current, the read is unavailable.
+
+The existing identity type permits an optional HTTPS source. The common v1
+schema now accepts that field, matching the type and owner binding, while
+rejecting sources with authority credentials. Older validators that omit this
+field may reject source-bound projections; consumers must not discard source
+identity merely to make those validators accept a different binding.
+
+Consumers SHOULD prefer `readAccounts()` when it exists, otherwise use
+`accountControl.readAccounts()` when the full control surface exists. Older Hosts
+may omit the independent read. A returned revision is an opaque equality fence;
+it need not increase between observations. This capability does not prove that
+a Host has synchronized account mutations across clients.
+
+## Independent account toggles and observation
+
+A Host MAY expose `ManagedServiceV1.toggleAccount()` without granting the full
+`accountControl` surface or OAuth authority. The method uses the existing v1
+toggle request and result. The Host MUST bind it to the current service owner,
+require the declared user gesture, check the exact account and expected opaque
+revision, and verify the requested state against a fresh owner readback before
+reporting acceptance. It MUST coordinate all affected service consumers and
+admitted renderers; an unconfirmed change MUST NOT be reported as successful or
+automatically replayed. A Host that cannot establish those conditions omits the
+method. Older Hosts may expose only `accountControl.toggleAccount()`.
+
+A Host MAY expose `observeAccounts(observer)` for the same binding. It returns
+a disposer and delivers validated, owner-confirmed account projections without
+credentials. Consumers retaining an account view SHOULD register an observer
+when available and dispose it with that view. The Host MUST await currently
+registered observers during a coordinated toggle and treat a failed or lost
+acknowledgement as an unconfirmed result. Observations do not grant write
+authority, and a revision is an equality fence rather than a counter.
+
+An owner-side Node UI source MAY supply `prepareAccountToggle(request)` with
+the exact declared service operations, safe request values and invocation
+limits needed for the toggle and its account readback. Preparing a plan MUST
+be side-effect free and MUST NOT invoke the service or include credentials.
+The Host MUST validate and bind the plan to the active plugin and service
+generation, keep it private from renderers, and enforce its exact values and
+limits while other service consumers are reserved. A missing or invalid plan
+does not grant a toggle. This plan does not replace user authorization or the
+owner readback and renderer acknowledgements above.
+
 ## Managed native provider reasoning capabilities
 
 `ManagedNativeProviderRouteV1.reasoningCapabilities` optionally carries the

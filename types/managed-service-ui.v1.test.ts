@@ -15,6 +15,12 @@ const got = await reg.get({ serviceId: 'cli-proxy' })
 if (got.status === 'available') {
   got.service.binding.identity.serviceId
   got.service.snapshot
+  const accountRead = await got.service.readAccounts?.()
+  if (accountRead?.status === 'available') {
+    accountRead.accounts.accounts[0]?.accountId
+    // @ts-expect-error account reads do not expose credentials
+    accountRead.accounts.accounts[0]?.apiKey
+  }
   const logout: ManagedServiceLogoutRequestV1 = {
     $schema:
       'https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/managed-service-logout-request.v1.schema.json',
