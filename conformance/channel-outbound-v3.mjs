@@ -50,6 +50,8 @@ for (
     'https://user:password@example.org',
     'https://example.org\\bad',
     'https://example.org/a\nb',
+    'https://example.org/a%0Ab',
+    'https://example.org/a%5cb',
   ]
 ) {
   assert.equal(send(richtext([{ type: 'paragraph', nodes: [{ type: 'link', text: 'label', url }] }])), false)
@@ -62,6 +64,7 @@ for (
     { type: 'inline-code', text: 'a\nb' },
     { type: 'inline-code', text: '   ' },
     { type: 'code', text: 'x', language: 'unknown' },
+    { type: 'code', text: 'x\u0000y' },
   ]
 ) assert.equal(send(richtext([block])), false)
 const capability = {

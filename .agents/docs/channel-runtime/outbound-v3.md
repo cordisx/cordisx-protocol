@@ -39,3 +39,10 @@ At most 16 image-node occurrences are permitted across the whole request;
 this aggregate semantic bound must be enforced in addition to schema validation.
 Inline code is nonempty, contains no line break or NUL, and is not solely spaces.
 Code languages use the enumerated uppercase values, not arbitrary metadata.
+
+The whole serialized content and request each have a 196608 UTF-8 byte bound;
+rendered adapter content must fit the same Host transport budget before the first
+effect. Richtext has at most 1024 total nodes and 65536 text code points. These
+aggregate semantic limits supplement per-block/per-node schema bounds. No NUL
+is permitted in new link/code text; legacy text validation is unchanged.
+Percent-encoded control characters and backslashes in links are also rejected.

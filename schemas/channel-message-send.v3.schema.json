@@ -200,14 +200,20 @@
                                 "text": {
                                   "type": "string",
                                   "minLength": 1,
-                                  "maxLength": 4096
+                                  "maxLength": 4096,
+                                  "not": {
+                                    "pattern": "\\u0000"
+                                  }
                                 },
                                 "url": {
                                   "type": "string",
                                   "minLength": 1,
                                   "maxLength": 2048,
                                   "format": "uri",
-                                  "pattern": "^https?://[^/@\\\\\\s\\u0000-\\u001f\\u007f]+(?:[/?#][^\\\\\\s\\u0000-\\u001f\\u007f]*)?$"
+                                  "pattern": "^https?://[^/@\\\\\\s\\u0000-\\u001f\\u007f]+(?:[/?#][^\\\\\\s\\u0000-\\u001f\\u007f]*)?$",
+                                  "not": {
+                                    "pattern": "%([01][0-9A-Fa-f]|7[Ff]|5[Cc])"
+                                  }
                                 }
                               }
                             },
@@ -270,7 +276,10 @@
                       "text": {
                         "type": "string",
                         "minLength": 1,
-                        "maxLength": 4096
+                        "maxLength": 4096,
+                        "not": {
+                          "pattern": "\\u0000"
+                        }
                       },
                       "language": {
                         "enum": [
