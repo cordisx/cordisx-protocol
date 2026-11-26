@@ -62,6 +62,7 @@ roles and change requirements are defined in the [maintenance rules](../rules/RE
 - [Channel runtime](channel-runtime/README.md) and
   [task gateway](channel-task-gateway/README.md): sourced messages, complete
   binding identities, redacted state, and launcher-side dispatch authorization.
+- [Historical resources v1](channel-runtime/historical-resources-v1.md): independent source-verified preparation, status and bounded bytes; not an additional plugin runtime facade.
 - [Connector service](connector-service/README.md): descriptors, bound public
   clients, authorization, ordered subscriptions, and disposal.
 - [Managed service](managed-service/README.md): owner-bound projections,

@@ -83,6 +83,13 @@ import type { ChannelMessageSearchRequestV1, ChannelMessageSearchResultV1 } from
 declare const messageSearchRequest: ChannelMessageSearchRequestV1
 declare const messageSearchResult: ChannelMessageSearchResultV1
 void [messageSearchRequest, messageSearchResult]
+import type { ChannelHistoricalResourceReadRequestV1, ChannelHistoricalResourceResultV1 } from '@cordisx/protocol/channel-historical-resources/v1'
+declare const historicalResourceRequest: ChannelHistoricalResourceReadRequestV1
+declare const historicalResourceResult: ChannelHistoricalResourceResultV1
+historicalResourceRequest.length satisfies number
+if (historicalResourceResult.status === 'ok' && historicalResourceResult.resource.state === 'ready') {
+  historicalResourceResult.resource.attachment.handle satisfies string
+}
 threadHistoryRequest.anchorMessageId satisfies string
 import type { ChannelThreadForwardRequestV1, ChannelThreadForwardReceiptV1 } from '@cordisx/protocol/channel-thread-forward/v1'
 declare const threadForwardRequest: ChannelThreadForwardRequestV1

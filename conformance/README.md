@@ -1,5 +1,7 @@
 # Conformance
 
+- `node conformance/channel-historical-resources.mjs` checks closed resource requests/results and bounded-byte vectors. It also runs from the existing remote-history gate; SDK/source authorization and actual consumption require Host evidence.
+
 - `node conformance/channel-thread-forward.mjs` checks native topic request/receipt shapes; authorization, idempotency and platform effects require Host evidence. It also runs from the existing forwarding gate.
 
 - `node conformance/channel-terminal-intent.mjs` checks the closed terminal intent shape and vectors; Host delivery and recovery require separate integration evidence.

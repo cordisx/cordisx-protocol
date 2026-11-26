@@ -252,6 +252,7 @@ and explicitly select identity-bearing snapshots.
 - [Channel remote history v1](channel-remote-history.v1.d.ts): [bounded remote history and source identity](../.agents/docs/channel-runtime/remote-history-v1.md).
 - [Channel thread history v1](channel-thread-history.v1.d.ts): [topic pagination and verified anchor scope](../.agents/docs/channel-runtime/thread-history-v1.md).
 - [Channel message search v1](channel-message-search.v1.d.ts): [bounded conversation search and authoritative hit verification](../.agents/docs/channel-runtime/message-search-v1.md).
+- [Channel historical resources v1](channel-historical-resources.v1.d.ts): [source-verified preparation, status and bounded bytes](../.agents/docs/channel-runtime/historical-resources-v1.md).
 - [Channel message read v1](channel-message-read.v1.d.ts): [source-scoped reply-chain lookup](../.agents/docs/channel-runtime/message-read-v1.md).
 - [Channel message operations v1](channel-message-operations.v1.d.ts): [scoped mutation, pagination and discovery](../.agents/docs/channel-runtime/message-operations-v1.md).
 - [Channel bounded card actions v1](channel-card-actions.v1.d.ts): [owned publication and normalized readback](../.agents/docs/channel-runtime/card-actions-v1.md); standalone authenticated launcher operations, not a new ctx getter.

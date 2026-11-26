@@ -518,6 +518,8 @@ See [remote history v1](remote-history-v1.md) for optional bounded remote reads,
 See [thread history v1](thread-history-v1.md) for independent topic pagination and verified anchor scope.
 See [message search v1](message-search-v1.md) for conversation/time-bounded search and authoritative hit verification.
 
+See [historical resources v1](historical-resources-v1.md) for source-verified status, preparation and bounded byte consumption with independent resource-read authority.
+
 See [message read v1](message-read-v1.md) for source-scoped lookup of reply ancestors.
 
 See [Channel Manager v13 creation defaults](manager-v13-creation-defaults.md) for the separate sparse Channel overlay and frozen-form compatibility.

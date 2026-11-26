@@ -1,5 +1,7 @@
 # Test Vectors
 
+- `channel-historical-resources.v1.json` contains source-selected resource byte request and ready/chunk result examples; it grants no Host acquisition or platform permission.
+
 - [Whole-thread forwarding v1](channel-thread-forward/v1.json): native topic envelope and real-ID receipt shapes.
 
 - [Channel terminal intent v1](channel-terminal-intent/v1.json): valid and invalid explicit terminal correlation.
