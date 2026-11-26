@@ -1,6 +1,13 @@
 /* Service/account boundary fixture consumed by the installed-package gate. */
 export const distributionServicesConsumerFixture =
-  `import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
+  `import type { ChannelRuntimeContextV4 } from '@cordisx/protocol/channel-runtime/v4'
+import type { ChannelMessageSendV3 } from '@cordisx/protocol/channel-outbound/v3'
+declare const channelContextV4: ChannelRuntimeContextV4
+declare const sendV3: ChannelMessageSendV3
+channelContextV4.channel.outboundV3.send(sendV3).then(handle => handle.receipt())
+// @ts-expect-error Frozen v2 facade must reject v3 wire requests
+channelContextV4.channel.outboundV2.send(sendV3)
+import type { WalletSpendV1 } from '@cordisx/protocol/wallet-spend/v1'
 import type { ManagedNativeProviderRouteV1, ManagedServiceRegistrationHandleV1 } from '@cordisx/protocol/managed-service-runtime/v1'
 declare const managedRegistration: ManagedServiceRegistrationHandleV1
 const managedRoute: ManagedNativeProviderRouteV1 = { alias: 'example', gatewayModelId: 'example', ...(managedRegistration.nativeProviderCapabilities?.contextWindow === true ? { contextWindow: 65536 } : {}) }

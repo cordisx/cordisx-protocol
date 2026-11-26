@@ -248,6 +248,9 @@
     "channel-outbound.v1.test.ts",
     "channel-outbound.v2.d.ts",
     "channel-runtime.v3.d.ts",
-    "channel-outbound.v2.test.ts"
+    "channel-outbound.v2.test.ts",
+    "channel-outbound.v3.d.ts",
+    "channel-runtime.v4.d.ts",
+    "channel-outbound.v3.test.ts"
   ]
 }

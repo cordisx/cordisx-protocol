@@ -257,6 +257,8 @@ and explicitly select identity-bearing snapshots.
 - [Channel message operations v1](channel-message-operations.v1.d.ts): [scoped mutation, pagination and discovery](../.agents/docs/channel-runtime/message-operations-v1.md).
 - [Channel bounded card actions v1](channel-card-actions.v1.d.ts): [owned publication and normalized readback](../.agents/docs/channel-runtime/card-actions-v1.md); standalone authenticated launcher operations, not a new ctx getter.
 
+- [Channel outbound v3](channel-outbound.v3.d.ts) and [runtime v4](channel-runtime.v4.d.ts): [typed links, scoped prepared images and standalone inline code](../.agents/docs/channel-runtime/outbound-v3.md).
+
 - [Channel Manager v13](channel-manager.v13.d.ts): [independent Channel creation defaults inherited from general profile defaults](../.agents/docs/channel-runtime/manager-v13-creation-defaults.md).
 
 - [Agent context v1](agent-context.v1.d.ts): [current occupancy and threshold observation](../.agents/docs/agent-context/README.md).
