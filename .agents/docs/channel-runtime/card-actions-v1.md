@@ -13,7 +13,11 @@ question and approval contracts remain unchanged.
 notice card. The Host must verify platform sender, message type, conversation,
 and its own successful plain-card record. Initial expectedVersion is zero;
 subsequent replacement requires the current owner-bound version. Never admit
-approval/question cards or arbitrary vendor card JSON. The action-notice template
+approval/question cards or arbitrary vendor card JSON. Verify the exact owned
+plain-notice structure without extra root, header, config, div or text fields;
+for replacement verify the exact current owned action template. A message read
+must return exactly the requested message, not a selected row from an ambiguous
+multi-message result. The action-notice template
 contains bounded literal title/body and one to five unique action id/label pairs.
 IDs are identifiers, never commands, links, callback URLs or scripts.
 
@@ -31,6 +35,13 @@ Publication uses a stable owner-scoped operationId and durable uncertain write
 reservation before the platform effect. Changed descriptors conflict; unknown
 effects must not be replayed. Only verified platform business success establishes
 publication. A receipt can be null; null is not evidence of no effect.
+Reserve publication at both the caller operationId and exact account,
+conversation, message and successor version. Another operationId or caller must
+not overwrite a pending/uncertain version, including after restart or while a
+timed-out platform effect is still settling. Serialize message-version checks
+and revalidate the current registration after awaited reads. Confirmed success
+permits only the next version under the same live owner; retired registrations
+cannot be reconstructed from a publication receipt alone.
 Publication success has operation `card-action-publish` and required operationId,
 messageId, version and expiresAt. Receipt returns the stored publication result,
 including `unknown` for durable pending/uncertain reservations, not a fabricated
@@ -61,6 +72,9 @@ while a completed page omits it.
 Never expose raw callback bodies, secret tokens,
 profiles, approval values or exception text. Returned events are untrusted data,
 not commands or authorization. Polling/subscription is not automatic.
+Callbacks arriving while a publication acknowledgment is pending may be buffered
+privately, but cannot be disclosed before verified publication success. Failed
+or uncertain publication discards this provisional readback.
 
 Threats: cross-tenant deputies, caller takeover, forged operators, callback
 replay, stale generation/version actions, control-card replacement, duplicate

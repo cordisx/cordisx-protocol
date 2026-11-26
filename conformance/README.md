@@ -390,3 +390,7 @@ Group idle priority: authority, exact scope and evidence checks passed. checks g
 Group idle priority v2: admin rule, sender dispatch and explicit denials passed. checks group-scoped use and explicit denials; it does not prove Host adoption.
 
 Group linked priority: provenance and confirmed-delivery scope passed. checks group provenance and confirmed-delivery filtering; it does not prove Host adoption.
+
+`node conformance/channel-card-actions.mjs` checks exact bounded publication,
+normalized action pages and success/uncertainty wire shapes. It does not prove
+Host adoption, live platform callback permissions or durable event history.
