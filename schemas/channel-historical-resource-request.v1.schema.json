@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cordisx/cordisx-protocol/main/schemas/channel-historical-resource-request.v1.schema.json",
+  "title": "Channel historical resource request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["account", "conversationId", "kind", "messageId", "index"],
+  "properties": {
+    "account": { "$ref": "channel-remote-history-request.v1.schema.json#/properties/account" },
+    "conversationId": { "type": "string", "pattern": "^oc_[A-Za-z0-9_]{1,200}$" },
+    "kind": { "enum": ["direct", "group"] },
+    "messageId": { "type": "string", "pattern": "^om_[A-Za-z0-9_]{1,200}$" },
+    "index": { "type": "integer", "minimum": 0, "maximum": 15 },
+    "offset": { "type": "integer", "minimum": 0, "maximum": 30000000 },
+    "length": { "type": "integer", "minimum": 1, "maximum": 65536 }
+  },
+  "dependentRequired": { "offset": ["length"], "length": ["offset"] }
+}
