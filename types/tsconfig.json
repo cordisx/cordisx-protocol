@@ -13,6 +13,8 @@
     "channel-forward.v1.test.ts",
     "channel-message-operations.v1.d.ts",
     "channel-message-operations.v1.test.ts",
+    "channel-card-actions.v1.d.ts",
+    "channel-card-actions.v1.test.ts",
     "model-providers.v1.d.ts",
     "model-providers.v1.test.ts",
     "visuals.v1.d.ts",

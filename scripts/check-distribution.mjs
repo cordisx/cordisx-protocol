@@ -110,6 +110,14 @@ terminalIntent.inputOperationId satisfies string
 import type { ChannelMessageOperationsV1 } from '@cordisx/protocol/channel-message-operations/v1'
 declare const messageOperations: ChannelMessageOperationsV1
 void messageOperations
+import type { ChannelCardActionsV1, ChannelCardActionResultV1 } from '@cordisx/protocol/channel-card-actions/v1'
+declare const cardActions: ChannelCardActionsV1
+declare const cardActionResult: ChannelCardActionResultV1
+void cardActions
+if (cardActionResult.status === 'ok' && cardActionResult.operation === 'card-action-read') {
+  cardActionResult.events satisfies readonly unknown[]
+  if (cardActionResult.hasMore) cardActionResult.pageToken satisfies string
+}
 declare const messageRead: ChannelMessageReadRequestV1
 messageRead.messageId satisfies string
 import type { SchemaFormOptionsV1 } from '@cordisx/protocol/schema-form/v1'

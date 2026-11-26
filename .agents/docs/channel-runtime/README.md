@@ -17,6 +17,8 @@ bounded caller-sandbox bytes preparation and scoped media resolution, see the
 explicit [outbound v1 and runtime v2 successor](outbound-v1.md).
 Optional [message operations v1](message-operations-v1.md) adds scoped lifecycle
 operations and operation-level discovery independently of outbound availability.
+Optional [bounded card actions v1](card-actions-v1.md) adds explicit owned notice
+publication and generation-local normalized action readback without task dispatch.
 
 Status: normative version 1 Channel connection contracts. Channel is a base
 messaging service: it connects accounts, durably receives and sends attributed
