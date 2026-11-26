@@ -9,6 +9,7 @@
 - `node conformance/channel-forward.mjs` checks independent forward request/receipt schemas and vectors; it does not establish live Host/platform adoption.
 
 - `node conformance/channel-outbound-v2.mjs`: frozen v1 rejection, v2 paragraph/mention shapes, capability negotiation and scoped sender-evidence model.
+- `node conformance/channel-outbound-v3.mjs`: frozen v1/v2 rejection, safe links/prepared-image structure, standalone inline-code layout, code-language negotiation and runtime v4 acquisition exports.
 
 `node conformance/channel-outbound.mjs` checks the six outbound v1 schemas,
 seven content types, bounded bytes preparation, scoped capability reference
